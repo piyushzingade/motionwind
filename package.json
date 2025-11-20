@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "motionwind",
   "private": true,
   "scripts": {
     "build": "turbo run build",
