@@ -1,0 +1,24 @@
+{
+    "name": "vite-example",
+    "version": "0.1.0",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "dev": "vite --port 3002",
+        "build": "vite build",
+        "start": "vite"
+    },
+    "dependencies": {
+        "motionwind-core": "workspace:*",
+        "motionwind-tailwind-css": "workspace:*",
+        "react": "^19",
+        "react-dom": "^19"
+    },
+    "devDependencies": {
+        "vite": "^5",
+        "@vitejs/plugin-react": "^4",
+        "typescript": "latest",
+        "@types/react": "^19",
+        "@types/react-dom": "^19"
+    }
+}

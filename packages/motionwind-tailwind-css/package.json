@@ -1,0 +1,12 @@
+{
+    "name": "motionwind-tailwind-css",
+    "version": "0.1.0",
+    "type": "module",
+    "private": true,
+    "exports": {
+        "./css/motionwind.css": "./css/motionwind.css"
+    },
+    "files": [
+        "css"
+    ]
+}

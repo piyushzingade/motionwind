@@ -1,0 +1,45 @@
+{
+    "name": "motionwind-core",
+    "version": "0.1.0",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "build:css": "bun run src/scripts/generate-css.ts"
+    },
+    "exports": {
+        ".": {
+            "types": "./src/index.ts",
+            "default": "./src/index.ts"
+        },
+        "./runtime": {
+            "types": "./src/runtime/index.ts",
+            "default": "./src/runtime/index.ts"
+        },
+        "./runtime/vanilla": {
+            "types": "./src/runtime/vanilla.ts",
+            "default": "./src/runtime/vanilla.ts"
+        },
+        "./runtime/react": {
+            "types": "./src/runtime/react.ts",
+            "default": "./src/runtime/react.ts"
+        },
+        "./css": {
+            "types": "./src/css/utilities.ts",
+            "default": "./src/css/utilities.ts"
+        }
+    },
+    "peerDependencies": {
+        "react": ">=18"
+    },
+    "peerDependenciesMeta": {
+        "react": {
+            "optional": true
+        }
+    },
+    "devDependencies": {
+        "ts-node": "latest",
+        "typescript": "latest",
+        "@types/node": "latest",
+        "@types/react": "^19"
+    }
+}
