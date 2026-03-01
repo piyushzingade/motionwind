@@ -1,0 +1,94 @@
+{
+  "name": "motionwind",
+  "version": "0.1.0",
+  "type": "module",
+  "private": false,
+  "description": "Write Motion animations as Tailwind-like classes. Babel plugin transforms them at build time.",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./babel": {
+      "import": "./dist/babel.js",
+      "require": "./dist/babel.cjs"
+    },
+    "./next": {
+      "import": "./dist/next.js",
+      "require": "./dist/next.cjs"
+    },
+    "./vite": {
+      "import": "./dist/vite.js",
+      "require": "./dist/vite.cjs"
+    },
+    "./parser": {
+      "import": "./dist/parser.js",
+      "require": "./dist/parser.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "babel": ["./dist/babel.d.ts"],
+      "next": ["./dist/next.d.ts"],
+      "vite": ["./dist/vite.d.ts"],
+      "parser": ["./dist/parser.d.ts"]
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "motion": ">=11"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": false
+    },
+    "motion": {
+      "optional": false
+    }
+  },
+  "dependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/generator": "^7.26.0",
+    "@babel/parser": "^7.26.0",
+    "@babel/types": "^7.26.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.28.6",
+    "@babel/preset-react": "^7.28.5",
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@testing-library/react": "^16.3.0",
+    "@types/babel__core": "^7.20.5",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "eslint": "^9.39.1",
+    "jsdom": "^26.1.0",
+    "motion": "^12.12.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tsup": "^8.5.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  },
+  "keywords": [
+    "tailwind",
+    "motion",
+    "framer-motion",
+    "animation",
+    "babel-plugin",
+    "react"
+  ]
+}
