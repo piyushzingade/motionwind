@@ -1,0 +1,25 @@
+{
+  "name": "create-motionwind",
+  "version": "0.1.0",
+  "type": "module",
+  "private": false,
+  "description": "CLI to scaffold motionwind in your project",
+  "license": "MIT",
+  "bin": {
+    "create-motionwind": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "eslint": "^9.39.1",
+    "tsup": "^8.5.0",
+    "typescript": "5.9.2"
+  }
+}
