@@ -1,6 +1,14 @@
 {
   "name": "motionwind",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piyushzingade/motionwind.git"
+  },
+  "bugs": {
+    "url": "https://github.com/piyushzingade/motionwind/issues"
+  },
+  "homepage": "https://github.com/piyushzingade/motionwind#readme",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -21,5 +29,8 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "next": "^16.1.6"
+  }
 }
