@@ -12,6 +12,8 @@ type MotionwindProps<T extends HTMLTag> = React.ComponentPropsWithRef<T> & {
   className?: string;
 };
 
+// Bounded by the finite set of HTML tags (~100), but cap at 200 as a safety measure
+const COMPONENT_CACHE_MAX = 200;
 const componentCache = new Map<string, React.ComponentType<MotionProps>>();
 
 function getMotionComponent(tag: string): React.ComponentType<MotionProps> {
@@ -20,12 +22,20 @@ function getMotionComponent(tag: string): React.ComponentType<MotionProps> {
 
   const component = (motion as unknown as Record<string, React.ComponentType<MotionProps>>)[tag];
   if (component) {
+    if (componentCache.size >= COMPONENT_CACHE_MAX) {
+      const firstKey = componentCache.keys().next().value;
+      if (firstKey !== undefined) componentCache.delete(firstKey);
+    }
     componentCache.set(tag, component);
     return component;
   }
 
   // Fallback: use motion.div
   const fallback = motion.div as React.ComponentType<MotionProps>;
+  if (componentCache.size >= COMPONENT_CACHE_MAX) {
+    const firstKey = componentCache.keys().next().value;
+    if (firstKey !== undefined) componentCache.delete(firstKey);
+  }
   componentCache.set(tag, fallback);
   return fallback;
 }
