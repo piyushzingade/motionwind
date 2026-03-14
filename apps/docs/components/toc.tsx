@@ -5,6 +5,7 @@ import {
   useState,
   useRef,
   useCallback,
+  useMemo,
   type ReactNode,
 } from "react";
 
@@ -169,11 +170,27 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
     [items],
   );
 
+  /* Map active heading position → path progress (not raw scroll %) */
+  const tocProgress = useMemo(() => {
+    if (activeIndex < 0 || ys.length < 2) return 0;
+    // When near the bottom, fill the entire path
+    if (scrollPct > 0.95) return 1;
+
+    const firstY = ys[0] ?? 0;
+    const lastY = ys[ys.length - 1] ?? 0;
+    const range = lastY - firstY;
+    if (range <= 0) return 0;
+
+    const activeY = ys[activeIndex] ?? firstY;
+    const raw = (activeY - firstY) / range;
+    // Show a small fill even at the first heading
+    return activeIndex === 0 ? Math.max(raw, 0.03) : raw;
+  }, [activeIndex, ys, scrollPct]);
+
   if (!items.length) return null;
 
   const pathD = buildPath(items, ys);
-  const dashOff = totalLen > 0 ? totalLen * (1 - scrollPct) : totalLen;
-  void activeIndex;
+  const dashOff = totalLen > 0 ? totalLen * (1 - tocProgress) : totalLen;
 
   return (
     <nav className="toc" aria-label="Table of contents">
