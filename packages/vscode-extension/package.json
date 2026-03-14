@@ -1,0 +1,77 @@
+{
+  "name": "motionwind",
+  "displayName": "Motionwind",
+  "description": "IntelliSense for motionwind animation classes - autocomplete, hover docs, diagnostics, and color decorators",
+  "version": "0.1.0",
+  "publisher": "piyushzingade",
+  "license": "MIT",
+  "icon": "icon.png",
+  "homepage": "https://github.com/piyushzingade/motionwind#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piyushzingade/motionwind.git",
+    "directory": "packages/vscode-extension"
+  },
+  "bugs": {
+    "url": "https://github.com/piyushzingade/motionwind/issues"
+  },
+  "galleryBanner": {
+    "color": "#0f172a",
+    "theme": "dark"
+  },
+  "qna": "marketplace",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Programming Languages", "Linters", "Other"],
+  "keywords": ["motionwind", "motion", "framer-motion", "animation", "tailwind"],
+  "activationEvents": [
+    "onLanguage:typescriptreact",
+    "onLanguage:javascriptreact",
+    "onLanguage:html",
+    "onLanguage:typescript",
+    "onLanguage:javascript"
+  ],
+  "main": "./dist/client/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Motionwind",
+      "properties": {
+        "motionwind.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the motionwind language server"
+        },
+        "motionwind.validate": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable validation diagnostics for animate-* classes"
+        },
+        "motionwind.classAttributes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["className", "class"],
+          "description": "HTML/JSX attributes to scan for motionwind classes"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint --max-warnings 0",
+    "check-types": "tsc --noEmit",
+    "package": "bunx @vscode/vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.12"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*",
+    "@types/vscode": "^1.85.0",
+    "tsup": "^8.5.0",
+    "typescript": "5.9.2"
+  }
+}
