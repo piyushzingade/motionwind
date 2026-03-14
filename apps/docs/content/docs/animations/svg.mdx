@@ -1,0 +1,231 @@
+---
+title: "SVG Animations"
+description: "Animate SVG elements with motionwind -- path drawing, stroke effects, and transforms using utility classes and arbitrary values."
+---
+
+# SVG Animations
+
+SVG elements are lowercase HTML tags (`svg`, `path`, `circle`, `rect`, etc.), so the Babel plugin can transform them into `motion.svg`, `motion.path`, and so on automatically. This makes SVG animation a first-class citizen in motionwind.
+
+For SVG-specific properties that are not part of the built-in class vocabulary, the **arbitrary value bracket syntax** `animate-{gesture}:[key=value]` lets you animate any Motion-supported property.
+
+---
+
+## Path Drawing
+
+The classic "draw-on" effect animates `pathLength` from `0` to `1`. Since `pathLength` is not a built-in motionwind property, you use bracket syntax:
+
+```tsx
+<svg width="200" height="200" viewBox="0 0 200 200">
+  <path
+    d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="3"
+    className="animate-initial:[pathLength=0] animate-enter:[pathLength=1] animate-duration-2000 animate-ease-in-out"
+  />
+</svg>
+```
+
+At build time this becomes:
+
+```tsx
+<motion.path
+  d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
+  fill="none"
+  stroke="currentColor"
+  strokeWidth="3"
+  initial={{ pathLength: 0 }}
+  animate={{ pathLength: 1 }}
+  transition={{ duration: 2, ease: "easeInOut" }}
+/>
+```
+
+<Demo title="Path Drawing Animation">
+  <svg width="200" height="200" viewBox="0 0 200 200" className="text-[#c8ff2e]">
+    <path
+      d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      style={{ pathLength: 0 }}
+      className="animate-initial:[pathLength=0] animate-enter:[pathLength=1] animate-duration-2000 animate-ease-in-out"
+    />
+  </svg>
+</Demo>
+
+---
+
+## Stroke Animation
+
+You can animate `strokeDasharray` and `strokeDashoffset` using arbitrary values to create dashed-line and reveal effects:
+
+```tsx
+<svg width="200" height="100" viewBox="0 0 200 100">
+  <line
+    x1="10" y1="50" x2="190" y2="50"
+    stroke="currentColor"
+    strokeWidth="2"
+    className="animate-initial:[strokeDasharray=10] animate-enter:[strokeDasharray=1] animate-initial:[strokeDashoffset=200] animate-enter:[strokeDashoffset=0] animate-duration-1500 animate-ease-in-out"
+  />
+</svg>
+```
+
+Build output:
+
+```tsx
+<motion.line
+  x1="10" y1="50" x2="190" y2="50"
+  stroke="currentColor"
+  strokeWidth="2"
+  initial={{ strokeDasharray: 10, strokeDashoffset: 200 }}
+  animate={{ strokeDasharray: 1, strokeDashoffset: 0 }}
+  transition={{ duration: 1.5, ease: "easeInOut" }}
+/>
+```
+
+<Demo title="Stroke Dash Animation">
+  <svg width="200" height="100" viewBox="0 0 200 100" className="text-[#c8ff2e]">
+    <line
+      x1="10" y1="50" x2="190" y2="50"
+      stroke="currentColor"
+      strokeWidth="2"
+      className="animate-initial:[strokeDasharray=10] animate-enter:[strokeDasharray=1] animate-initial:[strokeDashoffset=200] animate-enter:[strokeDashoffset=0] animate-duration-1500 animate-ease-in-out"
+    />
+  </svg>
+</Demo>
+
+---
+
+## SVG Transforms
+
+Standard motionwind transform classes work on SVG elements the same way they work on HTML elements. Because `circle`, `rect`, `g`, and other SVG tags are lowercase, the plugin picks them up and wraps them in `motion.*`:
+
+```tsx
+<svg width="120" height="120" viewBox="0 0 120 120">
+  <rect
+    x="30" y="30" width="60" height="60"
+    fill="currentColor"
+    className="animate-hover:rotate-45 animate-hover:scale-110 animate-spring"
+  />
+</svg>
+```
+
+Build output:
+
+```tsx
+<motion.rect
+  x="30" y="30" width="60" height="60"
+  fill="currentColor"
+  whileHover={{ rotate: 45, scale: 1.1 }}
+  transition={{ type: "spring" }}
+/>
+```
+
+<Demo title="SVG Hover Transform">
+  <svg width="120" height="120" viewBox="0 0 120 120" style={{ overflow: "visible" }} className="text-[#c8ff2e] cursor-pointer">
+    <rect
+      x="30" y="30" width="60" height="60"
+      rx="8"
+      fill="currentColor"
+      className="animate-hover:rotate-45 animate-hover:scale-110 animate-spring"
+      style={{ transformOrigin: "center" }}
+    />
+  </svg>
+</Demo>
+
+You can combine multiple gestures on SVG elements as well:
+
+```tsx
+<circle
+  cx="60" cy="60" r="30"
+  fill="currentColor"
+  className="animate-hover:scale-120 animate-tap:scale-90 animate-spring"
+/>
+```
+
+<Demo title="SVG Circle Hover + Tap">
+  <svg width="120" height="120" viewBox="0 0 120 120" style={{ overflow: "visible" }} className="text-[#c8ff2e] cursor-pointer">
+    <circle
+      cx="60" cy="60" r="30"
+      fill="currentColor"
+      className="animate-hover:scale-120 animate-tap:scale-90 animate-spring"
+    />
+  </svg>
+</Demo>
+
+---
+
+## SVG Gradient Animation
+
+Animating SVG gradient stops (e.g. morphing colors within a `<linearGradient>`) requires manipulating child `<stop>` elements' `stopColor` attribute over time. This is beyond what motionwind classes can express because it involves coordinating multiple child elements and color interpolation.
+
+Use the Motion API directly for gradient animations:
+
+```tsx
+import { motion } from "motion/react";
+
+function AnimatedGradient() {
+  return (
+    <svg width="200" height="200" viewBox="0 0 200 200">
+      <defs>
+        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <motion.stop
+            offset="0%"
+            animate={{ stopColor: ["#c8ff2e", "#00d4ff", "#c8ff2e"] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          />
+          <motion.stop
+            offset="100%"
+            animate={{ stopColor: ["#00d4ff", "#c8ff2e", "#00d4ff"] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          />
+        </linearGradient>
+      </defs>
+      <rect width="200" height="200" rx="16" fill="url(#grad)" />
+    </svg>
+  );
+}
+```
+
+Each `<motion.stop>` receives its own keyframe array for `stopColor`, cycling through colors infinitely.
+
+---
+
+## SVG Morphing
+
+Shape morphing -- smoothly transitioning one SVG path shape into another -- requires animating the `d` attribute. Motion supports this natively, but it needs matching path structures (same number of commands and control points) and must be expressed as Motion props:
+
+```tsx
+import { motion } from "motion/react";
+
+const square = "M 20 20 L 80 20 L 80 80 L 20 80 Z";
+const circle = "M 50 20 C 66 20, 80 34, 80 50 C 80 66, 66 80, 50 80 C 34 80, 20 66, 20 50 C 20 34, 34 20, 50 20 Z";
+
+function MorphShape() {
+  return (
+    <svg width="100" height="100" viewBox="0 0 100 100">
+      <motion.path
+        fill="currentColor"
+        initial={{ d: square }}
+        animate={{ d: circle }}
+        transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+      />
+    </svg>
+  );
+}
+```
+
+The `d` attribute is a string, and Motion interpolates between matching path commands. Since motionwind bracket syntax passes values through to Motion, you can technically write `animate-initial:[d=M 20 20...]` but the spaces in path data conflict with class tokenization. Use the Motion API directly for morphing.
+
+---
+
+## Summary
+
+| Technique | motionwind support | Approach |
+|---|---|---|
+| Path drawing (`pathLength`) | Bracket syntax | `animate-initial:[pathLength=0] animate-enter:[pathLength=1]` |
+| Stroke dash animation | Bracket syntax | `animate-initial:[strokeDashoffset=200] animate-enter:[strokeDashoffset=0]` |
+| SVG transforms | Built-in classes | `animate-hover:rotate-45 animate-hover:scale-110` |
+| Gradient color animation | Motion API only | Use `motion.stop` with `animate` prop arrays |
+| Path morphing (`d` attribute) | Motion API only | Use `motion.path` with `d` in `animate` prop |
