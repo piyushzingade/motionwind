@@ -1,0 +1,456 @@
+---
+title: "Gesture Animations"
+description: "Trigger animations with hover, tap, focus, drag, and in-view gestures using simple class prefixes."
+---
+
+Motionwind supports six gesture prefixes that map directly to Motion's interaction props. Each gesture defines **when** an animation plays, while the property-value pairs define **what** gets animated.
+
+| Prefix | Motion Prop | Triggers When |
+|---|---|---|
+| `hover` | `whileHover` | Pointer enters the element |
+| `tap` | `whileTap` | Element is pressed/clicked |
+| `focus` | `whileFocus` | Element receives keyboard focus |
+| `drag` | `whileDrag` | Element is being dragged |
+| `inview` | `whileInView` | Element enters the viewport |
+| `initial` | `initial` | Component mounts (starting state) |
+| `enter` | `animate` | Component mounts (target state) |
+| `exit` | `exit` | Component unmounts (with AnimatePresence) |
+
+---
+
+## Hover
+
+The `animate-hover:` prefix triggers an animation when the user's pointer enters the element. The animation automatically reverses when the pointer leaves.
+
+This maps to Motion's `whileHover` prop.
+
+<Demo title="Button Grow on Hover">
+  <button className="px-6 py-3 bg-[#c8ff2e] text-black rounded-xl font-medium cursor-pointer animate-hover:scale-110 animate-spring">
+    Hover me
+  </button>
+</Demo>
+
+```html
+<button className="animate-hover:scale-110 animate-spring">
+  Hover me
+</button>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.button
+  whileHover={{ scale: 1.1 }}
+  transition={{ type: "spring" }}
+>
+  Hover me
+</motion.button>
+```
+
+### Hover with Multiple Properties
+
+Stack multiple property classes under the `hover` gesture to animate several things at once:
+
+<Demo title="Card Lift on Hover">
+  <div className="w-56 px-6 py-5 bg-white/5 border border-white/10 rounded-2xl cursor-pointer animate-hover:scale-105 animate-hover:-y-4 animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-spring">
+    <p className="font-semibold text-sm">Pricing Card</p>
+    <p className="text-xs mt-1 opacity-70">Hover to preview</p>
+  </div>
+</Demo>
+
+```html
+<div className="animate-hover:scale-105 animate-hover:-y-4 animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-spring">
+  <p>Pricing Card</p>
+  <p>Hover to preview</p>
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{
+    scale: 1.05,
+    y: -4,
+    backgroundColor: "#c8ff2e",
+    color: "#000000",
+  }}
+  transition={{ type: "spring" }}
+>
+  ...
+</motion.div>
+```
+
+---
+
+## Tap
+
+The `animate-tap:` prefix triggers while the user is actively pressing/clicking the element. The animation holds for the duration of the press and reverses on release.
+
+This maps to Motion's `whileTap` prop.
+
+<Demo title="Button Press Effect">
+  <button className="px-8 py-3 bg-[#c8ff2e] text-black rounded-xl font-medium cursor-pointer animate-tap:scale-95 animate-spring">
+    Press me
+  </button>
+</Demo>
+
+```html
+<button className="animate-tap:scale-95 animate-spring">
+  Press me
+</button>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.button
+  whileTap={{ scale: 0.95 }}
+  transition={{ type: "spring" }}
+>
+  Press me
+</motion.button>
+```
+
+### Tap with Rotation
+
+Add a small rotation on tap for a playful interaction:
+
+<Demo title="Tap to Tilt">
+  <div className="w-16 h-16 bg-[#c8ff2e] rounded-2xl flex items-center justify-center text-2xl cursor-pointer animate-tap:scale-90 animate-tap:rotate-12 animate-spring animate-stiffness-400">
+    *
+  </div>
+</Demo>
+
+```html
+<div className="animate-tap:scale-90 animate-tap:rotate-12 animate-spring animate-stiffness-400">
+  *
+</div>
+```
+
+---
+
+## Focus
+
+The `animate-focus:` prefix triggers when the element receives keyboard focus (via Tab key or programmatic focus). It reverses when the element loses focus.
+
+This maps to Motion's `whileFocus` prop. It works best on focusable elements like `input`, `textarea`, `button`, and elements with `tabindex`.
+
+<Demo title="Input Focus Animation">
+  <input className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 outline-none w-64 animate-focus:scale-105 animate-focus:[borderColor=#c8ff2e] animate-spring" placeholder="Click or Tab to focus" />
+</Demo>
+
+```html
+<input
+  className="animate-focus:scale-105 animate-focus:[borderColor=#c8ff2e] animate-spring"
+  placeholder="Click or Tab to focus"
+/>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.input
+  whileFocus={{ scale: 1.05, borderColor: "#c8ff2e" }}
+  transition={{ type: "spring" }}
+  placeholder="Click or Tab to focus"
+/>
+```
+
+### Styled Focus State
+
+Combine focus animations with enter animations for a search bar that scales up and changes background on focus:
+
+<Demo title="Search Bar Focus">
+  <input className="px-5 py-3 bg-white/5 border border-white/10 rounded-full text-white placeholder-white/30 outline-none w-72 animate-focus:scale-105 animate-focus:[backgroundColor=#ffffff15] animate-spring" placeholder="Search..." />
+</Demo>
+
+```html
+<input
+  className="animate-focus:scale-105 animate-focus:[backgroundColor=#ffffff15] animate-spring"
+  placeholder="Search..."
+/>
+```
+
+---
+
+## Drag
+
+The `animate-drag:` prefix triggers while an element is being actively dragged. You must also enable drag on the element with `animate-drag-x`, `animate-drag-y`, or `animate-drag-both`.
+
+This maps to Motion's `whileDrag` prop, combined with the `drag` prop.
+
+<Demo title="Draggable Element">
+  <div className="w-20 h-20 bg-[#c8ff2e] rounded-2xl flex items-center justify-center text-black font-bold cursor-grab active:cursor-grabbing select-none animate-drag-both animate-drag:scale-110 animate-drag:rotate-12 animate-spring animate-drag-elastic-50">
+    Drag
+  </div>
+</Demo>
+
+```html
+<div className="animate-drag-both animate-drag:scale-110 animate-drag:rotate-12 animate-spring animate-drag-elastic-50">
+  Drag
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  drag
+  whileDrag={{ scale: 1.1, rotate: 12 }}
+  transition={{ type: "spring" }}
+  dragElastic={0.5}
+>
+  Drag
+</motion.div>
+```
+
+### Drag Configuration Classes
+
+| Class | Effect |
+|---|---|
+| `animate-drag-both` | Enable dragging in both axes (`drag={true}`) |
+| `animate-drag-x` | Constrain dragging to horizontal axis (`drag="x"`) |
+| `animate-drag-y` | Constrain dragging to vertical axis (`drag="y"`) |
+| `animate-drag-elastic-{n}` | Set drag elasticity (divided by 100, so `50` = `0.5`) |
+
+<Demo title="Horizontal Drag Only">
+  <div className="w-16 h-16 bg-[#c8ff2e]/70 rounded-xl flex items-center justify-center text-black font-bold cursor-grab active:cursor-grabbing select-none animate-drag-x animate-drag:scale-105 animate-spring animate-drag-elastic-20">
+    X
+  </div>
+</Demo>
+
+```html
+<div className="animate-drag-x animate-drag:scale-105 animate-spring animate-drag-elastic-20">
+  X only
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  drag="x"
+  whileDrag={{ scale: 1.05 }}
+  transition={{ type: "spring" }}
+  dragElastic={0.2}
+>
+  X only
+</motion.div>
+```
+
+---
+
+## InView (Scroll Reveal)
+
+The `animate-inview:` prefix triggers when an element scrolls into the viewport. Pair it with `animate-initial:` to define the starting state so the animation has somewhere to transition from.
+
+This maps to Motion's `whileInView` prop.
+
+<Demo title="Scroll Reveal (visible on load)">
+  <div className="px-8 py-6 bg-white/5 border border-white/10 rounded-2xl text-white font-medium animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-600 animate-ease-out">
+    I animate when scrolled into view
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-600 animate-ease-out">
+  I animate when scrolled into view
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: "easeOut" }}
+  viewport={{ once: true }}
+>
+  I animate when scrolled into view
+</motion.div>
+```
+
+### Viewport Configuration
+
+Control how the in-view detection behaves:
+
+| Class | Effect |
+|---|---|
+| `animate-once` | Only trigger the animation once (`viewport.once = true`) |
+| `animate-amount-all` | Element must be fully visible to trigger (`viewport.amount = "all"`) |
+| `animate-margin-{n}` | Offset the viewport detection by N pixels (`viewport.margin`) |
+
+### Scale Reveal
+
+<Demo title="Scale In on View">
+  <div className="w-32 h-20 bg-[#c8ff2e] rounded-2xl flex items-center justify-center text-black font-bold animate-initial:opacity-0 animate-initial:scale-50 animate-inview:opacity-100 animate-inview:scale-100 animate-once animate-spring">
+    Pop in
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:scale-50 animate-inview:opacity-100 animate-inview:scale-100 animate-once animate-spring">
+  Pop in
+</div>
+```
+
+---
+
+## Combining Gestures
+
+The real power of motionwind comes from layering multiple gestures on a single element. Each gesture prefix creates its own separate Motion prop, and they all work together seamlessly.
+
+### Hover + Tap (Interactive Button)
+
+The most common combination. Scale up on hover, scale down on tap for a natural button feel.
+
+<Demo title="Hover + Tap Button">
+  <button className="px-8 py-3 bg-[#c8ff2e] text-black rounded-xl font-semibold cursor-pointer animate-hover:scale-110 animate-tap:scale-95 animate-spring">
+    Interactive button
+  </button>
+</Demo>
+
+```html
+<button className="animate-hover:scale-110 animate-tap:scale-95 animate-spring">
+  Interactive button
+</button>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.button
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.95 }}
+  transition={{ type: "spring" }}
+>
+  Interactive button
+</motion.button>
+```
+
+### Initial + Enter + InView (Scroll-Triggered Entrance)
+
+Use `initial` to set the hidden state, then `inview` to define the visible state. Add `animate-once` so it only plays the first time.
+
+<Demo title="Slide Up + Fade In">
+  <div className="flex gap-4">
+    <div className="w-20 h-20 bg-[#c8ff2e]/20 border border-[#c8ff2e]/40 rounded-xl flex items-center justify-center text-white font-bold animate-initial:opacity-0 animate-initial:y-30 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-ease-out">
+      1
+    </div>
+    <div className="w-20 h-20 bg-[#c8ff2e]/20 border border-[#c8ff2e]/40 rounded-xl flex items-center justify-center text-white font-bold animate-initial:opacity-0 animate-initial:y-30 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-100 animate-ease-out">
+      2
+    </div>
+    <div className="w-20 h-20 bg-[#c8ff2e]/20 border border-[#c8ff2e]/40 rounded-xl flex items-center justify-center text-white font-bold animate-initial:opacity-0 animate-initial:y-30 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-200 animate-ease-out">
+      3
+    </div>
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:y-30 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-ease-out">
+  1
+</div>
+<div className="... animate-delay-100">2</div>
+<div className="... animate-delay-200">3</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5, ease: "easeOut" }}
+  viewport={{ once: true }}
+/>
+<!-- Second element adds delay: 0.1, third adds delay: 0.2 -->
+```
+
+Use staggered `animate-delay-{ms}` values across sibling elements to create a cascading entrance effect.
+
+### Hover + Tap + Focus (Fully Interactive Input)
+
+Cover all interaction states for form elements:
+
+<Demo title="All Gesture States">
+  <input className="px-5 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 outline-none w-72 animate-hover:scale-102 animate-focus:scale-105 animate-focus:[borderColor=#c8ff2e] animate-tap:scale-98 animate-spring" placeholder="Hover, focus, or tap me" />
+</Demo>
+
+```html
+<input
+  className="animate-hover:scale-102 animate-focus:scale-105 animate-focus:[borderColor=#c8ff2e] animate-tap:scale-98 animate-spring"
+  placeholder="Hover, focus, or tap me"
+/>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.input
+  whileHover={{ scale: 1.02 }}
+  whileFocus={{ scale: 1.05, borderColor: "#c8ff2e" }}
+  whileTap={{ scale: 0.98 }}
+  transition={{ type: "spring" }}
+  placeholder="Hover, focus, or tap me"
+/>
+```
+
+### Initial + Enter (Mount Animation)
+
+For elements that should animate when the component first mounts (not scroll-dependent), use `initial` and `enter`:
+
+<Demo title="Animate on Mount">
+  <div className="px-8 py-4 bg-[#c8ff2e] text-black rounded-xl font-semibold animate-initial:opacity-0 animate-initial:scale-80 animate-initial:-y-10 animate-enter:opacity-100 animate-enter:scale-100 animate-enter:y-0 animate-spring">
+    Animated on mount
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:scale-80 animate-initial:-y-10 animate-enter:opacity-100 animate-enter:scale-100 animate-enter:y-0 animate-spring">
+  Animated on mount
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, scale: 0.8, y: -10 }}
+  animate={{ opacity: 1, scale: 1, y: 0 }}
+  transition={{ type: "spring" }}
+>
+  Animated on mount
+</motion.div>
+```
+
+The `enter` prefix maps to Motion's `animate` prop, which defines the target state the element should transition to after mount.
+
+---
+
+## Gesture Priority
+
+When multiple gestures are active simultaneously, Motion applies them in priority order. The higher-priority gesture wins:
+
+1. **Tap** (highest -- overrides everything while pressed)
+2. **Focus**
+3. **Hover**
+4. **InView / Enter** (lowest)
+
+This means if you have both `animate-hover:scale-110` and `animate-tap:scale-95`, tapping the element will show `scale: 0.95` even though it is also being hovered.
+
+---
+
+## Summary
+
+| Gesture | Prefix | Use Case |
+|---|---|---|
+| Hover | `animate-hover:` | Buttons, cards, links, any pointer interaction |
+| Tap | `animate-tap:` | Button press feedback, click effects |
+| Focus | `animate-focus:` | Form inputs, accessibility focus indicators |
+| Drag | `animate-drag:` | Draggable elements, sliders, sortable items |
+| InView | `animate-inview:` | Scroll-triggered reveals, lazy animations |
+| Initial | `animate-initial:` | Starting state for enter/inview animations |
+| Enter | `animate-enter:` | Target state on mount |
+| Exit | `animate-exit:` | Target state on unmount (requires AnimatePresence) |
