@@ -1,5 +1,5 @@
 {
-  "name": "motionwind",
+  "name": "motionwind-react",
   "version": "0.1.0",
   "type": "module",
   "private": false,
@@ -59,8 +59,7 @@
   },
   "peerDependencies": {
     "react": ">=18",
-    "motion": ">=11",
-    "babel-loader": ">=9"
+    "motion": ">=11"
   },
   "peerDependenciesMeta": {
     "react": {
@@ -68,9 +67,6 @@
     },
     "motion": {
       "optional": false
-    },
-    "babel-loader": {
-      "optional": true
     }
   },
   "dependencies": {
@@ -78,7 +74,8 @@
     "@babel/generator": "^7.26.0",
     "@babel/parser": "^7.26.0",
     "@babel/plugin-syntax-jsx": "^7.28.6",
-    "@babel/types": "^7.26.0"
+    "@babel/types": "^7.26.0",
+    "babel-loader": "^9.2.1"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.28.5",

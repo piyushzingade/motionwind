@@ -21,14 +21,14 @@ Run the following command in your project root:
 npx create-motionwind
 ```
 
-The CLI auto-detects your package manager (npm, yarn, pnpm, or bun) and installs `motionwind` for you. Then follow the manual setup steps below to configure your build tool.
+The CLI auto-detects your package manager (npm, yarn, pnpm, or bun) and installs `motionwind-react` for you. Then follow the manual setup steps below to configure your build tool.
 
 ## Manual setup: Next.js
 
 ### 1. Install dependencies
 
 ```bash
-npm install motionwind motion
+npm install motionwind-react motion
 ```
 
 ### 2. Update next.config.js
@@ -36,7 +36,7 @@ npm install motionwind motion
 Wrap your Next.js config with the `withMotionwind` helper. This adds the motionwind Babel plugin as a webpack pre-processing step that runs before SWC:
 
 ```js
-import withMotionwind from "motionwind/next";
+import withMotionwind from "motionwind-react/next";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
@@ -47,7 +47,7 @@ export default withMotionwind(nextConfig);
 If you have an existing config with other plugins, wrap the outermost call:
 
 ```js
-import withMotionwind from "motionwind/next";
+import withMotionwind from "motionwind-react/next";
 import withMDX from "@next/mdx";
 
 /** @type {import('next').NextConfig} */
@@ -64,6 +64,12 @@ export default withMotionwind(withMDX(nextConfig));
 npm run dev
 ```
 
+**Next.js 15+:** If you use Turbopack (the default), add the `--webpack` flag for now. The motionwind Babel transform runs via webpack and is not yet supported under Turbopack:
+
+```bash
+npm run dev -- --webpack
+```
+
 That is all the setup required. The Babel plugin will process every `.tsx` and `.jsx` file automatically.
 
 ## Manual setup: Vite
@@ -71,7 +77,7 @@ That is all the setup required. The Babel plugin will process every `.tsx` and `
 ### 1. Install dependencies
 
 ```bash
-npm install motionwind motion
+npm install motionwind-react motion
 ```
 
 ### 2. Update vite.config.ts
@@ -81,7 +87,7 @@ Add the motionwind Vite plugin. It must be placed **before** the React plugin so
 ```ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { motionwind } from "motionwind/vite";
+import { motionwind } from "motionwind-react/vite";
 
 export default defineConfig({
   plugins: [motionwind(), react()],
@@ -101,7 +107,7 @@ For any bundler that supports Babel, add the motionwind plugin to your Babel con
 ### 1. Install dependencies
 
 ```bash
-npm install motionwind motion
+npm install motionwind-react motion
 ```
 
 ### 2. Add to Babel config
@@ -110,7 +116,7 @@ Create or update a `.babelrc` file in your project root:
 
 ```json
 {
-  "plugins": ["motionwind/babel"]
+  "plugins": ["motionwind-react/babel"]
 }
 ```
 
@@ -118,7 +124,7 @@ Or if you use `babel.config.js`:
 
 ```js
 module.exports = {
-  plugins: ["motionwind/babel"],
+  plugins: ["motionwind-react/babel"],
 };
 ```
 

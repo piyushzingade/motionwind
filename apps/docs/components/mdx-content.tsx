@@ -5,7 +5,7 @@
  * These override plain HTML elements in MDX so that animate-* classes
  * get parsed into Motion props at runtime.
  */
-import { mw } from "motionwind";
+import { mw } from "motionwind-react";
 
 export const MWDiv = mw.div;
 export const MWButton = mw.button;

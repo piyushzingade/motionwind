@@ -12,7 +12,7 @@ export default defineConfig({
   dts: true,
   splitting: true,
   clean: true,
-  external: ["react", "react-dom", "motion", "next", "vite", "webpack"],
+  external: ["react", "react-dom", "motion", "next", "vite", "webpack", "babel-loader"],
   treeshake: true,
   // Ensure CJS default exports work: require("motionwind/next") returns the function directly
   cjsInterop: true,

@@ -38,20 +38,20 @@ npx create-motionwind init
 Or install manually:
 
 ```bash
-npm install motionwind motion
+npm install motionwind-react motion
 # or
-yarn add motionwind motion
+yarn add motionwind-react motion
 # or
-pnpm add motionwind motion
+pnpm add motionwind-react motion
 # or
-bun add motionwind motion
+bun add motionwind-react motion
 ```
 
 ### Next.js
 
 ```js
 // next.config.js
-import withMotionwind from "motionwind/next";
+import withMotionwind from "motionwind-react/next";
 export default withMotionwind({});
 ```
 
@@ -59,7 +59,7 @@ export default withMotionwind({});
 
 ```ts
 // vite.config.ts
-import { motionwind } from "motionwind/vite";
+import { motionwind } from "motionwind-react/vite";
 import react from "@vitejs/plugin-react";
 export default defineConfig({ plugins: [motionwind(), react()] });
 ```
@@ -67,7 +67,7 @@ export default defineConfig({ plugins: [motionwind(), react()] });
 ### Babel
 
 ```json
-{ "plugins": ["motionwind/babel"] }
+{ "plugins": ["motionwind-react/babel"] }
 ```
 
 ## Syntax
@@ -131,7 +131,7 @@ Arbitrary values: `animate-hover:[backgroundColor=#4f46e5]`
 For dynamic classNames that Babel can't statically analyze, use the runtime fallback:
 
 ```tsx
-import { mw } from "motionwind";
+import { mw } from "motionwind-react";
 
 <mw.button className={`${isActive ? "bg-blue-500" : "bg-gray-500"} animate-hover:scale-110`}>
   Dynamic
@@ -142,7 +142,7 @@ import { mw } from "motionwind";
 
 | Package | Description |
 |---|---|
-| `motionwind` | Core library — parser, Babel plugin, runtime component, framework integrations |
+| `motionwind-react` | Core library — parser, Babel plugin, runtime component, framework integrations |
 | `create-motionwind` | CLI to scaffold motionwind in your project |
 
 ## Development

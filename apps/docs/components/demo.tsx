@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, type ReactNode } from "react";
-import { mw } from "motionwind";
+import { mw } from "motionwind-react";
 
 /**
  * Recursively walks React children and replaces any plain HTML element

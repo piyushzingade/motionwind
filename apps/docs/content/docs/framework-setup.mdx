@@ -19,7 +19,7 @@ Motionwind ships a Next.js config wrapper that plugs a Babel transform into webp
 
 ```tsx
 // next.config.mjs
-import { withMotionwind } from "motionwind/next";
+import { withMotionwind } from "motionwind-react/next";
 
 const nextConfig = {
   // your existing config
@@ -31,7 +31,7 @@ export default withMotionwind(nextConfig);
 If you are using CommonJS (`next.config.js`):
 
 ```tsx
-const { withMotionwind } = require("motionwind/next");
+const { withMotionwind } = require("motionwind-react/next");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
@@ -51,7 +51,7 @@ The injected webpack rule looks like this internally:
     {
       loader: "babel-loader",
       options: {
-        plugins: [require.resolve("motionwind/babel")],
+        plugins: [require.resolve("motionwind-react/babel")],
         parserOpts: {
           plugins: ["typescript", "jsx"],
         },
@@ -127,7 +127,7 @@ In development, open your browser's DevTools and look at the rendered DOM. Eleme
 You can test what the parser produces for any className string:
 
 ```tsx
-import { parseMotionClasses } from "motionwind";
+import { parseMotionClasses } from "motionwind-react";
 
 const result = parseMotionClasses(
   "bg-white p-4 animate-hover:scale-110 animate-duration-300"
@@ -162,7 +162,7 @@ The Vite plugin runs the same Babel transform as the Next.js integration, but ho
 // vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { motionwind } from "motionwind/vite";
+import { motionwind } from "motionwind-react/vite";
 
 export default defineConfig({
   plugins: [
@@ -238,7 +238,7 @@ The Babel plugin can only transform **static string literals** in `className`. I
 For dynamic classNames, use the `mw.*` runtime components instead:
 
 ```tsx
-import { mw } from "motionwind";
+import { mw } from "motionwind-react";
 
 // WORKS -- mw.* parses at runtime
 <mw.div className={`bg-blue-500 animate-hover:scale-110`}>
@@ -280,7 +280,7 @@ function Card({ children }) {
 }
 
 // Option 2: use mw.* with the HTML element
-import { mw } from "motionwind";
+import { mw } from "motionwind-react";
 
 function Card({ children }) {
   return (
@@ -308,7 +308,7 @@ All motionwind classes must start with `animate-`. If you forget the prefix, the
 If you are building classNames dynamically (with template literals, `clsx`, `cn`, or conditional expressions), the build-time Babel transform cannot process them. You must use `mw.*` components:
 
 ```tsx
-import { mw } from "motionwind";
+import { mw } from "motionwind-react";
 import { cn } from "@/lib/utils";
 
 function Button({ variant }: { variant: "primary" | "secondary" }) {

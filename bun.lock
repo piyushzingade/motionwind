@@ -24,7 +24,7 @@
         "fumadocs-mdx": "^14.2.10",
         "fumadocs-ui": "^16.6.17",
         "motion": "^12.12.1",
-        "motionwind": "*",
+        "motionwind-react": "*",
         "next": "^16.1.6",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
@@ -36,7 +36,6 @@
         "@types/node": "^22.15.3",
         "@types/react": "19.2.2",
         "@types/react-dom": "19.2.2",
-        "babel-loader": "^9.2.1",
         "eslint": "^9.39.1",
         "postcss": "^8.5.0",
         "tailwindcss": "^4.1.0",
@@ -50,7 +49,7 @@
         "@repo/ui": "*",
         "@vercel/analytics": "^2.0.1",
         "motion": "^12.12.1",
-        "motionwind": "*",
+        "motionwind-react": "*",
         "next": "^16.1.6",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
@@ -62,7 +61,6 @@
         "@types/node": "^22.15.3",
         "@types/react": "19.2.2",
         "@types/react-dom": "19.2.2",
-        "babel-loader": "^9.2.1",
         "eslint": "^9.39.1",
         "postcss": "^8.5.0",
         "tailwindcss": "^4.1.0",
@@ -109,6 +107,7 @@
         "@babel/parser": "^7.26.0",
         "@babel/plugin-syntax-jsx": "^7.28.6",
         "@babel/types": "^7.26.0",
+        "babel-loader": "^9.2.1",
       },
       "devDependencies": {
         "@babel/preset-react": "^7.28.5",
@@ -128,13 +127,9 @@
         "vitest": "^3.2.1",
       },
       "peerDependencies": {
-        "babel-loader": ">=9",
         "motion": ">=11",
         "react": ">=18",
       },
-      "optionalPeers": [
-        "babel-loader",
-      ],
     },
     "packages/typescript-config": {
       "name": "@repo/typescript-config",
@@ -914,7 +909,7 @@
 
     "es-iterator-helpers": ["es-iterator-helpers@1.2.1", "", { "dependencies": { "call-bind": "^1.0.8", "call-bound": "^1.0.3", "define-properties": "^1.2.1", "es-abstract": "^1.23.6", "es-errors": "^1.3.0", "es-set-tostringtag": "^2.0.3", "function-bind": "^1.1.2", "get-intrinsic": "^1.2.6", "globalthis": "^1.0.4", "gopd": "^1.2.0", "has-property-descriptors": "^1.0.2", "has-proto": "^1.2.0", "has-symbols": "^1.1.0", "internal-slot": "^1.1.0", "iterator.prototype": "^1.1.4", "safe-array-concat": "^1.1.3" } }, "sha512-uDn+FE1yrDzyC0pCo961B2IHbdM8y/ACZsKD4dG6WqrjV53BADjwa7D+1aom2rsNVfLyDgU/eigvlJGJ08OQ4w=="],
 
-    "es-module-lexer": ["es-module-lexer@2.0.0", "", {}, "sha512-5POEcUuZybH7IdmGsD8wlf0AI55wMecM9rVBTI/qEAy2c1kTOm3DjFYjrBdI2K3BaJjJYfYFeRtM0t9ssnRuxw=="],
+    "es-module-lexer": ["es-module-lexer@1.7.0", "", {}, "sha512-jEQoCwk8hyb2AZziIOLhDqpm5+2ww5uIE6lkO/6jcOCusfk6LhMHpXXfBLXTZ7Ydyt0j4VoUQv6uGNYbdW+kBA=="],
 
     "es-object-atoms": ["es-object-atoms@1.1.1", "", { "dependencies": { "es-errors": "^1.3.0" } }, "sha512-FGgH2h8zKNim9ljj7dankFPcICIK9Cp5bm+c2gQSYePhpaG5+esrLODihIorn+Pe6FGJzWhXQotPv73jTaldXA=="],
 
@@ -1389,8 +1384,6 @@
     "motion-utils": ["motion-utils@12.36.0", "", {}, "sha512-eHWisygbiwVvf6PZ1vhaHCLamvkSbPIeAYxWUuL3a2PD/TROgE7FvfHWTIH4vMl798QLfMw15nRqIaRDXTlYRg=="],
 
     "motion-wind": ["motion-wind@workspace:packages/vscode-extension"],
-
-    "motionwind": ["motionwind@0.0.0", "", {}, "sha512-ar9VPk7P0oI9NtF/MKfrw6XsRBg06V9cKiXcyOS79zKVK8Rf13JgZYJ8B06qNUTbEEDHphL8gP2v4P/k4hPQwg=="],
 
     "motionwind-react": ["motionwind-react@workspace:packages/motionwind"],
 
@@ -1906,13 +1899,13 @@
 
     "terser/commander": ["commander@2.20.3", "", {}, "sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ=="],
 
-    "vite-node/es-module-lexer": ["es-module-lexer@1.7.0", "", {}, "sha512-jEQoCwk8hyb2AZziIOLhDqpm5+2ww5uIE6lkO/6jcOCusfk6LhMHpXXfBLXTZ7Ydyt0j4VoUQv6uGNYbdW+kBA=="],
-
     "vscode-languageclient/minimatch": ["minimatch@5.1.9", "", { "dependencies": { "brace-expansion": "^2.0.1" } }, "sha512-7o1wEA2RyMP7Iu7GNba9vc0RWWGACJOCZBJX2GJWip0ikV+wcOsgVuY9uE8CPiyQhkGFSlhuSkZPavN7u1c2Fw=="],
 
     "vscode-languageclient/semver": ["semver@7.7.3", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q=="],
 
     "webpack/acorn": ["acorn@8.16.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw=="],
+
+    "webpack/es-module-lexer": ["es-module-lexer@2.0.0", "", {}, "sha512-5POEcUuZybH7IdmGsD8wlf0AI55wMecM9rVBTI/qEAy2c1kTOm3DjFYjrBdI2K3BaJjJYfYFeRtM0t9ssnRuxw=="],
 
     "webpack/eslint-scope": ["eslint-scope@5.1.1", "", { "dependencies": { "esrecurse": "^4.3.0", "estraverse": "^4.1.1" } }, "sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw=="],
 

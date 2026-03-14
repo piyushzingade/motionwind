@@ -14,7 +14,7 @@
     "@repo/ui": "*",
     "@vercel/analytics": "^2.0.1",
     "motion": "^12.12.1",
-    "motionwind": "*",
+    "motionwind-react": "*",
     "next": "^16.1.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
@@ -26,7 +26,6 @@
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
-    "babel-loader": "^9.2.1",
     "eslint": "^9.39.1",
     "postcss": "^8.5.0",
     "tailwindcss": "^4.1.0",

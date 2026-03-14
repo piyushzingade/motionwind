@@ -129,7 +129,7 @@ This works well for small, static lists where you know the item count at author 
 motionwind's Babel plugin only transforms static className strings. For dynamic or conditional animations, use the `mw.*` runtime component, which parses motionwind classes at runtime.
 
 ```tsx
-import { mw } from "motionwind";
+import { mw } from "motionwind-react";
 
 function ToggleCard({ isActive }: { isActive: boolean }) {
   return (
@@ -164,7 +164,7 @@ Use the Babel transform for static classes (the common case). Reach for `mw.*` w
 ### Conditional hover effects
 
 ```tsx
-import { mw } from "motionwind";
+import { mw } from "motionwind-react";
 
 function Button({ variant }: { variant: "primary" | "ghost" }) {
   return (

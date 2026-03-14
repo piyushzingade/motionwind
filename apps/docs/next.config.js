@@ -1,4 +1,4 @@
-import withMotionwind from "motionwind/next";
+import withMotionwind from "motionwind-react/next";
 import { createMDX } from "fumadocs-mdx/next";
 
 /** @type {import('next').NextConfig} */

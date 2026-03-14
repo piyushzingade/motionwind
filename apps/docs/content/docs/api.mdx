@@ -8,7 +8,7 @@ description: "Complete API reference for motionwind -- the parser, runtime compo
 The framework-agnostic core parser. It takes a className string, extracts all `animate-*` tokens, and returns a structured `ParsedResult` that maps directly to Motion props. Regular Tailwind/CSS classes pass through untouched.
 
 ```tsx
-import { parseMotionClasses } from "motionwind";
+import { parseMotionClasses } from "motionwind-react";
 
 const result = parseMotionClasses(
   "bg-blue-500 p-4 animate-hover:scale-110 animate-hover:opacity-100 animate-duration-300"
@@ -148,7 +148,7 @@ interface LayoutConfig {
 Clears the internal memoization cache. Useful in testing or hot-reload scenarios.
 
 ```tsx
-import { clearParserCache } from "motionwind";
+import { clearParserCache } from "motionwind-react";
 
 clearParserCache();
 ```
@@ -160,7 +160,7 @@ clearParserCache();
 Runtime components for **dynamic classNames**. Use `mw.div`, `mw.button`, `mw.span`, etc. when you need to compute motionwind classes at runtime -- for example, when classNames come from props, state, or conditional logic.
 
 ```tsx
-import { mw } from "motionwind";
+import { mw } from "motionwind-react";
 ```
 
 The `mw` object works like `motion.*` from Motion, but instead of passing Motion props directly, you write motionwind classes in `className` and they are parsed at runtime.
@@ -172,7 +172,7 @@ The build-time Babel transform only handles **static string literals** in `class
 ### Usage
 
 ```tsx
-import { mw } from "motionwind";
+import { mw } from "motionwind-react";
 
 function AnimatedCard({ isActive }: { isActive: boolean }) {
   return (
@@ -226,7 +226,7 @@ A Next.js configuration wrapper that adds the motionwind Babel transform to your
 
 ```tsx
 // next.config.mjs
-import { withMotionwind } from "motionwind/next";
+import { withMotionwind } from "motionwind-react/next";
 
 const nextConfig = {
   // your existing Next.js config
@@ -264,7 +264,7 @@ function withMotionwind(nextConfig?: NextConfig): NextConfig;
 If you already have a custom `webpack` function in your Next.js config, `withMotionwind` will call it after adding its own rules. Your custom configuration is preserved:
 
 ```tsx
-import { withMotionwind } from "motionwind/next";
+import { withMotionwind } from "motionwind-react/next";
 
 export default withMotionwind({
   webpack(config, context) {
@@ -285,7 +285,7 @@ A Vite plugin that runs the motionwind Babel transform during the build.
 // vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { motionwind } from "motionwind/vite";
+import { motionwind } from "motionwind-react/vite";
 
 export default defineConfig({
   plugins: [
@@ -333,7 +333,7 @@ The underlying Babel plugin is also available for direct use if you need custom 
 ```tsx
 // babel.config.js
 module.exports = {
-  plugins: ["motionwind/babel"],
+  plugins: ["motionwind-react/babel"],
 };
 ```
 

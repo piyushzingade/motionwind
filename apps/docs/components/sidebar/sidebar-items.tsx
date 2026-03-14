@@ -54,6 +54,7 @@ export const SIDEBAR_ITEMS: SidebarConfig = {
       items: [
         { title: "API", url: "/docs/api" },
         { title: "Framework Setup", url: "/docs/framework-setup" },
+        { title: "LLM Documentation", url: "/docs/llms" },
       ],
     },
   ],

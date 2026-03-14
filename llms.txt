@@ -1,0 +1,415 @@
+# motionwind — Complete Documentation for LLMs
+
+## What is motionwind?
+
+motionwind is a Babel plugin that transforms Tailwind-like animation classes into Motion (formerly Framer Motion) component props at build time. Write `animate-hover:scale-110` and it becomes `whileHover={{ scale: 1.1 }}`. Zero imports, zero boilerplate, zero runtime overhead.
+
+## Installation
+
+### Prerequisites
+
+- React 18+
+- Motion 11+ (the `motion` package)
+- Node.js 18+
+
+### Quick Start
+
+```bash
+npx create-motionwind
+```
+
+Or manually:
+
+```bash
+npm install motionwind-react motion
+```
+
+### Next.js Setup
+
+```js
+// next.config.js
+import withMotionwind from "motionwind-react/next";
+export default withMotionwind({});
+```
+
+### Vite Setup (plugin must come BEFORE react)
+
+```ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { motionwind } from "motionwind-react/vite";
+export default defineConfig({ plugins: [motionwind(), react()] });
+```
+
+### Babel Setup
+
+```json
+{ "plugins": ["motionwind-react/babel"] }
+```
+
+## How It Works
+
+The Babel plugin:
+
+1. Scans JSX for static `className` strings with `animate-*` tokens
+2. Parses them into Motion props
+3. Rewrites `<div>` to `<motion.div>` with parsed props
+4. Auto-injects `"use client"` and `import { motion } from "motion/react"`
+5. Tailwind classes pass through unchanged
+
+### Key Constraints
+
+- **Static classNames only** — template literals/variables are NOT transformed. Use `mw.*` for dynamic.
+- **Lowercase HTML elements only** — `<div>`, `<button>` etc. Custom components like `<Card>` are skipped.
+- **No duplicate gesture props** — don't mix manual Motion props with `animate-*` classes.
+
+## Syntax Reference
+
+### Format
+
+```
+animate-{gesture}:{property}-{value}     (for animations)
+animate-{config}-{value}                 (for transition/viewport/drag/layout config)
+```
+
+### Gesture Prefixes
+
+| Prefix | Motion prop | Triggers when |
+|---|---|---|
+| `hover` | `whileHover` | Pointer enters element |
+| `tap` | `whileTap` | Element is pressed |
+| `focus` | `whileFocus` | Element has keyboard focus |
+| `inview` | `whileInView` | Element enters viewport |
+| `drag` | `whileDrag` | Element is being dragged |
+| `initial` | `initial` | Starting state (before enter) |
+| `enter` | `animate` | Target state on mount |
+| `exit` | `exit` | Target state on unmount |
+
+### All Animatable Properties
+
+| Class pattern | Motion output | Value type |
+|---|---|---|
+| `scale-{n}` | `scale: n/100` | Percentage (110 = 1.1) |
+| `scale-x-{n}` | `scaleX: n/100` | Percentage |
+| `scale-y-{n}` | `scaleY: n/100` | Percentage |
+| `scale-z-{n}` | `scaleZ: n/100` | Percentage |
+| `rotate-{n}` | `rotate: n` | Degrees |
+| `rotate-x-{n}` | `rotateX: n` | Degrees |
+| `rotate-y-{n}` | `rotateY: n` | Degrees |
+| `skew-{n}` | `skew: n` | Degrees (uniform) |
+| `skew-x-{n}` | `skewX: n` | Degrees |
+| `skew-y-{n}` | `skewY: n` | Degrees |
+| `origin-x-{n}` | `originX: n/100` | Percentage (0-100 -> 0-1) |
+| `origin-y-{n}` | `originY: n/100` | Percentage |
+| `origin-z-{n}` | `originZ: n` | Pixels |
+| `perspective-{n}` | `perspective: n` | Pixels |
+| `x-{n}` | `x: n` | Pixels |
+| `y-{n}` | `y: n` | Pixels |
+| `z-{n}` | `z: n` | Pixels |
+| `opacity-{n}` | `opacity: n/100` | Percentage (0-100) |
+| `blur-{n}` | `filter: "blur(Npx)"` | Pixels |
+| `backdrop-blur-{n}` | `backdropFilter: "blur(Npx)"` | Pixels |
+| `brightness-{n}` | `filter: "brightness(n/100)"` | Percentage |
+| `contrast-{n}` | `filter: "contrast(n/100)"` | Percentage |
+| `saturate-{n}` | `filter: "saturate(n/100)"` | Percentage |
+| `clip-[value]` | `clipPath: "value"` | String |
+| `bg-{color}` | `backgroundColor: color` | Color (#hex/rgb/hsl) |
+| `text-{color}` | `color: color` | Color |
+| `border-{color}` | `borderColor: color` | Color |
+| `shadow-[value]` | `boxShadow: "value"` | String (use _ for spaces) |
+| `w-{n}` | `width: n` | Pixels |
+| `h-{n}` | `height: n` | Pixels |
+| `rounded-{n}` | `borderRadius: n` | Pixels |
+| `top-{n}` | `top: n` | Pixels (+ units) |
+| `left-{n}` | `left: n` | Pixels (+ units) |
+| `right-{n}` | `right: n` | Pixels (+ units) |
+| `bottom-{n}` | `bottom: n` | Pixels (+ units) |
+| `p-{n}` | `padding: n` | Pixels (+ units) |
+| `m-{n}` | `margin: n` | Pixels (+ units) |
+| `gap-{n}` | `gap: n` | Pixels (+ units) |
+| `text-size-{n}` | `fontSize: n` | Pixels (+ units) |
+| `tracking-{n}` | `letterSpacing: n` | Pixels (+ units) |
+| `leading-{n}` | `lineHeight: n` | Pixels (+ units) |
+| `border-w-{n}` | `borderWidth: n` | Pixels |
+| `path-length-{n}` | `pathLength: n` | Number |
+| `path-offset-{n}` | `pathOffset: n` | Number |
+| `path-spacing-{n}` | `pathSpacing: n` | Number |
+| `{prop}-[v1,v2,v3]` | `prop: [v1, v2, v3]` | Keyframe array |
+| `[key=value]` | `key: value` | Arbitrary value |
+
+### Negative Values
+
+Prefix with `-` after the colon: `animate-hover:-rotate-45` produces `rotate: -45`
+
+### Arbitrary Values (Escape Hatch)
+
+`animate-hover:[backgroundColor=#ff0000]` produces `whileHover: { backgroundColor: "#ff0000" }`
+
+### Unit Suffixes
+
+Supported on x, y, z, w, h, top, left, right, bottom, p, m, gap, text-size, tracking, leading:
+
+| Suffix | CSS unit | Example | Output |
+|---|---|---|---|
+| `pct` | `%` | `x-50pct` | `"50%"` |
+| `px` | `px` | `x-100px` | `"100px"` |
+| `vh` | `vh` | `y-50vh` | `"50vh"` |
+| `vw` | `vw` | `x-100vw` | `"100vw"` |
+| `rem` | `rem` | `gap-2rem` | `"2rem"` |
+| `em` | `em` | `p-1em` | `"1em"` |
+| `dvh` | `dvh` | `h-100dvh` | `"100dvh"` |
+| `svh` | `svh` | `h-100svh` | `"100svh"` |
+| `lvh` | `lvh` | `h-100lvh` | `"100lvh"` |
+| `auto` | auto | `w-auto` | `"auto"` |
+
+### Keyframe Arrays
+
+```html
+<div className="animate-enter:scale-[100,120,100] animate-repeat-infinite animate-duration-1000">
+```
+
+Compiles to: `animate={{ scale: [1, 1.2, 1] }}`
+
+## Transition Configuration
+
+All transition classes have NO gesture prefix:
+
+| Class | Compiled to | Notes |
+|---|---|---|
+| `animate-duration-{ms}` | `duration: ms/1000` | Duration in ms |
+| `animate-delay-{ms}` | `delay: ms/1000` | Start delay |
+| `animate-spring` | `type: "spring"` | Spring physics |
+| `animate-stiffness-{n}` | `stiffness: n` | Spring tension |
+| `animate-damping-{n}` | `damping: n` | Spring resistance |
+| `animate-mass-{n}` | `mass: n/10` | Object weight |
+| `animate-bounce-{n}` | `bounce: n/100` | Bounciness |
+| `animate-ease-in` | `ease: "easeIn"` | Slow start |
+| `animate-ease-out` | `ease: "easeOut"` | Slow end |
+| `animate-ease-in-out` | `ease: "easeInOut"` | Slow both |
+| `animate-ease-linear` | `ease: "linear"` | Constant speed |
+| `animate-ease-circ-in` | `ease: "circIn"` | Circular ease in |
+| `animate-ease-circ-out` | `ease: "circOut"` | Circular ease out |
+| `animate-ease-circ-in-out` | `ease: "circInOut"` | Circular ease in-out |
+| `animate-ease-back-in` | `ease: "backIn"` | Enters with overshoot |
+| `animate-ease-back-out` | `ease: "backOut"` | Exits with anticipation |
+| `animate-ease-back-in-out` | `ease: "backInOut"` | Both |
+| `animate-ease-anticipate` | `ease: "anticipate"` | Pull back then forward |
+| `animate-ease-[n,n,n,n]` | `ease: [n,n,n,n]` | Custom cubic-bezier |
+| `animate-ease-steps-{n}` | `ease: "steps(n)"` | Stepped animation |
+| `animate-repeat-{n}` | `repeat: n` | Fixed repeat count |
+| `animate-repeat-infinite` | `repeat: Infinity` | Loop forever |
+| `animate-repeat-reverse` | `repeatType: "reverse"` | Alternate direction |
+| `animate-repeat-mirror` | `repeatType: "mirror"` | Mirror direction |
+| `animate-repeat-delay-{ms}` | `repeatDelay: ms/1000` | Pause between cycles |
+| `animate-stagger-{ms}` | `staggerChildren: ms/1000` | Stagger children (on parent) |
+| `animate-stagger-reverse` | `staggerDirection: -1` | Reverse stagger |
+| `animate-delay-children-{ms}` | `delayChildren: ms/1000` | Delay all children |
+| `animate-when-before` | `when: "beforeChildren"` | Parent first |
+| `animate-when-after` | `when: "afterChildren"` | Children first |
+| `animate-rest-speed-{n}` | `restSpeed: n` | Spring rest velocity |
+| `animate-rest-delta-{n}` | `restDelta: n` | Spring rest distance |
+| `animate-times-[...]` | `times: [...]` | Keyframe timing |
+
+## Viewport Configuration (for inview gesture)
+
+| Class | Effect |
+|---|---|
+| `animate-once` | `viewport.once: true` -- only animate once |
+| `animate-amount-all` | `viewport.amount: "all"` -- fully visible |
+| `animate-amount-{n}` | `viewport.amount: n/100` -- percentage |
+| `animate-margin-{n}` | `viewport.margin: "{n}px"` -- early trigger |
+
+## Drag Configuration
+
+| Class | Effect |
+|---|---|
+| `animate-drag-x` | `drag="x"` |
+| `animate-drag-y` | `drag="y"` |
+| `animate-drag-both` | `drag` (both axes) |
+| `animate-drag-elastic-{n}` | `dragElastic={n/100}` |
+| `animate-drag-snap` | `dragSnapToOrigin` |
+| `animate-drag-no-momentum` | `dragMomentum={false}` |
+| `animate-drag-lock` | `dragDirectionLock` |
+| `animate-drag-constraint-t-{n}` | `dragConstraints.top: n` |
+| `animate-drag-constraint-b-{n}` | `dragConstraints.bottom: n` |
+| `animate-drag-constraint-l-{n}` | `dragConstraints.left: n` |
+| `animate-drag-constraint-r-{n}` | `dragConstraints.right: n` |
+
+## Layout Configuration
+
+| Class | Effect |
+|---|---|
+| `animate-layout` | `layout` |
+| `animate-layout-position` | `layout="position"` |
+| `animate-layout-size` | `layout="size"` |
+| `animate-layout-preserve` | `layout="preserve-aspect"` |
+| `animate-layout-id-{name}` | `layoutId="{name}"` |
+| `animate-layout-scroll` | `layoutScroll` |
+| `animate-layout-root` | `layoutRoot` |
+
+## Dynamic ClassNames (Runtime)
+
+For dynamic/conditional classNames, use `mw.*` components:
+
+```tsx
+import { mw } from "motionwind-react";
+
+<mw.button className={`${isActive ? "bg-blue-500" : "bg-gray-500"} animate-hover:scale-110`}>
+  Dynamic
+</mw.button>
+```
+
+`mw.*` supports all HTML tags via Proxy. When className has no `animate-*` classes, it renders a plain HTML element. Results are cached by className string.
+
+## API Reference
+
+### parseMotionClasses(className)
+
+```tsx
+import { parseMotionClasses } from "motionwind-react";
+const result = parseMotionClasses("bg-blue-500 p-4 animate-hover:scale-110 animate-duration-300");
+// Returns: { tailwindClasses, gestures, transition, viewport, dragConfig, layoutConfig, hasMotion }
+```
+
+### clearParserCache()
+
+```tsx
+import { clearParserCache } from "motionwind-react";
+clearParserCache();
+```
+
+## Common Patterns
+
+### Interactive Button (hover + tap)
+
+```html
+<button className="px-6 py-3 bg-indigo-600 text-white rounded-lg animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+  Click Me
+</button>
+```
+
+### Scroll Reveal (fade + slide up, once)
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:y-40 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once">
+  Scroll to reveal
+</div>
+```
+
+### Mount Animation (fade up on load)
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500">
+  Fades in on mount
+</div>
+```
+
+### Exit Animation (requires AnimatePresence wrapper)
+
+```tsx
+import { AnimatePresence } from "motion/react";
+<AnimatePresence>
+  {show && (
+    <div className="animate-initial:opacity-0 animate-enter:opacity-100 animate-exit:opacity-0 animate-exit:y-20 animate-duration-300">
+      Conditional content
+    </div>
+  )}
+</AnimatePresence>
+```
+
+### Infinite Spin
+
+```html
+<div className="animate-enter:rotate-360 animate-repeat-infinite animate-duration-2000 animate-ease-linear">
+  Spinning
+</div>
+```
+
+### Pulse/Breathing Effect
+
+```html
+<div className="animate-enter:scale-[100,110,100] animate-repeat-infinite animate-duration-2000">
+  Pulsing
+</div>
+```
+
+### Spring Button
+
+```html
+<button className="animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15">
+  Springy
+</button>
+```
+
+### Draggable Element
+
+```html
+<div className="animate-drag-both animate-drag:scale-110 animate-drag:rotate-5 animate-spring animate-drag-elastic-50">
+  Drag me
+</div>
+```
+
+### SVG Path Drawing
+
+```html
+<path className="animate-initial:path-length-0 animate-enter:path-length-1 animate-duration-2000 animate-ease-in-out" />
+```
+
+### Staggered Children
+
+```html
+<div className="animate-stagger-100">
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0">First</div>
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0">Second</div>
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0">Third</div>
+</div>
+```
+
+### Layout Animation
+
+```html
+<div className="animate-layout">
+  Automatically animates when layout changes
+</div>
+```
+
+### Shared Layout (layoutId)
+
+```html
+{activeTab === tab && (
+  <div className="animate-layout-id-active-tab absolute inset-0 bg-indigo-600 rounded-lg" />
+)}
+```
+
+### 3D Card Hover (needs parent with perspective)
+
+```html
+<div style={{ perspective: "800px" }}>
+  <div className="animate-hover:rotate-x-10 animate-hover:-rotate-y-10 animate-hover:scale-105 animate-spring">
+    3D hover card
+  </div>
+</div>
+```
+
+### Color Animation
+
+```html
+<button className="animate-hover:bg-#c8ff2e animate-hover:text-#000000 animate-duration-300">
+  Hover for color
+</button>
+```
+
+## Troubleshooting
+
+1. **Classes not transforming?** -- Must be static string literals on lowercase HTML elements. Use `mw.*` for dynamic.
+2. **Animations not working in production?** -- Check that `withMotionwind` (Next.js) or `motionwind()` (Vite) is in your config.
+3. **Exit animations not playing?** -- Wrap in `<AnimatePresence>` from `motion/react`.
+4. **Plugin order matters (Vite)** -- `motionwind()` MUST come before `react()` in plugins array.
+5. **Server Component errors?** -- Extract animated elements into separate component files. The plugin auto-adds `"use client"`.
+
+## Gesture Priority (highest to lowest)
+
+1. Tap (overrides all while pressed)
+2. Focus
+3. Hover
+4. InView / Enter (lowest)

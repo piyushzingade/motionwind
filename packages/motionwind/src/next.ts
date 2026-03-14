@@ -1,7 +1,4 @@
-import { createRequire } from "node:module";
-import path from "path";
-
-const _require = createRequire(import.meta.url);
+import { fileURLToPath } from "node:url";
 
 export interface WebpackRule {
   test?: RegExp;
@@ -23,6 +20,7 @@ export interface NextConfig {
     config: WebpackConfig,
     context: { isServer: boolean },
   ) => WebpackConfig;
+  turbopack?: Record<string, unknown>;
   [key: string]: unknown;
 }
 
@@ -33,8 +31,18 @@ export interface NextConfig {
 export function withMotionwind(nextConfig: NextConfig = {}): NextConfig {
   const originalWebpack = nextConfig.webpack;
 
+  // Resolve the babel plugin path relative to this file (both live in dist/)
+  // so it works regardless of the published package name.
+  const babelPluginPath = fileURLToPath(
+    new URL("./babel.cjs", import.meta.url),
+  );
+
   return {
     ...nextConfig,
+    // Provide a turbopack config to suppress the Next.js 15+ warning about
+    // having a webpack config without a turbopack config. The actual Babel
+    // transform only runs under webpack; use `next dev --webpack` for now.
+    turbopack: nextConfig.turbopack ?? {},
     webpack(config: WebpackConfig, context: { isServer: boolean }) {
       // Add babel-loader as a pre-processing rule for JSX/TSX files
       const rule: WebpackRule = {
@@ -44,12 +52,7 @@ export function withMotionwind(nextConfig: NextConfig = {}): NextConfig {
           {
             loader: "babel-loader",
             options: {
-              plugins: [
-                path.resolve(
-                  // Resolve to the built babel plugin
-                  _require.resolve("motionwind/babel"),
-                ),
-              ],
+              plugins: [babelPluginPath],
               // Enable TypeScript + JSX parsing without extra packages
               parserOpts: {
                 plugins: ["typescript", "jsx"],

@@ -85,7 +85,7 @@ Global transition settings are written without a gesture prefix:
 The Babel plugin only transforms static string literals. For dynamic or conditional classNames, motionwind provides a runtime component API:
 
 ```tsx
-import { mw } from "motionwind";
+import { mw } from "motionwind-react";
 
 <mw.button className={`animate-hover:scale-110 ${isActive ? "bg-blue-500" : "bg-gray-500"}`}>
   Click

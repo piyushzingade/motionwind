@@ -1,4 +1,4 @@
-import withMotionwind from "motionwind/next";
+import withMotionwind from "motionwind-react/next";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
