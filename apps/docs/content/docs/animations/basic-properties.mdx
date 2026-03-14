@@ -1,0 +1,359 @@
+---
+title: "Basic Property Animations"
+description: "Animate opacity, scale, rotation, translation, dimensions, border radius, and colors with simple Tailwind-like classes."
+---
+
+Motionwind lets you animate any CSS-compatible property using the familiar `animate-{gesture}:{property}-{value}` syntax. Each class is transformed at build time into the corresponding Motion prop -- zero runtime parsing, full type safety.
+
+This page covers the foundational animatable properties you will use most often.
+
+---
+
+## Opacity
+
+Fade elements in and out by animating their opacity. Values are specified on a 0-100 scale where `0` is fully transparent and `100` is fully opaque.
+
+The parser divides the number by 100, so `opacity-0` becomes `0` and `opacity-100` becomes `1`.
+
+<Demo title="Fade In on Enter">
+  <div className="px-8 py-6 bg-[#c8ff2e]/20 border border-[#c8ff2e]/40 rounded-xl text-center font-medium text-white animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-1000">
+    I faded in
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-1000">
+  I faded in
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}
+>
+  I faded in
+</motion.div>
+```
+
+---
+
+## Scale
+
+Scale elements up or down. Values are specified as percentages where `100` equals the original size, `110` is 10% larger, and `50` is half the size.
+
+The parser divides by 100, so `scale-110` becomes `1.1`.
+
+<Demo title="Hover to Scale Up">
+  <button className="px-6 py-3 bg-[#c8ff2e] text-black rounded-xl font-medium cursor-pointer animate-hover:scale-110 animate-spring">
+    Hover me
+  </button>
+</Demo>
+
+```html
+<button className="animate-hover:scale-110 animate-spring">
+  Hover me
+</button>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.button
+  whileHover={{ scale: 1.1 }}
+  transition={{ type: "spring" }}
+>
+  Hover me
+</motion.button>
+```
+
+---
+
+## Rotate
+
+Rotate elements by a given number of degrees. Positive values rotate clockwise, negative values rotate counter-clockwise.
+
+<Demo title="Hover to Rotate">
+  <div className="w-16 h-16 bg-[#c8ff2e] rounded-lg flex items-center justify-center text-black font-bold text-xl cursor-pointer animate-hover:rotate-45 animate-spring">
+    R
+  </div>
+</Demo>
+
+```html
+<div className="animate-hover:rotate-45 animate-spring">R</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ rotate: 45 }}
+  transition={{ type: "spring" }}
+>
+  R
+</motion.div>
+```
+
+You can also use negative rotation with a `-` prefix:
+
+```html
+<div className="animate-hover:-rotate-90">Spin back</div>
+```
+
+This compiles to `whileHover={{ rotate: -90 }}`.
+
+---
+
+## Translate X
+
+Slide elements horizontally. The value is in pixels. Positive moves right, negative moves left.
+
+<Demo title="Hover to Slide Right">
+  <div className="px-6 py-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer animate-hover:x-20 animate-spring">
+    Slide right
+  </div>
+</Demo>
+
+```html
+<div className="animate-hover:x-20 animate-spring">Slide right</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ x: 20 }}
+  transition={{ type: "spring" }}
+>
+  Slide right
+</motion.div>
+```
+
+For sliding left, use a negative value:
+
+```html
+<div className="animate-hover:-x-40">Slide left</div>
+```
+
+---
+
+## Translate Y
+
+Slide elements vertically. Positive values move down, negative values move up.
+
+<Demo title="Hover to Float Up">
+  <div className="w-20 h-20 bg-[#c8ff2e] rounded-2xl flex items-center justify-center text-black font-bold cursor-pointer animate-hover:-y-20 animate-spring">
+    UP
+  </div>
+</Demo>
+
+```html
+<div className="animate-hover:-y-20 animate-spring">UP</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ y: -20 }}
+  transition={{ type: "spring" }}
+>
+  UP
+</motion.div>
+```
+
+A common pattern is using `y` with `initial` and `inview` for scroll-reveal effects:
+
+```html
+<div className="animate-initial:y-40 animate-inview:y-0 animate-once">
+  Slides up into view
+</div>
+```
+
+---
+
+## Width
+
+Animate the width of an element. The value is in pixels.
+
+<Demo title="Hover to Expand Width">
+  <div className="h-12 w-[100px] bg-[#c8ff2e] rounded-xl flex items-center justify-center text-black font-medium cursor-pointer animate-hover:w-200 animate-spring">
+    Expand
+  </div>
+</Demo>
+
+```html
+<div className="w-[100px] animate-hover:w-200 animate-spring">Expand</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ width: 200 }}
+  transition={{ type: "spring" }}
+>
+  Expand
+</motion.div>
+```
+
+---
+
+## Height
+
+Animate the height of an element. The value is in pixels.
+
+<Demo title="Hover to Grow Taller">
+  <div className="w-24 h-[48px] bg-[#c8ff2e]/20 border-2 border-[#c8ff2e] rounded-xl flex items-center justify-center text-white font-medium cursor-pointer animate-hover:h-100 animate-spring">
+    Grow
+  </div>
+</Demo>
+
+```html
+<div className="h-[48px] animate-hover:h-100 animate-spring">Grow</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ height: 100 }}
+  transition={{ type: "spring" }}
+>
+  Grow
+</motion.div>
+```
+
+---
+
+## Border Radius
+
+Animate the border radius to morph between shapes. The value is in pixels.
+
+<Demo title="Hover to Morph Shape">
+  <div className="w-20 h-20 bg-[#c8ff2e] rounded-lg flex items-center justify-center text-black font-bold cursor-pointer animate-hover:rounded-40 animate-spring">
+    Hi
+  </div>
+</Demo>
+
+```html
+<div className="rounded-lg animate-hover:rounded-40 animate-spring">Hi</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ borderRadius: 40 }}
+  transition={{ type: "spring" }}
+>
+  Hi
+</motion.div>
+```
+
+This is a great way to smoothly transition a square into a circle (or vice versa) on interaction.
+
+---
+
+## Background Color (Arbitrary Values)
+
+For properties that don't have a dedicated shorthand -- like `backgroundColor` -- use the arbitrary value syntax: `[key=value]`.
+
+The value inside the brackets is passed through directly. If it parses as a number, it becomes a number; otherwise it stays a string.
+
+<Demo title="Hover to Change Color">
+  <button className="px-6 py-3 bg-white/10 text-white rounded-xl font-medium cursor-pointer border border-white/20 animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-duration-300">
+    Hover for color
+  </button>
+</Demo>
+
+```html
+<button className="animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-duration-300">
+  Hover for color
+</button>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.button
+  whileHover={{ backgroundColor: "#c8ff2e", color: "#000000" }}
+  transition={{ duration: 0.3 }}
+>
+  Hover for color
+</motion.button>
+```
+
+You can use any valid CSS property name and value with the arbitrary syntax:
+
+```html
+<!-- Animate padding -->
+<div className="animate-hover:[padding=32]">...</div>
+
+<!-- Animate letter spacing -->
+<div className="animate-hover:[letterSpacing=4]">...</div>
+```
+
+---
+
+## Box Shadow
+
+Box shadow animations are **not** supported through motionwind classes because `boxShadow` values contain spaces, commas, and complex syntax that cannot be expressed in a single class token.
+
+To animate box shadows, use the Motion API directly alongside your motionwind classes:
+
+```jsx
+import { motion } from "motion/react";
+
+<motion.div
+  className="px-6 py-4 bg-white/10 rounded-xl"
+  whileHover={{
+    boxShadow: "0 20px 60px rgba(200, 255, 46, 0.3)",
+  }}
+  transition={{ duration: 0.3 }}
+>
+  Glowing card
+</motion.div>
+```
+
+Since the Babel plugin only transforms lowercase HTML elements with static `className` strings, you can safely mix manual Motion components with motionwind-powered elements in the same project. Use motionwind for the common cases and drop down to the Motion API when you need complex values.
+
+---
+
+## Combining Multiple Properties
+
+You can animate multiple properties on the same gesture by stacking classes. Each gesture collects all its property-value pairs into a single object.
+
+<Demo title="Combined Hover Effect">
+  <div className="px-8 py-6 bg-white/5 border border-white/10 rounded-xl text-white font-medium cursor-pointer animate-hover:scale-105 animate-hover:-y-4 animate-hover:rounded-20 animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-spring">
+    Everything at once
+  </div>
+</Demo>
+
+```html
+<div className="animate-hover:scale-105 animate-hover:-y-4 animate-hover:rounded-20 animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-spring">
+  Everything at once
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{
+    scale: 1.05,
+    y: -4,
+    borderRadius: 20,
+    backgroundColor: "#c8ff2e",
+    color: "#000000",
+  }}
+  transition={{ type: "spring" }}
+>
+  Everything at once
+</motion.div>
+```
+
+All property classes sharing the same gesture prefix are merged into a single Motion prop object at build time.
