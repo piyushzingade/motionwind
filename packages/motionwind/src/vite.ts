@@ -25,8 +25,13 @@ export function motionwind(): VitePlugin {
       // Quick check: skip files that don't contain animate-
       if (!code.includes("animate-")) return null;
 
+      const isTsx = /\.tsx$/.test(id);
+
       const result = transformSync(code, {
         plugins: [motionwindBabelPlugin, "@babel/plugin-syntax-jsx"],
+        parserOpts: isTsx
+          ? { plugins: ["typescript", "jsx"] }
+          : undefined,
         filename: id,
         configFile: false,
         babelrc: false,
