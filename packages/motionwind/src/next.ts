@@ -1,4 +1,5 @@
 import { fileURLToPath } from "node:url";
+import { existsSync } from "node:fs";
 
 export interface WebpackRule {
   test?: RegExp;
@@ -36,6 +37,14 @@ export function withMotionwind(nextConfig: NextConfig = {}): NextConfig {
   const babelPluginPath = fileURLToPath(
     new URL("./babel.cjs", import.meta.url),
   );
+
+  if (!existsSync(babelPluginPath)) {
+    throw new Error(
+      `[motionwind] babel.cjs not found at ${babelPluginPath}. ` +
+        `This usually means the package was not installed correctly. ` +
+        `Try removing node_modules and reinstalling.`,
+    );
+  }
 
   return {
     ...nextConfig,
