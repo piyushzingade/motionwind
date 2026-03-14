@@ -1,0 +1,74 @@
+import { source } from "@/lib/source";
+import { notFound } from "next/navigation";
+import defaultMdxComponents from "fumadocs-ui/mdx";
+import { Demo } from "@/components/demo";
+import { MWDiv, MWButton, MWSpan, MWInput } from "@/components/mdx-content";
+import { DocsPageHeader } from "@/components/docs-page-header";
+import { TableOfContents } from "@/components/toc";
+
+// Motionwind runtime overrides for HTML elements used in Demo blocks.
+// The mw.* components parse animate-* classes into Motion props at runtime.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mdxComponents: any = {
+  ...defaultMdxComponents,
+  Demo,
+  div: MWDiv,
+  button: MWButton,
+  span: MWSpan,
+  input: MWInput,
+};
+
+export default async function Page(props: {
+  params: Promise<{ slug?: string[] }>;
+}) {
+  const params = await props.params;
+  const page = source.getPage(params.slug);
+  if (!page) notFound();
+
+  const MDX = page.data.body;
+
+  return (
+    <div className="docs-layout-inner">
+      <article className="docs-page min-w-0">
+        <DocsPageHeader
+          title={page.data.title}
+          description={page.data.description}
+        />
+        <div className="docs-prose">
+          <MDX components={mdxComponents} />
+        </div>
+      </article>
+      <aside className="toc-sidebar">
+        <TableOfContents items={page.data.toc} />
+      </aside>
+    </div>
+  );
+}
+
+export function generateStaticParams() {
+  return source.generateParams();
+}
+
+export async function generateMetadata(props: {
+  params: Promise<{ slug?: string[] }>;
+}) {
+  const params = await props.params;
+  const page = source.getPage(params.slug);
+  if (!page) notFound();
+
+  const url = `https://motionwind.dev${page.url}`;
+
+  return {
+    title: page.data.title,
+    description: page.data.description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: `${page.data.title} | Motionwind`,
+      description: page.data.description,
+      url,
+      type: "article",
+    },
+  };
+}
