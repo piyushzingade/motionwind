@@ -14,4 +14,6 @@ export default defineConfig({
   clean: true,
   external: ["react", "react-dom", "motion", "next", "vite", "webpack"],
   treeshake: true,
+  // Ensure CJS default exports work: require("motionwind/next") returns the function directly
+  cjsInterop: true,
 });
