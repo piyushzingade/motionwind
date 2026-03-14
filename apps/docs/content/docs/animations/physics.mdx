@@ -1,0 +1,419 @@
+---
+title: "Physics-Based Animations"
+description: "Control spring dynamics, easing curves, duration, and delay to fine-tune how motionwind animations feel."
+---
+
+Motionwind provides transition configuration classes that control how animations play out. These classes compile to Motion's `transition` prop, giving you spring physics, easing functions, timing, and delay -- all from your className string.
+
+## Spring Animations
+
+Add `animate-spring` to switch from the default tween (duration-based) animation to a spring (physics-based) animation. Springs produce natural motion that overshoots and settles, rather than following a fixed curve over a fixed duration.
+
+<Demo title="Spring vs Default">
+  <div className="flex gap-6 items-center">
+    <div className="animate-initial:scale-50 animate-enter:scale-100 animate-spring rounded-xl bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium">
+      Spring
+    </div>
+    <div className="animate-initial:scale-50 animate-enter:scale-100 animate-duration-500 rounded-xl bg-fd-secondary px-5 py-3 text-fd-secondary-foreground text-sm font-medium">
+      Tween
+    </div>
+  </div>
+</Demo>
+
+```html
+<!-- Spring animation -->
+<div className="animate-initial:scale-50 animate-enter:scale-100 animate-spring">
+  Spring
+</div>
+
+<!-- Tween animation (default) -->
+<div className="animate-initial:scale-50 animate-enter:scale-100 animate-duration-500">
+  Tween
+</div>
+```
+
+**Spring compiles to:**
+
+```jsx
+<motion.div
+  initial={{ scale: 0.5 }}
+  animate={{ scale: 1 }}
+  transition={{ type: "spring" }}
+/>
+```
+
+When `animate-spring` is used without additional spring parameters, Motion applies its default spring configuration (stiffness: 100, damping: 10).
+
+---
+
+## Spring Configuration
+
+Fine-tune spring behavior with four configuration classes. These compile to properties on the `transition` object and only take effect when `animate-spring` is also present (or when using any spring-related parameter, which implicitly sets the type to spring in Motion).
+
+| Class | Compiled property | Controls |
+|---|---|---|
+| `animate-stiffness-{n}` | `stiffness: n` | Spring tension -- higher values create faster, snappier motion |
+| `animate-damping-{n}` | `damping: n` | Resistance -- higher values reduce oscillation |
+| `animate-mass-{n}` | `mass: n / 10` | Weight of the animated object -- higher values create slower, heavier motion |
+| `animate-bounce-{n}` | `bounce: n / 100` | Shorthand bounciness (0 = no bounce, 100 = maximum) |
+
+### How values map
+
+- **stiffness**: The class value maps directly. `animate-stiffness-400` becomes `stiffness: 400`.
+- **damping**: The class value maps directly. `animate-damping-25` becomes `damping: 25`.
+- **mass**: Divided by 10. `animate-mass-10` becomes `mass: 1`. `animate-mass-30` becomes `mass: 3`.
+- **bounce**: Divided by 100. `animate-bounce-25` becomes `bounce: 0.25`.
+
+---
+
+## Bouncy Spring
+
+High stiffness with very low damping produces a spring that oscillates several times before settling. Use this for playful, attention-grabbing animations.
+
+<Demo title="Bouncy Spring">
+  <div className="animate-initial:scale-50 animate-initial:opacity-0 animate-enter:scale-100 animate-enter:opacity-100 animate-spring animate-stiffness-600 animate-damping-5 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    Very bouncy
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:scale-50 animate-initial:opacity-0 animate-enter:scale-100 animate-enter:opacity-100 animate-spring animate-stiffness-600 animate-damping-5">
+  Very bouncy
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ scale: 0.5, opacity: 0 }}
+  animate={{ scale: 1, opacity: 1 }}
+  transition={{ type: "spring", stiffness: 600, damping: 5 }}
+/>
+```
+
+The high stiffness (600) creates strong force toward the target, while the low damping (5) provides very little resistance, resulting in visible overshoot and multiple oscillations.
+
+---
+
+## Snappy Spring
+
+High stiffness with moderate damping produces a spring that reaches its target quickly with minimal overshoot. Use this for responsive UI interactions like button presses and toggles.
+
+<Demo title="Snappy Spring">
+  <div className="animate-initial:scale-80 animate-initial:opacity-0 animate-enter:scale-100 animate-enter:opacity-100 animate-spring animate-stiffness-400 animate-damping-25 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    Quick and snappy
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:scale-80 animate-initial:opacity-0 animate-enter:scale-100 animate-enter:opacity-100 animate-spring animate-stiffness-400 animate-damping-25">
+  Quick and snappy
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ scale: 0.8, opacity: 0 }}
+  animate={{ scale: 1, opacity: 1 }}
+  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+/>
+```
+
+The damping (25) absorbs most of the spring energy before it can overshoot, producing a fast settle with barely any bounce.
+
+---
+
+## Smooth Spring
+
+Low stiffness with moderate damping produces a gentle, slow-settling spring. Use this for ambient animations, background transitions, or anything that should feel relaxed.
+
+<Demo title="Smooth Spring">
+  <div className="animate-initial:y-30 animate-initial:opacity-0 animate-enter:y-0 animate-enter:opacity-100 animate-spring animate-stiffness-100 animate-damping-15 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    Gentle and smooth
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:y-30 animate-initial:opacity-0 animate-enter:y-0 animate-enter:opacity-100 animate-spring animate-stiffness-100 animate-damping-15">
+  Gentle and smooth
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ y: 30, opacity: 0 }}
+  animate={{ y: 0, opacity: 1 }}
+  transition={{ type: "spring", stiffness: 100, damping: 15 }}
+/>
+```
+
+### Spring presets at a glance
+
+| Preset | Stiffness | Damping | Character |
+|---|---|---|---|
+| Bouncy | 600 | 5 | Lots of overshoot and oscillation |
+| Snappy | 400 | 25 | Fast, nearly no bounce |
+| Smooth | 100 | 15 | Slow, gentle settle |
+| Default (Motion) | 100 | 10 | Moderate bounce, moderate speed |
+
+### Using mass
+
+Mass affects how "heavy" the animated element feels. Higher mass means slower acceleration and deceleration.
+
+<Demo title="Heavy vs Light">
+  <div className="flex gap-6 items-center">
+    <div className="animate-initial:y-20 animate-initial:opacity-0 animate-enter:y-0 animate-enter:opacity-100 animate-spring animate-stiffness-200 animate-damping-10 animate-mass-5 rounded-xl bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium">
+      Light (mass 0.5)
+    </div>
+    <div className="animate-initial:y-20 animate-initial:opacity-0 animate-enter:y-0 animate-enter:opacity-100 animate-spring animate-stiffness-200 animate-damping-10 animate-mass-30 rounded-xl bg-fd-secondary px-5 py-3 text-fd-secondary-foreground text-sm font-medium">
+      Heavy (mass 3)
+    </div>
+  </div>
+</Demo>
+
+```html
+<!-- Light: mass 0.5 (animate-mass-5 / 10) -->
+<div className="animate-spring animate-stiffness-200 animate-damping-10 animate-mass-5 ...">
+  Light
+</div>
+
+<!-- Heavy: mass 3 (animate-mass-30 / 10) -->
+<div className="animate-spring animate-stiffness-200 animate-damping-10 animate-mass-30 ...">
+  Heavy
+</div>
+```
+
+### Using bounce
+
+The `animate-bounce-{n}` class provides a simpler way to control bounciness without tuning stiffness and damping individually. The value ranges from 0 (no bounce) to 100 (maximum bounce), and is divided by 100 in the compiled output.
+
+<Demo title="Bounce Control">
+  <div className="animate-initial:scale-50 animate-enter:scale-100 animate-spring animate-bounce-50 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    bounce: 0.5
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:scale-50 animate-enter:scale-100 animate-spring animate-bounce-50">
+  bounce: 0.5
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ scale: 0.5 }}
+  animate={{ scale: 1 }}
+  transition={{ type: "spring", bounce: 0.5 }}
+/>
+```
+
+---
+
+## Easing Functions
+
+For tween (duration-based) animations, easing functions control the acceleration curve. Motionwind provides four easing classes that map to Motion's built-in easing values.
+
+<Demo title="Easing Comparison" className="flex-col gap-4">
+  <div className="animate-initial:opacity-0 animate-initial:-x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-800 animate-ease-in rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-56 text-center">
+    ease-in (slow start)
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:-x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-800 animate-ease-out rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-56 text-center">
+    ease-out (slow end)
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:-x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-800 animate-ease-in-out rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-56 text-center">
+    ease-in-out (slow both)
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:-x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-800 animate-ease-linear rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-56 text-center">
+    linear (constant speed)
+  </div>
+</Demo>
+
+```html
+<div className="... animate-duration-800 animate-ease-in">ease-in</div>
+<div className="... animate-duration-800 animate-ease-out">ease-out</div>
+<div className="... animate-duration-800 animate-ease-in-out">ease-in-out</div>
+<div className="... animate-duration-800 animate-ease-linear">linear</div>
+```
+
+| Class | Compiled value | Behavior |
+|---|---|---|
+| `animate-ease-in` | `ease: "easeIn"` | Starts slow, accelerates |
+| `animate-ease-out` | `ease: "easeOut"` | Starts fast, decelerates |
+| `animate-ease-in-out` | `ease: "easeInOut"` | Slow at both ends |
+| `animate-ease-linear` | `ease: "linear"` | Constant speed throughout |
+
+**Example compiled output:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, x: -40 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+/>
+```
+
+Easing classes are ignored when using spring animations, since springs are physics-based and do not follow a timing curve.
+
+---
+
+## Duration Control
+
+The `animate-duration-{ms}` class sets how long a tween animation takes, in milliseconds. The value is converted to seconds in the compiled output.
+
+<Demo title="Duration Comparison" className="flex-col gap-4">
+  <div className="animate-initial:opacity-0 animate-initial:-x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-200 rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-48 text-center">
+    200ms (fast)
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:-x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-500 rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-48 text-center">
+    500ms (medium)
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:-x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-1000 rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-48 text-center">
+    1000ms (slow)
+  </div>
+</Demo>
+
+```html
+<div className="... animate-duration-200">200ms</div>
+<div className="... animate-duration-500">500ms</div>
+<div className="... animate-duration-1000">1000ms</div>
+```
+
+| Class | Compiled value |
+|---|---|
+| `animate-duration-200` | `duration: 0.2` |
+| `animate-duration-500` | `duration: 0.5` |
+| `animate-duration-1000` | `duration: 1` |
+
+When using springs, setting a duration switches the spring to a duration-based spring that takes exactly the specified time to complete, losing the natural overshoot behavior.
+
+---
+
+## Delay
+
+The `animate-delay-{ms}` class postpones the start of the animation. The value is in milliseconds and converts to seconds.
+
+<Demo title="Delayed Animation">
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-500 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    I wait 500ms before animating
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-500">
+  I wait 500ms before animating
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5, delay: 0.5 }}
+/>
+```
+
+Delay works with both tween and spring animations. It is also commonly used for staggering multiple elements (see [Enter & Exit Animations](/docs/animations/enter-exit)).
+
+---
+
+## Combining Transition Options
+
+All transition classes can be freely combined. They merge into a single `transition` object in the compiled output.
+
+<Demo title="Combined: Spring + Delay">
+  <div className="animate-initial:opacity-0 animate-initial:scale-50 animate-initial:rotate-12 animate-enter:opacity-100 animate-enter:scale-100 animate-enter:rotate-0 animate-spring animate-stiffness-300 animate-damping-12 animate-delay-200 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    Spring + delay + rotate
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:scale-50 animate-initial:rotate-12 animate-enter:opacity-100 animate-enter:scale-100 animate-enter:rotate-0 animate-spring animate-stiffness-300 animate-damping-12 animate-delay-200">
+  Spring + delay + rotate
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, scale: 0.5, rotate: 12 }}
+  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+  transition={{ type: "spring", stiffness: 300, damping: 12, delay: 0.2 }}
+/>
+```
+
+---
+
+## Inertia Animations
+
+Inertia is a Motion animation type designed for decelerating a value based on its initial velocity. It is primarily used internally by Motion's drag system -- when you release a dragged element, inertia determines how it decelerates to a stop.
+
+**This is not directly exposed through motionwind classes.** Inertia animations are triggered automatically by Motion when drag ends, or can be used manually via the `useAnimate` hook:
+
+```tsx
+import { useAnimate } from "motion/react";
+
+function InertiaExample() {
+  const [scope, animate] = useAnimate();
+
+  const handleDragEnd = (event, info) => {
+    animate(scope.current, { x: 0 }, {
+      type: "inertia",
+      velocity: info.velocity.x,
+    });
+  };
+
+  return (
+    <div
+      ref={scope}
+      className="animate-drag-x animate-drag-elastic-50"
+    />
+  );
+}
+```
+
+Motionwind's `animate-drag-*` classes handle the drag configuration, but the post-drag deceleration behavior is controlled by Motion's internal inertia system.
+
+---
+
+## Velocity-Based Animations
+
+Motion's spring animations are inherently velocity-aware. When animating from one value to another, the spring system considers the current velocity of the value, producing smooth transitions even when an animation is interrupted mid-flight.
+
+**You do not need to configure this.** Motion handles velocity continuity automatically when using springs. If you interrupt a spring animation by changing the target value, the spring picks up from the current velocity rather than starting from rest.
+
+```html
+<!-- The spring automatically handles velocity when retargeted -->
+<div className="animate-hover:scale-110 animate-tap:scale-95 animate-spring animate-stiffness-400 animate-damping-15">
+  Hover then quickly tap -- the spring transition is seamless
+</div>
+```
+
+This velocity continuity is one of the key advantages of spring animations over tween animations, and it works automatically with all motionwind spring classes.
+
+---
+
+## Quick Reference
+
+| Class | Compiles to | Notes |
+|---|---|---|
+| `animate-spring` | `type: "spring"` | Enables physics-based animation |
+| `animate-stiffness-{n}` | `stiffness: n` | Spring tension (direct value) |
+| `animate-damping-{n}` | `damping: n` | Spring resistance (direct value) |
+| `animate-mass-{n}` | `mass: n / 10` | Object weight (divided by 10) |
+| `animate-bounce-{n}` | `bounce: n / 100` | Bounciness shorthand (divided by 100) |
+| `animate-ease-in` | `ease: "easeIn"` | Tween: slow start |
+| `animate-ease-out` | `ease: "easeOut"` | Tween: slow end |
+| `animate-ease-in-out` | `ease: "easeInOut"` | Tween: slow both ends |
+| `animate-ease-linear` | `ease: "linear"` | Tween: constant speed |
+| `animate-duration-{ms}` | `duration: ms / 1000` | Animation length in ms |
+| `animate-delay-{ms}` | `delay: ms / 1000` | Start delay in ms |
