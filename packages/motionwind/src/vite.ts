@@ -27,23 +27,29 @@ export function motionwind(): VitePlugin {
 
       const isTsx = /\.tsx$/.test(id);
 
-      const result = transformSync(code, {
-        plugins: [motionwindBabelPlugin, "@babel/plugin-syntax-jsx"],
-        parserOpts: isTsx
-          ? { plugins: ["typescript", "jsx"] }
-          : undefined,
-        filename: id,
-        configFile: false,
-        babelrc: false,
-        sourceMaps: true,
-      });
+      try {
+        const result = transformSync(code, {
+          plugins: [motionwindBabelPlugin, "@babel/plugin-syntax-jsx"],
+          parserOpts: isTsx
+            ? { plugins: ["typescript", "jsx"] }
+            : undefined,
+          filename: id,
+          configFile: false,
+          babelrc: false,
+          sourceMaps: true,
+        });
 
-      if (!result || !result.code) return null;
+        if (!result || !result.code) return null;
 
-      return {
-        code: result.code,
-        map: result.map,
-      };
+        return {
+          code: result.code,
+          map: result.map,
+        };
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        console.error(`[motionwind] Failed to transform ${id}: ${message}`);
+        return null;
+      }
     },
   };
 }
