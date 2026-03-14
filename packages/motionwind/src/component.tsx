@@ -75,6 +75,32 @@ function createMotionwindComponent<T extends HTMLTag>(tag: T) {
       if (parsed.dragConfig.dragElastic !== undefined) {
         motionProps.dragElastic = parsed.dragConfig.dragElastic;
       }
+      if (parsed.dragConfig.dragSnapToOrigin !== undefined) {
+        motionProps.dragSnapToOrigin = parsed.dragConfig.dragSnapToOrigin;
+      }
+      if (parsed.dragConfig.dragMomentum !== undefined) {
+        motionProps.dragMomentum = parsed.dragConfig.dragMomentum;
+      }
+      if (parsed.dragConfig.dragDirectionLock !== undefined) {
+        motionProps.dragDirectionLock = parsed.dragConfig.dragDirectionLock;
+      }
+      if (parsed.dragConfig.dragConstraints !== undefined) {
+        motionProps.dragConstraints = parsed.dragConfig.dragConstraints;
+      }
+
+      // Add layout config
+      if (parsed.layoutConfig.layout !== undefined) {
+        motionProps.layout = parsed.layoutConfig.layout;
+      }
+      if (parsed.layoutConfig.layoutId !== undefined) {
+        motionProps.layoutId = parsed.layoutConfig.layoutId;
+      }
+      if (parsed.layoutConfig.layoutScroll !== undefined) {
+        motionProps.layoutScroll = parsed.layoutConfig.layoutScroll;
+      }
+      if (parsed.layoutConfig.layoutRoot !== undefined) {
+        motionProps.layoutRoot = parsed.layoutConfig.layoutRoot;
+      }
 
       return React.createElement(Component, motionProps as MotionProps);
     },
