@@ -26,6 +26,7 @@ The returned `result` for the example above:
   transition: { duration: 0.3 },
   viewport: {},
   dragConfig: {},
+  layoutConfig: {},
   hasMotion: true
 }
 ```
@@ -51,6 +52,9 @@ interface ParsedResult {
   /** Drag configuration */
   dragConfig: DragConfig;
 
+  /** Layout animation configuration */
+  layoutConfig: LayoutConfig;
+
   /** Whether any motion classes were found */
   hasMotion: boolean;
 }
@@ -75,24 +79,33 @@ type GestureKey =
 ### `AnimatableValues`
 
 ```tsx
-type AnimatableValues = Record<string, string | number>;
+type AnimatableValues = Record<string, string | number | number[]>;
 ```
 
-A dictionary of CSS/transform properties to their target values. For example, `{ scale: 1.1, opacity: 1 }` or `{ x: 20, rotate: 45 }`.
+A dictionary of CSS/transform properties to their target values. For example, `{ scale: 1.1, opacity: 1 }`, `{ x: 20, rotate: 45 }`, or `{ scale: [1, 1.2, 1] }` for keyframe arrays.
 
 ### `TransitionConfig`
 
 ```tsx
 interface TransitionConfig {
   type?: "spring" | "tween" | "inertia";
-  duration?: number;     // in seconds (animate-duration-{ms} is converted)
-  delay?: number;        // in seconds (animate-delay-{ms} is converted)
-  ease?: string;         // e.g. "easeIn", "easeOut", "easeInOut", "linear"
-  stiffness?: number;    // animate-stiffness-{n}
-  damping?: number;      // animate-damping-{n}
-  bounce?: number;       // animate-bounce-{n} divided by 100
-  mass?: number;         // animate-mass-{n} divided by 10
-  repeat?: number;       // animate-repeat-{n} or Infinity
+  duration?: number;          // in seconds (animate-duration-{ms} is converted)
+  delay?: number;             // in seconds (animate-delay-{ms} is converted)
+  ease?: string | number[];   // e.g. "easeIn", "easeOut", or [0.25, 0.1, 0.25, 1] for cubic-bezier
+  stiffness?: number;         // animate-stiffness-{n}
+  damping?: number;           // animate-damping-{n}
+  bounce?: number;            // animate-bounce-{n} divided by 100
+  mass?: number;              // animate-mass-{n} divided by 10
+  repeat?: number;            // animate-repeat-{n} or Infinity
+  repeatType?: "loop" | "reverse" | "mirror";  // animate-repeat-reverse | animate-repeat-mirror
+  repeatDelay?: number;       // animate-repeat-delay-{ms} divided by 1000
+  staggerChildren?: number;   // animate-stagger-{ms} divided by 1000
+  staggerDirection?: 1 | -1;  // animate-stagger-reverse -> -1
+  delayChildren?: number;     // animate-delay-children-{ms} divided by 1000
+  when?: "beforeChildren" | "afterChildren" | false;  // animate-when-before | animate-when-after
+  restSpeed?: number;         // animate-rest-speed-{n}
+  restDelta?: number;         // animate-rest-delta-{n}
+  times?: number[];           // animate-times-[...] for keyframe timing
 }
 ```
 
@@ -100,9 +113,9 @@ interface TransitionConfig {
 
 ```tsx
 interface ViewportConfig {
-  once?: boolean;              // animate-once
-  amount?: "some" | "all";    // animate-amount-all
-  margin?: string;             // animate-margin-{n} -> "{n}px"
+  once?: boolean;                      // animate-once
+  amount?: "some" | "all" | number;   // animate-amount-all or animate-amount-{n} (n/100)
+  margin?: string;                     // animate-margin-{n} -> "{n}px"
 }
 ```
 
@@ -112,6 +125,21 @@ interface ViewportConfig {
 interface DragConfig {
   drag?: boolean | "x" | "y";   // animate-drag-both | animate-drag-x | animate-drag-y
   dragElastic?: number;          // animate-drag-elastic-{n} divided by 100
+  dragSnapToOrigin?: boolean;    // animate-drag-snap
+  dragMomentum?: boolean;        // animate-drag-no-momentum -> false
+  dragDirectionLock?: boolean;   // animate-drag-lock
+  dragConstraints?: { top?: number; left?: number; right?: number; bottom?: number };  // animate-drag-constraint-{edge}-{n}
+}
+```
+
+### `LayoutConfig`
+
+```tsx
+interface LayoutConfig {
+  layout?: boolean | "position" | "size" | "preserve-aspect";  // animate-layout | animate-layout-position | animate-layout-size | animate-layout-preserve
+  layoutId?: string;             // animate-layout-id-{name}
+  layoutScroll?: boolean;        // animate-layout-scroll
+  layoutRoot?: boolean;          // animate-layout-root
 }
 ```
 
