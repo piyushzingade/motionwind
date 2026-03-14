@@ -710,8 +710,12 @@ function classifyToken(
   if (rest === "layout-root") { layoutConfig.layoutRoot = true; return true; }
 
   if (rest.startsWith("layout-id-")) {
-    layoutConfig.layoutId = rest.slice(10);
-    return true;
+    const id = rest.slice(10);
+    if (id && !/\s/.test(id)) {
+      layoutConfig.layoutId = id;
+      return true;
+    }
+    return false;
   }
 
   return false;
