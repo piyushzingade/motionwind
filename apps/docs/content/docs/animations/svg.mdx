@@ -13,7 +13,47 @@ For SVG-specific properties that are not part of the built-in class vocabulary, 
 
 ## Path Drawing
 
-The classic "draw-on" effect animates `pathLength` from `0` to `1`. Since `pathLength` is not a built-in motionwind property, you use bracket syntax:
+The classic "draw-on" effect animates `pathLength` from `0` to `1`. Motionwind provides built-in classes for the three path animation properties:
+
+| Class | Motion property | Description |
+|---|---|---|
+| `path-length-{n}` | `pathLength: n` | Progress of the path drawing (0 to 1) |
+| `path-offset-{n}` | `pathOffset: n` | Offset of the path starting point |
+| `path-spacing-{n}` | `pathSpacing: n` | Spacing between dashes in the path |
+
+### Using built-in path classes
+
+The built-in classes provide a more concise way to animate SVG paths:
+
+```html
+<svg width="200" height="200" viewBox="0 0 200 200">
+  <path
+    d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="3"
+    className="animate-initial:path-length-0 animate-enter:path-length-1 animate-duration-2000 animate-ease-in-out"
+  />
+</svg>
+```
+
+Compiles to:
+
+```jsx
+<motion.path
+  d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
+  fill="none"
+  stroke="currentColor"
+  strokeWidth="3"
+  initial={{ pathLength: 0 }}
+  animate={{ pathLength: 1 }}
+  transition={{ duration: 2, ease: "easeInOut" }}
+/>
+```
+
+### Using bracket syntax
+
+The bracket syntax `[pathLength=0]` still works and is useful for any SVG property not covered by built-in classes:
 
 ```tsx
 <svg width="200" height="200" viewBox="0 0 200 200">
@@ -27,7 +67,7 @@ The classic "draw-on" effect animates `pathLength` from `0` to `1`. Since `pathL
 </svg>
 ```
 
-At build time this becomes:
+At build time this produces the same output:
 
 ```tsx
 <motion.path
@@ -41,6 +81,8 @@ At build time this becomes:
 />
 ```
 
+The built-in `path-length-{n}`, `path-offset-{n}`, and `path-spacing-{n}` classes are more concise than the bracket syntax, but both approaches compile to identical Motion output.
+
 <Demo title="Path Drawing Animation">
   <svg width="200" height="200" viewBox="0 0 200 200" className="text-[#c8ff2e]">
     <path
@@ -49,7 +91,7 @@ At build time this becomes:
       stroke="currentColor"
       strokeWidth="3"
       style={{ pathLength: 0 }}
-      className="animate-initial:[pathLength=0] animate-enter:[pathLength=1] animate-duration-2000 animate-ease-in-out"
+      className="animate-initial:path-length-0 animate-enter:path-length-1 animate-duration-2000 animate-ease-in-out"
     />
   </svg>
 </Demo>
@@ -224,7 +266,10 @@ The `d` attribute is a string, and Motion interpolates between matching path com
 
 | Technique | motionwind support | Approach |
 |---|---|---|
-| Path drawing (`pathLength`) | Bracket syntax | `animate-initial:[pathLength=0] animate-enter:[pathLength=1]` |
+| Path drawing (`pathLength`) | Built-in classes | `animate-initial:path-length-0 animate-enter:path-length-1` |
+| Path offset (`pathOffset`) | Built-in classes | `animate-initial:path-offset-0 animate-enter:path-offset-1` |
+| Path spacing (`pathSpacing`) | Built-in classes | `animate-initial:path-spacing-0 animate-enter:path-spacing-1` |
+| Path drawing (bracket syntax) | Bracket syntax | `animate-initial:[pathLength=0] animate-enter:[pathLength=1]` |
 | Stroke dash animation | Bracket syntax | `animate-initial:[strokeDashoffset=200] animate-enter:[strokeDashoffset=0]` |
 | SVG transforms | Built-in classes | `animate-hover:rotate-45 animate-hover:scale-110` |
 | Gradient color animation | Motion API only | Use `motion.stop` with `animate` prop arrays |
