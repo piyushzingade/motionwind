@@ -73,6 +73,38 @@
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
+/* Typewriter */
+.typewriter-wrap {
+  display: inline;
+  font-variant-ligatures: none;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.15em;
+  vertical-align: text-bottom;
+  background: var(--color-acid);
+  margin-left: 1px;
+  opacity: 1;
+}
+
+.typewriter-cursor-blink {
+  animation: cursor-blink 530ms steps(1) infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typewriter-cursor-blink {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 /* Section divider */
 .section-divider {
   height: 1px;
