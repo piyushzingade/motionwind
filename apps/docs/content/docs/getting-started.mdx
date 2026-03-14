@@ -1,0 +1,165 @@
+---
+title: "Getting Started"
+description: "Learn how the motionwind build-time transform works and write your first animation."
+---
+
+# Getting Started
+
+motionwind is a Babel plugin that transforms Tailwind-like animation classes into Motion component props at build time. This page explains the pipeline, walks through a quick example, and covers the key constraints you should know before writing code.
+
+## How it works
+
+The transform runs in four steps during your build process:
+
+### Step 1: You write classes
+
+You add `animate-*` classes to any lowercase HTML element's `className` string, alongside your regular Tailwind or CSS classes:
+
+```tsx
+<button className="px-4 py-2 bg-blue-600 text-white rounded-lg animate-hover:scale-110 animate-tap:scale-95 animate-duration-200">
+  Click me
+</button>
+```
+
+### Step 2: Babel finds them
+
+The Babel plugin scans every JSX element in your source files. When it encounters a `className` attribute containing a static string literal with `animate-` tokens, it proceeds to the next step. Elements without `animate-` classes are skipped entirely.
+
+### Step 3: Parse to Motion props
+
+Each `animate-*` token is parsed into a structured representation:
+
+- `animate-hover:scale-110` becomes `whileHover: { scale: 1.1 }`
+- `animate-tap:scale-95` becomes `whileTap: { scale: 0.95 }`
+- `animate-duration-200` becomes `transition: { duration: 0.2 }`
+
+Non-animation classes like `px-4`, `bg-blue-600`, and `rounded-lg` are left untouched and passed through as the remaining `className`.
+
+### Step 4: Replace with motion.* component
+
+The plugin rewrites the JSX element. `<button>` becomes `<motion.button>`, the parsed props are added as JSX attributes, and the `className` is updated to contain only the non-animation classes. An import for `motion` from `"motion/react"` is automatically added to the file.
+
+## Before and after
+
+Here is a complete example showing exactly what the Babel plugin produces.
+
+### What you write
+
+```tsx
+export function Card() {
+  return (
+    <div className="p-6 bg-white rounded-xl shadow-lg animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-ease-out">
+      <h2 className="text-xl font-bold animate-hover:scale-105 animate-spring">
+        Hello motionwind
+      </h2>
+    </div>
+  );
+}
+```
+
+### What the build outputs
+
+```tsx
+"use client";
+import { motion } from "motion/react";
+
+export function Card() {
+  return (
+    <motion.div
+      className="p-6 bg-white rounded-xl shadow-lg"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <motion.h2
+        className="text-xl font-bold"
+        whileHover={{ scale: 1.05 }}
+        transition={{ type: "spring" }}
+      >
+        Hello motionwind
+      </motion.h2>
+    </motion.div>
+  );
+}
+```
+
+Notice that:
+
+- Each `<div>` and `<h2>` became `<motion.div>` and `<motion.h2>`
+- The `animate-*` classes were consumed and removed from `className`
+- The remaining Tailwind classes are preserved exactly as written
+- `"use client"` and the `motion` import were injected automatically
+
+## Key constraints
+
+### Static classNames only
+
+The Babel plugin can only process string literals. Template literals, variables, and expressions are invisible to the transform:
+
+```tsx
+// This works -- static string literal
+<div className="animate-hover:scale-110">OK</div>
+
+// This does NOT work -- template literal
+<div className={`animate-hover:scale-${value}`}>Not transformed</div>
+
+// This does NOT work -- variable
+<div className={classes}>Not transformed</div>
+```
+
+### Lowercase elements only
+
+The plugin only transforms native HTML elements (lowercase tag names). React components (uppercase) are skipped because the plugin cannot know if the component forwards `className` to a DOM element:
+
+```tsx
+// Transformed -- lowercase HTML element
+<button className="animate-hover:scale-110">OK</button>
+
+// NOT transformed -- uppercase component
+<Button className="animate-hover:scale-110">Skipped</Button>
+```
+
+### Use mw.* for dynamic classNames
+
+When you need conditional or computed animation classes, use the runtime `mw` components from `motionwind`. These parse classes at runtime instead of build time:
+
+```tsx
+import { mw } from "motionwind";
+
+function DynamicExample({ isLarge }: { isLarge: boolean }) {
+  return (
+    <mw.div className={`animate-hover:scale-${isLarge ? "120" : "105"} p-4`}>
+      Dynamic
+    </mw.div>
+  );
+}
+```
+
+The `mw` object works like `motion` -- use `mw.div`, `mw.button`, `mw.span`, and so on for any HTML tag.
+
+### No duplicate gesture props
+
+If you also manually pass a Motion prop like `whileHover` to the same element, the Babel-generated prop will conflict. Avoid mixing manual Motion props with `animate-*` classes on the same element.
+
+## Quick example
+
+Here is a practical starting point. A button that scales up on hover, scales down on tap, and uses spring physics:
+
+```tsx
+<button className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+  Get Started
+</button>
+```
+
+A card that fades and slides in when it enters the viewport, and only animates once:
+
+```tsx
+<div className="p-8 bg-white rounded-2xl shadow-xl animate-initial:opacity-0 animate-initial:y-40 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once">
+  Scroll down to reveal me
+</div>
+```
+
+## Next steps
+
+- [Installation](/docs/installation) -- set up motionwind in your project
+- [Syntax Reference](/docs/syntax) -- the complete list of classes, properties, and options
