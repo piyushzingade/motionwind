@@ -1,0 +1,502 @@
+---
+title: "Syntax Reference"
+description: "Complete reference for all motionwind animation classes, properties, transitions, and configuration options."
+---
+
+# Syntax Reference
+
+Every motionwind class follows a consistent pattern:
+
+```
+animate-{gesture}:{property}-{value}
+```
+
+Configuration classes (transition, viewport, drag) omit the gesture prefix:
+
+```
+animate-{config}-{value}
+```
+
+All classes must be inside a static `className` string literal on a lowercase HTML element.
+
+## Gesture prefixes
+
+The gesture prefix determines **when** the animation runs. It maps directly to a Motion prop.
+
+| Prefix | Motion prop | Description |
+|--------|------------|-------------|
+| `hover` | `whileHover` | While the pointer is over the element |
+| `tap` | `whileTap` | While the element is actively pressed |
+| `focus` | `whileFocus` | While the element has keyboard focus |
+| `inview` | `whileInView` | While the element is visible in the viewport |
+| `drag` | `whileDrag` | While the element is being dragged |
+| `initial` | `initial` | The starting state (before enter animation) |
+| `enter` | `animate` | The target state for mount/entrance animation |
+| `exit` | `exit` | The state to animate to on unmount |
+
+### Usage
+
+Combine a gesture prefix with any property:
+
+```tsx
+<div className="animate-hover:opacity-50 animate-tap:scale-90 animate-focus:rotate-5">
+  Interactive element
+</div>
+```
+
+Multiple properties under the same gesture are merged:
+
+```tsx
+{/* Both scale and opacity apply on hover */}
+<div className="animate-hover:scale-110 animate-hover:opacity-80">
+  Combined hover effect
+</div>
+```
+
+## Properties
+
+### scale
+
+Scales the element uniformly. The value represents a percentage: `110` means `1.1x`.
+
+```tsx
+<div className="animate-hover:scale-110">Scale to 110%</div>
+<div className="animate-hover:scale-50">Scale to 50%</div>
+<div className="animate-hover:scale-200">Scale to 200%</div>
+```
+
+### scale-x
+
+Scales along the horizontal axis only.
+
+```tsx
+<div className="animate-hover:scale-x-120">Stretch horizontally to 120%</div>
+```
+
+### scale-y
+
+Scales along the vertical axis only.
+
+```tsx
+<div className="animate-hover:scale-y-80">Squish vertically to 80%</div>
+```
+
+### rotate
+
+Rotates the element in degrees.
+
+```tsx
+<div className="animate-hover:rotate-45">Rotate 45 degrees</div>
+<div className="animate-hover:rotate-180">Rotate 180 degrees</div>
+<div className="animate-hover:rotate-360">Full rotation</div>
+```
+
+### rotate-x
+
+Rotates around the horizontal axis (3D tilt forward/backward).
+
+```tsx
+<div className="animate-hover:rotate-x-30">Tilt forward 30 degrees</div>
+```
+
+### rotate-y
+
+Rotates around the vertical axis (3D tilt left/right).
+
+```tsx
+<div className="animate-hover:rotate-y-45">Tilt sideways 45 degrees</div>
+```
+
+### skew-x
+
+Skews the element along the horizontal axis in degrees.
+
+```tsx
+<div className="animate-hover:skew-x-12">Skew horizontally 12 degrees</div>
+```
+
+### skew-y
+
+Skews the element along the vertical axis in degrees.
+
+```tsx
+<div className="animate-hover:skew-y-6">Skew vertically 6 degrees</div>
+```
+
+### x
+
+Translates the element horizontally in pixels.
+
+```tsx
+<div className="animate-hover:x-10">Move 10px right</div>
+<div className="animate-hover:x-100">Move 100px right</div>
+```
+
+### y
+
+Translates the element vertically in pixels.
+
+```tsx
+<div className="animate-hover:y-10">Move 10px down</div>
+<div className="animate-initial:y-40 animate-enter:y-0">Slide up on enter</div>
+```
+
+### opacity
+
+Sets the element's opacity. The value is a percentage: `0` means fully transparent, `100` means fully opaque.
+
+```tsx
+<div className="animate-hover:opacity-50">Fade to 50% on hover</div>
+<div className="animate-initial:opacity-0 animate-enter:opacity-100">Fade in on mount</div>
+```
+
+### blur
+
+Applies a Gaussian blur in pixels. Produces a CSS `filter: blur(Npx)` value.
+
+```tsx
+<div className="animate-hover:blur-4">Blur by 4px on hover</div>
+<div className="animate-initial:blur-10 animate-enter:blur-0">Un-blur on enter</div>
+```
+
+### brightness
+
+Adjusts the element's brightness. The value is a percentage: `100` is normal, `150` is brighter, `50` is darker.
+
+```tsx
+<div className="animate-hover:brightness-120">Brighten on hover</div>
+```
+
+### contrast
+
+Adjusts the element's contrast. The value is a percentage: `100` is normal.
+
+```tsx
+<div className="animate-hover:contrast-150">Increase contrast on hover</div>
+```
+
+### saturate
+
+Adjusts the element's color saturation. The value is a percentage: `100` is normal, `0` is grayscale.
+
+```tsx
+<div className="animate-hover:saturate-150">Boost saturation on hover</div>
+<div className="animate-initial:saturate-0 animate-enter:saturate-100">Fade from grayscale to color</div>
+```
+
+### w
+
+Animates the element's width in pixels.
+
+```tsx
+<div className="animate-hover:w-300">Expand to 300px wide on hover</div>
+```
+
+### h
+
+Animates the element's height in pixels.
+
+```tsx
+<div className="animate-hover:h-200">Expand to 200px tall on hover</div>
+```
+
+### rounded
+
+Animates the element's border-radius in pixels.
+
+```tsx
+<div className="animate-hover:rounded-20">Round corners to 20px on hover</div>
+```
+
+## Negative values
+
+Prefix the property-value segment with a dash to use negative values:
+
+```tsx
+<div className="animate-hover:-rotate-45">Rotate -45 degrees</div>
+<div className="animate-hover:-x-20">Move 20px to the left</div>
+<div className="animate-hover:-y-10">Move 10px upward</div>
+<div className="animate-hover:-skew-x-6">Skew -6 degrees</div>
+```
+
+The negative sign comes after the colon and before the property name:
+
+```
+animate-hover:-rotate-45
+             ^
+             negative prefix
+```
+
+## Arbitrary values
+
+For any Motion property not covered by the built-in classes, use bracket syntax:
+
+```
+animate-{gesture}:[key=value]
+```
+
+The key is the exact Motion property name, and the value is passed as-is (numbers are auto-detected):
+
+```tsx
+{/* Arbitrary transform property */}
+<div className="animate-hover:[rotateZ=30]">Rotate on Z axis</div>
+
+{/* Arbitrary string value */}
+<div className="animate-hover:[backgroundColor=#ff0000]">Red on hover</div>
+
+{/* Numeric value auto-detection */}
+<div className="animate-hover:[z=50]">Move on Z axis</div>
+```
+
+This gives you escape-hatch access to any property that Motion supports, including ones that motionwind does not have dedicated class names for.
+
+## Transition configuration
+
+Transition classes control **how** the animation runs. They apply globally to all gestures on the element. These classes have no gesture prefix.
+
+### `animate-duration-{ms}`
+
+Sets the animation duration in milliseconds. The value is converted to seconds internally.
+
+```tsx
+<div className="animate-hover:scale-110 animate-duration-300">300ms duration</div>
+<div className="animate-hover:scale-110 animate-duration-1000">1 second duration</div>
+```
+
+### `animate-delay-{ms}`
+
+Sets a delay before the animation starts, in milliseconds.
+
+```tsx
+<div className="animate-enter:opacity-100 animate-delay-200">200ms delay before animating</div>
+```
+
+### `animate-ease-{type}`
+
+Sets the easing function. Available values:
+
+| Class | Motion easing value |
+|-------|-------------------|
+| `animate-ease-in` | `easeIn` |
+| `animate-ease-out` | `easeOut` |
+| `animate-ease-in-out` | `easeInOut` |
+| `animate-ease-linear` | `linear` |
+
+```tsx
+<div className="animate-enter:y-0 animate-ease-out">Ease out</div>
+<div className="animate-enter:y-0 animate-ease-in-out">Ease in and out</div>
+```
+
+### animate-spring
+
+Switches the transition to spring physics instead of duration-based easing. When using `animate-spring`, the `duration` and `ease` values are ignored by Motion in favor of the spring parameters.
+
+```tsx
+<div className="animate-hover:scale-110 animate-spring">Spring animation</div>
+```
+
+### `animate-stiffness-{n}`
+
+Sets the spring stiffness. Higher values create a stiffer, faster spring. Only applies when using `animate-spring`.
+
+```tsx
+<div className="animate-hover:scale-110 animate-spring animate-stiffness-300">Stiff spring</div>
+```
+
+### `animate-damping-{n}`
+
+Sets the spring damping. Higher values reduce oscillation. Only applies when using `animate-spring`.
+
+```tsx
+<div className="animate-hover:scale-110 animate-spring animate-damping-20">Moderate damping</div>
+```
+
+### `animate-mass-{n}`
+
+Sets the mass of the animated object. The value is divided by 10 internally (so `animate-mass-10` equals mass `1.0`). Higher mass means slower, heavier movement.
+
+```tsx
+<div className="animate-hover:scale-110 animate-spring animate-mass-15">Heavier spring (mass 1.5)</div>
+```
+
+### `animate-bounce-{n}`
+
+Sets the spring bounciness as a percentage. The value is divided by 100 internally (so `animate-bounce-25` equals `0.25`). Only applies when using `animate-spring`.
+
+```tsx
+<div className="animate-hover:scale-110 animate-spring animate-bounce-30">Bouncy spring</div>
+```
+
+### `animate-repeat-{n}`
+
+Repeats the animation a set number of times.
+
+```tsx
+<div className="animate-enter:rotate-360 animate-repeat-3">Spin 3 times</div>
+```
+
+### animate-repeat-infinite
+
+Repeats the animation indefinitely.
+
+```tsx
+<div className="animate-enter:rotate-360 animate-repeat-infinite animate-duration-2000">
+  Spin forever, 2 seconds per rotation
+</div>
+```
+
+### Complete spring example
+
+```tsx
+<button className="px-6 py-3 bg-purple-600 text-white rounded-xl animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 animate-bounce-20">
+  Springy Button
+</button>
+```
+
+This produces:
+
+```tsx
+<motion.button
+  className="px-6 py-3 bg-purple-600 text-white rounded-xl"
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.9 }}
+  transition={{ type: "spring", stiffness: 400, damping: 15, bounce: 0.2 }}
+>
+  Springy Button
+</motion.button>
+```
+
+## Viewport configuration
+
+These classes configure how scroll-triggered animations behave when using the `inview` gesture. They have no gesture prefix.
+
+### animate-once
+
+The animation runs only the first time the element enters the viewport. After that, it stays in its final state even if the element scrolls out and back in.
+
+```tsx
+<div className="animate-initial:opacity-0 animate-inview:opacity-100 animate-once">
+  Fades in once, stays visible
+</div>
+```
+
+### animate-amount-all
+
+By default, the animation triggers when any part of the element is visible. With `animate-amount-all`, the entire element must be in the viewport before the animation starts.
+
+```tsx
+<div className="animate-inview:scale-110 animate-amount-all">
+  Only animates when fully visible
+</div>
+```
+
+### `animate-margin-{n}`
+
+Expands or shrinks the viewport detection area by the specified number of pixels. A positive value triggers the animation before the element is actually in view.
+
+```tsx
+<div className="animate-inview:opacity-100 animate-margin-100">
+  Starts animating 100px before entering viewport
+</div>
+```
+
+### Complete viewport example
+
+```tsx
+<section className="animate-initial:opacity-0 animate-initial:y-30 animate-inview:opacity-100 animate-inview:y-0 animate-duration-700 animate-ease-out animate-once animate-margin-50">
+  This section fades and slides up when scrolled into view (with a 50px margin),
+  and only animates once.
+</section>
+```
+
+## Drag configuration
+
+These classes enable and configure drag behavior on the element.
+
+### animate-drag-x
+
+Enables dragging along the horizontal axis only.
+
+```tsx
+<div className="w-20 h-20 bg-blue-500 rounded-lg animate-drag-x">
+  Drag me left/right
+</div>
+```
+
+### animate-drag-y
+
+Enables dragging along the vertical axis only.
+
+```tsx
+<div className="w-20 h-20 bg-green-500 rounded-lg animate-drag-y">
+  Drag me up/down
+</div>
+```
+
+### animate-drag-both
+
+Enables dragging in both directions.
+
+```tsx
+<div className="w-20 h-20 bg-red-500 rounded-lg animate-drag-both">
+  Drag me anywhere
+</div>
+```
+
+### `animate-drag-elastic-{n}`
+
+Sets the elasticity of the drag as a percentage. The value is divided by 100 (so `animate-drag-elastic-50` equals `0.5`). A value of `0` means no elastic overshoot; `100` means full elasticity.
+
+```tsx
+<div className="w-20 h-20 bg-orange-500 rounded-lg animate-drag-both animate-drag-elastic-30">
+  Drag with 30% elasticity
+</div>
+```
+
+### Combining drag with gestures
+
+Drag classes can be combined with the `drag` gesture prefix to style the element while it is being dragged:
+
+```tsx
+<div className="w-20 h-20 bg-blue-500 rounded-lg animate-drag-both animate-drag:scale-110 animate-drag:rotate-10 animate-spring">
+  Grows and tilts while dragging
+</div>
+```
+
+## Combining everything
+
+Here is a full example that uses gestures, transitions, viewport config, and multiple properties:
+
+```tsx
+<div className="p-8 bg-white rounded-2xl shadow-lg animate-initial:opacity-0 animate-initial:y-40 animate-initial:scale-90 animate-inview:opacity-100 animate-inview:y-0 animate-inview:scale-100 animate-hover:scale-105 animate-hover:rotate-1 animate-tap:scale-95 animate-duration-600 animate-ease-out animate-once">
+  <h2 className="text-2xl font-bold">Card Title</h2>
+  <p className="mt-2 text-gray-600">
+    This card fades, slides, and scales in when scrolled into view.
+    It also responds to hover and tap.
+  </p>
+</div>
+```
+
+## Property quick reference
+
+| Class pattern | Motion output | Value type |
+|--------------|---------------|------------|
+| `scale-{n}` | `scale: n/100` | Percentage (110 = 1.1) |
+| `scale-x-{n}` | `scaleX: n/100` | Percentage |
+| `scale-y-{n}` | `scaleY: n/100` | Percentage |
+| `rotate-{n}` | `rotate: n` | Degrees |
+| `rotate-x-{n}` | `rotateX: n` | Degrees |
+| `rotate-y-{n}` | `rotateY: n` | Degrees |
+| `skew-x-{n}` | `skewX: n` | Degrees |
+| `skew-y-{n}` | `skewY: n` | Degrees |
+| `x-{n}` | `x: n` | Pixels |
+| `y-{n}` | `y: n` | Pixels |
+| `opacity-{n}` | `opacity: n/100` | Percentage (0-100) |
+| `blur-{n}` | `filter: "blur(Npx)"` | Pixels |
+| `brightness-{n}` | `filter: "brightness(n/100)"` | Percentage |
+| `contrast-{n}` | `filter: "contrast(n/100)"` | Percentage |
+| `saturate-{n}` | `filter: "saturate(n/100)"` | Percentage |
+| `w-{n}` | `width: n` | Pixels |
+| `h-{n}` | `height: n` | Pixels |
+| `rounded-{n}` | `borderRadius: n` | Pixels |
+| `[key=value]` | `key: value` | Any |
