@@ -506,6 +506,15 @@ function classifyToken(
         ) {
           gestures[gestureKey]![parsed.key] += ` ${parsed.value}`;
         } else {
+          if (
+            process.env.NODE_ENV !== "production" &&
+            gestures[gestureKey]![parsed.key] !== undefined
+          ) {
+            console.warn(
+              `[motionwind] Duplicate property "${parsed.key}" in "${gestureKey}" ` +
+                `(class "${token}"). The last value will be used.`,
+            );
+          }
           gestures[gestureKey]![parsed.key] = parsed.value;
         }
         return true;
