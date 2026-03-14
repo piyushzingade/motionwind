@@ -1,50 +1,574 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-fg: var(--color-fg);
+  --color-fg-muted: var(--color-fg-muted);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-fg: var(--color-accent-fg);
+  --color-border: var(--color-border);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-surface: var(--color-surface);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-shadow: var(--color-shadow);
+  --color-code-bg: var(--color-code-bg);
+  --color-code-header: var(--color-code-header);
+  --color-code-border: var(--color-code-border);
+  --color-code-muted: var(--color-code-muted);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+/* ── Light Theme (default) ── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg: #fafaf9;
+  --color-fg: #171717;
+  --color-fg-muted: #64646e;
+  --color-accent: #4d7c0f;
+  --color-accent-hover: #3f6212;
+  --color-accent-fg: #ffffff;
+  --color-border: #e4e4e0;
+  --color-border-subtle: #f0f0ec;
+  --color-surface: #f5f5f2;
+  --color-surface-elevated: #ffffff;
+  --color-shadow: rgba(0, 0, 0, 0.06);
+  --color-code-bg: #f6f6f2;
+  --color-code-header: #eeeee8;
+  --color-code-border: #e0e0da;
+  --color-code-muted: #9a9a9a;
+  --color-selection: rgba(77, 124, 15, 0.12);
+  --color-dot-grid: rgba(77, 124, 15, 0.06);
+
+  /* Fumadocs overrides */
+  --color-fd-primary: #4d7c0f !important;
+  --color-fd-primary-foreground: #ffffff !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Dark Theme ── */
+.dark {
+  --color-bg: #0a0a0f;
+  --color-fg: #f0f0f0;
+  --color-fg-muted: #8a8a9a;
+  --color-accent: #c8ff2e;
+  --color-accent-hover: #b8ef1e;
+  --color-accent-fg: #0a0a0f;
+  --color-border: #1e1e2a;
+  --color-border-subtle: #141420;
+  --color-surface: #0f0f18;
+  --color-surface-elevated: #16161f;
+  --color-shadow: rgba(0, 0, 0, 0.5);
+  --color-code-bg: #0c0c14;
+  --color-code-header: #12121c;
+  --color-code-border: rgba(200, 255, 46, 0.06);
+  --color-code-muted: #5a5a6a;
+  --color-selection: rgba(200, 255, 46, 0.18);
+  --color-dot-grid: rgba(200, 255, 46, 0.03);
+
+  /* Fumadocs overrides */
+  --color-fd-primary: #c8ff2e !important;
+  --color-fd-primary-foreground: #0a0a0f !important;
 }
 
-html,
+/* ── Base styles ── */
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-a {
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-fg-muted);
+}
+
+/* ── Selection ── */
+::selection {
+  background-color: var(--color-selection);
   color: inherit;
-  text-decoration: none;
 }
 
-.imgDark {
+/* ── No scrollbar ── */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+}
 
-  .imgLight {
-    display: none;
+/* ── Docs content wrapper ── */
+.docs-content-wrapper {
+  width: 100%;
+  padding: 1rem 2.5rem 4rem;
+}
+
+@media (max-width: 640px) {
+  .docs-content-wrapper {
+    padding: 1.5rem 1rem 3rem;
   }
-  .imgDark {
-    display: unset;
+}
+
+/* ── Docs inner layout (article + TOC) ── */
+.docs-layout-inner {
+  display: flex;
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Docs page container ── */
+.docs-page {
+  flex: 1;
+  min-width: 0;
+  max-width: 760px;
+}
+
+/* ── TOC sidebar ── */
+.toc-sidebar {
+  display: none;
+  width: 250px;
+  flex-shrink: 0;
+  position: sticky;
+  top: calc(3.5rem + 1rem); /* header height + padding */
+  max-height: calc(100vh - 3.5rem - 2rem);
+  overflow-y: auto;
+  align-self: flex-start;
+  margin-left: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.toc-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .toc-sidebar {
+    display: block;
   }
+}
+
+/* ── Docs prose — typography for MDX content ── */
+.docs-prose {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.docs-prose h2 {
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-fg);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.docs-prose h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-fg);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.docs-prose p {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--color-fg-muted);
+  margin-bottom: 1rem;
+}
+
+.docs-prose ol {
+  list-style: none;
+  counter-reset: docs-counter;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-left: 0;
+}
+
+.docs-prose ol li {
+  counter-increment: docs-counter;
+  position: relative;
+  padding-left: 2.25rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--color-fg-muted);
+}
+
+.docs-prose ol li::before {
+  content: counter(docs-counter);
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.375rem;
+  background: var(--color-border-subtle);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--color-fg-muted);
+}
+
+.docs-prose ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.docs-prose ul li {
+  position: relative;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--color-fg-muted);
+}
+
+.docs-prose ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.docs-prose strong {
+  font-weight: 600;
+  color: var(--color-fg);
+}
+
+.docs-prose code {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8125rem;
+  background: var(--color-border-subtle);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+  color: var(--color-accent);
+}
+
+/* Don't style inline code inside code blocks */
+.docs-prose figure code,
+.docs-prose pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+}
+
+.docs-prose a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--color-accent);
+  transition: border-color 0.2s ease;
+}
+
+.docs-prose a:hover {
+  border-bottom-style: solid;
+}
+
+/* ── Animated link underline ── */
+.link-underline {
+  position: relative;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-accent);
+  transition: width 0.3s ease;
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* ── Fumadocs code block overrides ── */
+
+/* ── Code block overrides ── */
+figure.shiki pre,
+figure.shiki code,
+.shiki code,
+.shiki pre {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+figure.shiki {
+  border: 1px solid var(--color-border) !important;
+  border-radius: 0.5rem !important;
+  background: var(--color-code-bg) !important;
+  margin: 1.25rem 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  position: relative;
+  overflow: hidden !important;
+}
+
+/* Copy button — top-right */
+figure.shiki > div:first-child {
+  position: absolute !important;
+  top: 0.25rem !important;
+  right: 0.25rem !important;
+  z-index: 3 !important;
+  backdrop-filter: none !important;
+  background: none !important;
+}
+
+figure.shiki > div:first-child button {
+  color: var(--color-code-muted) !important;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease !important;
+  border-radius: 0.25rem !important;
+  padding: 0.25rem !important;
+}
+
+figure.shiki:hover > div:first-child button {
+  opacity: 1;
+}
+
+figure.shiki > div:first-child button:hover {
+  color: var(--color-accent) !important;
+}
+
+/* Pre element — minimal padding */
+figure.shiki pre {
+  padding: 0.625rem 0.875rem !important;
+  margin: 0 !important;
+  overflow-x: auto;
+  font-size: 0.8125rem !important;
+  line-height: 1.7 !important;
+}
+
+/* Code element */
+code {
+  font-family: var(--font-mono), monospace;
+}
+
+figure.shiki code {
+  font-family: var(--font-mono), monospace !important;
+  font-size: 0.8125rem !important;
+}
+
+/* Shiki theme tokens — light by default, dark in .dark */
+code span {
+  color: var(--shiki-light) !important;
+  background-color: transparent !important;
+}
+
+.dark code span {
+  color: var(--shiki-dark) !important;
+}
+
+/* Minimal scrollbar on overflow */
+figure.shiki pre::-webkit-scrollbar {
+  height: 0;
+}
+
+
+/* ── Demo component refinements ── */
+.demo-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--color-dot-grid) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+/* ── Fumadocs sidebar overrides ── */
+[data-fd-sidebar] {
+  --fd-sidebar-width: 260px;
+}
+
+/* Sidebar active item glow */
+[data-active="true"] {
+  color: var(--color-accent) !important;
+}
+
+/* ── Table overrides for docs ── */
+.docs-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.8125rem;
+}
+
+.docs-prose thead th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-fg);
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.docs-prose tbody td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-fg-muted);
+  vertical-align: top;
+}
+
+.docs-prose tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Horizontal rule ── */
+.docs-prose hr {
+  border: none;
+  border-top: 1px dashed var(--color-border);
+  margin: 2.5rem 0;
+}
+
+/* ── Blockquote ── */
+.docs-prose blockquote {
+  border-left: 2px solid var(--color-accent);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: var(--color-fg-muted);
+  font-style: italic;
+}
+
+/* ── Table of Contents — Organic Thread ── */
+
+.toc-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.875rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.toc-header-label {
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: 0.8125rem;
+  color: var(--color-fg);
+  letter-spacing: -0.01em;
+}
+
+.toc-header-pct {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.5625rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent);
+  opacity: 0.6;
+  min-width: 1.75rem;
+  text-align: right;
+  transition: opacity 0.2s ease;
+}
+
+.toc:hover .toc-header-pct {
+  opacity: 1;
+}
+
+/* ── Body wrapper ── */
+.toc-body {
+  position: relative;
+  padding-left: 1.375rem;
+}
+
+/* ── SVG organic spine ── */
+.toc-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.toc-path-fill {
+  transition: stroke-dashoffset 0.15s ease-out;
+}
+
+
+/* ── TOC list ── */
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+/* ── TOC item ── */
+.toc-item {
+  position: relative;
+  padding-left: calc(var(--toc-indent, 0) * 0.75rem);
+}
+
+/* ── TOC link ── */
+.toc-link {
+  position: relative;
+  display: block;
+  padding: 0.25rem 0.375rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-fg-muted);
+  text-decoration: none;
+  border-radius: 4px;
+  transition:
+    color 0.15s ease,
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Active link */
+.toc-active {
+  color: var(--color-accent) !important;
+  font-weight: 600;
 }
