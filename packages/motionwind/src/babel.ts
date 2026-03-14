@@ -5,10 +5,14 @@ import type { AnimatableValues, TransitionConfig } from "./types.js";
 
 /**
  * Convert a plain JS value to a Babel AST node.
+ * Supports strings, numbers, booleans, and number arrays (keyframes).
  */
 function valueToAst(
-  value: string | number | boolean,
+  value: string | number | boolean | number[],
 ): t.Expression {
+  if (Array.isArray(value)) {
+    return t.arrayExpression(value.map((v) => t.numericLiteral(v)));
+  }
   if (typeof value === "string") return t.stringLiteral(value);
   if (typeof value === "boolean") return t.booleanLiteral(value);
   if (value === Infinity) return t.identifier("Infinity");
@@ -16,10 +20,11 @@ function valueToAst(
 }
 
 /**
- * Convert a Record<string, value> to a Babel ObjectExpression.
+ * Convert an AnimatableValues record to a Babel ObjectExpression.
+ * Handles string, number, and number[] (keyframe) values.
  */
 function objectToAst(
-  obj: Record<string, string | number | boolean>,
+  obj: AnimatableValues,
 ): t.ObjectExpression {
   const properties = Object.entries(obj).map(([key, value]) =>
     t.objectProperty(t.identifier(key), valueToAst(value)),
@@ -51,9 +56,18 @@ function transitionToAst(config: TransitionConfig): t.ObjectExpression {
     );
   }
   if (config.ease !== undefined) {
-    properties.push(
-      t.objectProperty(t.identifier("ease"), t.stringLiteral(config.ease)),
-    );
+    if (Array.isArray(config.ease)) {
+      properties.push(
+        t.objectProperty(
+          t.identifier("ease"),
+          t.arrayExpression(config.ease.map((v) => t.numericLiteral(v))),
+        ),
+      );
+    } else {
+      properties.push(
+        t.objectProperty(t.identifier("ease"), t.stringLiteral(config.ease)),
+      );
+    }
   }
   if (config.stiffness !== undefined) {
     properties.push(
@@ -91,6 +105,81 @@ function transitionToAst(config: TransitionConfig): t.ObjectExpression {
         config.repeat === Infinity
           ? t.identifier("Infinity")
           : t.numericLiteral(config.repeat),
+      ),
+    );
+  }
+  if (config.repeatType !== undefined) {
+    properties.push(
+      t.objectProperty(
+        t.identifier("repeatType"),
+        t.stringLiteral(config.repeatType),
+      ),
+    );
+  }
+  if (config.repeatDelay !== undefined) {
+    properties.push(
+      t.objectProperty(
+        t.identifier("repeatDelay"),
+        t.numericLiteral(config.repeatDelay),
+      ),
+    );
+  }
+  if (config.staggerChildren !== undefined) {
+    properties.push(
+      t.objectProperty(
+        t.identifier("staggerChildren"),
+        t.numericLiteral(config.staggerChildren),
+      ),
+    );
+  }
+  if (config.delayChildren !== undefined) {
+    properties.push(
+      t.objectProperty(
+        t.identifier("delayChildren"),
+        t.numericLiteral(config.delayChildren),
+      ),
+    );
+  }
+  if (config.staggerDirection !== undefined) {
+    properties.push(
+      t.objectProperty(
+        t.identifier("staggerDirection"),
+        t.numericLiteral(config.staggerDirection),
+      ),
+    );
+  }
+  if (config.when !== undefined) {
+    if (config.when === false) {
+      properties.push(
+        t.objectProperty(t.identifier("when"), t.booleanLiteral(false)),
+      );
+    } else {
+      properties.push(
+        t.objectProperty(t.identifier("when"), t.stringLiteral(config.when)),
+      );
+    }
+  }
+  if (config.restSpeed !== undefined) {
+    properties.push(
+      t.objectProperty(
+        t.identifier("restSpeed"),
+        t.numericLiteral(config.restSpeed),
+      ),
+    );
+  }
+  if (config.restDelta !== undefined) {
+    properties.push(
+      t.objectProperty(
+        t.identifier("restDelta"),
+        t.numericLiteral(config.restDelta),
+      ),
+    );
+  }
+  if (config.times !== undefined) {
+    properties.push(
+      t.objectProperty(
+        t.identifier("times"),
+        t.arrayExpression(config.times.map((v) => t.numericLiteral(v))),
       ),
     );
   }
@@ -257,7 +346,9 @@ export default function motionwindBabelPlugin(): PluginObj {
             props.push(
               t.objectProperty(
                 t.identifier("amount"),
-                t.stringLiteral(parsed.viewport.amount),
+                typeof parsed.viewport.amount === "number"
+                  ? t.numericLiteral(parsed.viewport.amount)
+                  : t.stringLiteral(parsed.viewport.amount),
               ),
             );
           }
@@ -300,6 +391,70 @@ export default function motionwindBabelPlugin(): PluginObj {
                 t.numericLiteral(parsed.dragConfig.dragElastic),
               ),
             ),
+          );
+        }
+        if (parsed.dragConfig.dragSnapToOrigin === true) {
+          node.attributes.push(
+            t.jsxAttribute(t.jsxIdentifier("dragSnapToOrigin"), null),
+          );
+        }
+        if (parsed.dragConfig.dragMomentum === false) {
+          node.attributes.push(
+            t.jsxAttribute(
+              t.jsxIdentifier("dragMomentum"),
+              t.jsxExpressionContainer(t.booleanLiteral(false)),
+            ),
+          );
+        }
+        if (parsed.dragConfig.dragDirectionLock === true) {
+          node.attributes.push(
+            t.jsxAttribute(t.jsxIdentifier("dragDirectionLock"), null),
+          );
+        }
+        if (parsed.dragConfig.dragConstraints !== undefined) {
+          const constraintProps = Object.entries(parsed.dragConfig.dragConstraints).map(
+            ([key, value]) =>
+              t.objectProperty(t.identifier(key), t.numericLiteral(value as number)),
+          );
+          node.attributes.push(
+            t.jsxAttribute(
+              t.jsxIdentifier("dragConstraints"),
+              t.jsxExpressionContainer(t.objectExpression(constraintProps)),
+            ),
+          );
+        }
+
+        // Add layout props
+        if (parsed.layoutConfig.layout !== undefined) {
+          if (parsed.layoutConfig.layout === true) {
+            node.attributes.push(
+              t.jsxAttribute(t.jsxIdentifier("layout"), null),
+            );
+          } else {
+            node.attributes.push(
+              t.jsxAttribute(
+                t.jsxIdentifier("layout"),
+                t.stringLiteral(parsed.layoutConfig.layout as string),
+              ),
+            );
+          }
+        }
+        if (parsed.layoutConfig.layoutId !== undefined) {
+          node.attributes.push(
+            t.jsxAttribute(
+              t.jsxIdentifier("layoutId"),
+              t.stringLiteral(parsed.layoutConfig.layoutId),
+            ),
+          );
+        }
+        if (parsed.layoutConfig.layoutScroll === true) {
+          node.attributes.push(
+            t.jsxAttribute(t.jsxIdentifier("layoutScroll"), null),
+          );
+        }
+        if (parsed.layoutConfig.layoutRoot === true) {
+          node.attributes.push(
+            t.jsxAttribute(t.jsxIdentifier("layoutRoot"), null),
           );
         }
       },
