@@ -5,6 +5,7 @@ import {
   JetBrains_Mono,
 } from "next/font/google";
 import { RootProvider } from "fumadocs-ui/provider/next";
+import { Analytics } from "@vercel/analytics/next";
 import "fumadocs-ui/style.css";
 import "./globals.css";
 
@@ -129,6 +130,7 @@ export default function RootLayout({
         >
           {children}
         </RootProvider>
+        <Analytics />
       </body>
     </html>
   );

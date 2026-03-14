@@ -14,6 +14,7 @@
   "dependencies": {
     "@repo/ui": "*",
     "@types/mdx": "^2.0.13",
+    "@vercel/analytics": "^2.0.1",
     "fumadocs-core": "^16.6.17",
     "fumadocs-mdx": "^14.2.10",
     "fumadocs-ui": "^16.6.17",
