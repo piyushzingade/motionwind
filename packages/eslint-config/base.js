@@ -19,6 +19,11 @@ export const config = [
     },
     rules: {
       "turbo/no-undeclared-env-vars": "warn",
+      // Allow unused variables that start with _ (common destructuring pattern)
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
     },
   },
   {

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
@@ -74,7 +75,7 @@ export function DocsSidebar({
       {/* Header */}
       <div className="flex h-14 items-center border-b border-dashed border-[var(--color-border)] px-4">
         <Link href="/" className="flex items-center gap-2.5 no-underline">
-          <img
+          <Image
             src="/logo.svg"
             alt="motionwind"
             width={22}
