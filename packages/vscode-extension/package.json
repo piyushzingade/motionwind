@@ -69,8 +69,10 @@
     "vscode-languageserver-textdocument": "^1.0.12"
   },
   "devDependencies": {
+    "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "@types/vscode": "^1.85.0",
+    "eslint": "^9.39.1",
     "tsup": "^8.5.0",
     "typescript": "5.9.2"
   }

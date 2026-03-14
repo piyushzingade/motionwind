@@ -2,7 +2,6 @@ import {
   createConnection,
   TextDocuments,
   ProposedFeatures,
-  InitializeParams,
   InitializeResult,
   TextDocumentSyncKind,
   DidChangeConfigurationNotification,
@@ -38,7 +37,7 @@ const defaultSettings: MotionwindSettings = {
 
 let globalSettings: MotionwindSettings = defaultSettings;
 
-connection.onInitialize((_params: InitializeParams): InitializeResult => {
+connection.onInitialize((): InitializeResult => {
   return {
     capabilities: {
       textDocumentSync: TextDocumentSyncKind.Incremental,

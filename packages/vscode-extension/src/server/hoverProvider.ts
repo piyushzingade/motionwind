@@ -88,9 +88,8 @@ function renderMotionOutput(className: string, result: ParsedResult): string {
       }
     }
   } else {
-    // Handle remaining layout props without layout itself
-    const { layout: _, ...rest } = result.layoutConfig;
-    for (const [key, value] of Object.entries(rest)) {
+    for (const [key, value] of Object.entries(result.layoutConfig)) {
+      if (key === "layout") continue;
       if (typeof value === "string") {
         lines.push(`  ${key}="${value}"`);
       } else {

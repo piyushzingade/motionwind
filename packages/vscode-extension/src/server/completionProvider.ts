@@ -2,7 +2,6 @@ import {
   CompletionItem,
   CompletionList,
   CompletionParams,
-  InsertTextFormat,
 } from "vscode-languageserver/node.js";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { getCursorContext } from "./documentUtils.js";
