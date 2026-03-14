@@ -46,6 +46,8 @@ export function withMotionwind(nextConfig: NextConfig = {}): NextConfig {
     );
   }
 
+  let turbopackWarned = false;
+
   return {
     ...nextConfig,
     // Provide a turbopack config to suppress the Next.js 15+ warning about
@@ -53,6 +55,15 @@ export function withMotionwind(nextConfig: NextConfig = {}): NextConfig {
     // transform only runs under webpack; use `next dev --webpack` for now.
     turbopack: nextConfig.turbopack ?? {},
     webpack(config: WebpackConfig, context: { isServer: boolean }) {
+      // Warn once if Turbopack is detected (webpack callback still fires for server builds)
+      if (!turbopackWarned && process.env.TURBOPACK === "1") {
+        turbopackWarned = true;
+        console.warn(
+          "[motionwind] Turbopack does not support Babel transforms. " +
+            "motionwind classes will NOT be compiled. " +
+            "Use `next dev --webpack` or `next build` instead.",
+        );
+      }
       // Add babel-loader as a pre-processing rule for JSX/TSX files
       const rule: WebpackRule = {
         test: /\.(tsx|jsx)$/,
