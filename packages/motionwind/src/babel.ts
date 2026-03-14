@@ -231,13 +231,11 @@ export default function motionwindBabelPlugin(): PluginObj {
               ],
               t.stringLiteral("motion/react"),
             );
-            // Insert after any existing directives / imports
+            // Insert after the last import declaration in the file
             let insertIdx = 0;
             for (let i = 0; i < body.length; i++) {
               if (t.isImportDeclaration(body[i])) {
                 insertIdx = i + 1;
-              } else {
-                break;
               }
             }
             body.splice(insertIdx, 0, importDecl);
