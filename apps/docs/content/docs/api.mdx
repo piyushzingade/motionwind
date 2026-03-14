@@ -1,0 +1,362 @@
+---
+title: "API Reference"
+description: "Complete API reference for motionwind -- the parser, runtime components, and framework integrations."
+---
+
+## `parseMotionClasses(className)`
+
+The framework-agnostic core parser. It takes a className string, extracts all `animate-*` tokens, and returns a structured `ParsedResult` that maps directly to Motion props. Regular Tailwind/CSS classes pass through untouched.
+
+```tsx
+import { parseMotionClasses } from "motionwind";
+
+const result = parseMotionClasses(
+  "bg-blue-500 p-4 animate-hover:scale-110 animate-hover:opacity-100 animate-duration-300"
+);
+```
+
+The returned `result` for the example above:
+
+```tsx
+{
+  tailwindClasses: "bg-blue-500 p-4",
+  gestures: {
+    whileHover: { scale: 1.1, opacity: 1 }
+  },
+  transition: { duration: 0.3 },
+  viewport: {},
+  dragConfig: {},
+  hasMotion: true
+}
+```
+
+Results are memoized internally by input string, so calling `parseMotionClasses` with the same className is essentially free after the first call.
+
+### `ParsedResult`
+
+```tsx
+interface ParsedResult {
+  /** Tailwind/CSS classes that pass through untouched */
+  tailwindClasses: string;
+
+  /** Gesture props mapped to their animatable values */
+  gestures: Partial<Record<GestureKey, AnimatableValues>>;
+
+  /** Transition configuration */
+  transition: TransitionConfig;
+
+  /** Viewport configuration for whileInView */
+  viewport: ViewportConfig;
+
+  /** Drag configuration */
+  dragConfig: DragConfig;
+
+  /** Whether any motion classes were found */
+  hasMotion: boolean;
+}
+```
+
+### `GestureKey`
+
+The supported gesture keys that map to Motion props:
+
+```tsx
+type GestureKey =
+  | "whileHover"    // animate-hover:*
+  | "whileTap"      // animate-tap:*
+  | "whileFocus"    // animate-focus:*
+  | "whileInView"   // animate-inview:*
+  | "whileDrag"     // animate-drag:*
+  | "initial"       // animate-initial:*
+  | "animate"       // animate-enter:*
+  | "exit";         // animate-exit:*
+```
+
+### `AnimatableValues`
+
+```tsx
+type AnimatableValues = Record<string, string | number>;
+```
+
+A dictionary of CSS/transform properties to their target values. For example, `{ scale: 1.1, opacity: 1 }` or `{ x: 20, rotate: 45 }`.
+
+### `TransitionConfig`
+
+```tsx
+interface TransitionConfig {
+  type?: "spring" | "tween" | "inertia";
+  duration?: number;     // in seconds (animate-duration-{ms} is converted)
+  delay?: number;        // in seconds (animate-delay-{ms} is converted)
+  ease?: string;         // e.g. "easeIn", "easeOut", "easeInOut", "linear"
+  stiffness?: number;    // animate-stiffness-{n}
+  damping?: number;      // animate-damping-{n}
+  bounce?: number;       // animate-bounce-{n} divided by 100
+  mass?: number;         // animate-mass-{n} divided by 10
+  repeat?: number;       // animate-repeat-{n} or Infinity
+}
+```
+
+### `ViewportConfig`
+
+```tsx
+interface ViewportConfig {
+  once?: boolean;              // animate-once
+  amount?: "some" | "all";    // animate-amount-all
+  margin?: string;             // animate-margin-{n} -> "{n}px"
+}
+```
+
+### `DragConfig`
+
+```tsx
+interface DragConfig {
+  drag?: boolean | "x" | "y";   // animate-drag-both | animate-drag-x | animate-drag-y
+  dragElastic?: number;          // animate-drag-elastic-{n} divided by 100
+}
+```
+
+### `clearParserCache()`
+
+Clears the internal memoization cache. Useful in testing or hot-reload scenarios.
+
+```tsx
+import { clearParserCache } from "motionwind";
+
+clearParserCache();
+```
+
+---
+
+## `mw.*`
+
+Runtime components for **dynamic classNames**. Use `mw.div`, `mw.button`, `mw.span`, etc. when you need to compute motionwind classes at runtime -- for example, when classNames come from props, state, or conditional logic.
+
+```tsx
+import { mw } from "motionwind";
+```
+
+The `mw` object works like `motion.*` from Motion, but instead of passing Motion props directly, you write motionwind classes in `className` and they are parsed at runtime.
+
+### Why `mw.*`?
+
+The build-time Babel transform only handles **static string literals** in `className`. If your className is dynamic (template literals, variables, ternaries), the Babel plugin cannot analyze it at build time. That is where `mw.*` comes in -- it calls `parseMotionClasses` at runtime and passes the result to the underlying `motion.*` component.
+
+### Usage
+
+```tsx
+import { mw } from "motionwind";
+
+function AnimatedCard({ isActive }: { isActive: boolean }) {
+  return (
+    <mw.div
+      className={`p-6 rounded-xl animate-hover:scale-105 animate-duration-200 ${
+        isActive ? "bg-blue-500 animate-enter:opacity-100" : "bg-gray-800 animate-enter:opacity-50"
+      }`}
+    >
+      Card content
+    </mw.div>
+  );
+}
+```
+
+### Supported tags
+
+`mw.*` supports every HTML tag that Motion supports. The component is created lazily on first access via a Proxy, so there is no up-front cost for tags you do not use.
+
+```tsx
+<mw.div className="animate-hover:scale-105" />
+<mw.button className="animate-tap:scale-95" />
+<mw.span className="animate-enter:opacity-100" />
+<mw.a className="animate-hover:x-2" />
+<mw.img className="animate-inview:opacity-100 animate-once" />
+<mw.section className="animate-inview:y-0 animate-initial:y-20" />
+```
+
+### Behavior details
+
+- When `className` contains **no** `animate-*` classes, `mw.*` renders a plain HTML element (no Motion overhead).
+- When `className` contains `animate-*` classes, `mw.*` renders the corresponding `motion.*` component with the parsed props.
+- Results are cached by className string, so re-renders with the same className skip parsing.
+- `mw.*` components are marked `"use client"` and require a client-side React environment.
+- Refs are forwarded through to the underlying element.
+
+### Type signature
+
+```tsx
+type MotionwindProps<T extends HTMLTag> = React.ComponentPropsWithRef<T> & {
+  className?: string;
+};
+```
+
+Each `mw.*` component accepts the same props as the corresponding HTML element, plus an optional `className` that is parsed for motionwind classes.
+
+---
+
+## `withMotionwind(nextConfig)`
+
+A Next.js configuration wrapper that adds the motionwind Babel transform to your webpack pipeline.
+
+```tsx
+// next.config.mjs
+import { withMotionwind } from "motionwind/next";
+
+const nextConfig = {
+  // your existing Next.js config
+};
+
+export default withMotionwind(nextConfig);
+```
+
+### What it does
+
+`withMotionwind` wraps your existing `next.config` and injects a webpack rule that runs `babel-loader` with the motionwind Babel plugin as a **pre-processing step** (before SWC). This means:
+
+1. All `.tsx` and `.jsx` files are scanned for `animate-*` class strings.
+2. Static `className` attributes on lowercase HTML elements are transformed at build time.
+3. Elements with motionwind classes are rewritten to `motion.*` components with the correct props.
+4. A `"use client"` directive is automatically injected into any file that gets transformed.
+5. An `import { motion } from "motion/react"` is automatically added if not already present.
+
+### TypeScript types
+
+```tsx
+interface NextConfig {
+  webpack?: (
+    config: WebpackConfig,
+    context: { isServer: boolean }
+  ) => WebpackConfig;
+  [key: string]: unknown;
+}
+
+function withMotionwind(nextConfig?: NextConfig): NextConfig;
+```
+
+### Preserving existing webpack config
+
+If you already have a custom `webpack` function in your Next.js config, `withMotionwind` will call it after adding its own rules. Your custom configuration is preserved:
+
+```tsx
+import { withMotionwind } from "motionwind/next";
+
+export default withMotionwind({
+  webpack(config, context) {
+    // Your custom webpack modifications
+    config.resolve.alias["@components"] = "./src/components";
+    return config;
+  },
+});
+```
+
+---
+
+## `motionwind()` (Vite plugin)
+
+A Vite plugin that runs the motionwind Babel transform during the build.
+
+```tsx
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { motionwind } from "motionwind/vite";
+
+export default defineConfig({
+  plugins: [
+    motionwind(),  // Must come before the React plugin
+    react(),
+  ],
+});
+```
+
+### What it does
+
+The plugin registers a `transform` hook with `enforce: "pre"`, meaning it runs before other plugins (including the React/JSX transform). For every `.jsx` or `.tsx` file that contains the string `animate-`:
+
+1. The file is passed through the motionwind Babel plugin.
+2. Static motionwind classes are transformed into Motion props.
+3. Source maps are preserved for accurate debugging.
+
+Files that do not contain `animate-` are skipped entirely (a fast string check avoids unnecessary parsing).
+
+### TypeScript types
+
+```tsx
+interface VitePlugin {
+  name: string;
+  enforce?: "pre" | "post";
+  transform?: (
+    code: string,
+    id: string
+  ) => { code: string; map: unknown } | null;
+}
+
+function motionwind(): VitePlugin;
+```
+
+### HMR support
+
+Because the plugin runs as a standard Vite transform, it works seamlessly with Vite's Hot Module Replacement. When you edit a file, the transform re-runs and the updated component is hot-reloaded in the browser.
+
+---
+
+## Babel plugin (advanced)
+
+The underlying Babel plugin is also available for direct use if you need custom Babel setups:
+
+```tsx
+// babel.config.js
+module.exports = {
+  plugins: ["motionwind/babel"],
+};
+```
+
+The plugin exports both a default export and a named `motionwindBabelPlugin` export for compatibility with different module systems.
+
+### Transform rules
+
+The Babel plugin follows these rules:
+
+1. **Only static string `className` attributes are transformed.** Template literals, variables, and expressions are ignored (use `mw.*` for those).
+2. **Only lowercase HTML tags are transformed.** Custom components (`<MyComponent>`) and member expressions (`<motion.div>`) are skipped.
+3. **`"use client"` is auto-injected** into any file that gets a transform, ensuring compatibility with React Server Components.
+4. **`import { motion } from "motion/react"` is auto-added** if not already present in the file.
+
+### Example transform
+
+Input:
+
+```tsx
+export function Hero() {
+  return (
+    <div className="p-8 animate-hover:scale-105 animate-hover:rotate-2 animate-duration-300 animate-ease-out">
+      <h1 className="text-4xl animate-enter:opacity-100 animate-initial:opacity-0 animate-enter:y-0 animate-initial:y-20">
+        Hello World
+      </h1>
+    </div>
+  );
+}
+```
+
+Output (after transform):
+
+```tsx
+"use client";
+import { motion } from "motion/react";
+
+export function Hero() {
+  return (
+    <motion.div
+      className="p-8"
+      whileHover={{ scale: 1.05, rotate: 2 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+    >
+      <motion.h1
+        className="text-4xl"
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 20 }}
+      >
+        Hello World
+      </motion.h1>
+    </motion.div>
+  );
+}
+```
