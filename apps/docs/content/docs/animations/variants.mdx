@@ -1,0 +1,310 @@
+---
+title: "Variant Animations"
+description: "Parent-child orchestration, staggered lists, conditional animation states, and multi-state systems using Motion variants alongside motionwind."
+---
+
+# Variant Animations
+
+Motion's variant system lets you define named animation states and orchestrate parent-child relationships. Variants are not expressed as motionwind utility classes -- they use Motion's `variants` prop and named state objects.
+
+This page covers how variants work, how to approximate stagger effects with motionwind delay classes, and when to use each approach.
+
+## Parent-child variants
+
+Variants let a parent element control the animation state of its children. When the parent enters a state, children automatically follow.
+
+```tsx
+import { motion } from "motion/react";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+function StaggeredList({ items }: { items: string[] }) {
+  return (
+    <motion.ul
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-3"
+    >
+      {items.map((item) => (
+        <motion.li
+          key={item}
+          variants={itemVariants}
+          className="rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/10 px-4 py-3 text-white"
+        >
+          {item}
+        </motion.li>
+      ))}
+    </motion.ul>
+  );
+}
+```
+
+### How it works
+
+1. The parent `motion.ul` defines `initial="hidden"` and `animate="visible"`.
+2. Motion propagates the current state name down to every child `motion.li` that has matching variant names.
+3. `staggerChildren: 0.1` in the parent's `visible` transition adds a 100ms delay between each child's animation start.
+4. Each child animates from `{ opacity: 0, y: 20 }` to `{ opacity: 1, y: 0 }`.
+
+This orchestration is not available through class names because it requires a shared state name that connects parent and children.
+
+## Stagger with motionwind delay classes
+
+If you have a static list (not dynamically rendered), you can approximate a stagger effect using motionwind's `animate-delay-{ms}` class with incrementing values on each item.
+
+<Demo title="Stagger with delay classes">
+  <div className="flex gap-3">
+    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 w-12 h-12 rounded-lg bg-[#c8ff2e] flex items-center justify-center text-[#0a0a0f] font-bold">1</div>
+    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-100 w-12 h-12 rounded-lg bg-[#c8ff2e]/80 flex items-center justify-center text-[#0a0a0f] font-bold">2</div>
+    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-200 w-12 h-12 rounded-lg bg-[#c8ff2e]/60 flex items-center justify-center text-[#0a0a0f] font-bold">3</div>
+    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-300 w-12 h-12 rounded-lg bg-[#c8ff2e]/40 flex items-center justify-center text-[#0a0a0f] font-bold">4</div>
+  </div>
+</Demo>
+
+```html
+<div className="flex gap-3">
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500">
+    1
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-100">
+    2
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-200">
+    3
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-300">
+    4
+  </div>
+</div>
+```
+
+Each element has the same enter animation but with an incrementing delay: 0ms, 100ms, 200ms, 300ms. This creates a cascading stagger effect.
+
+### Compiled output (per item)
+
+The first item (no delay) compiles to:
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+>
+  1
+</motion.div>
+```
+
+The second item (100ms delay) compiles to:
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5, delay: 0.1 }}
+>
+  2
+</motion.div>
+```
+
+### Limitations of the delay approach
+
+This works well for small, static lists where you know the item count at author time. For dynamic lists where the count changes at runtime, use Motion's `staggerChildren` variant pattern shown above -- it automatically calculates delays based on the number of children.
+
+## Conditional states with mw.* runtime components
+
+motionwind's Babel plugin only transforms static className strings. For dynamic or conditional animations, use the `mw.*` runtime component, which parses motionwind classes at runtime.
+
+```tsx
+import { mw } from "motionwind";
+
+function ToggleCard({ isActive }: { isActive: boolean }) {
+  return (
+    <mw.div
+      className={
+        isActive
+          ? "animate-enter:scale-105 animate-enter:opacity-100 animate-spring bg-[#c8ff2e]/10 border-[#c8ff2e]/30"
+          : "animate-enter:scale-100 animate-enter:opacity-60 animate-spring bg-[#1a1a2e] border-[#1a1a2e]"
+      }
+    >
+      <p className="text-white font-medium">
+        {isActive ? "Active" : "Inactive"}
+      </p>
+    </mw.div>
+  );
+}
+```
+
+The `mw.div` component parses the className at runtime and passes the appropriate Motion props. When `isActive` toggles, the className changes, which causes `mw.div` to reparse and animate to the new values.
+
+### How mw.* differs from Babel transform
+
+| | Babel plugin | `mw.*` runtime |
+| --- | --- | --- |
+| When it runs | Build time | Runtime |
+| Handles dynamic classes | No | Yes |
+| Bundle impact | Zero (removed at build) | Small runtime parser |
+| Syntax | Same `animate-*` classes | Same `animate-*` classes |
+
+Use the Babel transform for static classes (the common case). Reach for `mw.*` when the className depends on props or state.
+
+### Conditional hover effects
+
+```tsx
+import { mw } from "motionwind";
+
+function Button({ variant }: { variant: "primary" | "ghost" }) {
+  return (
+    <mw.button
+      className={
+        variant === "primary"
+          ? "animate-hover:scale-110 animate-tap:scale-90 animate-spring bg-[#c8ff2e] text-[#0a0a0f] px-6 py-3 rounded-lg font-semibold"
+          : "animate-hover:scale-105 animate-tap:scale-95 animate-duration-200 bg-transparent border border-[#c8ff2e]/20 text-[#c8ff2e] px-6 py-3 rounded-lg font-semibold"
+      }
+    >
+      {variant === "primary" ? "Primary" : "Ghost"}
+    </mw.button>
+  );
+}
+```
+
+The primary variant has a bouncier spring-based scale, while the ghost variant uses a subtler tween. Both are expressed with motionwind classes but selected at runtime.
+
+## Multi-state animation system
+
+For complex state machines with many named states, use Motion's variants directly. This is the right tool when an element has more than two states or when transitions between specific state pairs should differ.
+
+```tsx
+import { useState } from "react";
+import { motion } from "motion/react";
+
+const cardVariants = {
+  idle: {
+    scale: 1,
+    boxShadow: "0 0 0 rgba(200, 255, 46, 0)",
+    borderColor: "rgba(200, 255, 46, 0.1)",
+  },
+  hover: {
+    scale: 1.02,
+    boxShadow: "0 4px 20px rgba(200, 255, 46, 0.1)",
+    borderColor: "rgba(200, 255, 46, 0.3)",
+  },
+  active: {
+    scale: 1.05,
+    boxShadow: "0 8px 32px rgba(200, 255, 46, 0.2)",
+    borderColor: "rgba(200, 255, 46, 0.6)",
+  },
+  disabled: {
+    scale: 0.98,
+    opacity: 0.5,
+    boxShadow: "0 0 0 rgba(200, 255, 46, 0)",
+    borderColor: "rgba(200, 255, 46, 0.05)",
+  },
+};
+
+function StatefulCard({ state }: { state: "idle" | "hover" | "active" | "disabled" }) {
+  return (
+    <motion.div
+      variants={cardVariants}
+      animate={state}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="rounded-xl bg-[#1a1a2e] border p-6"
+    >
+      <p className="text-white font-medium">State: {state}</p>
+    </motion.div>
+  );
+}
+```
+
+Each named variant defines a complete set of properties for that state. Motion interpolates between whichever two states you transition between. This is more powerful than motionwind's gesture-based model because:
+
+- You can have any number of named states (not just hover, tap, focus).
+- You can control which state is active programmatically.
+- Transitions between specific pairs can be customized.
+
+### Orchestrated parent-child state machine
+
+Combining parent-child propagation with multi-state variants creates sophisticated animation systems:
+
+```tsx
+import { motion } from "motion/react";
+
+const navVariants = {
+  collapsed: {
+    width: 64,
+    transition: {
+      staggerChildren: 0.05,
+      staggerDirection: -1,
+    },
+  },
+  expanded: {
+    width: 240,
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const labelVariants = {
+  collapsed: { opacity: 0, x: -10 },
+  expanded: { opacity: 1, x: 0 },
+};
+
+function Sidebar({ isOpen }: { isOpen: boolean }) {
+  return (
+    <motion.nav
+      variants={navVariants}
+      animate={isOpen ? "expanded" : "collapsed"}
+      className="bg-[#1a1a2e] rounded-xl overflow-hidden"
+    >
+      {["Home", "Search", "Settings"].map((label) => (
+        <motion.div
+          key={label}
+          className="flex items-center gap-3 px-4 py-3 text-white"
+        >
+          <div className="w-8 h-8 rounded-lg bg-[#c8ff2e]/10 flex-shrink-0" />
+          <motion.span variants={labelVariants}>
+            {label}
+          </motion.span>
+        </motion.div>
+      ))}
+    </motion.nav>
+  );
+}
+```
+
+When the sidebar state changes:
+1. The parent `nav` animates its width.
+2. `staggerChildren: 0.05` staggers the child animations by 50ms each.
+3. `staggerDirection: -1` on the "collapsed" variant reverses the stagger order when collapsing.
+4. Each child's label fades and slides based on the `labelVariants`.
+
+This level of orchestration is what Motion's variant system is built for.
+
+## Choosing the right approach
+
+| Scenario | Recommended approach |
+| --- | --- |
+| Hover/tap/focus effects | motionwind classes (`animate-hover:*`, `animate-tap:*`) |
+| Simple enter animations | motionwind classes (`animate-initial:*`, `animate-enter:*`) |
+| Static stagger (known item count) | motionwind `animate-delay-{ms}` with incrementing values |
+| Dynamic stagger (unknown item count) | Motion `staggerChildren` in parent variant |
+| Two-state conditional animation | `mw.*` runtime with conditional className |
+| Multi-state animation (3+ states) | Motion `variants` prop |
+| Parent-child orchestration | Motion `variants` with `staggerChildren` |
+| Complex state machines | Motion `variants` with programmatic `animate` control |
+
+motionwind handles the common cases -- gesture responses, enter/exit transitions, and simple repeating animations -- with zero-config utility classes. For orchestrated multi-element animations, Motion's variant system is the right abstraction. The two approaches complement each other: use motionwind classes for the majority of your UI animations, and reach for Motion's variants API when you need parent-child coordination or complex state management.
