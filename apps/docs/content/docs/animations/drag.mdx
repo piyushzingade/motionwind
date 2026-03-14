@@ -177,88 +177,105 @@ You can combine `whileDrag` with other gestures. For example, a draggable elemen
 
 ## Drag Constraints
 
-Motion's `dragConstraints` prop lets you define boundaries that restrict how far an element can be dragged. Constraints can be pixel values or a ref to a parent element. This prop requires object or ref values that cannot be expressed as a single utility class, so use the Motion API directly:
+The `animate-drag-constraint-{side}-{n}` classes define pixel boundaries that restrict how far an element can be dragged. Each side is set independently:
+
+- `animate-drag-constraint-t-{n}` -- top boundary
+- `animate-drag-constraint-b-{n}` -- bottom boundary
+- `animate-drag-constraint-l-{n}` -- left boundary
+- `animate-drag-constraint-r-{n}` -- right boundary
 
 ```tsx
-import { motion, useRef } from "motion/react";
-
-function ConstrainedDrag() {
-  const constraintRef = useRef(null);
-
-  return (
-    <div ref={constraintRef} className="w-64 h-64 bg-gray-900 rounded-xl">
-      <motion.div
-        drag
-        dragConstraints={constraintRef}
-        className="w-16 h-16 bg-green-400 rounded-xl cursor-grab"
-      />
-    </div>
-  );
-}
+<div className="animate-drag-both animate-drag-constraint-t-100 animate-drag-constraint-b-100 animate-drag-constraint-l-100 animate-drag-constraint-r-100 w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  Constrained
+</div>
 ```
 
-With pixel values:
+Build output:
 
 ```tsx
 <motion.div
   drag
-  dragConstraints={{ top: -50, left: -50, right: 50, bottom: 50 }}
-  className="w-16 h-16 bg-green-400 rounded-xl cursor-grab"
-/>
+  dragConstraints={{ top: 100, left: 100, right: 100, bottom: 100 }}
+  className="w-16 h-16 rounded-xl bg-green-400 cursor-grab"
+>
+  Constrained
+</motion.div>
 ```
+
+<Callout>
+For ref-based constraints (constraining drag to a parent element), use the Motion API directly with a `useRef` and the `dragConstraints` prop.
+</Callout>
 
 ---
 
 ## Drag Snap to Origin
 
-`dragSnapToOrigin` makes the element animate back to its original position when released. This is a boolean prop on the Motion component:
+The `animate-drag-snap` class makes the element animate back to its original position when released. This maps to Motion's `dragSnapToOrigin` prop:
 
 ```tsx
-import { motion } from "motion/react";
-
-function SnapBack() {
-  return (
-    <motion.div
-      drag
-      dragSnapToOrigin
-      className="w-16 h-16 bg-green-400 rounded-xl cursor-grab"
-    >
-      I snap back
-    </motion.div>
-  );
-}
+<div className="animate-drag-both animate-drag-snap w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  I snap back
+</div>
 ```
 
-You can combine this with motionwind's drag visual feedback by adding `animate-drag:` classes to the same element in a hybrid approach:
+Build output:
 
 ```tsx
-<div className="animate-drag-both animate-drag:scale-110 animate-drag:rotate-5 animate-spring w-16 h-16 rounded-xl bg-green-400 cursor-grab">
-  {/* Note: dragSnapToOrigin needs to be added via Motion API */}
-</div>
+<motion.div
+  drag
+  dragSnapToOrigin
+  className="w-16 h-16 rounded-xl bg-green-400 cursor-grab"
+>
+  I snap back
+</motion.div>
 ```
 
 ---
 
 ## Drag Momentum
 
-By default, Motion applies momentum to dragged elements -- when you release, the element continues in the direction of the drag gesture. The `dragMomentum` prop controls this behavior:
+By default, Motion applies momentum to dragged elements -- when you release, the element continues in the direction of the drag gesture. The `animate-drag-no-momentum` class disables this behavior so the element stops immediately on release:
 
 ```tsx
-import { motion } from "motion/react";
+<div className="animate-drag-both animate-drag-no-momentum w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  No momentum
+</div>
+```
 
-// Disable momentum (element stops immediately on release)
+Build output:
+
+```tsx
 <motion.div
   drag
   dragMomentum={false}
-  className="w-16 h-16 bg-green-400 rounded-xl cursor-grab"
-/>
+  className="w-16 h-16 rounded-xl bg-green-400 cursor-grab"
+>
+  No momentum
+</motion.div>
+```
 
-// With momentum (default behavior)
+---
+
+## Drag Direction Lock
+
+The `animate-drag-lock` class locks the drag to whichever axis the user starts dragging in. If the user begins dragging horizontally, the element will only move on the X axis for that gesture (and vice versa). This maps to Motion's `dragDirectionLock` prop:
+
+```tsx
+<div className="animate-drag-both animate-drag-lock w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  Locked
+</div>
+```
+
+Build output:
+
+```tsx
 <motion.div
   drag
-  dragMomentum={true}
-  className="w-16 h-16 bg-green-400 rounded-xl cursor-grab"
-/>
+  dragDirectionLock
+  className="w-16 h-16 rounded-xl bg-green-400 cursor-grab"
+>
+  Locked
+</motion.div>
 ```
 
 ---
@@ -303,6 +320,13 @@ Since `Reorder.Group` and `Reorder.Item` are React components (uppercase), the m
 | `animate-drag-y` | `drag="y"` | Vertical dragging only |
 | `animate-drag-both` | `drag` | Free dragging on both axes |
 | `animate-drag-elastic-{n}` | `dragElastic={n/100}` | Snap-back elasticity (0-100) |
+| `animate-drag-snap` | `dragSnapToOrigin` | Snap back to origin on release |
+| `animate-drag-no-momentum` | `dragMomentum={false}` | Disable post-release momentum |
+| `animate-drag-lock` | `dragDirectionLock` | Lock to initial drag direction |
+| `animate-drag-constraint-t-{n}` | `dragConstraints={{ top: n }}` | Top boundary |
+| `animate-drag-constraint-l-{n}` | `dragConstraints={{ left: n }}` | Left boundary |
+| `animate-drag-constraint-r-{n}` | `dragConstraints={{ right: n }}` | Right boundary |
+| `animate-drag-constraint-b-{n}` | `dragConstraints={{ bottom: n }}` | Bottom boundary |
 | `animate-drag:scale-{n}` | `whileDrag={{ scale: n/100 }}` | Scale while dragging |
 | `animate-drag:rotate-{n}` | `whileDrag={{ rotate: n }}` | Rotate while dragging |
 | `animate-drag:opacity-{n}` | `whileDrag={{ opacity: n/100 }}` | Opacity while dragging |
