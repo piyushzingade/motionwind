@@ -1,6 +1,6 @@
 ---
 title: "Transform Animations"
-description: "Animate scaleX, scaleY, rotateX, rotateY, skewX, and skewY for advanced 2D and 3D transform effects."
+description: "Animate scaleX, scaleY, scaleZ, rotateX, rotateY, skewX, skewY, transform origin, perspective, Z-axis translation, and unit-based translate values for advanced 2D and 3D transform effects."
 ---
 
 Beyond the basic `scale` and `rotate` shorthands, motionwind supports individual axis transforms for fine-grained control over 2D and 3D animations. These map directly to Motion's transform properties and are processed identically at build time.
@@ -89,6 +89,40 @@ Combine `scaleX` and `scaleY` for classic squash-and-stretch effects:
 
 ---
 
+## ScaleZ
+
+Scale an element along the Z-axis for 3D depth scaling. Like `scaleX` and `scaleY`, values are divided by 100, so `scale-z-120` becomes `scaleZ: 1.2`. This is most useful in combination with `perspective` and other 3D transforms to create depth effects.
+
+```html
+<div className="[perspective:800px]">
+  <div className="animate-hover:scale-z-120 animate-hover:rotate-y-20 animate-spring">
+    Depth
+  </div>
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<div style={{ perspective: "800px" }}>
+  <motion.div
+    whileHover={{ scaleZ: 1.2, rotateY: 20 }}
+    transition={{ type: "spring" }}
+  >
+    Depth
+  </motion.div>
+</div>
+```
+
+| Class | Compiled Value |
+|---|---|
+| `animate-hover:scale-z-50` | `scaleZ: 0.5` |
+| `animate-hover:scale-z-100` | `scaleZ: 1` |
+| `animate-hover:scale-z-120` | `scaleZ: 1.2` |
+| `animate-hover:scale-z-200` | `scaleZ: 2` |
+
+---
+
 ## RotateX
 
 Rotate an element around the horizontal axis, creating a 3D tilt effect. The value is in degrees.
@@ -173,6 +207,36 @@ Combine `rotateY` with `initial` and `enter` gestures for a card flip on load:
 
 ---
 
+## Skew (Uniform)
+
+Apply the same skew angle to both axes simultaneously. The value is in degrees. Use `skew-12` to skew the element by 12 degrees on both the X and Y axes at once.
+
+```html
+<div className="animate-hover:skew-12 animate-spring">Skew</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ skew: 12 }}
+  transition={{ type: "spring" }}
+>
+  Skew
+</motion.div>
+```
+
+| Class | Compiled Value |
+|---|---|
+| `animate-hover:skew-6` | `skew: 6` |
+| `animate-hover:skew-12` | `skew: 12` |
+| `animate-hover:-skew-12` | `skew: -12` |
+| `animate-hover:skew-45` | `skew: 45` |
+
+If you need different skew values per axis, use the `skew-x-{n}` and `skew-y-{n}` classes below instead.
+
+---
+
 ## SkewX
 
 Skew an element along the horizontal axis. The value is in degrees. This creates a slanted, italic-like distortion.
@@ -224,6 +288,259 @@ Skew an element along the vertical axis. This creates a leaning, parallelogram-l
   Skew Y
 </motion.div>
 ```
+
+---
+
+## Z-Axis Translation
+
+Translate an element along the Z-axis for 3D depth movement. The class `z-{n}` compiles to `z: n` in pixels. This requires a parent element with CSS `perspective` for the 3D effect to be visible.
+
+```html
+<div className="[perspective:800px]">
+  <div className="animate-hover:z-50 animate-spring">
+    Come closer
+  </div>
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<div style={{ perspective: "800px" }}>
+  <motion.div
+    whileHover={{ z: 50 }}
+    transition={{ type: "spring" }}
+  >
+    Come closer
+  </motion.div>
+</div>
+```
+
+Positive values move the element towards the viewer; negative values push it away:
+
+| Class | Compiled Value |
+|---|---|
+| `animate-hover:z-50` | `z: 50` |
+| `animate-hover:z-100` | `z: 100` |
+| `animate-hover:-z-50` | `z: -50` |
+| `animate-hover:-z-100` | `z: -100` |
+
+---
+
+## Unit Values for Translate
+
+The `x`, `y`, and `z` translate classes support unit suffixes that compile to string values with the corresponding CSS unit. By default, values are plain numbers (pixels), but appending a unit suffix produces a quoted string value.
+
+### Supported Unit Suffixes
+
+| Suffix | CSS Unit | Example Class | Compiled Value |
+|---|---|---|---|
+| `pct` | `%` | `x-100pct` | `x: "100%"` |
+| `px` | `px` | `x-50px` | `x: "50px"` |
+| `vh` | `vh` | `x-50vh` | `x: "50vh"` |
+| `vw` | `vw` | `x-50vw` | `x: "50vw"` |
+| `rem` | `rem` | `x-3rem` | `x: "3rem"` |
+| `em` | `em` | `x-2em` | `x: "2em"` |
+| `dvh` | `dvh` | `y-100dvh` | `y: "100dvh"` |
+| `svh` | `svh` | `y-100svh` | `y: "100svh"` |
+| `lvh` | `lvh` | `y-100lvh` | `y: "100lvh"` |
+| *(none)* | `auto` | `y-auto` | `y: "auto"` |
+
+### Examples
+
+Slide an element by a percentage of its own width:
+
+```html
+<div className="animate-hover:x-100pct animate-spring">Slide right 100%</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ x: "100%" }}
+  transition={{ type: "spring" }}
+>
+  Slide right 100%
+</motion.div>
+```
+
+Slide an element by a viewport unit:
+
+```html
+<div className="animate-hover:x-50vh animate-spring">Slide 50vh</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ x: "50vh" }}
+  transition={{ type: "spring" }}
+>
+  Slide 50vh
+</motion.div>
+```
+
+### Negative Unit Values
+
+Negative values work with unit suffixes using the `-` prefix:
+
+```html
+<div className="animate-hover:-x-100pct animate-spring">Slide left 100%</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ x: "-100%" }}
+  transition={{ type: "spring" }}
+>
+  Slide left 100%
+</motion.div>
+```
+
+### Auto Value
+
+The special value `auto` does not take a number and compiles to the string `"auto"`:
+
+```html
+<div className="animate-hover:y-auto animate-spring">Auto Y</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ y: "auto" }}
+  transition={{ type: "spring" }}
+>
+  Auto Y
+</motion.div>
+```
+
+---
+
+## Transform Origin
+
+Control the origin point of transform animations using `origin-x-{n}`, `origin-y-{n}`, and `origin-z-{n}`. The X and Y values range from 0 to 100 and are divided by 100 to produce a 0-1 decimal, matching Motion's `originX` and `originY` props. The Z value is in pixels and is not divided.
+
+### Common Origin Values
+
+| Value | originX / originY | Position |
+|---|---|---|
+| `0` | `0` | Left / Top |
+| `25` | `0.25` | Quarter |
+| `50` | `0.5` | Center (default) |
+| `75` | `0.75` | Three-quarters |
+| `100` | `1` | Right / Bottom |
+
+### Rotate from Top-Left Corner
+
+```html
+<div className="animate-hover:origin-x-0 animate-hover:origin-y-0 animate-hover:rotate-45 animate-spring">
+  Top-left pivot
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ originX: 0, originY: 0, rotate: 45 }}
+  transition={{ type: "spring" }}
+>
+  Top-left pivot
+</motion.div>
+```
+
+### Rotate from Bottom-Right Corner
+
+```html
+<div className="animate-hover:origin-x-100 animate-hover:origin-y-100 animate-hover:rotate-45 animate-spring">
+  Bottom-right pivot
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ originX: 1, originY: 1, rotate: 45 }}
+  transition={{ type: "spring" }}
+>
+  Bottom-right pivot
+</motion.div>
+```
+
+### Origin Z
+
+The `origin-z-{n}` class maps to `originZ` in pixels (not divided by 100). This shifts the transform origin along the Z-axis for 3D effects:
+
+```html
+<div className="[perspective:800px]">
+  <div className="animate-hover:origin-z-100 animate-hover:rotate-y-30 animate-spring">
+    Z offset origin
+  </div>
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<div style={{ perspective: "800px" }}>
+  <motion.div
+    whileHover={{ originZ: 100, rotateY: 30 }}
+    transition={{ type: "spring" }}
+  >
+    Z offset origin
+  </motion.div>
+</div>
+```
+
+| Class | Compiled Value |
+|---|---|
+| `animate-hover:origin-x-0` | `originX: 0` |
+| `animate-hover:origin-x-50` | `originX: 0.5` |
+| `animate-hover:origin-x-100` | `originX: 1` |
+| `animate-hover:origin-y-0` | `originY: 0` |
+| `animate-hover:origin-y-50` | `originY: 0.5` |
+| `animate-hover:origin-y-100` | `originY: 1` |
+| `animate-hover:origin-z-100` | `originZ: 100` |
+
+---
+
+## Perspective
+
+Set the `perspective` Motion prop directly on the animated element. The class `perspective-{n}` compiles to `perspective: n` in pixels.
+
+This is different from CSS `perspective` applied on a parent container. Motion's `perspective` prop applies perspective to the element's own transform, which can be useful when you want the element itself to control its 3D space.
+
+```html
+<div className="animate-hover:perspective-800 animate-hover:rotate-y-30 animate-spring">
+  Self-perspective
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ perspective: 800, rotateY: 30 }}
+  transition={{ type: "spring" }}
+>
+  Self-perspective
+</motion.div>
+```
+
+| Class | Compiled Value |
+|---|---|
+| `animate-hover:perspective-400` | `perspective: 400` |
+| `animate-hover:perspective-800` | `perspective: 800` |
+| `animate-hover:perspective-1200` | `perspective: 1200` |
+
+> **Note:** This is the Motion `perspective` prop on the animated element itself. For applying CSS perspective on a parent container (needed for `rotateX`/`rotateY` to appear 3D), use a Tailwind utility like `[perspective:800px]` on the parent element. See the [3D Perspective Effects](#3d-perspective-effects) section below.
 
 ---
 
