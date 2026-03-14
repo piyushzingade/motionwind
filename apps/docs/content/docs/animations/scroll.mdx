@@ -138,6 +138,33 @@ Require the entire element to be visible in the viewport before triggering. By d
 
 Compiles to `viewport={{ once: true, amount: "all" }}`.
 
+### `animate-amount-{n}`
+
+Sets a numeric viewport threshold as a percentage. The value is divided by 100, so `animate-amount-50` equals `0.5`, meaning 50% of the element must be visible before the animation triggers. This gives finer control over when animations fire compared to the binary "some" (default) or "all" options.
+
+<Demo title="Half Visible Threshold">
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-amount-50 animate-duration-500 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    I animate when 50% visible
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-amount-50 animate-duration-500">
+  I animate when 50% visible
+</div>
+```
+
+Compiles to `viewport={{ once: true, amount: 0.5 }}`.
+
+| Class | Viewport amount | Description |
+|---|---|---|
+| (default) | `"some"` | Triggers when any part is visible |
+| `animate-amount-all` | `"all"` | Triggers when the entire element is visible |
+| `animate-amount-25` | `0.25` | Triggers when 25% is visible |
+| `animate-amount-50` | `0.5` | Triggers when 50% is visible |
+| `animate-amount-75` | `0.75` | Triggers when 75% is visible |
+| `animate-amount-{n}` | `n/100` | Triggers at the specified percentage |
+
 ### `animate-margin-{n}`
 
 Add a margin (in pixels) around the viewport detection boundary. A positive value triggers the animation before the element actually enters the visible area, creating an earlier reveal.
