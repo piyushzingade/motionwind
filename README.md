@@ -1,135 +1,174 @@
-# Turborepo starter
+# motionwind
 
-This Turborepo starter is maintained by the Turborepo core team.
+**Motion animations as Tailwind classes.** A Babel plugin that transforms `animate-hover:scale-110` into `whileHover={{ scale: 1.1 }}` at build time. Zero imports, zero boilerplate.
 
-## Using this example
+## Before & After
 
-Run the following command:
+**Before (verbose):**
 
-```sh
-npx create-turbo@latest
+```jsx
+"use client";
+import { motion } from "motion/react";
+
+<motion.button
+  className="px-6 py-3 bg-indigo-600 text-white rounded-lg"
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.9 }}
+  transition={{ type: "spring", stiffness: 400 }}
+>
+  Click Me!
+</motion.button>
 ```
 
-## What's inside?
+**After (motionwind):**
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```jsx
+// No imports needed! The Babel plugin handles everything.
+<button className="px-6 py-3 bg-indigo-600 text-white rounded-lg animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400">
+  Click Me!
+</button>
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Quick Start
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+```bash
+npx create-motionwind init
 ```
 
-### Develop
+Or install manually:
 
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+```bash
+npm install motionwind motion
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Next.js
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+```js
+// next.config.js
+import withMotionwind from "motionwind/next";
+export default withMotionwind({});
 ```
 
-### Remote Caching
+### Vite
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```ts
+// vite.config.ts
+import { motionwind } from "motionwind/vite";
+import react from "@vitejs/plugin-react";
+export default defineConfig({ plugins: [motionwind(), react()] });
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### Babel
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+```json
+{ "plugins": ["motionwind/babel"] }
 ```
 
-## Useful Links
+## Syntax
 
-Learn more about the power of Turborepo:
+Format: `animate-{gesture}:{property}-{value}`
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+### Gestures
+
+| Class Prefix | Motion Prop |
+|---|---|
+| `animate-hover:` | `whileHover` |
+| `animate-tap:` | `whileTap` |
+| `animate-focus:` | `whileFocus` |
+| `animate-inview:` | `whileInView` |
+| `animate-drag:` | `whileDrag` |
+| `animate-initial:` | `initial` |
+| `animate-enter:` | `animate` |
+| `animate-exit:` | `exit` |
+
+### Properties
+
+| Class | Motion Value |
+|---|---|
+| `scale-110` | `scale: 1.1` |
+| `rotate-45` | `rotate: 45` |
+| `x-20` | `x: 20` |
+| `y-100` | `y: 100` |
+| `opacity-0` | `opacity: 0` |
+| `blur-10` | `filter: "blur(10px)"` |
+| `rounded-16` | `borderRadius: 16` |
+| `w-200` | `width: 200` |
+| `h-100` | `height: 100` |
+
+Negative values: prefix with `-` (e.g., `animate-hover:-x-20`)
+
+Arbitrary values: `animate-hover:[backgroundColor=#4f46e5]`
+
+### Transition Config
+
+| Class | Effect |
+|---|---|
+| `animate-duration-300` | `duration: 0.3s` |
+| `animate-delay-500` | `delay: 0.5s` |
+| `animate-ease-in-out` | `ease: "easeInOut"` |
+| `animate-spring` | `type: "spring"` |
+| `animate-stiffness-400` | `stiffness: 400` |
+| `animate-damping-20` | `damping: 20` |
+| `animate-repeat-infinite` | `repeat: Infinity` |
+
+### Viewport & Drag
+
+| Class | Effect |
+|---|---|
+| `animate-once` | `viewport.once: true` |
+| `animate-drag-both` | `drag: true` |
+| `animate-drag-x` | `drag: "x"` |
+| `animate-drag-elastic-50` | `dragElastic: 0.5` |
+
+## Dynamic ClassNames
+
+For dynamic classNames that Babel can't statically analyze, use the runtime fallback:
+
+```tsx
+import { mw } from "motionwind";
+
+<mw.button className={`${isActive ? "bg-blue-500" : "bg-gray-500"} animate-hover:scale-110`}>
+  Dynamic
+</mw.button>
+```
+
+## Packages
+
+| Package | Description |
+|---|---|
+| `motionwind` | Core library — parser, Babel plugin, runtime component, framework integrations |
+| `create-motionwind` | CLI to scaffold motionwind in your project |
+
+## Development
+
+```bash
+# Install deps
+bun install
+
+# Dev mode
+bun run dev
+
+# Build
+bun run build
+
+# Test
+bun run test
+
+# Lint
+bun run lint
+
+# Type check
+bun run check-types
+```
+
+## How It Works
+
+1. **Parser** (`motionwind/parser`) — Framework-agnostic class parser. Zero dependencies.
+2. **Babel Plugin** (`motionwind/babel`) — Build-time JSX transform. Converts `<button className="animate-...">` into `<motion.button whileHover={...}>`. Auto-injects imports and `"use client"`.
+3. **Runtime Fallback** (`motionwind`) — `mw.*` Proxy for dynamic classNames.
+
+All Tailwind classes pass through untouched. Only `animate-{gesture}:` and `animate-{config}` tokens are intercepted.
+
+## License
+
+MIT
