@@ -58,16 +58,8 @@
     "check-types": "tsc --noEmit"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "motion": ">=11"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": false
-    },
-    "motion": {
-      "optional": false
-    }
+    "react": "^18.0.0 || ^19.0.0",
+    "motion": "^11.0.0 || ^12.0.0"
   },
   "dependencies": {
     "@babel/core": "^7.26.0",
