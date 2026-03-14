@@ -39,6 +39,12 @@ Or install manually:
 
 ```bash
 npm install motionwind motion
+# or
+yarn add motionwind motion
+# or
+pnpm add motionwind motion
+# or
+bun add motionwind motion
 ```
 
 ### Next.js
@@ -332,17 +338,17 @@ bun run check-types
 git clone https://github.com/<you>/motionwind.git
 cd motionwind
 
-# 2. Install dependencies (uses Bun)
-bun install
+# 2. Install dependencies (use any package manager)
+npm install    # or yarn install / pnpm install / bun install
 
 # 3. Build all packages
-bun run build
+npm run build  # or yarn build / pnpm build / bun run build
 
 # 4. Run dev mode (all packages + apps)
-bun run dev
+npm run dev    # or yarn dev / pnpm dev / bun run dev
 
 # 5. Run tests
-bun run test
+npm run test   # or yarn test / pnpm test / bun run test
 ```
 
 ### Where to Contribute
@@ -376,10 +382,10 @@ bun run test
          │
          ▼
   4. Run checks
-         bun run test        ── All tests pass
-         bun run lint         ── No lint errors
-         bun run check-types  ── No type errors
-         bun run build        ── Everything builds
+         npm run test        ── All tests pass
+         npm run lint         ── No lint errors
+         npm run check-types  ── No type errors
+         npm run build        ── Everything builds
          │
          ▼
   5. Open a PR against main
@@ -387,7 +393,7 @@ bun run test
 
 ### Key Conventions
 
-- **Bun** as package manager — don't use npm/yarn/pnpm
+- **npm**, **yarn**, **pnpm**, or **bun** — any package manager works
 - **Vitest** for testing — tests live in `__tests__/` directories
 - **tsup** builds the core library — config in `packages/motionwind/tsup.config.ts`
 - **Turbo** orchestrates builds — `^build` means packages build before apps
