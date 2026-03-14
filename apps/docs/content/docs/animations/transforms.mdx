@@ -1,0 +1,360 @@
+---
+title: "Transform Animations"
+description: "Animate scaleX, scaleY, rotateX, rotateY, skewX, and skewY for advanced 2D and 3D transform effects."
+---
+
+Beyond the basic `scale` and `rotate` shorthands, motionwind supports individual axis transforms for fine-grained control over 2D and 3D animations. These map directly to Motion's transform properties and are processed identically at build time.
+
+---
+
+## ScaleX
+
+Scale an element along the horizontal axis only. Values work the same as `scale` -- they are divided by 100, so `scale-x-120` becomes `scaleX: 1.2`.
+
+<Demo title="Hover to Stretch Horizontally">
+  <div className="w-24 h-16 bg-[#c8ff2e] rounded-xl flex items-center justify-center text-black font-bold cursor-pointer animate-hover:scale-x-120 animate-spring">
+    X
+  </div>
+</Demo>
+
+```html
+<div className="animate-hover:scale-x-120 animate-spring">X</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ scaleX: 1.2 }}
+  transition={{ type: "spring" }}
+>
+  X
+</motion.div>
+```
+
+---
+
+## ScaleY
+
+Scale an element along the vertical axis only. Use `scale-y-120` to stretch it taller, or `scale-y-50` to squash it.
+
+<Demo title="Hover to Stretch Vertically">
+  <div className="w-16 h-24 bg-[#c8ff2e] rounded-xl flex items-center justify-center text-black font-bold cursor-pointer animate-hover:scale-y-120 animate-spring">
+    Y
+  </div>
+</Demo>
+
+```html
+<div className="animate-hover:scale-y-120 animate-spring">Y</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ scaleY: 1.2 }}
+  transition={{ type: "spring" }}
+>
+  Y
+</motion.div>
+```
+
+### Squash and Stretch
+
+Combine `scaleX` and `scaleY` for classic squash-and-stretch effects:
+
+<Demo title="Tap to Squash">
+  <div className="w-20 h-20 bg-[#c8ff2e] rounded-2xl flex items-center justify-center text-black font-bold cursor-pointer animate-hover:scale-y-80 animate-hover:scale-x-120 animate-tap:scale-y-70 animate-tap:scale-x-130 animate-spring animate-stiffness-400 animate-damping-10">
+    Boing
+  </div>
+</Demo>
+
+```html
+<div className="animate-hover:scale-y-80 animate-hover:scale-x-120 animate-tap:scale-y-70 animate-tap:scale-x-130 animate-spring animate-stiffness-400 animate-damping-10">
+  Boing
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ scaleY: 0.8, scaleX: 1.2 }}
+  whileTap={{ scaleY: 0.7, scaleX: 1.3 }}
+  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+>
+  Boing
+</motion.div>
+```
+
+---
+
+## RotateX
+
+Rotate an element around the horizontal axis, creating a 3D tilt effect. The value is in degrees.
+
+For the 3D effect to be visible, the parent element needs CSS `perspective`. You can set this with a Tailwind utility like `[perspective:800px]`.
+
+<Demo title="Hover to Tilt Forward">
+  <div className="[perspective:800px]">
+    <div className="w-32 h-20 bg-[#c8ff2e] rounded-xl flex items-center justify-center text-black font-bold cursor-pointer animate-hover:rotate-x-45 animate-spring">
+      Tilt X
+    </div>
+  </div>
+</Demo>
+
+```html
+<div className="[perspective:800px]">
+  <div className="animate-hover:rotate-x-45 animate-spring">
+    Tilt X
+  </div>
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<div style={{ perspective: "800px" }}>
+  <motion.div
+    whileHover={{ rotateX: 45 }}
+    transition={{ type: "spring" }}
+  >
+    Tilt X
+  </motion.div>
+</div>
+```
+
+---
+
+## RotateY
+
+Rotate an element around the vertical axis. This creates a card-flip or door-swing type of 3D effect.
+
+<Demo title="Hover to Swing Open">
+  <div className="[perspective:800px]">
+    <div className="w-32 h-20 bg-[#c8ff2e] rounded-xl flex items-center justify-center text-black font-bold cursor-pointer animate-hover:rotate-y-45 animate-spring">
+      Tilt Y
+    </div>
+  </div>
+</Demo>
+
+```html
+<div className="[perspective:800px]">
+  <div className="animate-hover:rotate-y-45 animate-spring">
+    Tilt Y
+  </div>
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<div style={{ perspective: "800px" }}>
+  <motion.div
+    whileHover={{ rotateY: 45 }}
+    transition={{ type: "spring" }}
+  >
+    Tilt Y
+  </motion.div>
+</div>
+```
+
+### Full Card Flip
+
+Combine `rotateY` with `initial` and `enter` gestures for a card flip on load:
+
+```html
+<div className="[perspective:1000px]">
+  <div className="animate-initial:rotate-y-180 animate-enter:rotate-y-0 animate-duration-800">
+    Flips in on mount
+  </div>
+</div>
+```
+
+---
+
+## SkewX
+
+Skew an element along the horizontal axis. The value is in degrees. This creates a slanted, italic-like distortion.
+
+<Demo title="Hover to Skew Horizontally">
+  <div className="px-8 py-4 bg-[#c8ff2e] rounded-xl text-black font-bold cursor-pointer animate-hover:skew-x-12 animate-spring">
+    Skew X
+  </div>
+</Demo>
+
+```html
+<div className="animate-hover:skew-x-12 animate-spring">Skew X</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ skewX: 12 }}
+  transition={{ type: "spring" }}
+>
+  Skew X
+</motion.div>
+```
+
+---
+
+## SkewY
+
+Skew an element along the vertical axis. This creates a leaning, parallelogram-like distortion.
+
+<Demo title="Hover to Skew Vertically">
+  <div className="px-8 py-4 bg-[#c8ff2e] rounded-xl text-black font-bold cursor-pointer animate-hover:skew-y-12 animate-spring">
+    Skew Y
+  </div>
+</Demo>
+
+```html
+<div className="animate-hover:skew-y-12 animate-spring">Skew Y</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  whileHover={{ skewY: 12 }}
+  transition={{ type: "spring" }}
+>
+  Skew Y
+</motion.div>
+```
+
+---
+
+## Negative Values
+
+All transform properties support negative values using the `-` prefix. This flips the direction of the animation.
+
+<Demo title="Negative Transforms">
+  <div className="flex gap-6 items-center">
+    <div className="w-16 h-16 bg-[#c8ff2e] rounded-lg flex items-center justify-center text-black font-bold cursor-pointer animate-hover:-rotate-45 animate-spring">
+      -45
+    </div>
+    <div className="w-16 h-16 bg-[#c8ff2e]/70 rounded-lg flex items-center justify-center text-black font-bold cursor-pointer animate-hover:-skew-x-12 animate-spring">
+      -Sk
+    </div>
+    <div className="w-16 h-16 bg-[#c8ff2e]/40 rounded-lg flex items-center justify-center text-black font-bold cursor-pointer animate-hover:-x-20 animate-spring">
+      -X
+    </div>
+  </div>
+</Demo>
+
+```html
+<!-- Rotate counter-clockwise -->
+<div className="animate-hover:-rotate-45">-45</div>
+
+<!-- Skew in the opposite direction -->
+<div className="animate-hover:-skew-x-12">-Sk</div>
+
+<!-- Slide left instead of right -->
+<div className="animate-hover:-x-20">-X</div>
+```
+
+The `-` prefix sets an internal `negative` flag that multiplies the parsed value by `-1`:
+
+| Class | Compiled Value |
+|---|---|
+| `animate-hover:rotate-45` | `rotate: 45` |
+| `animate-hover:-rotate-45` | `rotate: -45` |
+| `animate-hover:x-20` | `x: 20` |
+| `animate-hover:-x-20` | `x: -20` |
+
+---
+
+## Combined Transforms
+
+Stack multiple transform classes on the same gesture to create rich, multi-axis effects.
+
+<Demo title="3D Hover Card">
+  <div className="[perspective:800px]">
+    <div className="w-48 h-32 bg-gradient-to-br from-[#c8ff2e]/20 to-[#c8ff2e]/5 border border-[#c8ff2e]/30 rounded-2xl flex items-center justify-center text-white font-medium cursor-pointer animate-hover:rotate-x-10 animate-hover:-rotate-y-10 animate-hover:scale-105 animate-spring">
+      3D hover card
+    </div>
+  </div>
+</Demo>
+
+```html
+<div className="[perspective:800px]">
+  <div className="animate-hover:rotate-x-10 animate-hover:-rotate-y-10 animate-hover:scale-105 animate-spring">
+    3D hover card
+  </div>
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<div style={{ perspective: "800px" }}>
+  <motion.div
+    whileHover={{ rotateX: 10, rotateY: -10, scale: 1.05 }}
+    transition={{ type: "spring" }}
+  >
+    3D hover card
+  </motion.div>
+</div>
+```
+
+---
+
+## 3D Perspective Effects
+
+For any `rotateX` or `rotateY` animation to look three-dimensional, you need CSS `perspective` on a parent element. Without it, the rotation will appear flat.
+
+Tips for perspective values:
+- **Lower values** (300-500px) create a more dramatic, exaggerated 3D effect
+- **Higher values** (800-1200px) create a subtler, more realistic depth
+- Apply `perspective` to the **parent** container, not the animated element itself
+
+<Demo title="Dramatic vs Subtle Perspective">
+  <div className="flex gap-8 items-center">
+    <div className="text-center">
+      <div className="[perspective:300px] mb-2">
+        <div className="w-20 h-14 bg-[#c8ff2e] rounded-lg flex items-center justify-center text-black font-bold cursor-pointer animate-hover:rotate-y-30 animate-spring">
+          300
+        </div>
+      </div>
+      <span className="text-xs text-white/50">300px</span>
+    </div>
+    <div className="text-center">
+      <div className="[perspective:600px] mb-2">
+        <div className="w-20 h-14 bg-[#c8ff2e] rounded-lg flex items-center justify-center text-black font-bold cursor-pointer animate-hover:rotate-y-30 animate-spring">
+          600
+        </div>
+      </div>
+      <span className="text-xs text-white/50">600px</span>
+    </div>
+    <div className="text-center">
+      <div className="[perspective:1200px] mb-2">
+        <div className="w-20 h-14 bg-[#c8ff2e] rounded-lg flex items-center justify-center text-black font-bold cursor-pointer animate-hover:rotate-y-30 animate-spring">
+          1200
+        </div>
+      </div>
+      <span className="text-xs text-white/50">1200px</span>
+    </div>
+  </div>
+</Demo>
+
+```html
+<!-- Dramatic 3D -->
+<div className="[perspective:300px]">
+  <div className="animate-hover:rotate-y-30">300px</div>
+</div>
+
+<!-- Moderate 3D -->
+<div className="[perspective:600px]">
+  <div className="animate-hover:rotate-y-30">600px</div>
+</div>
+
+<!-- Subtle 3D -->
+<div className="[perspective:1200px]">
+  <div className="animate-hover:rotate-y-30">1200px</div>
+</div>
+```
+
+All three elements use the same `rotate-y-30` class, but the parent's `perspective` value controls how pronounced the 3D rotation appears.
