@@ -248,6 +248,13 @@ For tween (duration-based) animations, easing functions control the acceleration
 | `animate-ease-out` | `ease: "easeOut"` | Starts fast, decelerates |
 | `animate-ease-in-out` | `ease: "easeInOut"` | Slow at both ends |
 | `animate-ease-linear` | `ease: "linear"` | Constant speed throughout |
+| `animate-ease-circ-in` | `ease: "circIn"` | Circular ease in (sharper curve) |
+| `animate-ease-circ-out` | `ease: "circOut"` | Circular ease out |
+| `animate-ease-circ-in-out` | `ease: "circInOut"` | Circular ease in-out |
+| `animate-ease-back-in` | `ease: "backIn"` | Overshoots then comes back (enters with overshoot) |
+| `animate-ease-back-out` | `ease: "backOut"` | Anticipation then settles (exits with anticipation) |
+| `animate-ease-back-in-out` | `ease: "backInOut"` | Both overshoot and anticipation |
+| `animate-ease-anticipate` | `ease: "anticipate"` | Pulls back then shoots forward |
 
 **Example compiled output:**
 
@@ -259,7 +266,99 @@ For tween (duration-based) animations, easing functions control the acceleration
 />
 ```
 
+### Extended Easing Functions
+
+Beyond the standard CSS-like easings, motionwind provides additional easing curves from Motion's library. These are useful for more expressive animations.
+
+<Demo title="Extended Easings" className="flex-col gap-4">
+  <div className="animate-initial:opacity-0 animate-initial:-x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-800 animate-ease-circ-out rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-56 text-center">
+    circ-out (sharp decel)
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:-x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-800 animate-ease-back-out rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-56 text-center">
+    back-out (anticipation)
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:-x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-800 animate-ease-anticipate rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-56 text-center">
+    anticipate (pull back)
+  </div>
+</Demo>
+
+```html
+<div className="... animate-duration-800 animate-ease-circ-out">circ-out</div>
+<div className="... animate-duration-800 animate-ease-back-out">back-out</div>
+<div className="... animate-duration-800 animate-ease-anticipate">anticipate</div>
+```
+
+**Compiled output for back-out:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, x: -40 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.8, ease: "backOut" }}
+/>
+```
+
+- **Circular easings** (`circ-in`, `circ-out`, `circ-in-out`) produce a sharper acceleration curve than the standard easings, based on a circular function.
+- **Back easings** (`back-in`, `back-out`, `back-in-out`) overshoot the target value before settling, creating an elastic feel without using a spring.
+- **Anticipate** pulls back slightly before moving forward, like winding up before a throw.
+
 Easing classes are ignored when using spring animations, since springs are physics-based and do not follow a timing curve.
+
+---
+
+## Custom Cubic-Bezier
+
+For complete control over the easing curve, use the arbitrary value syntax to define a custom cubic-bezier curve. The four values correspond to the two control points of the bezier curve (x1, y1, x2, y2).
+
+```html
+<div className="... animate-duration-600 animate-ease-[0.25,0.1,0.25,1]">
+  Custom cubic-bezier
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+/>
+```
+
+| Class | Compiled value |
+|---|---|
+| `animate-ease-[0.25,0.1,0.25,1]` | `ease: [0.25, 0.1, 0.25, 1]` |
+| `animate-ease-[0.42,0,0.58,1]` | `ease: [0.42, 0, 0.58, 1]` |
+| `animate-ease-[0.6,0.04,0.98,0.335]` | `ease: [0.6, 0.04, 0.98, 0.335]` |
+
+This allows any custom cubic-bezier curve, matching the same four-value format used by the CSS `cubic-bezier()` function.
+
+---
+
+## Steps Easing
+
+Steps easing creates a stepped animation with a specified number of discrete steps, rather than a smooth interpolation. This is useful for sprite sheet animations, typewriter effects, or any animation that should jump between values.
+
+```html
+<div className="... animate-duration-1000 animate-ease-steps-5">
+  Stepped animation (5 steps)
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  transition={{ duration: 1, ease: "steps(5)" }}
+/>
+```
+
+| Class | Compiled value | Result |
+|---|---|---|
+| `animate-ease-steps-3` | `ease: "steps(3)"` | 3 discrete steps |
+| `animate-ease-steps-5` | `ease: "steps(5)"` | 5 discrete steps |
+| `animate-ease-steps-10` | `ease: "steps(10)"` | 10 discrete steps |
+
+Higher step counts produce smoother-looking motion, while lower counts create a more visible staircase effect.
 
 ---
 
@@ -353,6 +452,261 @@ All transition classes can be freely combined. They merge into a single `transit
 
 ---
 
+## Repeat Type
+
+Control how an animation behaves when it repeats. By default, repeating animations restart from the beginning each cycle. Use repeat type classes to change this behavior.
+
+| Class | Compiled value | Behavior |
+|---|---|---|
+| `animate-repeat-reverse` | `repeatType: "reverse"` | Alternates direction each cycle |
+| `animate-repeat-mirror` | `repeatType: "mirror"` | Same as reverse -- alternates direction |
+
+<Demo title="Repeat Reverse">
+  <div className="animate-initial:x-0 animate-enter:x-100 animate-duration-1000 animate-repeat-infinite animate-repeat-reverse rounded-xl bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-32 text-center">
+    Back and forth
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:x-0 animate-enter:x-100 animate-repeat-infinite animate-repeat-reverse animate-duration-1000">
+  Back and forth
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ x: 0 }}
+  animate={{ x: 100 }}
+  transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
+/>
+```
+
+Without `animate-repeat-reverse`, the element would snap back to the start position at the end of each cycle. With it, the animation smoothly reverses direction, creating a ping-pong effect.
+
+---
+
+## Repeat Delay
+
+The `animate-repeat-delay-{ms}` class adds a pause between each repetition of the animation. The value is in milliseconds and converts to seconds.
+
+```html
+<div className="animate-initial:opacity-50 animate-enter:opacity-100 animate-repeat-infinite animate-repeat-reverse animate-repeat-delay-500 animate-duration-800">
+  Pulse with pause
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0.5 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse", repeatDelay: 0.5 }}
+/>
+```
+
+| Class | Compiled value |
+|---|---|
+| `animate-repeat-delay-200` | `repeatDelay: 0.2` |
+| `animate-repeat-delay-500` | `repeatDelay: 0.5` |
+| `animate-repeat-delay-1000` | `repeatDelay: 1` |
+
+The delay occurs after each cycle completes and before the next cycle begins. This is useful for creating pulsing or breathing effects with a natural pause.
+
+---
+
+## Stagger Children
+
+The `animate-stagger-{ms}` class is applied to a parent element to stagger the start of each child's animation. The value is in milliseconds and converts to seconds. This creates a cascading effect where each child begins its animation slightly after the previous one.
+
+<Demo title="Staggered Children">
+  <div className="animate-stagger-100 flex gap-4">
+    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-400 rounded-lg bg-fd-primary px-4 py-3 text-fd-primary-foreground text-sm font-medium">
+      First
+    </div>
+    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-400 rounded-lg bg-fd-primary px-4 py-3 text-fd-primary-foreground text-sm font-medium">
+      Second
+    </div>
+    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-400 rounded-lg bg-fd-primary px-4 py-3 text-fd-primary-foreground text-sm font-medium">
+      Third
+    </div>
+  </div>
+</Demo>
+
+```html
+<div className="animate-stagger-100">
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-400">First</div>
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-400">Second</div>
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-400">Third</div>
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div transition={{ staggerChildren: 0.1 }}>
+  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} />
+  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} />
+  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} />
+</motion.div>
+```
+
+| Class | Compiled value |
+|---|---|
+| `animate-stagger-50` | `staggerChildren: 0.05` |
+| `animate-stagger-100` | `staggerChildren: 0.1` |
+| `animate-stagger-200` | `staggerChildren: 0.2` |
+
+### Reverse Stagger Order
+
+Use `animate-stagger-reverse` to reverse the stagger direction, so the last child animates first.
+
+```html
+<div className="animate-stagger-100 animate-stagger-reverse">
+  <div className="...">Animates third</div>
+  <div className="...">Animates second</div>
+  <div className="...">Animates first</div>
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div transition={{ staggerChildren: 0.1, staggerDirection: -1 }}>
+  ...
+</motion.div>
+```
+
+---
+
+## Delay Children
+
+The `animate-delay-children-{ms}` class delays all children animations by the specified amount. This is applied to the parent element and affects every child uniformly, unlike stagger which adds incremental delay. The value is in milliseconds and converts to seconds.
+
+```html
+<div className="animate-delay-children-200 animate-stagger-100">
+  <div className="animate-initial:opacity-0 animate-enter:opacity-100">First (starts at 200ms)</div>
+  <div className="animate-initial:opacity-0 animate-enter:opacity-100">Second (starts at 300ms)</div>
+  <div className="animate-initial:opacity-0 animate-enter:opacity-100">Third (starts at 400ms)</div>
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div transition={{ delayChildren: 0.2, staggerChildren: 0.1 }}>
+  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
+  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
+  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
+</motion.div>
+```
+
+| Class | Compiled value |
+|---|---|
+| `animate-delay-children-100` | `delayChildren: 0.1` |
+| `animate-delay-children-200` | `delayChildren: 0.2` |
+| `animate-delay-children-500` | `delayChildren: 0.5` |
+
+When combined with `animate-stagger-{ms}`, the delay children value is applied first, then stagger is added incrementally on top. In the example above, the first child starts at 200ms, the second at 300ms, and the third at 400ms.
+
+---
+
+## Orchestration (when)
+
+Orchestration classes control the order in which a parent and its children animate. By default, parent and children animations run simultaneously. Use `animate-when-before` or `animate-when-after` to sequence them.
+
+| Class | Compiled value | Behavior |
+|---|---|---|
+| `animate-when-before` | `when: "beforeChildren"` | Parent animates first, then children start |
+| `animate-when-after` | `when: "afterChildren"` | Children animate first, then parent starts |
+
+```html
+<div className="animate-initial:opacity-0 animate-enter:opacity-100 animate-when-before animate-stagger-100">
+  <div className="animate-initial:y-20 animate-enter:y-0">Child 1</div>
+  <div className="animate-initial:y-20 animate-enter:y-0">Child 2</div>
+  <div className="animate-initial:y-20 animate-enter:y-0">Child 3</div>
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ when: "beforeChildren", staggerChildren: 0.1 }}
+>
+  <motion.div initial={{ y: 20 }} animate={{ y: 0 }} />
+  <motion.div initial={{ y: 20 }} animate={{ y: 0 }} />
+  <motion.div initial={{ y: 20 }} animate={{ y: 0 }} />
+</motion.div>
+```
+
+In this example, the parent fades in first. Once the parent animation completes, the children slide up one by one with a 100ms stagger between them.
+
+---
+
+## Rest Speed & Rest Delta
+
+These classes fine-tune when a spring animation is considered "at rest" and stops calculating. They only apply to spring animations.
+
+| Class | Compiled value | Controls |
+|---|---|---|
+| `animate-rest-speed-{n}` | `restSpeed: n` | Velocity threshold below which the spring is considered at rest |
+| `animate-rest-delta-{n}` | `restDelta: n` | Distance from target below which the spring is considered at rest |
+
+```html
+<div className="animate-initial:x-0 animate-enter:x-200 animate-spring animate-stiffness-300 animate-damping-10 animate-rest-speed-2 animate-rest-delta-1">
+  Faster settling
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ x: 0 }}
+  animate={{ x: 200 }}
+  transition={{ type: "spring", stiffness: 300, damping: 10, restSpeed: 2, restDelta: 1 }}
+/>
+```
+
+Increasing `restSpeed` and `restDelta` causes the spring to stop sooner, cutting off the tail end of tiny oscillations. This is useful for performance or when you want the animation to feel "done" faster. Lowering these values makes the spring more precise but can result in longer settling times.
+
+---
+
+## Keyframe Times
+
+The `animate-times-[...]` class controls when each keyframe is reached during a keyframe animation. Values are provided as a comma-separated list in the range 0 to 1, where 0 is the start and 1 is the end of the animation.
+
+```html
+<div className="animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-1000 animate-times-[0,0.5,1]">
+  Timed keyframes
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1, times: [0, 0.5, 1] }}
+/>
+```
+
+| Class | Compiled value |
+|---|---|
+| `animate-times-[0,0.5,1]` | `times: [0, 0.5, 1]` |
+| `animate-times-[0,0.2,0.8,1]` | `times: [0, 0.2, 0.8, 1]` |
+| `animate-times-[0,0.1,0.9,1]` | `times: [0, 0.1, 0.9, 1]` |
+
+The number of time values should match the number of keyframes in the animation. Each time value maps to the corresponding keyframe, giving you precise control over the pacing of multi-step animations. For example, `[0, 0.2, 0.8, 1]` means the second keyframe is reached at 20% of the duration, and the third at 80%.
+
+---
+
 ## Inertia Animations
 
 Inertia is a Motion animation type designed for decelerating a value based on its initial velocity. It is primarily used internally by Motion's drag system -- when you release a dragged element, inertia determines how it decelerates to a stop.
@@ -415,5 +769,25 @@ This velocity continuity is one of the key advantages of spring animations over 
 | `animate-ease-out` | `ease: "easeOut"` | Tween: slow end |
 | `animate-ease-in-out` | `ease: "easeInOut"` | Tween: slow both ends |
 | `animate-ease-linear` | `ease: "linear"` | Tween: constant speed |
+| `animate-ease-circ-in` | `ease: "circIn"` | Circular ease in (sharper curve) |
+| `animate-ease-circ-out` | `ease: "circOut"` | Circular ease out |
+| `animate-ease-circ-in-out` | `ease: "circInOut"` | Circular ease in-out |
+| `animate-ease-back-in` | `ease: "backIn"` | Enters with overshoot |
+| `animate-ease-back-out` | `ease: "backOut"` | Exits with anticipation |
+| `animate-ease-back-in-out` | `ease: "backInOut"` | Both overshoot and anticipation |
+| `animate-ease-anticipate` | `ease: "anticipate"` | Pulls back then shoots forward |
+| `animate-ease-[n,n,n,n]` | `ease: [n, n, n, n]` | Custom cubic-bezier curve |
+| `animate-ease-steps-{n}` | `ease: "steps(n)"` | Stepped animation with n steps |
 | `animate-duration-{ms}` | `duration: ms / 1000` | Animation length in ms |
 | `animate-delay-{ms}` | `delay: ms / 1000` | Start delay in ms |
+| `animate-repeat-reverse` | `repeatType: "reverse"` | Alternates direction each cycle |
+| `animate-repeat-mirror` | `repeatType: "mirror"` | Same as reverse |
+| `animate-repeat-delay-{ms}` | `repeatDelay: ms / 1000` | Pause between repeats |
+| `animate-stagger-{ms}` | `staggerChildren: ms / 1000` | Stagger child animations (on parent) |
+| `animate-stagger-reverse` | `staggerDirection: -1` | Reverse stagger order |
+| `animate-delay-children-{ms}` | `delayChildren: ms / 1000` | Delay all children animations |
+| `animate-when-before` | `when: "beforeChildren"` | Parent animates before children |
+| `animate-when-after` | `when: "afterChildren"` | Parent animates after children |
+| `animate-rest-speed-{n}` | `restSpeed: n` | Spring rest velocity threshold |
+| `animate-rest-delta-{n}` | `restDelta: n` | Spring rest distance threshold |
+| `animate-times-[...]` | `times: [...]` | Keyframe timing control |
