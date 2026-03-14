@@ -1,0 +1,358 @@
+---
+title: "Framework Setup"
+description: "Detailed integration guides for Next.js and Vite, plus troubleshooting common issues."
+---
+
+## Next.js
+
+### How `withMotionwind` works
+
+Motionwind ships a Next.js config wrapper that plugs a Babel transform into webpack. When you wrap your config with `withMotionwind`, here is what happens under the hood:
+
+1. A **webpack rule** is injected with `enforce: "pre"` so it runs before Next.js's built-in SWC compiler.
+2. The rule targets all `.tsx` and `.jsx` files in your project.
+3. It runs `babel-loader` with the `motionwind/babel` plugin. No `.babelrc` file is needed and no other Babel presets are loaded.
+4. The Babel plugin scans every JSX element for static `className` strings that contain `animate-*` tokens.
+5. Matching elements are rewritten from plain HTML tags (`<div>`, `<button>`, etc.) to their `motion.*` equivalents (`<motion.div>`, `<motion.button>`) with the appropriate Motion props.
+
+### Setup
+
+```tsx
+// next.config.mjs
+import { withMotionwind } from "motionwind/next";
+
+const nextConfig = {
+  // your existing config
+};
+
+export default withMotionwind(nextConfig);
+```
+
+If you are using CommonJS (`next.config.js`):
+
+```tsx
+const { withMotionwind } = require("motionwind/next");
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {};
+
+module.exports = withMotionwind(nextConfig);
+```
+
+### Webpack configuration details
+
+The injected webpack rule looks like this internally:
+
+```tsx
+{
+  test: /\.(tsx|jsx)$/,
+  enforce: "pre",
+  use: [
+    {
+      loader: "babel-loader",
+      options: {
+        plugins: [require.resolve("motionwind/babel")],
+        parserOpts: {
+          plugins: ["typescript", "jsx"],
+        },
+        configFile: false,
+        babelrc: false,
+      },
+    },
+  ],
+}
+```
+
+Key points:
+- **`enforce: "pre"`** ensures the motionwind transform runs before SWC processes the file. This is critical because SWC handles the actual JSX compilation -- motionwind just rewrites element names and attributes beforehand.
+- **`configFile: false` and `babelrc: false`** prevent Babel from picking up any project-level Babel config. The motionwind plugin is the only thing that runs.
+- **`parserOpts`** enables TypeScript and JSX syntax parsing so Babel can understand `.tsx` files without needing `@babel/preset-typescript`.
+
+If you have an existing `webpack` function in your Next.js config, `withMotionwind` will call it after injecting its rule, so your custom configuration is preserved.
+
+### App Router and Server Components
+
+Motionwind works with the Next.js App Router and React Server Components out of the box. The Babel plugin automatically handles the client/server boundary:
+
+- **`"use client"` auto-injection**: When the plugin transforms a file (rewrites any element to a `motion.*` component), it automatically adds a `"use client"` directive at the top of the file. This is necessary because Motion components use browser APIs and cannot run as Server Components.
+- **`import { motion } from "motion/react"` auto-injection**: The required import is added automatically if not already present in the file.
+
+This means you do **not** need to manually add `"use client"` to every file that uses motionwind classes. The plugin handles it for you.
+
+However, be aware of the architectural implications:
+- A file that gets transformed will become a Client Component, which means its children are also rendered on the client by default.
+- If you want to keep most of a page as a Server Component and only animate specific parts, extract the animated elements into a separate component file.
+
+```tsx
+// app/page.tsx (Server Component -- no animate-* classes here)
+import { AnimatedHero } from "./hero";
+
+export default function Page() {
+  return (
+    <main>
+      <AnimatedHero />
+      {/* rest of the page stays as a Server Component */}
+    </main>
+  );
+}
+```
+
+```tsx
+// app/hero.tsx (will become a Client Component after transform)
+export function AnimatedHero() {
+  return (
+    <div className="animate-enter:opacity-100 animate-initial:opacity-0 animate-duration-500">
+      <h1 className="text-4xl font-bold">Welcome</h1>
+    </div>
+  );
+}
+```
+
+After the build, `hero.tsx` will have `"use client"` injected at the top automatically.
+
+### Verifying the transform
+
+To confirm that motionwind is transforming your code correctly, you can:
+
+**1. Check the build output**
+
+Run `next build` and look for any errors. If the build succeeds and your animations work, the transform is running.
+
+**2. Inspect the compiled output**
+
+In development, open your browser's DevTools and look at the rendered DOM. Elements that had motionwind classes should appear as regular HTML elements with inline styles applied by Motion (you will see `style` attributes with `transform`, `opacity`, etc.).
+
+**3. Use the parser directly**
+
+You can test what the parser produces for any className string:
+
+```tsx
+import { parseMotionClasses } from "motionwind";
+
+const result = parseMotionClasses(
+  "bg-white p-4 animate-hover:scale-110 animate-duration-300"
+);
+console.log(result);
+// {
+//   tailwindClasses: "bg-white p-4",
+//   gestures: { whileHover: { scale: 1.1 } },
+//   transition: { duration: 0.3 },
+//   viewport: {},
+//   dragConfig: {},
+//   hasMotion: true
+// }
+```
+
+---
+
+## Vite
+
+### How the plugin works
+
+The Vite plugin runs the same Babel transform as the Next.js integration, but hooks into Vite's plugin system instead of webpack.
+
+1. The plugin registers with `enforce: "pre"`, which means it runs **before** other plugins in the transform pipeline -- including the React plugin that handles JSX compilation.
+2. For every `.jsx` or `.tsx` file, the plugin first checks if the file contains the string `animate-`. If not, the file is skipped entirely (this is a fast string check, not a full parse).
+3. Files that pass the check are run through `@babel/core`'s `transformSync` with the motionwind Babel plugin and `@babel/plugin-syntax-jsx` for JSX parsing.
+4. The transformed code and source map are returned to Vite.
+
+### Setup
+
+```tsx
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { motionwind } from "motionwind/vite";
+
+export default defineConfig({
+  plugins: [
+    motionwind(),  // Must come BEFORE the React plugin
+    react(),
+  ],
+});
+```
+
+### Plugin order matters
+
+The motionwind plugin **must** come before the React plugin in the `plugins` array. This is because:
+
+- Motionwind needs to rewrite JSX element names (e.g., `<div>` to `<motion.div>`) and add attributes **before** the React plugin compiles JSX into `React.createElement` or `jsx()` calls.
+- If the React plugin runs first, the JSX is already compiled and motionwind cannot find or rewrite JSX elements.
+
+Incorrect order (will not work):
+
+```tsx
+// DO NOT do this
+plugins: [
+  react(),        // React runs first -- JSX is already compiled
+  motionwind(),   // Too late, no JSX to transform
+]
+```
+
+Correct order:
+
+```tsx
+plugins: [
+  motionwind(),   // Rewrites JSX elements first
+  react(),        // Then React compiles the rewritten JSX
+]
+```
+
+### HMR support
+
+The plugin works with Vite's Hot Module Replacement out of the box. When you save a file:
+
+1. Vite detects the change and triggers a re-transform.
+2. The motionwind plugin processes the updated code.
+3. The React plugin compiles the result.
+4. The HMR update is sent to the browser.
+
+Source maps are preserved through the transform, so stack traces and debugger breakpoints point to the correct lines in your source files.
+
+---
+
+## Troubleshooting
+
+### Classes not transforming
+
+If your `animate-*` classes are not being transformed into Motion props, check the following:
+
+**Static strings only**
+
+The Babel plugin can only transform **static string literals** in `className`. It does not handle template literals, variables, or expressions.
+
+```tsx
+// WORKS -- static string literal
+<div className="bg-blue-500 animate-hover:scale-110">
+
+// DOES NOT WORK -- template literal
+<div className={`bg-blue-500 animate-hover:scale-110`}>
+
+// DOES NOT WORK -- variable
+<div className={myClasses}>
+
+// DOES NOT WORK -- ternary/expression
+<div className={isActive ? "animate-hover:scale-110" : "animate-hover:scale-100"}>
+```
+
+For dynamic classNames, use the `mw.*` runtime components instead:
+
+```tsx
+import { mw } from "motionwind";
+
+// WORKS -- mw.* parses at runtime
+<mw.div className={`bg-blue-500 animate-hover:scale-110`}>
+
+// WORKS -- dynamic expressions
+<mw.div className={isActive ? "animate-hover:scale-110" : "animate-hover:scale-100"}>
+```
+
+**Lowercase HTML tags only**
+
+The Babel plugin only transforms lowercase HTML elements (`<div>`, `<button>`, `<span>`, etc.). It skips:
+
+- Custom components with uppercase names (`<MyComponent>`, `<Card>`)
+- Member expressions (`<motion.div>`, `<Component.Sub>`)
+
+This is by design -- the plugin cannot know what props a custom component accepts, so it only transforms standard HTML elements.
+
+```tsx
+// WORKS -- lowercase HTML tag
+<div className="animate-hover:scale-110">
+
+// SKIPPED -- uppercase component name
+<Card className="animate-hover:scale-110">
+
+// SKIPPED -- already a motion component
+<motion.div className="animate-hover:scale-110">
+```
+
+If you need animations on a custom component, either apply the motionwind classes to an HTML element inside the component, or use `mw.*`:
+
+```tsx
+// Option 1: animate an HTML element inside your component
+function Card({ children }) {
+  return (
+    <div className="animate-hover:scale-105 animate-duration-200 rounded-xl p-6">
+      {children}
+    </div>
+  );
+}
+
+// Option 2: use mw.* with the HTML element
+import { mw } from "motionwind";
+
+function Card({ children }) {
+  return (
+    <mw.div className="animate-hover:scale-105 animate-duration-200 rounded-xl p-6">
+      {children}
+    </mw.div>
+  );
+}
+```
+
+**Missing `animate-` prefix**
+
+All motionwind classes must start with `animate-`. If you forget the prefix, the class is treated as a regular Tailwind class and passed through unchanged.
+
+```tsx
+// WRONG -- missing animate- prefix
+<div className="hover:scale-110">
+
+// CORRECT
+<div className="animate-hover:scale-110">
+```
+
+### Dynamic classNames need `mw.*`
+
+If you are building classNames dynamically (with template literals, `clsx`, `cn`, or conditional expressions), the build-time Babel transform cannot process them. You must use `mw.*` components:
+
+```tsx
+import { mw } from "motionwind";
+import { cn } from "@/lib/utils";
+
+function Button({ variant }: { variant: "primary" | "secondary" }) {
+  return (
+    <mw.button
+      className={cn(
+        "px-4 py-2 rounded-lg animate-tap:scale-95 animate-duration-150",
+        variant === "primary" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"
+      )}
+    >
+      Click me
+    </mw.button>
+  );
+}
+```
+
+### Animations not working in production
+
+If animations work in development but not in production, check:
+
+**1. Verify peer dependencies are installed**
+
+Motionwind requires `motion` (v11+) and `react` (v18+) as peer dependencies. Make sure they are listed in your `package.json` dependencies (not just devDependencies):
+
+```bash
+npm install motion react react-dom
+```
+
+**2. Check that the plugin/wrapper is configured**
+
+Make sure `withMotionwind` (Next.js) or `motionwind()` (Vite) is present in your config. Without it, the Babel transform does not run and `animate-*` classes are passed through as plain CSS class names (which do nothing).
+
+**3. Check for tree-shaking issues**
+
+If you are using `mw.*` components, ensure that `motionwind` is not being excluded by your bundler's tree-shaking. The `mw` export is used at runtime, so it must be included in the production bundle.
+
+**4. Inspect the network tab**
+
+In your browser DevTools, check the Network tab to make sure `motion` is being loaded. If it is missing from the bundle, the `motion.*` components cannot render animations.
+
+### `"use client"` directive issues
+
+If you see errors about client/server component boundaries:
+
+- The Babel plugin automatically adds `"use client"` to transformed files. If you are still getting errors, make sure the motionwind plugin is actually running (check that your config wrapper is correct).
+- If you are importing a transformed component from a Server Component, that should work fine -- the `"use client"` directive marks the boundary correctly.
+- If you are manually adding `"use client"` to a file, the plugin will detect it and not add a duplicate.
