@@ -1,5 +1,5 @@
 {
-  "name": "motionwind",
+  "name": "motion-wind",
   "displayName": "Motionwind",
   "description": "IntelliSense for motionwind animation classes - autocomplete, hover docs, diagnostics, and color decorators",
   "version": "0.1.0",
