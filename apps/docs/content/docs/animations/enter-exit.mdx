@@ -1,0 +1,401 @@
+---
+title: "Enter & Exit Animations"
+description: "Animate elements on mount, unmount, and route transitions using motionwind's initial, enter, and exit gestures."
+---
+
+Motionwind provides three gesture prefixes for controlling element lifecycle animations: `animate-initial:` sets the starting state, `animate-enter:` defines the mounted/visible state, and `animate-exit:` defines the removal state. These compile to Motion's `initial`, `animate`, and `exit` props respectively.
+
+## Mount Animation
+
+When an element mounts, it transitions from its `initial` state to its `enter` state automatically. No scroll or interaction required -- the animation plays immediately on render.
+
+<Demo title="Fade Up on Mount">
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    I animate on mount
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500">
+  I animate on mount
+</div>
+```
+
+**What this compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+>
+  I animate on mount
+</motion.div>
+```
+
+| Class | Compiled prop | Effect |
+|---|---|---|
+| `animate-initial:opacity-0` | `initial={{ opacity: 0 }}` | Start fully transparent |
+| `animate-initial:y-20` | `initial={{ y: 20 }}` | Start 20px below |
+| `animate-enter:opacity-100` | `animate={{ opacity: 1 }}` | Fade to full opacity |
+| `animate-enter:y-0` | `animate={{ y: 0 }}` | Slide to final position |
+
+---
+
+## Enter Effect Variations
+
+All enter animations follow the same pattern: set a starting state with `animate-initial:`, then define the target with `animate-enter:`. Here are common effects.
+
+### Fade Up
+
+<Demo title="Fade Up">
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    Fade up
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500">
+  Fade up
+</div>
+```
+
+### Fade Down
+
+<Demo title="Fade Down">
+  <div className="animate-initial:opacity-0 animate-initial:-y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    Fade down
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:-y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500">
+  Fade down
+</div>
+```
+
+The `-y-20` prefix produces a negative value (`y: -20`), starting the element 20px above its final position.
+
+### Scale In
+
+<Demo title="Scale In">
+  <div className="animate-initial:opacity-0 animate-initial:scale-50 animate-enter:opacity-100 animate-enter:scale-100 animate-duration-400 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    Scale in
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:scale-50 animate-enter:opacity-100 animate-enter:scale-100 animate-duration-400">
+  Scale in
+</div>
+```
+
+Scale values are divided by 100 internally: `scale-50` becomes `scale: 0.5`, `scale-100` becomes `scale: 1`.
+
+### Slide from Left
+
+<Demo title="Slide from Left">
+  <div className="animate-initial:opacity-0 animate-initial:-x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-500 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    Slide from left
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:-x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-500">
+  Slide from left
+</div>
+```
+
+### Slide from Right
+
+<Demo title="Slide from Right">
+  <div className="animate-initial:opacity-0 animate-initial:x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-500 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    Slide from right
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:x-40 animate-enter:opacity-100 animate-enter:x-0 animate-duration-500">
+  Slide from right
+</div>
+```
+
+### Rotate and Fade
+
+<Demo title="Rotate and Fade">
+  <div className="animate-initial:opacity-0 animate-initial:rotate-12 animate-initial:scale-80 animate-enter:opacity-100 animate-enter:rotate-0 animate-enter:scale-100 animate-duration-600 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    Rotate in
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:rotate-12 animate-initial:scale-80 animate-enter:opacity-100 animate-enter:rotate-0 animate-enter:scale-100 animate-duration-600">
+  Rotate in
+</div>
+```
+
+You can combine as many properties as needed within each gesture prefix. The Babel plugin merges them into a single object per prop.
+
+---
+
+## Exit Animations
+
+Exit animations define how an element should animate before it is removed from the DOM. Motionwind supports the `animate-exit:` prefix, which compiles to Motion's `exit` prop.
+
+<Demo title="Exit Animation Classes">
+  <div className="animate-initial:opacity-0 animate-enter:opacity-100 animate-exit:opacity-0 animate-exit:y-20 animate-duration-300 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    I have exit classes
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-enter:opacity-100 animate-exit:opacity-0 animate-exit:y-20 animate-duration-300">
+  I have exit classes
+</div>
+```
+
+**Compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  exit={{ opacity: 0, y: 20 }}
+  transition={{ duration: 0.3 }}
+/>
+```
+
+### AnimatePresence is required
+
+The `exit` prop only works when the element is wrapped in Motion's `AnimatePresence` component. Without it, React removes the element from the DOM immediately and the exit animation never plays.
+
+**Motionwind handles the `exit` prop compilation, but you must add `AnimatePresence` yourself:**
+
+```tsx
+import { AnimatePresence } from "motion/react";
+
+function Notification({ show, message }) {
+  return (
+    <AnimatePresence>
+      {show && (
+        <div className="animate-initial:opacity-0 animate-initial:y-10 animate-enter:opacity-100 animate-enter:y-0 animate-exit:opacity-0 animate-exit:-y-10 animate-duration-300">
+          {message}
+        </div>
+      )}
+    </AnimatePresence>
+  );
+}
+```
+
+The element needs a `key` prop when used in lists inside `AnimatePresence`. For single conditional elements as shown above, the key is implicit.
+
+---
+
+## Page Transitions
+
+Route transitions use the same `initial` + `enter` + `exit` pattern, wrapped in `AnimatePresence` at the layout level. The motionwind classes define the animation; the framework integration handles when elements mount and unmount.
+
+### Next.js App Router
+
+```tsx
+// app/template.tsx
+"use client";
+import { AnimatePresence } from "motion/react";
+
+export default function Template({ children }: { children: React.ReactNode }) {
+  return (
+    <AnimatePresence mode="wait">
+      {children}
+    </AnimatePresence>
+  );
+}
+```
+
+Then in each page, apply motionwind classes to the page wrapper:
+
+```tsx
+// app/about/page.tsx
+export default function AboutPage() {
+  return (
+    <div className="animate-initial:opacity-0 animate-initial:y-10 animate-enter:opacity-100 animate-enter:y-0 animate-exit:opacity-0 animate-exit:-y-10 animate-duration-300">
+      <h1>About</h1>
+      <p>Page content here</p>
+    </div>
+  );
+}
+```
+
+**What the page wrapper compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, y: -10 }}
+  transition={{ duration: 0.3 }}
+>
+  ...
+</motion.div>
+```
+
+### AnimatePresence modes
+
+Motion's `AnimatePresence` supports different modes that control how entering and exiting elements overlap:
+
+| Mode | Behavior |
+|---|---|
+| `"sync"` (default) | Enter and exit animations play simultaneously |
+| `"wait"` | Exit completes before enter begins |
+| `"popLayout"` | Exiting element is removed from layout flow immediately |
+
+The mode is set on `AnimatePresence`, not through motionwind classes:
+
+```tsx
+<AnimatePresence mode="wait">
+  {children}
+</AnimatePresence>
+```
+
+---
+
+## Modal Open / Close
+
+Modals are a natural fit for enter/exit animations. The modal's conditional rendering triggers mount (enter) and unmount (exit) animations.
+
+```tsx
+import { AnimatePresence } from "motion/react";
+
+function Modal({ isOpen, onClose, children }) {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="animate-initial:opacity-0 animate-enter:opacity-100 animate-exit:opacity-0 animate-duration-200 fixed inset-0 bg-black/50 z-40"
+            onClick={onClose}
+          />
+          {/* Modal panel */}
+          <div className="animate-initial:opacity-0 animate-initial:scale-95 animate-initial:y-10 animate-enter:opacity-100 animate-enter:scale-100 animate-enter:y-0 animate-exit:opacity-0 animate-exit:scale-95 animate-exit:y-10 animate-duration-300 fixed inset-0 z-50 flex items-center justify-center">
+            <div className="bg-white rounded-2xl p-6 shadow-xl max-w-md w-full">
+              {children}
+            </div>
+          </div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+```
+
+**The backdrop compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  exit={{ opacity: 0 }}
+  transition={{ duration: 0.2 }}
+  className="fixed inset-0 bg-black/50 z-40"
+  onClick={onClose}
+/>
+```
+
+**The modal panel compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+  animate={{ opacity: 1, scale: 1, y: 0 }}
+  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+  transition={{ duration: 0.3 }}
+  className="fixed inset-0 z-50 flex items-center justify-center"
+/>
+```
+
+---
+
+## List Item Enter / Exit
+
+Stagger list items by combining `animate-delay-{ms}` with enter/exit classes. Each item gets an increasing delay for a cascading effect.
+
+<Demo title="Staggered List Items" className="flex-col gap-3">
+  <div className="animate-initial:opacity-0 animate-initial:-x-20 animate-enter:opacity-100 animate-enter:x-0 animate-duration-400 animate-delay-0 rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-48 text-center">
+    Item 1
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:-x-20 animate-enter:opacity-100 animate-enter:x-0 animate-duration-400 animate-delay-75 rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-48 text-center">
+    Item 2
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:-x-20 animate-enter:opacity-100 animate-enter:x-0 animate-duration-400 animate-delay-150 rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-48 text-center">
+    Item 3
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:-x-20 animate-enter:opacity-100 animate-enter:x-0 animate-duration-400 animate-delay-225 rounded-lg bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium w-48 text-center">
+    Item 4
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:-x-20 animate-enter:opacity-100 animate-enter:x-0 animate-duration-400 animate-delay-0">
+  Item 1
+</div>
+<div className="animate-initial:opacity-0 animate-initial:-x-20 animate-enter:opacity-100 animate-enter:x-0 animate-duration-400 animate-delay-75">
+  Item 2
+</div>
+<div className="animate-initial:opacity-0 animate-initial:-x-20 animate-enter:opacity-100 animate-enter:x-0 animate-duration-400 animate-delay-150">
+  Item 3
+</div>
+<div className="animate-initial:opacity-0 animate-initial:-x-20 animate-enter:opacity-100 animate-enter:x-0 animate-duration-400 animate-delay-225">
+  Item 4
+</div>
+```
+
+**The third item compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, x: -20 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.4, delay: 0.15 }}
+>
+  Item 3
+</motion.div>
+```
+
+### Dynamic lists with exit animations
+
+For lists where items can be added and removed, wrap the list in `AnimatePresence` and add `exit` classes. Each item must have a unique `key`:
+
+```tsx
+import { AnimatePresence } from "motion/react";
+
+function TodoList({ items, onRemove }) {
+  return (
+    <AnimatePresence>
+      {items.map((item, index) => (
+        <div
+          key={item.id}
+          className="animate-initial:opacity-0 animate-initial:-x-20 animate-enter:opacity-100 animate-enter:x-0 animate-exit:opacity-0 animate-exit:x-20 animate-duration-300"
+        >
+          <span>{item.text}</span>
+          <button onClick={() => onRemove(item.id)}>Remove</button>
+        </div>
+      ))}
+    </AnimatePresence>
+  );
+}
+```
+
+When an item is removed from the `items` array, `AnimatePresence` detects the missing key and plays the exit animation (`opacity: 0, x: 20`) before removing the DOM element.
+
+---
+
+## Summary
+
+| Pattern | Motionwind classes | Requires extra setup? |
+|---|---|---|
+| Mount animation | `animate-initial:*` + `animate-enter:*` | No |
+| Enter effects | `animate-initial:*` + `animate-enter:*` + `animate-duration-*` | No |
+| Exit animation | `animate-exit:*` | Yes -- needs `AnimatePresence` wrapper |
+| Page transitions | `animate-initial:*` + `animate-enter:*` + `animate-exit:*` | Yes -- needs `AnimatePresence` in layout |
+| Modal open/close | `animate-initial:*` + `animate-enter:*` + `animate-exit:*` | Yes -- needs `AnimatePresence` wrapper |
+| Staggered lists | Add `animate-delay-{ms}` per item | No for enter; `AnimatePresence` for exit |
