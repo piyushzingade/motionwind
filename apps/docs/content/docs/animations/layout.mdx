@@ -1,0 +1,350 @@
+---
+title: "Layout Animations"
+description: "Animate position and size changes automatically with Motion's layout system -- how it works alongside motionwind classes."
+---
+
+# Layout Animations
+
+Layout animations are a Motion feature that automatically animates elements when their position or size changes in the DOM. These are not expressed as motionwind utility classes. Instead, you use Motion's `layout` prop and `layoutId` directly on `motion.*` components.
+
+This page explains each layout animation pattern and shows how it integrates with motionwind classes on surrounding elements.
+
+## Layout prop basics
+
+The `layout` prop tells Motion to automatically animate an element whenever its layout (position or size) changes between renders.
+
+```tsx
+import { motion } from "motion/react";
+
+function ExpandableCard({ isOpen }: { isOpen: boolean }) {
+  return (
+    <motion.div
+      layout
+      className="rounded-xl bg-[#1a1a2e] p-4"
+      style={{
+        width: isOpen ? 400 : 200,
+        height: isOpen ? 300 : 100,
+      }}
+    >
+      <motion.h3 layout="position" className="text-[#c8ff2e] font-bold">
+        Card Title
+      </motion.h3>
+      {isOpen && (
+        <p className="text-gray-400 mt-2">
+          Expanded content appears here.
+        </p>
+      )}
+    </motion.div>
+  );
+}
+```
+
+When `isOpen` toggles, the card smoothly animates between its two sizes. The `layout` prop on the outer `div` animates both position and size. The `layout="position"` on the heading means it only animates its position (not its size), preventing text from stretching.
+
+### How it works
+
+Motion measures the element's bounding box before and after a React re-render. If the box changed, it uses a FLIP (First, Last, Invert, Play) animation to smoothly transition between the two states. You do not define start or end values -- Motion calculates them from the actual DOM layout.
+
+## Layout position changes
+
+When elements reorder in a list, each element's position changes. The `layout` prop animates these position shifts.
+
+```tsx
+import { useState } from "react";
+import { motion } from "motion/react";
+
+function SortableList() {
+  const [items, setItems] = useState(["Alpha", "Beta", "Gamma", "Delta"]);
+
+  const shuffle = () => {
+    setItems([...items].sort(() => Math.random() - 0.5));
+  };
+
+  return (
+    <div className="space-y-2">
+      {/* This button uses motionwind for hover/tap feedback */}
+      <button
+        className="animate-hover:scale-105 animate-tap:scale-95 animate-spring px-4 py-2 rounded-lg bg-[#c8ff2e] text-[#0a0a0f] font-semibold"
+        onClick={shuffle}
+      >
+        Shuffle
+      </button>
+
+      {items.map((item) => (
+        <motion.div
+          key={item}
+          layout
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          className="rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/10 px-4 py-3 text-white"
+        >
+          {item}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+```
+
+When the list shuffles, each `motion.div` smoothly slides to its new position. The button uses motionwind classes for hover and tap feedback. The Babel plugin transforms the button into a `motion.button`, while the list items use `motion.div` directly because they need the `layout` prop.
+
+## Layout size changes
+
+The `layout` prop also animates size transitions. This is useful for expandable panels, accordions, and toggle states.
+
+```tsx
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+
+function ExpandablePanel() {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <motion.div
+      layout
+      onClick={() => setExpanded(!expanded)}
+      className="cursor-pointer rounded-xl bg-[#1a1a2e] border border-[#c8ff2e]/10 p-6 overflow-hidden"
+      style={{ width: expanded ? 400 : 200 }}
+      transition={{ type: "spring", stiffness: 200, damping: 20 }}
+    >
+      <motion.p layout="position" className="text-[#c8ff2e] font-medium">
+        Click to {expanded ? "collapse" : "expand"}
+      </motion.p>
+
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="mt-4 text-gray-400 text-sm"
+          >
+            This content fades in when the panel expands.
+            The panel itself animates its width smoothly.
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+```
+
+The outer container animates its width change via `layout`. The inner text uses `layout="position"` so it stays anchored while the container resizes. The expanded content uses `AnimatePresence` for enter/exit opacity transitions.
+
+## Shared layout transitions (layoutId)
+
+`layoutId` connects two separate elements across different render states. When one unmounts and another with the same `layoutId` mounts, Motion animates between their positions and sizes as if they were the same element.
+
+```tsx
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+
+function TabBar() {
+  const [activeTab, setActiveTab] = useState("home");
+  const tabs = ["home", "about", "contact"];
+
+  return (
+    <div className="flex gap-2 p-2 rounded-xl bg-[#1a1a2e]">
+      {tabs.map((tab) => (
+        <button
+          key={tab}
+          onClick={() => setActiveTab(tab)}
+          className="relative px-4 py-2 rounded-lg text-sm font-medium capitalize"
+          style={{ color: activeTab === tab ? "#0a0a0f" : "#a0a0b0" }}
+        >
+          {activeTab === tab && (
+            <motion.div
+              layoutId="active-tab-bg"
+              className="absolute inset-0 rounded-lg bg-[#c8ff2e]"
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            />
+          )}
+          <span className="relative z-10">{tab}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+```
+
+The green background element has `layoutId="active-tab-bg"`. When `activeTab` changes, the background unmounts from one tab and mounts in another. Motion detects the matching `layoutId` and smoothly slides the background to the new position.
+
+### Gallery with shared layout
+
+A common pattern is a grid of thumbnails that expand to a full detail view:
+
+```tsx
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+
+function Gallery({ items }: { items: { id: string; title: string; color: string }[] }) {
+  const [selected, setSelected] = useState<string | null>(null);
+
+  return (
+    <>
+      <div className="grid grid-cols-3 gap-4">
+        {items.map((item) => (
+          <motion.div
+            key={item.id}
+            layoutId={`card-${item.id}`}
+            onClick={() => setSelected(item.id)}
+            className="cursor-pointer rounded-xl p-6"
+            style={{ backgroundColor: item.color }}
+          >
+            <motion.h3 layoutId={`title-${item.id}`} className="font-bold text-white">
+              {item.title}
+            </motion.h3>
+          </motion.div>
+        ))}
+      </div>
+
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            layoutId={`card-${selected}`}
+            className="fixed inset-0 m-auto w-[500px] h-[400px] rounded-2xl p-8 z-50"
+            style={{
+              backgroundColor: items.find((i) => i.id === selected)?.color,
+            }}
+            onClick={() => setSelected(null)}
+          >
+            <motion.h3
+              layoutId={`title-${selected}`}
+              className="font-bold text-white text-2xl"
+            >
+              {items.find((i) => i.id === selected)?.title}
+            </motion.h3>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-white/80 mt-4"
+            >
+              Click to close this expanded view.
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+```
+
+Each thumbnail and its expanded form share a `layoutId`. When a thumbnail is clicked, the card appears to grow from the thumbnail position to the full-size overlay.
+
+## Reorder animations
+
+Motion provides a `Reorder` component for drag-to-reorder lists. Each item animates to its new position automatically.
+
+```tsx
+import { useState } from "react";
+import { Reorder } from "motion/react";
+
+function ReorderList() {
+  const [items, setItems] = useState(["Item A", "Item B", "Item C", "Item D"]);
+
+  return (
+    <Reorder.Group
+      axis="y"
+      values={items}
+      onReorder={setItems}
+      className="space-y-2 w-64"
+    >
+      {items.map((item) => (
+        <Reorder.Item
+          key={item}
+          value={item}
+          className="cursor-grab active:cursor-grabbing rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/10 px-4 py-3 text-white select-none"
+          whileDrag={{
+            scale: 1.03,
+            boxShadow: "0 8px 24px rgba(200, 255, 46, 0.15)",
+          }}
+        >
+          {item}
+        </Reorder.Item>
+      ))}
+    </Reorder.Group>
+  );
+}
+```
+
+`Reorder.Group` manages the list state and `Reorder.Item` wraps each draggable element. Motion automatically animates position changes when items are reordered. The `whileDrag` prop adds visual feedback during the drag.
+
+### Mixing Reorder with motionwind
+
+motionwind's `animate-drag-*` classes work for basic drag behavior on `motion.*` elements, but `Reorder` has its own drag management built in. Use motionwind classes on elements outside the reorder list:
+
+```tsx
+<div>
+  {/* motionwind button outside the Reorder list */}
+  <button className="animate-hover:scale-105 animate-tap:scale-95 animate-spring mb-4 px-4 py-2 rounded-lg bg-[#c8ff2e] text-[#0a0a0f] font-semibold">
+    Reset Order
+  </button>
+
+  <Reorder.Group axis="y" values={items} onReorder={setItems}>
+    {/* Reorder items use Motion's Reorder API directly */}
+    {items.map((item) => (
+      <Reorder.Item key={item} value={item} className="...">
+        {item}
+      </Reorder.Item>
+    ))}
+  </Reorder.Group>
+</div>
+```
+
+## Grid layout transitions
+
+Combine CSS Grid with the `layout` prop to animate items as the grid changes shape.
+
+```tsx
+import { useState } from "react";
+import { motion } from "motion/react";
+
+function DynamicGrid() {
+  const [columns, setColumns] = useState(3);
+  const items = Array.from({ length: 9 }, (_, i) => i + 1);
+
+  return (
+    <div>
+      {/* Toggle button with motionwind classes */}
+      <button
+        className="animate-hover:scale-105 animate-tap:scale-95 animate-spring mb-4 px-4 py-2 rounded-lg bg-[#c8ff2e] text-[#0a0a0f] font-semibold"
+        onClick={() => setColumns(columns === 3 ? 2 : 3)}
+      >
+        Toggle {columns === 3 ? "2" : "3"} columns
+      </button>
+
+      <div
+        className="grid gap-3"
+        style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
+      >
+        {items.map((item) => (
+          <motion.div
+            key={item}
+            layout
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="rounded-xl bg-[#1a1a2e] border border-[#c8ff2e]/10 p-6 text-center text-white font-bold"
+          >
+            {item}
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+When the column count changes, each grid item smoothly animates to its new position and size. The `layout` prop on each `motion.div` handles the measurement and animation automatically.
+
+## When to use layout animations vs motionwind
+
+| Need | Approach |
+| --- | --- |
+| Hover, tap, focus, scroll effects | motionwind classes (`animate-hover:*`, etc.) |
+| Enter/exit transitions | motionwind classes (`animate-initial:*`, `animate-enter:*`, `animate-exit:*`) |
+| Animating DOM position/size changes | Motion `layout` prop directly |
+| Shared element transitions | Motion `layoutId` prop directly |
+| Drag-to-reorder lists | Motion `Reorder` component directly |
+| Grid/list reflow animations | Motion `layout` prop on each item |
+
+Layout animations and motionwind classes serve different purposes and work well together. Use motionwind for gesture-driven and transition-based animations. Use Motion's layout system when you need to animate changes to an element's position or size that result from React state updates or DOM reflows.
