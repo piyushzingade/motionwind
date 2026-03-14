@@ -67,6 +67,20 @@ function parseNumericWithUnit(
   return n * sign;
 }
 
+/** Allowed properties for arbitrary value syntax [key=value] */
+const ARBITRARY_VALUE_ALLOWLIST = new Set([
+  "x", "y", "z", "scale", "scaleX", "scaleY", "scaleZ",
+  "rotate", "rotateX", "rotateY", "rotateZ",
+  "skew", "skewX", "skewY",
+  "originX", "originY", "originZ", "perspective",
+  "opacity", "filter", "backdropFilter", "clipPath",
+  "width", "height", "top", "left", "right", "bottom",
+  "padding", "margin", "gap", "borderRadius", "borderWidth",
+  "fontSize", "letterSpacing", "lineHeight",
+  "backgroundColor", "color", "borderColor", "boxShadow",
+  "pathLength", "pathOffset", "pathSpacing",
+]);
+
 /**
  * Parse a property-value string (e.g. "scale-110", "x-20", "opacity-0")
  * into a Motion-compatible key-value pair.
@@ -80,6 +94,7 @@ function parsePropertyValue(
     const eqIdx = inner.indexOf("=");
     if (eqIdx === -1) return null;
     const key = inner.slice(0, eqIdx);
+    if (!ARBITRARY_VALUE_ALLOWLIST.has(key)) return null;
     const val = inner.slice(eqIdx + 1);
     const num = Number(val);
     return { key, value: isNaN(num) ? val : num };
