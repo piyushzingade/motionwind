@@ -3,8 +3,18 @@
   "version": "0.1.0",
   "type": "module",
   "private": false,
-  "description": "CLI to scaffold motionwind in your project",
+  "description": "Install motionwind with your package manager",
+  "author": "piyush555",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piyushzingade/motionwind.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/piyushzingade/motionwind/issues"
+  },
+  "homepage": "https://github.com/piyushzingade/motionwind#readme",
   "bin": {
     "create-motionwind": "./dist/index.js"
   },
