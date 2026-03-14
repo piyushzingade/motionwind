@@ -389,7 +389,7 @@ function parsePropertyValue(
 
   if (str.startsWith("bg-")) {
     const color = str.slice(3);
-    if (color.startsWith("#") || color.startsWith("rgb") || color.startsWith("hsl")) {
+    if (isValidColor(color)) {
       return { key: "backgroundColor", value: color };
     }
     return null;
@@ -397,7 +397,7 @@ function parsePropertyValue(
 
   if (str.startsWith("text-")) {
     const color = str.slice(5);
-    if (color.startsWith("#") || color.startsWith("rgb") || color.startsWith("hsl")) {
+    if (isValidColor(color)) {
       return { key: "color", value: color };
     }
     // fall through — could be text-size which is handled above
@@ -406,7 +406,7 @@ function parsePropertyValue(
 
   if (str.startsWith("border-")) {
     const color = str.slice(7);
-    if (color.startsWith("#") || color.startsWith("rgb") || color.startsWith("hsl")) {
+    if (isValidColor(color)) {
       return { key: "borderColor", value: color };
     }
     // fall through — could be border-w which is handled above
@@ -423,6 +423,14 @@ function parsePropertyValue(
   }
 
   return null;
+}
+
+/** Validate that a color string is a plausible CSS color */
+const HEX_COLOR_RE = /^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+const FUNC_COLOR_RE = /^(?:rgb|rgba|hsl|hsla)\(.+\)$/;
+
+function isValidColor(color: string): boolean {
+  return HEX_COLOR_RE.test(color) || FUNC_COLOR_RE.test(color);
 }
 
 /** Map shorthand property names to Motion property keys */
