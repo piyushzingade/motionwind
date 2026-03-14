@@ -81,6 +81,14 @@ Scales along the vertical axis only.
 <div className="animate-hover:scale-y-80">Squish vertically to 80%</div>
 ```
 
+### scale-z
+
+Scales along the depth axis (3D). The value represents a percentage: `150` means `1.5x`.
+
+```tsx
+<div className="animate-hover:scale-z-150">Scale depth to 150%</div>
+```
+
 ### rotate
 
 Rotates the element in degrees.
@@ -105,6 +113,14 @@ Rotates around the vertical axis (3D tilt left/right).
 
 ```tsx
 <div className="animate-hover:rotate-y-45">Tilt sideways 45 degrees</div>
+```
+
+### skew
+
+Skews the element uniformly (both axes) in degrees.
+
+```tsx
+<div className="animate-hover:skew-12">Skew uniformly 12 degrees</div>
 ```
 
 ### skew-x
@@ -139,6 +155,46 @@ Translates the element vertically in pixels.
 ```tsx
 <div className="animate-hover:y-10">Move 10px down</div>
 <div className="animate-initial:y-40 animate-enter:y-0">Slide up on enter</div>
+```
+
+### z
+
+Translates the element along the depth axis (3D) in pixels.
+
+```tsx
+<div className="animate-hover:z-50">Move 50px toward the viewer</div>
+<div className="animate-hover:-z-20">Move 20px away from the viewer</div>
+```
+
+### origin-x, origin-y, origin-z
+
+Sets the transform origin for the element. `origin-x` and `origin-y` use a percentage scale (0-100 maps to 0-1), while `origin-z` is in pixels.
+
+```tsx
+{/* Transform from top-left corner */}
+<div className="animate-hover:scale-110 animate-hover:origin-x-0 animate-hover:origin-y-0">
+  Scales from top-left
+</div>
+
+{/* Transform from center (default) */}
+<div className="animate-hover:rotate-45 animate-hover:origin-x-50 animate-hover:origin-y-50">
+  Rotates from center
+</div>
+
+{/* Set z origin for 3D transforms */}
+<div className="animate-hover:rotate-x-30 animate-hover:origin-z-100">
+  3D tilt with depth origin
+</div>
+```
+
+### perspective
+
+Sets the CSS perspective for 3D transforms in pixels. Lower values create more dramatic 3D effects.
+
+```tsx
+<div className="animate-hover:perspective-800 animate-hover:rotate-y-30">
+  3D rotation with perspective
+</div>
 ```
 
 ### opacity
@@ -250,6 +306,76 @@ The key is the exact Motion property name, and the value is passed as-is (number
 
 This gives you escape-hatch access to any property that Motion supports, including ones that motionwind does not have dedicated class names for.
 
+## Unit values
+
+Many positional and sizing properties support unit suffixes. The following properties accept unit suffixes: `x`, `y`, `z`, `w`, `h`, `top`, `left`, `right`, `bottom`, `p`, `m`, `gap`, `text-size`, `tracking`, and `leading`.
+
+Supported unit suffixes:
+
+| Suffix | CSS unit | Example class | Output value |
+|--------|----------|---------------|-------------|
+| `pct` | `%` | `x-50pct` | `"50%"` |
+| `px` | `px` | `x-100px` | `"100px"` |
+| `vh` | `vh` | `y-50vh` | `"50vh"` |
+| `vw` | `vw` | `x-100vw` | `"100vw"` |
+| `rem` | `rem` | `gap-2rem` | `"2rem"` |
+| `em` | `em` | `p-1em` | `"1em"` |
+| `dvh` | `dvh` | `h-100dvh` | `"100dvh"` |
+| `svh` | `svh` | `h-100svh` | `"100svh"` |
+| `lvh` | `lvh` | `h-100lvh` | `"100lvh"` |
+| `auto` | `auto` | `w-auto` | `"auto"` |
+
+```tsx
+{/* Move 50% of its own width */}
+<div className="animate-hover:x-50pct">Translate by 50%</div>
+
+{/* Full viewport height */}
+<div className="animate-enter:h-100vh">Full viewport height</div>
+
+{/* Spacing with rem units */}
+<div className="animate-hover:gap-2rem">Gap of 2rem</div>
+```
+
+When no unit suffix is provided, the value is treated as a plain number (pixels for most properties).
+
+## Keyframe array syntax
+
+For keyframe animations that cycle through multiple values, use the bracket array syntax:
+
+```
+animate-{gesture}:{property}-[v1,v2,v3]
+```
+
+Values inside the brackets are comma-separated. Each value becomes a keyframe in the animation sequence:
+
+```tsx
+{/* Scale pulses through three keyframes */}
+<div className="animate-enter:scale-[100,120,100] animate-repeat-infinite animate-duration-1000">
+  Pulsing element
+</div>
+
+{/* Opacity fades through keyframes */}
+<div className="animate-enter:opacity-[0,100,50,100] animate-duration-2000">
+  Multi-step fade
+</div>
+
+{/* Rotate through multiple angles */}
+<div className="animate-enter:rotate-[0,45,-45,0] animate-repeat-infinite">
+  Wiggle animation
+</div>
+```
+
+This compiles to Motion's keyframe array syntax:
+
+```jsx
+<motion.div
+  animate={{ scale: [1, 1.2, 1] }}
+  transition={{ duration: 1, repeat: Infinity }}
+/>
+```
+
+You can use the `animate-times-[...]` class to control the timing of each keyframe (see Transition configuration below).
+
 ## Transition configuration
 
 Transition classes control **how** the animation runs. They apply globally to all gestures on the element. These classes have no gesture prefix.
@@ -281,10 +407,24 @@ Sets the easing function. Available values:
 | `animate-ease-out` | `easeOut` |
 | `animate-ease-in-out` | `easeInOut` |
 | `animate-ease-linear` | `linear` |
+| `animate-ease-circ-in` | `circIn` |
+| `animate-ease-circ-out` | `circOut` |
+| `animate-ease-circ-in-out` | `circInOut` |
+| `animate-ease-back-in` | `backIn` |
+| `animate-ease-back-out` | `backOut` |
+| `animate-ease-back-in-out` | `backInOut` |
+| `animate-ease-anticipate` | `anticipate` |
+| `animate-ease-[n,n,n,n]` | `[n, n, n, n]` (custom cubic-bezier) |
+| `animate-ease-steps-{n}` | `"steps(n)"` |
 
 ```tsx
 <div className="animate-enter:y-0 animate-ease-out">Ease out</div>
 <div className="animate-enter:y-0 animate-ease-in-out">Ease in and out</div>
+<div className="animate-enter:y-0 animate-ease-circ-out">Circular ease out</div>
+<div className="animate-enter:y-0 animate-ease-back-out">Back ease out (slight overshoot)</div>
+<div className="animate-enter:y-0 animate-ease-anticipate">Anticipate (pull back then spring forward)</div>
+<div className="animate-enter:y-0 animate-ease-[0.25,0.1,0.25,1]">Custom cubic-bezier</div>
+<div className="animate-enter:y-0 animate-ease-steps-5">Stepped animation (5 steps)</div>
 ```
 
 ### animate-spring
@@ -345,6 +485,118 @@ Repeats the animation indefinitely.
 </div>
 ```
 
+### `animate-repeat-reverse`
+
+Sets the repeat type to "reverse" so the animation alternates direction on each repetition.
+
+```tsx
+<div className="animate-enter:x-100 animate-repeat-3 animate-repeat-reverse animate-duration-1000">
+  Slides back and forth 3 times
+</div>
+```
+
+### `animate-repeat-mirror`
+
+Sets the repeat type to "mirror" so the animation mirrors on each repetition.
+
+```tsx
+<div className="animate-enter:scale-120 animate-repeat-infinite animate-repeat-mirror">
+  Mirrors the scale animation infinitely
+</div>
+```
+
+### `animate-repeat-delay-{ms}`
+
+Sets a delay between each repetition, in milliseconds. The value is converted to seconds internally.
+
+```tsx
+<div className="animate-enter:rotate-360 animate-repeat-infinite animate-repeat-delay-500">
+  Pauses 500ms between each rotation
+</div>
+```
+
+### `animate-stagger-{ms}`
+
+Sets the stagger delay between children animations, in milliseconds. The value is converted to seconds internally. This maps to Motion's `staggerChildren` transition property.
+
+```tsx
+<div className="animate-stagger-100">
+  {/* Each child animates 100ms after the previous one */}
+</div>
+```
+
+### `animate-stagger-reverse`
+
+Reverses the stagger direction so the last child animates first. Maps to `staggerDirection: -1`.
+
+```tsx
+<div className="animate-stagger-100 animate-stagger-reverse">
+  {/* Last child animates first */}
+</div>
+```
+
+### `animate-delay-children-{ms}`
+
+Delays the start of children animations, in milliseconds. The value is converted to seconds internally.
+
+```tsx
+<div className="animate-delay-children-300 animate-stagger-100">
+  {/* Children start animating after 300ms, then stagger by 100ms */}
+</div>
+```
+
+### `animate-when-before`
+
+Sets orchestration so the parent animates before its children. Maps to `when: "beforeChildren"`.
+
+```tsx
+<div className="animate-enter:opacity-100 animate-when-before animate-stagger-100">
+  {/* Parent fades in first, then children stagger in */}
+</div>
+```
+
+### `animate-when-after`
+
+Sets orchestration so the parent animates after its children. Maps to `when: "afterChildren"`.
+
+```tsx
+<div className="animate-enter:opacity-100 animate-when-after">
+  {/* Children animate first, then parent fades in */}
+</div>
+```
+
+### `animate-rest-speed-{n}`
+
+Sets the rest speed threshold for spring animations. The animation is considered complete when the velocity falls below this value.
+
+```tsx
+<div className="animate-hover:scale-110 animate-spring animate-rest-speed-2">
+  Stops spring when velocity drops below 2
+</div>
+```
+
+### `animate-rest-delta-{n}`
+
+Sets the rest delta threshold for spring animations. The animation is considered complete when the distance from the target is less than this value.
+
+```tsx
+<div className="animate-hover:x-100 animate-spring animate-rest-delta-1">
+  Stops spring when within 1px of target
+</div>
+```
+
+### `animate-times-[...]`
+
+Sets the timing for each keyframe in a keyframe animation. Values are comma-separated numbers between 0 and 1 inside brackets.
+
+```tsx
+<div className="animate-enter:opacity-[0,100,50,100] animate-times-[0,0.3,0.7,1] animate-duration-2000">
+  Keyframes with custom timing
+</div>
+```
+
+Compiles to `transition: { times: [0, 0.3, 0.7, 1] }`.
+
 ### Complete spring example
 
 ```tsx
@@ -389,6 +641,21 @@ By default, the animation triggers when any part of the element is visible. With
   Only animates when fully visible
 </div>
 ```
+
+### `animate-amount-{n}`
+
+Sets a numeric viewport threshold as a percentage. The value is divided by 100 (so `animate-amount-50` equals `0.5`, meaning 50% of the element must be visible). This gives more precise control than `animate-amount-all`.
+
+```tsx
+<div className="animate-inview:opacity-100 animate-amount-50">
+  Animates when 50% of the element is visible
+</div>
+<div className="animate-inview:y-0 animate-amount-75">
+  Animates when 75% visible
+</div>
+```
+
+Compiles to `viewport: { amount: 0.5 }` and `viewport: { amount: 0.75 }` respectively.
 
 ### `animate-margin-{n}`
 
@@ -453,6 +720,46 @@ Sets the elasticity of the drag as a percentage. The value is divided by 100 (so
 </div>
 ```
 
+### `animate-drag-snap`
+
+Snaps the element back to its origin when released. Maps to `dragSnapToOrigin`.
+
+```tsx
+<div className="w-20 h-20 bg-blue-500 rounded-lg animate-drag-both animate-drag-snap">
+  Snaps back on release
+</div>
+```
+
+### `animate-drag-no-momentum`
+
+Disables momentum-based movement after the drag ends. Maps to `dragMomentum={false}`.
+
+```tsx
+<div className="w-20 h-20 bg-blue-500 rounded-lg animate-drag-both animate-drag-no-momentum">
+  Stops immediately on release
+</div>
+```
+
+### `animate-drag-lock`
+
+Enables direction locking -- once the user starts dragging in one direction, the other axis is locked. Maps to `dragDirectionLock`.
+
+```tsx
+<div className="w-20 h-20 bg-blue-500 rounded-lg animate-drag-both animate-drag-lock">
+  Locks to one axis while dragging
+</div>
+```
+
+### `animate-drag-constraint-t-{n}` / `animate-drag-constraint-l-{n}` / `animate-drag-constraint-r-{n}` / `animate-drag-constraint-b-{n}`
+
+Sets drag constraints for each edge in pixels. These map to `dragConstraints: { top, left, right, bottom }`.
+
+```tsx
+<div className="w-20 h-20 bg-blue-500 rounded-lg animate-drag-both animate-drag-constraint-t--100 animate-drag-constraint-b-100 animate-drag-constraint-l--100 animate-drag-constraint-r-100">
+  Drag within a 200x200 area
+</div>
+```
+
 ### Combining drag with gestures
 
 Drag classes can be combined with the `drag` gesture prefix to style the element while it is being dragged:
@@ -460,6 +767,80 @@ Drag classes can be combined with the `drag` gesture prefix to style the element
 ```tsx
 <div className="w-20 h-20 bg-blue-500 rounded-lg animate-drag-both animate-drag:scale-110 animate-drag:rotate-10 animate-spring">
   Grows and tilts while dragging
+</div>
+```
+
+## Layout configuration
+
+These classes enable and configure Motion's layout animations. Layout animations automatically animate elements when their position or size changes in the DOM.
+
+### `animate-layout`
+
+Enables layout animation on the element. Maps to `layout`.
+
+```tsx
+<div className="animate-layout">
+  Automatically animates when layout changes
+</div>
+```
+
+### `animate-layout-position`
+
+Only animates position changes, not size. Maps to `layout="position"`.
+
+```tsx
+<div className="animate-layout-position">
+  Only animates position changes
+</div>
+```
+
+### `animate-layout-size`
+
+Only animates size changes, not position. Maps to `layout="size"`.
+
+```tsx
+<div className="animate-layout-size">
+  Only animates size changes
+</div>
+```
+
+### `animate-layout-preserve`
+
+Animates layout changes while preserving the element's aspect ratio. Maps to `layout="preserve-aspect"`.
+
+```tsx
+<div className="animate-layout-preserve">
+  Preserves aspect ratio during layout animation
+</div>
+```
+
+### `animate-layout-id-{name}`
+
+Assigns a layout ID for shared layout animations. Elements with the same `layoutId` animate between each other when one mounts and the other unmounts. Maps to `layoutId="{name}"`.
+
+```tsx
+<div className="animate-layout-id-hero">
+  Shared layout animation with other "hero" elements
+</div>
+```
+
+### `animate-layout-scroll`
+
+Compensates for scroll offset during layout animations. Maps to `layoutScroll`.
+
+```tsx
+<div className="animate-layout-scroll">
+  Accounts for scroll position in layout animation
+</div>
+```
+
+### `animate-layout-root`
+
+Marks the element as a layout animation boundary. Maps to `layoutRoot`.
+
+```tsx
+<div className="animate-layout-root">
+  Layout animations are scoped to this subtree
 </div>
 ```
 
@@ -484,19 +865,47 @@ Here is a full example that uses gestures, transitions, viewport config, and mul
 | `scale-{n}` | `scale: n/100` | Percentage (110 = 1.1) |
 | `scale-x-{n}` | `scaleX: n/100` | Percentage |
 | `scale-y-{n}` | `scaleY: n/100` | Percentage |
+| `scale-z-{n}` | `scaleZ: n/100` | Percentage |
 | `rotate-{n}` | `rotate: n` | Degrees |
 | `rotate-x-{n}` | `rotateX: n` | Degrees |
 | `rotate-y-{n}` | `rotateY: n` | Degrees |
+| `skew-{n}` | `skew: n` | Degrees (uniform) |
 | `skew-x-{n}` | `skewX: n` | Degrees |
 | `skew-y-{n}` | `skewY: n` | Degrees |
+| `origin-x-{n}` | `originX: n/100` | Percentage (0-100 → 0-1) |
+| `origin-y-{n}` | `originY: n/100` | Percentage (0-100 → 0-1) |
+| `origin-z-{n}` | `originZ: n` | Pixels |
+| `perspective-{n}` | `perspective: n` | Pixels |
 | `x-{n}` | `x: n` | Pixels |
 | `y-{n}` | `y: n` | Pixels |
+| `z-{n}` | `z: n` | Pixels |
 | `opacity-{n}` | `opacity: n/100` | Percentage (0-100) |
 | `blur-{n}` | `filter: "blur(Npx)"` | Pixels |
+| `backdrop-blur-{n}` | `backdropFilter: "blur(Npx)"` | Pixels |
 | `brightness-{n}` | `filter: "brightness(n/100)"` | Percentage |
 | `contrast-{n}` | `filter: "contrast(n/100)"` | Percentage |
 | `saturate-{n}` | `filter: "saturate(n/100)"` | Percentage |
+| `clip-[value]` | `clipPath: "value"` | String |
+| `bg-{color}` | `backgroundColor: color` | Color (#hex/rgb/hsl) |
+| `text-{color}` | `color: color` | Color (#hex/rgb/hsl) |
+| `border-{color}` | `borderColor: color` | Color (#hex/rgb/hsl) |
+| `shadow-[value]` | `boxShadow: "value"` | String |
 | `w-{n}` | `width: n` | Pixels |
 | `h-{n}` | `height: n` | Pixels |
 | `rounded-{n}` | `borderRadius: n` | Pixels |
+| `top-{n}` | `top: n` | Pixels (+ units) |
+| `left-{n}` | `left: n` | Pixels (+ units) |
+| `right-{n}` | `right: n` | Pixels (+ units) |
+| `bottom-{n}` | `bottom: n` | Pixels (+ units) |
+| `p-{n}` | `padding: n` | Pixels (+ units) |
+| `m-{n}` | `margin: n` | Pixels (+ units) |
+| `gap-{n}` | `gap: n` | Pixels (+ units) |
+| `text-size-{n}` | `fontSize: n` | Pixels (+ units) |
+| `tracking-{n}` | `letterSpacing: n` | Pixels (+ units) |
+| `leading-{n}` | `lineHeight: n` | Pixels (+ units) |
+| `border-w-{n}` | `borderWidth: n` | Pixels |
+| `path-length-{n}` | `pathLength: n` | Number |
+| `path-offset-{n}` | `pathOffset: n` | Number |
+| `path-spacing-{n}` | `pathSpacing: n` | Number |
+| `{prop}-[v1,v2,v3]` | `prop: [v1, v2, v3]` | Keyframe array |
 | `[key=value]` | `key: value` | Any |
