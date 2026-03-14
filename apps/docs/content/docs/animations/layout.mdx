@@ -5,13 +5,45 @@ description: "Animate position and size changes automatically with Motion's layo
 
 # Layout Animations
 
-Layout animations are a Motion feature that automatically animates elements when their position or size changes in the DOM. These are not expressed as motionwind utility classes. Instead, you use Motion's `layout` prop and `layoutId` directly on `motion.*` components.
+Layout animations are a Motion feature that automatically animates elements when their position or size changes in the DOM. Motionwind provides utility classes for Motion's layout animation system. These compile to the `layout`, `layoutId`, `layoutScroll`, and `layoutRoot` props.
 
-This page explains each layout animation pattern and shows how it integrates with motionwind classes on surrounding elements.
+This page covers the motionwind layout classes and explains each layout animation pattern, including how to use both the class-based approach and the direct Motion API for advanced cases.
+
+## Layout Classes
+
+| Class | Motion output | Description |
+|---|---|---|
+| `animate-layout` | `layout` | Animate position and size changes |
+| `animate-layout-position` | `layout="position"` | Only animate position changes |
+| `animate-layout-size` | `layout="size"` | Only animate size changes |
+| `animate-layout-preserve` | `layout="preserve-aspect"` | Preserve aspect ratio during animation |
+| `animate-layout-id-{name}` | `layoutId="{name}"` | Shared layout transition identifier |
+| `animate-layout-scroll` | `layoutScroll` | Account for scroll offset in layout animation |
+| `animate-layout-root` | `layoutRoot` | Mark as layout animation boundary |
 
 ## Layout prop basics
 
-The `layout` prop tells Motion to automatically animate an element whenever its layout (position or size) changes between renders.
+The `layout` prop tells Motion to automatically animate an element whenever its layout (position or size) changes between renders. With motionwind, you can use the `animate-layout` class instead of the `layout` prop directly.
+
+### Class-based approach
+
+```html
+<div className="animate-layout rounded-xl bg-[#1a1a2e] p-4">
+  <h3 className="animate-layout-position text-[#c8ff2e] font-bold">Card Title</h3>
+</div>
+```
+
+Compiles to:
+
+```jsx
+<motion.div layout className="rounded-xl bg-[#1a1a2e] p-4">
+  <motion.h3 layout="position" className="text-[#c8ff2e] font-bold">Card Title</motion.h3>
+</motion.div>
+```
+
+### Direct Motion API approach
+
+For more complex cases where you need fine-grained control over transitions or conditional rendering, you can use the Motion API directly:
 
 ```tsx
 import { motion } from "motion/react";
@@ -47,7 +79,7 @@ Motion measures the element's bounding box before and after a React re-render. I
 
 ## Layout position changes
 
-When elements reorder in a list, each element's position changes. The `layout` prop animates these position shifts.
+When elements reorder in a list, each element's position changes. The `animate-layout` class (or the `layout` prop directly) animates these position shifts.
 
 ```tsx
 import { useState } from "react";
@@ -133,6 +165,41 @@ The outer container animates its width change via `layout`. The inner text uses 
 ## Shared layout transitions (layoutId)
 
 `layoutId` connects two separate elements across different render states. When one unmounts and another with the same `layoutId` mounts, Motion animates between their positions and sizes as if they were the same element.
+
+With motionwind, you can use the `animate-layout-id-{name}` class to set a `layoutId`. For example:
+
+- `animate-layout-id-active-tab` compiles to `layoutId="active-tab"`
+- `animate-layout-id-card-hero` compiles to `layoutId="card-hero"`
+
+### Class-based tab example
+
+```html
+{tabs.map((tab) => (
+  <button key={tab} onClick={() => setActiveTab(tab)} className="relative px-4 py-2 rounded-lg text-sm font-medium capitalize">
+    {activeTab === tab && (
+      <div className="animate-layout-id-active-tab-bg absolute inset-0 rounded-lg bg-[#c8ff2e]" />
+    )}
+    <span className="relative z-10">{tab}</span>
+  </button>
+))}
+```
+
+Compiles to:
+
+```jsx
+{tabs.map((tab) => (
+  <button key={tab} onClick={() => setActiveTab(tab)} className="relative px-4 py-2 rounded-lg text-sm font-medium capitalize">
+    {activeTab === tab && (
+      <motion.div layoutId="active-tab-bg" className="absolute inset-0 rounded-lg bg-[#c8ff2e]" />
+    )}
+    <span className="relative z-10">{tab}</span>
+  </button>
+))}
+```
+
+### Direct Motion API approach
+
+For cases where you need custom transitions on shared layout elements, use the Motion API directly:
 
 ```tsx
 import { useState } from "react";
@@ -336,15 +403,65 @@ function DynamicGrid() {
 
 When the column count changes, each grid item smoothly animates to its new position and size. The `layout` prop on each `motion.div` handles the measurement and animation automatically.
 
+## Layout Scroll
+
+The `animate-layout-scroll` class compiles to the `layoutScroll` prop. Use it on scrollable containers so that Motion correctly accounts for scroll offset when measuring element positions during layout animations.
+
+Without this, layout animations inside a scrollable container may appear to jump because Motion measures positions relative to the viewport, not the scroll container.
+
+```html
+<div className="animate-layout-scroll overflow-auto h-64">
+  <div className="animate-layout rounded-lg bg-[#1a1a2e] p-4">
+    Content that animates correctly inside a scrollable container.
+  </div>
+</div>
+```
+
+Compiles to:
+
+```jsx
+<motion.div layoutScroll className="overflow-auto h-64">
+  <motion.div layout className="rounded-lg bg-[#1a1a2e] p-4">
+    Content that animates correctly inside a scrollable container.
+  </motion.div>
+</motion.div>
+```
+
+## Layout Root
+
+The `animate-layout-root` class compiles to the `layoutRoot` prop. It creates an animation boundary that prevents layout animations from propagating above this point in the component tree.
+
+This is useful when you want to isolate a section of your page so that layout changes inside it do not trigger layout recalculations in parent components.
+
+```html
+<div className="animate-layout-root">
+  <div className="animate-layout rounded-lg bg-[#1a1a2e] p-4">
+    Layout animations inside here are isolated from the rest of the page.
+  </div>
+</div>
+```
+
+Compiles to:
+
+```jsx
+<motion.div layoutRoot>
+  <motion.div layout className="rounded-lg bg-[#1a1a2e] p-4">
+    Layout animations inside here are isolated from the rest of the page.
+  </motion.div>
+</motion.div>
+```
+
 ## When to use layout animations vs motionwind
 
 | Need | Approach |
 | --- | --- |
 | Hover, tap, focus, scroll effects | motionwind classes (`animate-hover:*`, etc.) |
 | Enter/exit transitions | motionwind classes (`animate-initial:*`, `animate-enter:*`, `animate-exit:*`) |
-| Animating DOM position/size changes | Motion `layout` prop directly |
-| Shared element transitions | Motion `layoutId` prop directly |
+| Animating DOM position/size changes | motionwind class (`animate-layout`) or Motion `layout` prop |
+| Shared element transitions | motionwind class (`animate-layout-id-{name}`) or Motion `layoutId` prop |
+| Scroll-aware layout animations | motionwind class (`animate-layout-scroll`) or Motion `layoutScroll` prop |
+| Layout animation boundaries | motionwind class (`animate-layout-root`) or Motion `layoutRoot` prop |
 | Drag-to-reorder lists | Motion `Reorder` component directly |
-| Grid/list reflow animations | Motion `layout` prop on each item |
+| Grid/list reflow animations | motionwind class (`animate-layout`) or Motion `layout` prop on each item |
 
-Layout animations and motionwind classes serve different purposes and work well together. Use motionwind for gesture-driven and transition-based animations. Use Motion's layout system when you need to animate changes to an element's position or size that result from React state updates or DOM reflows.
+Layout animations and motionwind classes now work hand-in-hand. Use motionwind layout classes (`animate-layout`, `animate-layout-id-{name}`, etc.) for straightforward layout animations where you want to stay in the utility-class workflow. Use the Motion API directly when you need fine-grained control over transitions, conditional rendering with `AnimatePresence`, or specialized components like `Reorder`.
