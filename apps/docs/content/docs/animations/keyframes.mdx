@@ -1,0 +1,235 @@
+---
+title: "Keyframe Animations"
+description: "Looping animations, repeat control, pulse effects, and loading spinners with motionwind classes -- plus how to reach for Motion's keyframes API when you need multi-step sequences."
+---
+
+# Keyframe Animations
+
+motionwind supports repeating animations, infinite loops, and duration/easing control through its class syntax. For multi-step keyframe sequences, you drop down to the Motion API directly. This page covers both approaches.
+
+## Continuous spin (infinite loop)
+
+Combine `animate-enter:rotate-360` with `animate-repeat-infinite`, a duration, and linear easing to create a continuous rotation that never stops.
+
+<Demo title="Continuous spin">
+  <div className="animate-enter:rotate-360 animate-repeat-infinite animate-duration-2000 animate-ease-linear w-16 h-16 rounded-lg bg-[#c8ff2e] flex items-center justify-center text-[#0a0a0f] font-bold text-xl">
+    MW
+  </div>
+</Demo>
+
+```html
+<div className="animate-enter:rotate-360 animate-repeat-infinite animate-duration-2000 animate-ease-linear">
+  MW
+</div>
+```
+
+At build time, motionwind compiles this to:
+
+```tsx
+<motion.div
+  animate={{ rotate: 360 }}
+  transition={{
+    duration: 2,
+    repeat: Infinity,
+    ease: "linear",
+  }}
+>
+  MW
+</motion.div>
+```
+
+### What each class does
+
+| Class | Motion equivalent | Purpose |
+| --- | --- | --- |
+| `animate-enter:rotate-360` | `animate={{ rotate: 360 }}` | Target rotation of 360 degrees |
+| `animate-repeat-infinite` | `transition.repeat = Infinity` | Loop forever |
+| `animate-duration-2000` | `transition.duration = 2` | 2 seconds per revolution |
+| `animate-ease-linear` | `transition.ease = "linear"` | Constant speed, no acceleration |
+
+## Repeat a fixed number of times
+
+Use `animate-repeat-{n}` to repeat an animation a specific number of times instead of infinitely.
+
+<Demo title="Repeat 3 times">
+  <div className="animate-enter:rotate-360 animate-repeat-3 animate-duration-800 animate-ease-in-out w-14 h-14 rounded-lg bg-[#c8ff2e]/80 flex items-center justify-center text-[#0a0a0f] font-bold">
+    3x
+  </div>
+</Demo>
+
+```html
+<div className="animate-enter:rotate-360 animate-repeat-3 animate-duration-800 animate-ease-in-out">
+  3x
+</div>
+```
+
+This compiles to:
+
+```tsx
+<motion.div
+  animate={{ rotate: 360 }}
+  transition={{
+    duration: 0.8,
+    repeat: 3,
+    ease: "easeInOut",
+  }}
+>
+  3x
+</motion.div>
+```
+
+The element rotates 360 degrees three times, then stops.
+
+## Pulse effect
+
+A pulse animation scales an element up and down continuously. Use `animate-initial:` to set the starting scale and `animate-enter:` for the target, then loop it infinitely.
+
+<Demo title="Pulse">
+  <div className="animate-initial:scale-100 animate-enter:scale-110 animate-repeat-infinite animate-duration-1000 animate-ease-in-out w-20 h-20 rounded-full bg-[#c8ff2e]/60 flex items-center justify-center">
+    <div className="w-10 h-10 rounded-full bg-[#c8ff2e]" />
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:scale-100 animate-enter:scale-110 animate-repeat-infinite animate-duration-1000 animate-ease-in-out">
+  <!-- inner content -->
+</div>
+```
+
+Compiled output:
+
+```tsx
+<motion.div
+  initial={{ scale: 1 }}
+  animate={{ scale: 1.1 }}
+  transition={{
+    duration: 1,
+    repeat: Infinity,
+    ease: "easeInOut",
+  }}
+>
+  {/* inner content */}
+</motion.div>
+```
+
+Motion automatically alternates between `initial` and `animate` values when `repeat` is set, which creates the pulsing back-and-forth effect.
+
+## Loading spinner
+
+A loading spinner is a continuous rotation with linear easing so the speed stays constant.
+
+<Demo title="Loading spinner">
+  <div className="animate-enter:rotate-360 animate-repeat-infinite animate-duration-1000 animate-ease-linear w-10 h-10 rounded-full border-4 border-[#c8ff2e]/20 border-t-[#c8ff2e]" />
+</Demo>
+
+```html
+<div className="animate-enter:rotate-360 animate-repeat-infinite animate-duration-1000 animate-ease-linear w-10 h-10 rounded-full border-4 border-[#c8ff2e]/20 border-t-[#c8ff2e]" />
+```
+
+The Tailwind border utilities create the visual spinner shape. The motionwind classes handle the rotation. At build time, the `animate-*` classes are stripped and the element is rewritten as a `motion.div` with the correct props. The Tailwind classes (`w-10`, `h-10`, `rounded-full`, `border-4`, etc.) pass through untouched.
+
+## Multi-step keyframes
+
+motionwind classes map a single value per property per gesture. For multi-step keyframe sequences like "move right, then up, then back to start," you need Motion's keyframes array syntax directly.
+
+This is **not** a motionwind class feature. Use Motion's `animate` prop with arrays:
+
+```tsx
+import { motion } from "motion/react";
+
+<motion.div
+  animate={{
+    x: [0, 100, 100, 0],
+    y: [0, 0, -50, 0],
+  }}
+  transition={{
+    duration: 3,
+    repeat: Infinity,
+    ease: "easeInOut",
+  }}
+  className="w-12 h-12 rounded-lg bg-[#c8ff2e]"
+/>
+```
+
+When you pass an array to a property, Motion treats each value as a keyframe and interpolates between them evenly across the duration. The element above traces a rectangular path: right, up, left/down, back to start.
+
+### Combining keyframes with motionwind
+
+You can mix direct Motion props and motionwind classes on sibling elements. For example, a parent with Motion keyframes and a child with motionwind hover effects:
+
+```tsx
+import { motion } from "motion/react";
+
+<motion.div
+  animate={{ x: [0, 100, 0] }}
+  transition={{ duration: 2, repeat: Infinity }}
+  className="p-4"
+>
+  {/* This child uses motionwind classes -- Babel transforms it at build time */}
+  <div className="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+    Hover me while I move
+  </div>
+</motion.div>
+```
+
+The Babel plugin transforms the inner `div` into a `motion.div` with hover and tap props. The outer `motion.div` uses Motion's keyframes API directly. Both work together without conflict.
+
+## Reverse and alternate animations
+
+Motion's `repeatType` property controls what happens after each repetition cycle. This is not available as a motionwind class, but you can set it directly when you need it:
+
+```tsx
+import { motion } from "motion/react";
+
+// "reverse" alternates direction each cycle
+<motion.div
+  animate={{ x: 100 }}
+  transition={{
+    duration: 1,
+    repeat: Infinity,
+    repeatType: "reverse",
+  }}
+  className="w-12 h-12 rounded-lg bg-[#c8ff2e]"
+/>
+
+// "mirror" is the same as reverse
+// "loop" resets to the start and plays forward again
+```
+
+With motionwind classes, you get the `repeat` count but not `repeatType`. When you use `animate-repeat-infinite` with `animate-initial:` and `animate-enter:`, Motion defaults to a reverse-style repetition (it animates from initial to animate and back). For finer control over repeat behavior, use the Motion API directly.
+
+## Complex timelines
+
+For orchestrated animations with staggered timing, sequential phases, or independent per-property timing, use Motion's orchestration API:
+
+```tsx
+import { motion } from "motion/react";
+
+<motion.div
+  animate={{
+    x: [0, 100, 100, 0, 0],
+    y: [0, 0, -100, -100, 0],
+    rotate: [0, 90, 180, 270, 360],
+  }}
+  transition={{
+    duration: 4,
+    repeat: Infinity,
+    ease: "linear",
+    times: [0, 0.25, 0.5, 0.75, 1],
+  }}
+  className="w-12 h-12 rounded-lg bg-[#c8ff2e]"
+/>
+```
+
+The `times` array lets you control exactly when each keyframe is reached during the total duration. This level of timing control is beyond what utility classes can express, and is where Motion's declarative API shines.
+
+### When to use which approach
+
+| Need | Approach |
+| --- | --- |
+| Simple loop (spin, pulse, bounce) | motionwind classes |
+| Fixed repeat count | `animate-repeat-{n}` class |
+| Duration and easing | `animate-duration-{ms}` and `animate-ease-*` classes |
+| Multi-step keyframes | Motion `animate` prop with arrays |
+| Custom repeat type (reverse, mirror, loop) | Motion `transition.repeatType` |
+| Complex orchestrated timelines | Motion `times` array and orchestration API |
