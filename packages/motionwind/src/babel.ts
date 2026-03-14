@@ -8,10 +8,14 @@ import type { AnimatableValues, TransitionConfig } from "./types.js";
  * Supports strings, numbers, booleans, and number arrays (keyframes).
  */
 function valueToAst(
-  value: string | number | boolean | number[],
+  value: string | number | boolean | (string | number)[],
 ): t.Expression {
   if (Array.isArray(value)) {
-    return t.arrayExpression(value.map((v) => t.numericLiteral(v)));
+    return t.arrayExpression(
+      value.map((v) =>
+        typeof v === "string" ? t.stringLiteral(v) : t.numericLiteral(v),
+      ),
+    );
   }
   if (typeof value === "string") return t.stringLiteral(value);
   if (typeof value === "boolean") return t.booleanLiteral(value);

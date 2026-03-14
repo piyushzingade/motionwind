@@ -110,20 +110,30 @@ function parsePropertyValue(
 
   const sign = negative ? -1 : 1;
 
-  // Keyframe array syntax: property-[v1,v2,v3]
+  // Keyframe array syntax: property-[v1,v2,v3] — supports numbers and unit values
   const keyframeMatch = str.match(/^(\w+(?:-\w+)?)-\[([^\]]+)\]$/);
   if (keyframeMatch) {
     const propName = keyframeMatch[1]!;
     const valuesStr = keyframeMatch[2]!;
     const propKey = normalizePropertyName(propName);
     if (propKey) {
-      const values = valuesStr.split(",").map((v) => Number(v.trim()));
-      if (!values.some(isNaN)) {
+      const rawValues = valuesStr.split(",").map((v) => v.trim());
+      if (rawValues.length > 0) {
         const scaleProps = new Set(["scale", "scaleX", "scaleY", "scaleZ", "opacity", "brightness", "contrast", "saturate"]);
-        const normalized = scaleProps.has(propKey)
-          ? values.map((v) => v / 100)
-          : values;
-        return { key: propKey, value: normalized };
+        const parsed: (string | number)[] = [];
+        let valid = true;
+        for (const rv of rawValues) {
+          const unitVal = parseNumericWithUnit(rv, 1);
+          if (unitVal === null) { valid = false; break; }
+          if (typeof unitVal === "number" && scaleProps.has(propKey)) {
+            parsed.push(unitVal / 100);
+          } else {
+            parsed.push(unitVal);
+          }
+        }
+        if (valid) {
+          return { key: propKey, value: parsed };
+        }
       }
     }
     // Fall through — may be shadow-[...] etc.

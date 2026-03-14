@@ -8,7 +8,7 @@ export type GestureKey =
   | "animate"
   | "exit";
 
-export type AnimatableValues = Record<string, string | number | number[]>;
+export type AnimatableValues = Record<string, string | number | (string | number)[]>;
 
 export interface TransitionConfig {
   type?: "spring" | "tween" | "inertia";
