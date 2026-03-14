@@ -1,0 +1,266 @@
+---
+title: "Scroll Animations"
+description: "Trigger animations when elements enter the viewport using motionwind's scroll-aware classes."
+---
+
+Motionwind provides scroll-triggered animations through the `animate-inview:` gesture prefix, which compiles to Motion's `whileInView` prop. Combined with `animate-initial:` for starting state, you can create reveal effects, staggered entrances, and viewport-aware transitions -- all from your className string.
+
+## Scroll Reveal
+
+The most common scroll pattern: elements start hidden and animate into view when they enter the viewport.
+
+<Demo title="Scroll Reveal (fade up)">
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    I appear on scroll
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500">
+  I appear on scroll
+</div>
+```
+
+**What this compiles to:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.5 }}
+>
+  I appear on scroll
+</motion.div>
+```
+
+### How it works
+
+| Class | Compiled prop | Effect |
+|---|---|---|
+| `animate-initial:opacity-0` | `initial={{ opacity: 0 }}` | Start fully transparent |
+| `animate-initial:y-20` | `initial={{ y: 20 }}` | Start 20px below final position |
+| `animate-inview:opacity-100` | `whileInView={{ opacity: 1 }}` | Fade to full opacity when in view |
+| `animate-inview:y-0` | `whileInView={{ y: 0 }}` | Slide to final position when in view |
+| `animate-once` | `viewport={{ once: true }}` | Only trigger the animation once |
+| `animate-duration-500` | `transition={{ duration: 0.5 }}` | Animation lasts 500ms |
+
+---
+
+## Staggered Scroll Cards
+
+Use `animate-delay-{ms}` on multiple elements to stagger their entrance as they scroll into view. Each card enters with an increasing delay, creating a cascading reveal effect.
+
+<Demo title="Staggered Cards" className="gap-4">
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-0 rounded-xl bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium">
+    Card 1
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-100 rounded-xl bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium">
+    Card 2
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-200 rounded-xl bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium">
+    Card 3
+  </div>
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-300 rounded-xl bg-fd-primary px-5 py-3 text-fd-primary-foreground text-sm font-medium">
+    Card 4
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-0">
+  Card 1
+</div>
+<div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-100">
+  Card 2
+</div>
+<div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-200">
+  Card 3
+</div>
+<div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-300">
+  Card 4
+</div>
+```
+
+**Compiled output for the third card:**
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.5, delay: 0.2 }}
+>
+  Card 3
+</motion.div>
+```
+
+The `animate-delay-{ms}` value is in milliseconds in the class name but converts to seconds in the compiled output (e.g., `animate-delay-200` becomes `delay: 0.2`).
+
+---
+
+## Viewport Options
+
+Motionwind exposes three viewport configuration classes that map directly to Motion's `viewport` prop.
+
+### animate-once
+
+Trigger the animation only the first time the element enters the viewport. Without this class, the animation replays every time the element scrolls in and out.
+
+<Demo title="Trigger Once">
+  <div className="animate-initial:opacity-0 animate-initial:scale-90 animate-inview:opacity-100 animate-inview:scale-100 animate-once animate-duration-400 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    I only animate once
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:scale-90 animate-inview:opacity-100 animate-inview:scale-100 animate-once animate-duration-400">
+  I only animate once
+</div>
+```
+
+Compiles `animate-once` to `viewport={{ once: true }}`.
+
+### animate-amount-all
+
+Require the entire element to be visible in the viewport before triggering. By default, Motion triggers when any part of the element is visible.
+
+<Demo title="Full Element Visible">
+  <div className="animate-initial:opacity-0 animate-inview:opacity-100 animate-once animate-amount-all animate-duration-500 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    I wait until fully visible
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-inview:opacity-100 animate-once animate-amount-all animate-duration-500">
+  I wait until fully visible
+</div>
+```
+
+Compiles to `viewport={{ once: true, amount: "all" }}`.
+
+### `animate-margin-{n}`
+
+Add a margin (in pixels) around the viewport detection boundary. A positive value triggers the animation before the element actually enters the visible area, creating an earlier reveal.
+
+<Demo title="Viewport Margin">
+  <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-margin-100 animate-duration-500 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium">
+    I trigger 100px early
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-margin-100 animate-duration-500">
+  I trigger 100px early
+</div>
+```
+
+Compiles to `viewport={{ once: true, margin: "100px" }}`.
+
+### Combining viewport options
+
+All viewport options can be combined freely:
+
+```html
+<div className="animate-initial:opacity-0 animate-inview:opacity-100 animate-once animate-amount-all animate-margin-50 animate-duration-600">
+  Full control over viewport detection
+</div>
+```
+
+Compiles to:
+
+```jsx
+<motion.div
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  viewport={{ once: true, amount: "all", margin: "50px" }}
+  transition={{ duration: 0.6 }}
+/>
+```
+
+---
+
+## Parallax Scrolling
+
+Parallax effects require scroll-linked values that update continuously as the user scrolls -- not just when an element enters the viewport. This is beyond what motionwind's declarative class syntax can express, since motionwind maps to discrete animation states rather than continuous scroll progress.
+
+**Use Motion's `useScroll` and `useTransform` hooks directly:**
+
+```tsx
+import { motion, useScroll, useTransform } from "motion/react";
+
+function ParallaxSection() {
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], [0, -200]);
+
+  return (
+    <motion.div
+      style={{ y }}
+      className="animate-initial:opacity-0 animate-inview:opacity-100 animate-once"
+    >
+      Parallax content with fade-in reveal
+    </motion.div>
+  );
+}
+```
+
+In this example, the parallax translation comes from `useScroll` + `useTransform`, while the fade-in reveal still uses motionwind classes. You can freely combine both approaches on the same element -- motionwind handles the declarative animation props, and Motion's hooks handle the imperative scroll-linked values.
+
+---
+
+## Scroll-Linked Transforms
+
+For animations that progress in sync with scroll position (e.g., a progress bar that fills as the page scrolls, or an element that rotates proportionally to scroll), you need Motion's `useScroll` API.
+
+**Motionwind's `inview` gesture is binary** -- it triggers when the element enters/exits the viewport. Scroll-linked transforms require a continuous `scrollYProgress` value.
+
+```tsx
+import { motion, useScroll, useTransform } from "motion/react";
+import { useRef } from "react";
+
+function ScrollProgress() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
+  return (
+    <div ref={ref}>
+      <motion.div
+        style={{ scaleX, transformOrigin: "left" }}
+        className="h-1 bg-blue-500 rounded-full"
+      />
+    </div>
+  );
+}
+```
+
+**When to use each approach:**
+
+| Need | Solution |
+|---|---|
+| Animate on viewport enter | motionwind `animate-inview:*` classes |
+| Animate proportional to scroll | Motion `useScroll` + `useTransform` |
+| Parallax offset | Motion `useScroll` + `useTransform` |
+| Scroll-snapping transitions | Motion `useScroll` with snap points |
+
+---
+
+## Sticky Scroll Sections
+
+Sticky scroll effects (where an element stays fixed while surrounding content scrolls past) are achieved with CSS `position: sticky`, not animation libraries. However, you can combine sticky positioning with motionwind's in-view triggers for compelling effects.
+
+```html
+<div className="relative h-[200vh]">
+  <div className="sticky top-0 flex h-screen items-center justify-center">
+    <div className="animate-initial:opacity-0 animate-initial:scale-90 animate-inview:opacity-100 animate-inview:scale-100 animate-once animate-duration-700">
+      <h2>This section sticks and reveals</h2>
+    </div>
+  </div>
+</div>
+```
+
+The outer wrapper's `h-[200vh]` creates scroll distance. The `sticky top-0` element stays pinned. The inner content uses motionwind to fade and scale in once it enters the viewport.
+
+**For more advanced sticky scroll sequences** (like animating between multiple panels while pinned), consider using Motion's `useScroll` to track progress within the sticky container and drive transforms accordingly. Motionwind's viewport triggers work well for the initial reveal, while scroll-linked values handle the continuous transitions within the sticky area.
