@@ -4,7 +4,17 @@
   "type": "module",
   "private": false,
   "description": "Write Motion animations as Tailwind-like classes. Babel plugin transforms them at build time.",
+  "author": "piyush555",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piyushzingade/motionwind.git",
+    "directory": "packages/motionwind"
+  },
+  "bugs": {
+    "url": "https://github.com/piyushzingade/motionwind/issues"
+  },
+  "homepage": "https://github.com/piyushzingade/motionwind#readme",
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -49,7 +59,8 @@
   },
   "peerDependencies": {
     "react": ">=18",
-    "motion": ">=11"
+    "motion": ">=11",
+    "babel-loader": ">=9"
   },
   "peerDependenciesMeta": {
     "react": {
@@ -57,16 +68,19 @@
     },
     "motion": {
       "optional": false
+    },
+    "babel-loader": {
+      "optional": true
     }
   },
   "dependencies": {
     "@babel/core": "^7.26.0",
     "@babel/generator": "^7.26.0",
     "@babel/parser": "^7.26.0",
+    "@babel/plugin-syntax-jsx": "^7.28.6",
     "@babel/types": "^7.26.0"
   },
   "devDependencies": {
-    "@babel/plugin-syntax-jsx": "^7.28.6",
     "@babel/preset-react": "^7.28.5",
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
