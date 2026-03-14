@@ -1,0 +1,336 @@
+---
+title: "Advanced Motion Effects"
+description: "Combine motionwind utility classes to create magnetic hovers, 3D tilts, floating animations, infinite loops, and morphing shapes."
+---
+
+# Advanced Motion Effects
+
+By combining multiple motionwind classes on a single element, you can create sophisticated animation effects without writing any Motion prop objects. This page demonstrates patterns that push beyond simple hover-scale interactions.
+
+---
+
+## Smooth Card Lift
+
+The classic card hover effect: the card rises, scales slightly, and gains a deeper shadow. This is one of the most common UI micro-interactions:
+
+```tsx
+<div className="animate-hover:y--8 animate-hover:scale-102 animate-spring animate-stiffness-300 animate-damping-20 p-6 rounded-xl bg-gray-800 shadow-lg hover:shadow-2xl transition-shadow">
+  <h3>Card Title</h3>
+  <p>Hover to lift this card.</p>
+</div>
+```
+
+Build output:
+
+```tsx
+<motion.div
+  whileHover={{ y: -8, scale: 1.02 }}
+  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+  className="p-6 rounded-xl bg-gray-800 shadow-lg hover:shadow-2xl transition-shadow"
+>
+  <h3>Card Title</h3>
+  <p>Hover to lift this card.</p>
+</motion.div>
+```
+
+Note that `hover:shadow-2xl` and `transition-shadow` are Tailwind classes -- they pass through untouched and handle the CSS shadow transition, while motionwind handles the `y` and `scale` transforms.
+
+<Demo title="Card Lift on Hover">
+  <div className="animate-hover:y--8 animate-hover:scale-102 animate-spring animate-stiffness-300 animate-damping-20 p-6 rounded-xl bg-fd-card border border-fd-border shadow-lg hover:shadow-2xl transition-shadow cursor-pointer max-w-[240px] w-full">
+    <div className="text-sm font-semibold mb-1">Card Title</div>
+    <div className="text-xs text-fd-muted-foreground">Hover to lift this card up with a spring animation.</div>
+  </div>
+</Demo>
+
+---
+
+## Floating Animation
+
+A gentle up-and-down floating loop, commonly used for hero illustrations, badges, or call-to-action elements. This uses `animate-repeat-infinite` to loop the enter animation forever:
+
+```tsx
+<div className="animate-initial:y-0 animate-enter:y--10 animate-repeat-infinite animate-duration-2000 animate-ease-in-out">
+  Floating element
+</div>
+```
+
+Build output:
+
+```tsx
+<motion.div
+  initial={{ y: 0 }}
+  animate={{ y: -10 }}
+  transition={{ duration: 2, ease: "easeInOut", repeat: Infinity }}
+>
+  Floating element
+</motion.div>
+```
+
+Motion automatically alternates (yoyo) infinite repeating animations by default, so the element moves up then back down continuously.
+
+<Demo title="Floating Element">
+  <div className="animate-initial:y-0 animate-enter:y--10 animate-repeat-infinite animate-duration-2000 animate-ease-in-out w-16 h-16 rounded-2xl bg-[#c8ff2e] flex items-center justify-center shadow-lg shadow-[#c8ff2e]/20">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+    </svg>
+  </div>
+</Demo>
+
+---
+
+## Breathing Animation
+
+A subtle scale pulse that gives the impression of "breathing." Useful for status indicators, loading states, or drawing attention to an element:
+
+```tsx
+<div className="animate-initial:scale-100 animate-enter:scale-105 animate-repeat-infinite animate-duration-2000 animate-ease-in-out w-4 h-4 rounded-full bg-green-400" />
+```
+
+Build output:
+
+```tsx
+<motion.div
+  initial={{ scale: 1 }}
+  animate={{ scale: 1.05 }}
+  transition={{ duration: 2, ease: "easeInOut", repeat: Infinity }}
+  className="w-4 h-4 rounded-full bg-green-400"
+/>
+```
+
+<Demo title="Breathing Pulse">
+  <div className="flex items-center gap-3">
+    <div className="animate-initial:scale-100 animate-enter:scale-105 animate-repeat-infinite animate-duration-2000 animate-ease-in-out w-4 h-4 rounded-full bg-[#c8ff2e] shadow-md shadow-[#c8ff2e]/30" />
+    <span className="text-sm text-fd-muted-foreground">System active</span>
+  </div>
+</Demo>
+
+---
+
+## Magnetic Hover Approximation
+
+A true magnetic effect tracks the cursor position and shifts the element towards it using `useMotionValue` and mouse event handlers. motionwind cannot replicate this exactly because cursor tracking requires JavaScript event listeners. However, you can approximate the feel with a fixed directional shift on hover:
+
+```tsx
+<button className="animate-hover:x-3 animate-hover:y--3 animate-spring animate-stiffness-400 animate-damping-15 px-6 py-3 rounded-lg bg-green-400 text-black font-semibold">
+  Hover me
+</button>
+```
+
+This gives a slight "pull" in one direction on hover. For a true magnetic effect that follows the cursor, use the Motion API:
+
+```tsx
+import { motion, useMotionValue, useSpring } from "motion/react";
+
+function MagneticButton({ children }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 400, damping: 15 });
+  const springY = useSpring(y, { stiffness: 400, damping: 15 });
+
+  function handleMouseMove(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    x.set(e.clientX - rect.left - rect.width / 2);
+    y.set(e.clientY - rect.top - rect.height / 2);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
+  return (
+    <motion.button
+      style={{ x: springX, y: springY }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="px-6 py-3 rounded-lg bg-green-400 text-black font-semibold"
+    >
+      {children}
+    </motion.button>
+  );
+}
+```
+
+<Demo title="Hover Shift (motionwind Approximation)">
+  <button className="animate-hover:x-3 animate-hover:y--3 animate-spring animate-stiffness-400 animate-damping-15 px-6 py-3 rounded-lg bg-[#c8ff2e] text-black font-semibold cursor-pointer select-none">
+    Hover me
+  </button>
+</Demo>
+
+---
+
+## 3D Tilt Effect
+
+Combine `rotateX` and `rotateY` on hover with CSS `perspective` on the parent to create a 3D card tilt:
+
+```tsx
+<div style={{ perspective: "600px" }}>
+  <div className="animate-hover:rotate-x-10 animate-hover:rotate-y-10 animate-spring p-8 rounded-xl bg-gray-800">
+    3D tilt card
+  </div>
+</div>
+```
+
+Build output:
+
+```tsx
+<div style={{ perspective: "600px" }}>
+  <motion.div
+    whileHover={{ rotateX: 10, rotateY: 10 }}
+    transition={{ type: "spring" }}
+    className="p-8 rounded-xl bg-gray-800"
+  >
+    3D tilt card
+  </motion.div>
+</div>
+```
+
+The `perspective` CSS property on the parent creates the 3D rendering context. Without it, `rotateX` and `rotateY` would produce flat-looking rotations.
+
+<Demo title="3D Tilt on Hover">
+  <div style={{ perspective: "600px" }}>
+    <div className="animate-hover:rotate-x-10 animate-hover:rotate-y-10 animate-spring p-6 rounded-xl bg-fd-card border border-fd-border cursor-pointer max-w-[200px] w-full text-center">
+      <div className="text-2xl mb-2">&#9670;</div>
+      <div className="text-sm font-semibold">3D Tilt Card</div>
+      <div className="text-xs text-fd-muted-foreground mt-1">Hover to see the effect</div>
+    </div>
+  </div>
+</Demo>
+
+---
+
+## Morphing Shapes
+
+Animate `borderRadius` on hover to morph a square into a circle. The `rounded-{n}` property is a built-in motionwind class:
+
+```tsx
+<div className="animate-hover:rounded-50 animate-duration-500 animate-ease-in-out w-24 h-24 bg-green-400" />
+```
+
+Build output:
+
+```tsx
+<motion.div
+  whileHover={{ borderRadius: 50 }}
+  transition={{ duration: 0.5, ease: "easeInOut" }}
+  className="w-24 h-24 bg-green-400"
+/>
+```
+
+Setting `borderRadius` to `50` (pixels) on a square element creates a circle when the border-radius equals half the element's size. For percentage-based values, use bracket syntax: `animate-hover:[borderRadius=50%]`.
+
+<Demo title="Square to Circle Morph">
+  <div className="animate-hover:rounded-50 animate-duration-500 animate-ease-in-out w-24 h-24 bg-[#c8ff2e] cursor-pointer" />
+</Demo>
+
+---
+
+## Infinite Horizontal Loop
+
+Move an element continuously across the screen. Useful for marquee effects or background decoration:
+
+```tsx
+<div className="animate-initial:x-0 animate-enter:x-200 animate-repeat-infinite animate-duration-3000 animate-ease-linear w-8 h-8 rounded-full bg-green-400" />
+```
+
+Build output:
+
+```tsx
+<motion.div
+  initial={{ x: 0 }}
+  animate={{ x: 200 }}
+  transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+  className="w-8 h-8 rounded-full bg-green-400"
+/>
+```
+
+<Demo title="Infinite Loop">
+  <div className="w-full max-w-[300px] overflow-hidden">
+    <div className="animate-initial:x-0 animate-enter:x-200 animate-repeat-infinite animate-duration-3000 animate-ease-linear w-8 h-8 rounded-full bg-[#c8ff2e] shadow-md shadow-[#c8ff2e]/20" />
+  </div>
+</Demo>
+
+---
+
+## Infinite Rotation
+
+Spin an element continuously. Common for loading spinners or decorative elements:
+
+```tsx
+<div className="animate-initial:rotate-0 animate-enter:rotate-360 animate-repeat-infinite animate-duration-2000 animate-ease-linear w-10 h-10 border-2 border-green-400 border-t-transparent rounded-full" />
+```
+
+<Demo title="Infinite Spinner">
+  <div className="animate-initial:rotate-0 animate-enter:rotate-360 animate-repeat-infinite animate-duration-2000 animate-ease-linear w-10 h-10 border-2 border-[#c8ff2e] border-t-transparent rounded-full" />
+</Demo>
+
+---
+
+## Cursor Follow
+
+A true cursor-follow effect requires tracking mouse position in real-time and feeding those coordinates into motion values. This is fundamentally a JavaScript task:
+
+```tsx
+import { motion, useMotionValue, useSpring } from "motion/react";
+import { useEffect } from "react";
+
+function CursorFollower() {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 150, damping: 15 });
+  const springY = useSpring(y, { stiffness: 150, damping: 15 });
+
+  useEffect(() => {
+    function handleMouseMove(e: MouseEvent) {
+      x.set(e.clientX - 16);
+      y.set(e.clientY - 16);
+    }
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [x, y]);
+
+  return (
+    <motion.div
+      style={{ x: springX, y: springY }}
+      className="fixed top-0 left-0 w-8 h-8 rounded-full bg-green-400 pointer-events-none z-50"
+    />
+  );
+}
+```
+
+The `useMotionValue` and `useSpring` hooks provide smooth, spring-based interpolation that would be impossible with class-based declarations. This pattern is best implemented directly with the Motion API.
+
+---
+
+## Combining Multiple Effects
+
+The real power of motionwind is composability. Stack multiple gestures, transition settings, and properties on a single element:
+
+```tsx
+<button className="animate-hover:y--4 animate-hover:scale-105 animate-tap:scale-95 animate-tap:y-0 animate-spring animate-stiffness-300 animate-damping-20 px-8 py-4 rounded-xl bg-green-400 text-black font-bold">
+  Interactive Button
+</button>
+```
+
+This button lifts and scales on hover, then compresses and snaps back on tap -- all with spring physics. No Motion imports needed.
+
+<Demo title="Combined Hover + Tap">
+  <button className="animate-hover:y--4 animate-hover:scale-105 animate-tap:scale-95 animate-tap:y-0 animate-spring animate-stiffness-300 animate-damping-20 px-8 py-4 rounded-xl bg-[#c8ff2e] text-black font-bold cursor-pointer select-none">
+    Interactive Button
+  </button>
+</Demo>
+
+---
+
+## Summary
+
+| Effect | Classes | JS required? |
+|---|---|---|
+| Card lift | `animate-hover:y--8 animate-hover:scale-102 animate-spring` | No |
+| Floating | `animate-initial:y-0 animate-enter:y--10 animate-repeat-infinite animate-duration-2000` | No |
+| Breathing | `animate-initial:scale-100 animate-enter:scale-105 animate-repeat-infinite animate-duration-2000` | No |
+| Magnetic hover (approx.) | `animate-hover:x-3 animate-hover:y--3 animate-spring` | No (true magnetic needs JS) |
+| 3D tilt | `animate-hover:rotate-x-10 animate-hover:rotate-y-10` + CSS `perspective` | No |
+| Shape morph | `animate-hover:rounded-50` | No |
+| Infinite loop | `animate-enter:x-200 animate-repeat-infinite animate-ease-linear` | No |
+| Cursor follow | -- | Yes (`useMotionValue` + `useSpring`) |
