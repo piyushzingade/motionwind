@@ -161,13 +161,238 @@ bun run lint
 bun run check-types
 ```
 
-## How It Works
+## Architecture
 
-1. **Parser** (`motionwind/parser`) — Framework-agnostic class parser. Zero dependencies.
-2. **Babel Plugin** (`motionwind/babel`) — Build-time JSX transform. Converts `<button className="animate-...">` into `<motion.button whileHover={...}>`. Auto-injects imports and `"use client"`.
-3. **Runtime Fallback** (`motionwind`) — `mw.*` Proxy for dynamic classNames.
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                       MONOREPO (Turborepo + Bun)                        │
+│                                                                         │
+│   APPS                                                                  │
+│   ┌─────────────────────┐       ┌──────────────────────────┐           │
+│   │   apps/web          │       │   apps/docs              │           │
+│   │   (Next.js)         │       │   (Next.js + Fumadocs)   │           │
+│   │   Demo / Marketing  │       │   MDX Documentation      │           │
+│   └────────┬────────────┘       └────────────┬─────────────┘           │
+│            └──────────────┬──────────────────┘                          │
+│                           ▼                                             │
+│   PACKAGES                                                              │
+│   ┌──────────────────┐  ┌──────────────────────────────────────────┐   │
+│   │  packages/cli     │  │  packages/motionwind  (core library)     │   │
+│   │  "create-         │  │                                          │   │
+│   │   motionwind"     │  │  ┌───────────┐  ┌──────────────────┐    │   │
+│   │                   │  │  │ parser.ts  │  │ babel.ts         │    │   │
+│   │  • Detect project │  │  │            │  │                  │    │   │
+│   │    type (Next/    │  │  │ Tokenizes  │  │ AST transform:   │    │   │
+│   │    Vite/CRA)      │  │  │ classNames │◄─┤ <div> → motion. │    │   │
+│   │  • Install deps   │  │  │ & extracts │  │ div + props      │    │   │
+│   │  • Inject config  │  │  │ motion     │  │                  │    │   │
+│   │                   │  │  │ props      │  └──────┬───────────┘    │   │
+│   └──────────────────┘  │  └───────────┘         │                 │   │
+│                          │                  ┌─────┴──────────┐      │   │
+│   ┌──────────────────┐  │  ┌───────────┐  │  vite.ts       │      │   │
+│   │ packages/ui      │  │  │ next.ts   │  │  Vite plugin   │      │   │
+│   │ Shared components│  │  │ Webpack   │  │  (pre phase)   │      │   │
+│   ├──────────────────┤  │  │ babel-    │  │                │      │   │
+│   │ eslint-config    │  │  │ loader    │  └────────────────┘      │   │
+│   ├──────────────────┤  │  └───────────┘                          │   │
+│   │ typescript-config│  │  ┌──────────────────────────────┐       │   │
+│   └──────────────────┘  │  │ component.tsx (mw.*)          │       │   │
+│                          │  │ Runtime Proxy for dynamic     │       │   │
+│                          │  │ classNames Babel can't see    │       │   │
+│                          │  └──────────────────────────────┘       │   │
+│                          └──────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
-All Tailwind classes pass through untouched. Only `animate-{gesture}:` and `animate-{config}` tokens are intercepted.
+### Data Flow
+
+```
+  DEVELOPMENT TIME              BUILD TIME                    RUNTIME
+ ─────────────────            ──────────────                 ─────────
+
+ You write:                   Babel plugin kicks in:         Browser gets:
+ ┌────────────────────┐       ┌──────────────────┐          ┌──────────────────────┐
+ │ <button className= │       │                  │          │ import { motion }    │
+ │  "px-6 rounded-lg  │ ───►  │ 1. Find animate-*│  ─────►  │   from "motion/react"│
+ │   animate-hover:   │       │ 2. Call parser   │          │                      │
+ │     scale-110      │       │ 3. Replace elem  │          │ <motion.button       │
+ │   animate-tap:     │       │ 4. Inject motion │          │  className="px-6     │
+ │     scale-90       │       │    import        │          │    rounded-lg"       │
+ │   animate-spring"  │       │ 5. Add           │          │  whileHover={        │
+ │ >                  │       │    "use client"  │          │    {scale:1.1}}      │
+ │   Click Me         │       │                  │          │  whileTap={          │
+ │ </button>          │       └──────────────────┘          │    {scale:0.9}}      │
+ └────────────────────┘                                     │  transition={        │
+                                                            │    {type:"spring"}}  │
+                                                            │ >Click Me            │
+                                                            │ </motion.button>     │
+                                                            └──────────────────────┘
+
+                                                            ✅ Zero parser overhead
+                                                            ✅ Zero Babel in bundle
+                                                            ✅ Only Motion.js runs
+```
+
+### The Parser
+
+```
+  Input: "px-4 animate-hover:scale-110 animate-spring animate-once"
+          │
+          ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │                 TOKENIZER (split by space)                │
+  └──────────────────────────────────────────────────────────┘
+          │
+  ┌───────┴──────────┬──────────────────┬────────────────────┐
+  ▼                  ▼                  ▼                    ▼
+ "px-4"      "animate-hover:     "animate-spring"     "animate-once"
+              scale-110"
+  │                  │                  │                    │
+  │  No animate-     │  Has colon →     │  No colon →        │  No colon →
+  │  prefix          │  GESTURE token   │  TRANSITION token  │  VIEWPORT token
+  ▼                  ▼                  ▼                    ▼
+ Tailwind       whileHover:        type: "spring"       once: true
+ passthrough    { scale: 1.1 }
+          │                  │                  │                    │
+          └──────────┬───────┴──────────────────┴────────────────────┘
+                     ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │ ParsedResult                                             │
+  │   tailwindClasses: "px-4"                                │
+  │   gestures:   { whileHover: { scale: 1.1 } }            │
+  │   transition: { type: "spring" }                         │
+  │   viewport:   { once: true }                             │
+  │   hasMotion:  true                                       │
+  └──────────────────────────────────────────────────────────┘
+```
+
+### Framework Integration
+
+```
+                      ┌──────────────────────┐
+                      │  npx create-          │
+                      │  motionwind init      │
+                      └──────────┬───────────┘
+                                 │
+                 ┌───────────────┼───────────────┐
+                 ▼               ▼               ▼
+         ┌──────────────┐ ┌───────────┐  ┌─────────────┐
+         │   Next.js    │ │   Vite    │  │    CRA      │
+         └──────┬───────┘ └─────┬─────┘  └──────┬──────┘
+                ▼               ▼               ▼
+     ┌──────────────────┐ ┌──────────┐  ┌──────────────┐
+     │ next.config.ts   │ │vite.     │  │ .babelrc     │
+     │ withMotionwind() │ │config.ts │  │ ["motionwind │
+     │ wraps webpack to │ │motionwind│  │  /babel"]    │
+     │ add babel-loader │ │() plugin │  │              │
+     └────────┬─────────┘ └────┬─────┘  └──────┬──────┘
+              └────────────────┼───────────────┘
+                               ▼
+                 ┌──────────────────────────┐
+                 │  Babel Plugin (babel.ts)  │
+                 │  Transforms JSX at build  │
+                 │  time using the parser    │
+                 └──────────────────────────┘
+```
+
+### Static vs Dynamic — Two Paths
+
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │                     Your Component                        │
+  └────────────────────────┬─────────────────────────────────┘
+                           │
+            ┌──────────────┴──────────────┐
+            ▼                             ▼
+  ┌────────────────────┐     ┌────────────────────────────┐
+  │  STATIC className  │     │  DYNAMIC className         │
+  │                    │     │                            │
+  │  className=        │     │  className={`animate-      │
+  │   "animate-hover:  │     │    hover:scale-110         │
+  │    scale-110"      │     │    ${cond ? 'x' : 'y'}`}  │
+  │                    │     │                            │
+  │  Babel sees it ✓   │     │  Babel can't analyze ✗    │
+  └────────┬───────────┘     └──────────────┬─────────────┘
+           ▼                                ▼
+  ┌────────────────────┐     ┌────────────────────────────┐
+  │  BUILD-TIME        │     │  RUNTIME                   │
+  │  Babel transforms  │     │  Use mw.* proxy:           │
+  │  to <motion.btn>   │     │  <mw.button className=...> │
+  │                    │     │  Parser runs in browser    │
+  │  ✅ Zero overhead  │     │  ⚠️  Small runtime cost    │
+  └────────────────────┘     └────────────────────────────┘
+```
+
+## Contributing
+
+### Getting Started
+
+```bash
+# 1. Fork & clone
+git clone https://github.com/<you>/motionwind.git
+cd motionwind
+
+# 2. Install dependencies (uses Bun)
+bun install
+
+# 3. Build all packages
+bun run build
+
+# 4. Run dev mode (all packages + apps)
+bun run dev
+
+# 5. Run tests
+bun run test
+```
+
+### Where to Contribute
+
+| Area | Path | What to Do |
+|---|---|---|
+| New animation property | `packages/motionwind/src/parser.ts` | Add parsing logic for new CSS/motion properties |
+| New gesture type | `packages/motionwind/src/constants.ts` | Add to `GESTURE_MAP`, update parser + types |
+| Babel transform bugs | `packages/motionwind/src/babel.ts` | Fix edge cases in JSX transformation |
+| Next.js integration | `packages/motionwind/src/next.ts` | Improve webpack config injection |
+| Vite integration | `packages/motionwind/src/vite.ts` | Improve Vite plugin behavior |
+| CLI improvements | `packages/cli/src/commands/init.ts` | Add new framework detection, improve config injection |
+| Documentation | `apps/docs/` | Write guides, improve API docs (MDX) |
+| Demo site | `apps/web/` | Add animation showcases |
+| Tests | `packages/motionwind/__tests__/` | Add parser, babel, component, or integration tests |
+
+### Workflow
+
+```
+  1. Pick an issue or feature
+         │
+         ▼
+  2. Create a branch ── git checkout -b feat/my-feature
+         │
+         ▼
+  3. Make changes in the right package
+         ├── Parser change?  → Add test in __tests__/parser.test.ts
+         ├── Babel change?   → Add test in __tests__/babel.test.ts
+         ├── Component?      → Add test in __tests__/component.test.tsx
+         └── New feature?    → Add tests + update docs/
+         │
+         ▼
+  4. Run checks
+         bun run test        ── All tests pass
+         bun run lint         ── No lint errors
+         bun run check-types  ── No type errors
+         bun run build        ── Everything builds
+         │
+         ▼
+  5. Open a PR against main
+```
+
+### Key Conventions
+
+- **Bun** as package manager — don't use npm/yarn/pnpm
+- **Vitest** for testing — tests live in `__tests__/` directories
+- **tsup** builds the core library — config in `packages/motionwind/tsup.config.ts`
+- **Turbo** orchestrates builds — `^build` means packages build before apps
+- All animate classes use the `animate-` prefix to avoid collision with Tailwind
+- The parser is framework-agnostic with zero dependencies — keep it that way
 
 ## License
 
