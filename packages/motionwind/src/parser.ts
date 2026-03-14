@@ -13,7 +13,18 @@ import {
   EASING_MAP,
 } from "./constants.js";
 
+const CACHE_MAX = 1000;
 const cache = new Map<string, ParsedResult>();
+
+/** Evict oldest entries when cache exceeds max size */
+function cacheSet(key: string, value: ParsedResult): void {
+  if (cache.size >= CACHE_MAX) {
+    // Map iterates in insertion order — delete the first (oldest) key
+    const firstKey = cache.keys().next().value;
+    if (firstKey !== undefined) cache.delete(firstKey);
+  }
+  cache.set(key, value);
+}
 
 /** Unit suffix map for string-unit values: x-100pct → "100%" */
 const UNIT_MAP: Record<string, string> = {
@@ -713,7 +724,7 @@ export function parseMotionClasses(className: string): ParsedResult {
     hasMotion,
   };
 
-  cache.set(className, result);
+  cacheSet(className, result);
   return result;
 }
 
