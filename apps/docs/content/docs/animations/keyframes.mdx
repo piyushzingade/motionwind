@@ -1,11 +1,11 @@
 ---
 title: "Keyframe Animations"
-description: "Looping animations, repeat control, pulse effects, and loading spinners with motionwind classes -- plus how to reach for Motion's keyframes API when you need multi-step sequences."
+description: "Looping animations, repeat control, multi-step keyframes, repeat types, pulse effects, and loading spinners with motionwind classes -- plus how to reach for Motion's API when you need full choreography."
 ---
 
 # Keyframe Animations
 
-motionwind supports repeating animations, infinite loops, and duration/easing control through its class syntax. For multi-step keyframe sequences, you drop down to the Motion API directly. This page covers both approaches.
+motionwind supports repeating animations, infinite loops, multi-step keyframe arrays, repeat types (reverse/mirror), timeline control with `times`, and duration/easing control -- all through its class syntax. For very complex choreographed sequences, you can still drop down to the Motion API directly. This page covers both approaches.
 
 ## Continuous spin (infinite loop)
 
@@ -130,13 +130,68 @@ The Tailwind border utilities create the visual spinner shape. The motionwind cl
 
 ## Multi-step keyframes
 
-motionwind classes map a single value per property per gesture. For multi-step keyframe sequences like "move right, then up, then back to start," you need Motion's keyframes array syntax directly.
+motionwind supports multi-step keyframe arrays directly in the class syntax. Pass a comma-separated list of values inside square brackets to animate through multiple steps.
 
-This is **not** a motionwind class feature. Use Motion's `animate` prop with arrays:
+### Syntax
+
+```
+animate-{gesture}:{property}-[v1,v2,v3,...]
+```
+
+Each value in the bracket becomes an entry in Motion's keyframe array. Scale and opacity values are divided by 100 automatically (just like single-value classes), so `scale-[100,120,100]` becomes `scale: [1, 1.2, 1]`.
+
+### Supported properties
+
+Keyframe arrays work with all animatable properties: `scale`, `scale-x`, `scale-y`, `scale-z`, `rotate`, `rotate-x`, `rotate-y`, `x`, `y`, `z`, `opacity`, `skew-x`, `skew-y`, `w`, `h`, `rounded`, `origin-x`, `origin-y`, `origin-z`, `perspective`.
+
+### Breathing animation
+
+A simple breathing effect that scales up and back down continuously:
+
+<Demo title="Breathing animation">
+  <div className="animate-enter:scale-[100,110,100] animate-repeat-infinite animate-duration-2000 w-20 h-20 rounded-full bg-[#c8ff2e]/60 flex items-center justify-center">
+    <div className="w-10 h-10 rounded-full bg-[#c8ff2e]" />
+  </div>
+</Demo>
+
+```html
+<div className="animate-enter:scale-[100,110,100] animate-repeat-infinite animate-duration-2000">
+  <!-- inner content -->
+</div>
+```
+
+Compiled output:
 
 ```tsx
-import { motion } from "motion/react";
+<motion.div
+  animate={{ scale: [1, 1.1, 1] }}
+  transition={{
+    duration: 2,
+    repeat: Infinity,
+  }}
+>
+  {/* inner content */}
+</motion.div>
+```
 
+The three values `[100,110,100]` become `[1, 1.1, 1]` after the automatic division by 100. Motion interpolates between them evenly across the duration.
+
+### Multi-step translate (rectangular path)
+
+Combine keyframe arrays on multiple properties to trace complex paths:
+
+<Demo title="Rectangular path">
+  <div className="animate-enter:x-[0,100,100,0] animate-enter:y-[0,0,-50,0] animate-duration-3000 animate-repeat-infinite animate-ease-in-out w-12 h-12 rounded-lg bg-[#c8ff2e]" />
+</Demo>
+
+```html
+<div className="animate-enter:x-[0,100,100,0] animate-enter:y-[0,0,-50,0] animate-duration-3000 animate-repeat-infinite animate-ease-in-out">
+</div>
+```
+
+Compiled output:
+
+```tsx
 <motion.div
   animate={{
     x: [0, 100, 100, 0],
@@ -147,11 +202,10 @@ import { motion } from "motion/react";
     repeat: Infinity,
     ease: "easeInOut",
   }}
-  className="w-12 h-12 rounded-lg bg-[#c8ff2e]"
 />
 ```
 
-When you pass an array to a property, Motion treats each value as a keyframe and interpolates between them evenly across the duration. The element above traces a rectangular path: right, up, left/down, back to start.
+The element traces a rectangular path: right, up, left/down, back to start -- all defined purely with classes.
 
 ### Combining keyframes with motionwind
 
@@ -176,12 +230,31 @@ The Babel plugin transforms the inner `div` into a `motion.div` with hover and t
 
 ## Reverse and alternate animations
 
-Motion's `repeatType` property controls what happens after each repetition cycle. This is not available as a motionwind class, but you can set it directly when you need it:
+motionwind provides classes to control Motion's `repeatType` property, which determines what happens after each repetition cycle.
+
+### Available classes
+
+| Class | Motion equivalent | Behavior |
+| --- | --- | --- |
+| `animate-repeat-reverse` | `transition.repeatType = "reverse"` | Alternates direction each cycle (forward, backward, forward, ...) |
+| `animate-repeat-mirror` | `transition.repeatType = "mirror"` | Same behavior as reverse -- mirror naming alias |
+
+### Ping-pong slide
+
+Use `animate-repeat-reverse` to make an element slide back and forth:
+
+<Demo title="Reverse repeat">
+  <div className="animate-enter:x-100 animate-repeat-infinite animate-repeat-reverse animate-duration-1000 w-12 h-12 rounded-lg bg-[#c8ff2e]" />
+</Demo>
+
+```html
+<div className="animate-enter:x-100 animate-repeat-infinite animate-repeat-reverse animate-duration-1000">
+</div>
+```
+
+Compiled output:
 
 ```tsx
-import { motion } from "motion/react";
-
-// "reverse" alternates direction each cycle
 <motion.div
   animate={{ x: 100 }}
   transition={{
@@ -189,27 +262,86 @@ import { motion } from "motion/react";
     repeat: Infinity,
     repeatType: "reverse",
   }}
-  className="w-12 h-12 rounded-lg bg-[#c8ff2e]"
 />
-
-// "mirror" is the same as reverse
-// "loop" resets to the start and plays forward again
 ```
 
-With motionwind classes, you get the `repeat` count but not `repeatType`. When you use `animate-repeat-infinite` with `animate-initial:` and `animate-enter:`, Motion defaults to a reverse-style repetition (it animates from initial to animate and back). For finer control over repeat behavior, use the Motion API directly.
+Without `animate-repeat-reverse`, a repeating animation would snap back to the start position and play forward again (the "loop" behavior). With it, the animation smoothly reverses direction on each cycle.
 
-## Complex timelines
+## Repeat delay
 
-For orchestrated animations with staggered timing, sequential phases, or independent per-property timing, use Motion's orchestration API:
+Use `animate-repeat-delay-{ms}` to add a pause between each repetition cycle. The value is in milliseconds and is converted to seconds for Motion.
+
+| Class | Motion equivalent | Purpose |
+| --- | --- | --- |
+| `animate-repeat-delay-500` | `transition.repeatDelay = 0.5` | 500ms pause between cycles |
+| `animate-repeat-delay-1000` | `transition.repeatDelay = 1` | 1 second pause between cycles |
+
+### Pulse with pause
+
+A pulse animation that rests briefly between each beat:
+
+<Demo title="Pulse with repeat delay">
+  <div className="animate-initial:scale-100 animate-enter:scale-110 animate-repeat-infinite animate-repeat-reverse animate-repeat-delay-500 animate-duration-600 animate-ease-in-out w-20 h-20 rounded-full bg-[#c8ff2e]/60 flex items-center justify-center">
+    <div className="w-10 h-10 rounded-full bg-[#c8ff2e]" />
+  </div>
+</Demo>
+
+```html
+<div className="animate-initial:scale-100 animate-enter:scale-110 animate-repeat-infinite animate-repeat-reverse animate-repeat-delay-500 animate-duration-600 animate-ease-in-out">
+  <!-- inner content -->
+</div>
+```
+
+Compiled output:
 
 ```tsx
-import { motion } from "motion/react";
+<motion.div
+  initial={{ scale: 1 }}
+  animate={{ scale: 1.1 }}
+  transition={{
+    duration: 0.6,
+    repeat: Infinity,
+    repeatType: "reverse",
+    repeatDelay: 0.5,
+    ease: "easeInOut",
+  }}
+>
+  {/* inner content */}
+</motion.div>
+```
 
+## Complex timelines with times
+
+motionwind supports the `times` array through the `animate-times-[...]` class. The `times` array controls exactly when each keyframe is reached during the total duration, giving you precise timing control over multi-step keyframe animations.
+
+### Syntax
+
+```
+animate-times-[v1,v2,v3,...]
+```
+
+Each value maps directly to Motion's `times` array. Values should range from `0` to `1`, representing the fraction of total duration at which each keyframe is reached.
+
+### Square path with precise timing
+
+Combine keyframe arrays with `times` to control exactly when each step of the animation occurs:
+
+<Demo title="Square path with times">
+  <div className="animate-enter:x-[0,100,100,0,0] animate-enter:y-[0,0,-100,-100,0] animate-times-[0,0.25,0.5,0.75,1] animate-duration-4000 animate-repeat-infinite animate-ease-linear w-12 h-12 rounded-lg bg-[#c8ff2e]" />
+</Demo>
+
+```html
+<div className="animate-enter:x-[0,100,100,0,0] animate-enter:y-[0,0,-100,-100,0] animate-times-[0,0.25,0.5,0.75,1] animate-duration-4000 animate-repeat-infinite animate-ease-linear">
+</div>
+```
+
+Compiled output:
+
+```tsx
 <motion.div
   animate={{
     x: [0, 100, 100, 0, 0],
     y: [0, 0, -100, -100, 0],
-    rotate: [0, 90, 180, 270, 360],
   }}
   transition={{
     duration: 4,
@@ -217,11 +349,14 @@ import { motion } from "motion/react";
     ease: "linear",
     times: [0, 0.25, 0.5, 0.75, 1],
   }}
-  className="w-12 h-12 rounded-lg bg-[#c8ff2e]"
 />
 ```
 
-The `times` array lets you control exactly when each keyframe is reached during the total duration. This level of timing control is beyond what utility classes can express, and is where Motion's declarative API shines.
+The element traces a square path, spending exactly 25% of the total duration on each side. Without `times`, Motion distributes keyframes evenly -- with `times`, you have full control over the pacing.
+
+### When to reach for the Motion API
+
+For very complex choreography -- such as staggered children with independent per-property timing, or orchestrated sequences across multiple elements -- Motion's full orchestration API is still available and may be more readable than long class strings. You can always mix direct Motion props alongside motionwind classes on sibling elements.
 
 ### When to use which approach
 
@@ -230,6 +365,9 @@ The `times` array lets you control exactly when each keyframe is reached during 
 | Simple loop (spin, pulse, bounce) | motionwind classes |
 | Fixed repeat count | `animate-repeat-{n}` class |
 | Duration and easing | `animate-duration-{ms}` and `animate-ease-*` classes |
-| Multi-step keyframes | Motion `animate` prop with arrays |
-| Custom repeat type (reverse, mirror, loop) | Motion `transition.repeatType` |
-| Complex orchestrated timelines | Motion `times` array and orchestration API |
+| Multi-step keyframes | `animate-enter:{prop}-[v1,v2,v3]` class |
+| Reverse / mirror repeat | `animate-repeat-reverse` or `animate-repeat-mirror` class |
+| Pause between cycles | `animate-repeat-delay-{ms}` class |
+| Precise keyframe timing | `animate-times-[...]` class |
+| Staggered children / orchestration across elements | Motion orchestration API |
+| Independent per-property transition config | Motion `transition` prop directly |
