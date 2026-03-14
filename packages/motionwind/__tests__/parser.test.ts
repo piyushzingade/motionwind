@@ -122,6 +122,24 @@ describe("parseMotionClasses", () => {
       const result = parseMotionClasses("animate-hover:saturate-0");
       expect(result.gestures.whileHover).toEqual({ filter: "saturate(0)" });
     });
+
+    it("combines multiple filter functions", () => {
+      const result = parseMotionClasses(
+        "animate-hover:blur-10 animate-hover:brightness-150",
+      );
+      expect(result.gestures.whileHover).toEqual({
+        filter: "blur(10px) brightness(1.5)",
+      });
+    });
+
+    it("combines three filter functions", () => {
+      const result = parseMotionClasses(
+        "animate-hover:blur-5 animate-hover:brightness-120 animate-hover:contrast-150",
+      );
+      expect(result.gestures.whileHover).toEqual({
+        filter: "blur(5px) brightness(1.2) contrast(1.5)",
+      });
+    });
   });
 
   describe("gesture: dimensions", () => {
@@ -330,6 +348,479 @@ describe("parseMotionClasses", () => {
         rotate: 5,
         y: 10,
       });
+    });
+  });
+
+  describe("keyframe arrays", () => {
+    it("parses scale keyframes", () => {
+      const result = parseMotionClasses("animate-enter:scale-[100,150,100]");
+      expect(result.gestures.animate).toEqual({ scale: [1, 1.5, 1] });
+    });
+
+    it("parses opacity keyframes", () => {
+      const result = parseMotionClasses("animate-enter:opacity-[0,100,50]");
+      expect(result.gestures.animate).toEqual({ opacity: [0, 1, 0.5] });
+    });
+
+    it("parses x keyframes (non-scale, no normalization)", () => {
+      const result = parseMotionClasses("animate-enter:x-[0,100,0]");
+      expect(result.gestures.animate).toEqual({ x: [0, 100, 0] });
+    });
+
+    it("parses y keyframes", () => {
+      const result = parseMotionClasses("animate-enter:y-[0,20,0]");
+      expect(result.gestures.animate).toEqual({ y: [0, 20, 0] });
+    });
+
+    it("parses rotate keyframes", () => {
+      const result = parseMotionClasses("animate-enter:rotate-[0,360]");
+      expect(result.gestures.animate).toEqual({ rotate: [0, 360] });
+    });
+
+    it("parses scale-x keyframes", () => {
+      const result = parseMotionClasses("animate-hover:scale-x-[100,150,100]");
+      expect(result.gestures.whileHover).toEqual({ scaleX: [1, 1.5, 1] });
+    });
+  });
+
+  describe("custom cubic-bezier", () => {
+    it("parses animate-ease-[n,n,n,n]", () => {
+      const result = parseMotionClasses("animate-ease-[0.17,0.67,0.83,0.67]");
+      expect(result.transition.ease).toEqual([0.17, 0.67, 0.83, 0.67]);
+    });
+
+    it("rejects invalid cubic-bezier (not 4 values)", () => {
+      const result = parseMotionClasses("animate-ease-[0.17,0.67,0.83]");
+      expect(result.transition.ease).toBeUndefined();
+    });
+  });
+
+  describe("layout config", () => {
+    it("parses animate-layout", () => {
+      const result = parseMotionClasses("animate-layout");
+      expect(result.layoutConfig.layout).toBe(true);
+      expect(result.hasMotion).toBe(true);
+    });
+
+    it("parses animate-layout-position", () => {
+      const result = parseMotionClasses("animate-layout-position");
+      expect(result.layoutConfig.layout).toBe("position");
+    });
+
+    it("parses animate-layout-size", () => {
+      const result = parseMotionClasses("animate-layout-size");
+      expect(result.layoutConfig.layout).toBe("size");
+    });
+
+    it("parses animate-layout-preserve", () => {
+      const result = parseMotionClasses("animate-layout-preserve");
+      expect(result.layoutConfig.layout).toBe("preserve-aspect");
+    });
+
+    it("parses animate-layout-id-{name}", () => {
+      const result = parseMotionClasses("animate-layout-id-hero");
+      expect(result.layoutConfig.layoutId).toBe("hero");
+    });
+
+    it("parses layout with layoutId together", () => {
+      const result = parseMotionClasses("animate-layout animate-layout-id-card");
+      expect(result.layoutConfig.layout).toBe(true);
+      expect(result.layoutConfig.layoutId).toBe("card");
+    });
+  });
+
+  describe("stagger and delay children", () => {
+    it("parses animate-stagger-{ms}", () => {
+      const result = parseMotionClasses("animate-stagger-100");
+      expect(result.transition.staggerChildren).toBe(0.1);
+    });
+
+    it("parses animate-delay-children-{ms}", () => {
+      const result = parseMotionClasses("animate-delay-children-200");
+      expect(result.transition.delayChildren).toBe(0.2);
+    });
+  });
+
+  describe("repeatType and repeatDelay", () => {
+    it("parses animate-repeat-reverse", () => {
+      const result = parseMotionClasses("animate-repeat-reverse");
+      expect(result.transition.repeatType).toBe("reverse");
+    });
+
+    it("parses animate-repeat-mirror", () => {
+      const result = parseMotionClasses("animate-repeat-mirror");
+      expect(result.transition.repeatType).toBe("mirror");
+    });
+
+    it("parses animate-repeat-delay-{ms}", () => {
+      const result = parseMotionClasses("animate-repeat-delay-500");
+      expect(result.transition.repeatDelay).toBe(0.5);
+    });
+
+    it("parses full repeat pattern", () => {
+      const result = parseMotionClasses(
+        "animate-repeat-infinite animate-repeat-reverse animate-repeat-delay-1000",
+      );
+      expect(result.transition.repeat).toBe(Infinity);
+      expect(result.transition.repeatType).toBe("reverse");
+      expect(result.transition.repeatDelay).toBe(1);
+    });
+  });
+
+  describe("SVG path properties", () => {
+    it("parses path-length", () => {
+      const result = parseMotionClasses("animate-enter:path-length-1");
+      expect(result.gestures.animate).toEqual({ pathLength: 1 });
+    });
+
+    it("parses path-offset", () => {
+      const result = parseMotionClasses("animate-enter:path-offset-0");
+      expect(result.gestures.animate).toEqual({ pathOffset: 0 });
+    });
+
+    it("parses path-spacing", () => {
+      const result = parseMotionClasses("animate-enter:path-spacing-1");
+      expect(result.gestures.animate).toEqual({ pathSpacing: 1 });
+    });
+
+    it("parses SVG draw animation pattern", () => {
+      const result = parseMotionClasses(
+        "animate-initial:path-length-0 animate-enter:path-length-1 animate-duration-2000",
+      );
+      expect(result.gestures.initial).toEqual({ pathLength: 0 });
+      expect(result.gestures.animate).toEqual({ pathLength: 1 });
+      expect(result.transition.duration).toBe(2);
+    });
+  });
+
+  describe("color properties", () => {
+    it("parses bg-#hex as backgroundColor", () => {
+      const result = parseMotionClasses("animate-hover:bg-#ff0000");
+      expect(result.gestures.whileHover).toEqual({ backgroundColor: "#ff0000" });
+    });
+
+    it("parses text-#hex as color", () => {
+      const result = parseMotionClasses("animate-hover:text-#ffffff");
+      expect(result.gestures.whileHover).toEqual({ color: "#ffffff" });
+    });
+
+    it("parses border-#hex as borderColor", () => {
+      const result = parseMotionClasses("animate-hover:border-#00ff00");
+      expect(result.gestures.whileHover).toEqual({ borderColor: "#00ff00" });
+    });
+  });
+
+  describe("drag snap and momentum", () => {
+    it("parses animate-drag-snap", () => {
+      const result = parseMotionClasses("animate-drag-snap");
+      expect(result.dragConfig.dragSnapToOrigin).toBe(true);
+    });
+
+    it("parses animate-drag-no-momentum", () => {
+      const result = parseMotionClasses("animate-drag-no-momentum");
+      expect(result.dragConfig.dragMomentum).toBe(false);
+    });
+
+    it("parses full drag config", () => {
+      const result = parseMotionClasses(
+        "animate-drag-both animate-drag-elastic-30 animate-drag-snap animate-drag-no-momentum",
+      );
+      expect(result.dragConfig).toEqual({
+        drag: true,
+        dragElastic: 0.3,
+        dragSnapToOrigin: true,
+        dragMomentum: false,
+      });
+    });
+  });
+
+  describe("z-axis", () => {
+    it("parses z value", () => {
+      const result = parseMotionClasses("animate-hover:z-50");
+      expect(result.gestures.whileHover).toEqual({ z: 50 });
+    });
+
+    it("parses negative z value", () => {
+      const result = parseMotionClasses("animate-hover:-z-100");
+      expect(result.gestures.whileHover).toEqual({ z: -100 });
+    });
+  });
+
+  describe("box shadow", () => {
+    it("parses shadow-[value]", () => {
+      const result = parseMotionClasses("animate-hover:shadow-[0px_10px_30px_rgba(0,0,0,0.3)]");
+      expect(result.gestures.whileHover).toEqual({
+        boxShadow: "0px_10px_30px_rgba(0,0,0,0.3)",
+      });
+    });
+  });
+
+  describe("viewport amount numeric", () => {
+    it("parses animate-amount-50 as 0.5", () => {
+      const result = parseMotionClasses("animate-amount-50");
+      expect(result.viewport.amount).toBe(0.5);
+    });
+
+    it("parses animate-amount-100 as 1", () => {
+      const result = parseMotionClasses("animate-amount-100");
+      expect(result.viewport.amount).toBe(1);
+    });
+  });
+
+  describe("string unit values", () => {
+    it("parses x with percent: x-100pct → '100%'", () => {
+      const result = parseMotionClasses("animate-enter:x-100pct");
+      expect(result.gestures.animate).toEqual({ x: "100%" });
+    });
+
+    it("parses negative percent: -x-50pct → '-50%'", () => {
+      const result = parseMotionClasses("animate-enter:-x-50pct");
+      expect(result.gestures.animate).toEqual({ x: "-50%" });
+    });
+
+    it("parses y-50vh", () => {
+      const result = parseMotionClasses("animate-enter:y-50vh");
+      expect(result.gestures.animate).toEqual({ y: "50vh" });
+    });
+
+    it("parses x-2rem", () => {
+      const result = parseMotionClasses("animate-hover:x-2rem");
+      expect(result.gestures.whileHover).toEqual({ x: "2rem" });
+    });
+
+    it("parses w-auto", () => {
+      const result = parseMotionClasses("animate-enter:w-auto");
+      expect(result.gestures.animate).toEqual({ width: "auto" });
+    });
+
+    it("parses h-100pct", () => {
+      const result = parseMotionClasses("animate-enter:h-100pct");
+      expect(result.gestures.animate).toEqual({ height: "100%" });
+    });
+
+    it("parses x-100vw", () => {
+      const result = parseMotionClasses("animate-exit:x-100vw");
+      expect(result.gestures.exit).toEqual({ x: "100vw" });
+    });
+
+    it("parses x with em", () => {
+      const result = parseMotionClasses("animate-hover:x-3em");
+      expect(result.gestures.whileHover).toEqual({ x: "3em" });
+    });
+
+    it("parses x-20px (explicit px)", () => {
+      const result = parseMotionClasses("animate-hover:x-20px");
+      expect(result.gestures.whileHover).toEqual({ x: "20px" });
+    });
+  });
+
+  describe("new easing functions", () => {
+    it("parses circIn", () => {
+      expect(parseMotionClasses("animate-ease-circ-in").transition.ease).toBe("circIn");
+    });
+
+    it("parses circOut", () => {
+      expect(parseMotionClasses("animate-ease-circ-out").transition.ease).toBe("circOut");
+    });
+
+    it("parses circInOut", () => {
+      expect(parseMotionClasses("animate-ease-circ-in-out").transition.ease).toBe("circInOut");
+    });
+
+    it("parses backIn", () => {
+      expect(parseMotionClasses("animate-ease-back-in").transition.ease).toBe("backIn");
+    });
+
+    it("parses backOut", () => {
+      expect(parseMotionClasses("animate-ease-back-out").transition.ease).toBe("backOut");
+    });
+
+    it("parses backInOut", () => {
+      expect(parseMotionClasses("animate-ease-back-in-out").transition.ease).toBe("backInOut");
+    });
+
+    it("parses anticipate", () => {
+      expect(parseMotionClasses("animate-ease-anticipate").transition.ease).toBe("anticipate");
+    });
+
+    it("parses steps(n)", () => {
+      expect(parseMotionClasses("animate-ease-steps-5").transition.ease).toBe("steps(5)");
+    });
+  });
+
+  describe("originX/originY/originZ and perspective", () => {
+    it("parses origin-x-50 → 0.5", () => {
+      const result = parseMotionClasses("animate-hover:origin-x-50");
+      expect(result.gestures.whileHover).toEqual({ originX: 0.5 });
+    });
+
+    it("parses origin-y-0", () => {
+      const result = parseMotionClasses("animate-hover:origin-y-0");
+      expect(result.gestures.whileHover).toEqual({ originY: 0 });
+    });
+
+    it("parses origin-z-100", () => {
+      const result = parseMotionClasses("animate-hover:origin-z-100");
+      expect(result.gestures.whileHover).toEqual({ originZ: 100 });
+    });
+
+    it("parses perspective-800", () => {
+      const result = parseMotionClasses("animate-hover:perspective-800");
+      expect(result.gestures.whileHover).toEqual({ perspective: 800 });
+    });
+  });
+
+  describe("scaleZ and skew", () => {
+    it("parses scale-z-150", () => {
+      const result = parseMotionClasses("animate-hover:scale-z-150");
+      expect(result.gestures.whileHover).toEqual({ scaleZ: 1.5 });
+    });
+
+    it("parses skew-12 (uniform)", () => {
+      const result = parseMotionClasses("animate-hover:skew-12");
+      expect(result.gestures.whileHover).toEqual({ skew: 12 });
+    });
+  });
+
+  describe("staggerDirection and when", () => {
+    it("parses animate-stagger-reverse", () => {
+      const result = parseMotionClasses("animate-stagger-reverse");
+      expect(result.transition.staggerDirection).toBe(-1);
+    });
+
+    it("parses animate-when-before", () => {
+      const result = parseMotionClasses("animate-when-before");
+      expect(result.transition.when).toBe("beforeChildren");
+    });
+
+    it("parses animate-when-after", () => {
+      const result = parseMotionClasses("animate-when-after");
+      expect(result.transition.when).toBe("afterChildren");
+    });
+  });
+
+  describe("restSpeed, restDelta, times", () => {
+    it("parses rest-speed", () => {
+      const result = parseMotionClasses("animate-rest-speed-0.01");
+      expect(result.transition.restSpeed).toBe(0.01);
+    });
+
+    it("parses rest-delta", () => {
+      const result = parseMotionClasses("animate-rest-delta-0.01");
+      expect(result.transition.restDelta).toBe(0.01);
+    });
+
+    it("parses times-[0,0.5,1]", () => {
+      const result = parseMotionClasses("animate-times-[0,0.5,1]");
+      expect(result.transition.times).toEqual([0, 0.5, 1]);
+    });
+  });
+
+  describe("layoutScroll and layoutRoot", () => {
+    it("parses animate-layout-scroll", () => {
+      const result = parseMotionClasses("animate-layout-scroll");
+      expect(result.layoutConfig.layoutScroll).toBe(true);
+    });
+
+    it("parses animate-layout-root", () => {
+      const result = parseMotionClasses("animate-layout-root");
+      expect(result.layoutConfig.layoutRoot).toBe(true);
+    });
+  });
+
+  describe("dragDirectionLock and dragConstraints", () => {
+    it("parses animate-drag-lock", () => {
+      const result = parseMotionClasses("animate-drag-lock");
+      expect(result.dragConfig.dragDirectionLock).toBe(true);
+    });
+
+    it("parses drag-constraint-t-100", () => {
+      const result = parseMotionClasses("animate-drag-constraint-t-100");
+      expect(result.dragConfig.dragConstraints).toEqual({ top: 100 });
+    });
+
+    it("parses all drag constraints", () => {
+      const result = parseMotionClasses(
+        "animate-drag-constraint-t-0 animate-drag-constraint-l-0 animate-drag-constraint-r-200 animate-drag-constraint-b-200",
+      );
+      expect(result.dragConfig.dragConstraints).toEqual({
+        top: 0,
+        left: 0,
+        right: 200,
+        bottom: 200,
+      });
+    });
+  });
+
+  describe("backdropFilter", () => {
+    it("parses backdrop-blur", () => {
+      const result = parseMotionClasses("animate-hover:backdrop-blur-10");
+      expect(result.gestures.whileHover).toEqual({ backdropFilter: "blur(10px)" });
+    });
+  });
+
+  describe("clipPath", () => {
+    it("parses clip-[value]", () => {
+      const result = parseMotionClasses("animate-enter:clip-[inset(0)]");
+      expect(result.gestures.animate).toEqual({ clipPath: "inset(0)" });
+    });
+  });
+
+  describe("position properties", () => {
+    it("parses top", () => {
+      const result = parseMotionClasses("animate-enter:top-0");
+      expect(result.gestures.animate).toEqual({ top: 0 });
+    });
+
+    it("parses left with percent", () => {
+      const result = parseMotionClasses("animate-enter:left-50pct");
+      expect(result.gestures.animate).toEqual({ left: "50%" });
+    });
+
+    it("parses right and bottom", () => {
+      const result = parseMotionClasses("animate-hover:right-20 animate-hover:bottom-10");
+      expect(result.gestures.whileHover).toEqual({ right: 20, bottom: 10 });
+    });
+  });
+
+  describe("spacing (padding, margin, gap)", () => {
+    it("parses p-20 → padding", () => {
+      const result = parseMotionClasses("animate-hover:p-20");
+      expect(result.gestures.whileHover).toEqual({ padding: 20 });
+    });
+
+    it("parses m-10 → margin", () => {
+      const result = parseMotionClasses("animate-hover:m-10");
+      expect(result.gestures.whileHover).toEqual({ margin: 10 });
+    });
+
+    it("parses gap-8", () => {
+      const result = parseMotionClasses("animate-hover:gap-8");
+      expect(result.gestures.whileHover).toEqual({ gap: 8 });
+    });
+  });
+
+  describe("typography", () => {
+    it("parses text-size-20 → fontSize", () => {
+      const result = parseMotionClasses("animate-hover:text-size-20");
+      expect(result.gestures.whileHover).toEqual({ fontSize: 20 });
+    });
+
+    it("parses tracking-2 → letterSpacing", () => {
+      const result = parseMotionClasses("animate-hover:tracking-2");
+      expect(result.gestures.whileHover).toEqual({ letterSpacing: 2 });
+    });
+
+    it("parses leading-24 → lineHeight", () => {
+      const result = parseMotionClasses("animate-hover:leading-24");
+      expect(result.gestures.whileHover).toEqual({ lineHeight: 24 });
+    });
+  });
+
+  describe("borderWidth", () => {
+    it("parses border-w-2", () => {
+      const result = parseMotionClasses("animate-hover:border-w-2");
+      expect(result.gestures.whileHover).toEqual({ borderWidth: 2 });
     });
   });
 
