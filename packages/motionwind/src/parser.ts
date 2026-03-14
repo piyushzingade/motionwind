@@ -221,34 +221,34 @@ function parsePropertyValue(
     if (!isNaN(n)) return { key: "opacity", value: (n / 100) * sign };
   }
 
-  // blur-{n}
+  // blur-{n} — clamped to 0 minimum (negative blur is invalid CSS)
   if (str.startsWith("blur-")) {
     const n = Number(str.slice(5));
-    if (!isNaN(n)) return { key: "filter", value: `blur(${n * sign}px)` };
+    if (!isNaN(n)) return { key: "filter", value: `blur(${Math.max(0, n * sign)}px)` };
   }
 
-  // brightness-{n}
+  // brightness-{n} — clamped to 0 minimum
   if (str.startsWith("brightness-")) {
     const n = Number(str.slice(11));
-    if (!isNaN(n)) return { key: "filter", value: `brightness(${(n / 100) * sign})` };
+    if (!isNaN(n)) return { key: "filter", value: `brightness(${Math.max(0, (n / 100) * sign)})` };
   }
 
-  // contrast-{n}
+  // contrast-{n} — clamped to 0 minimum
   if (str.startsWith("contrast-")) {
     const n = Number(str.slice(9));
-    if (!isNaN(n)) return { key: "filter", value: `contrast(${(n / 100) * sign})` };
+    if (!isNaN(n)) return { key: "filter", value: `contrast(${Math.max(0, (n / 100) * sign)})` };
   }
 
-  // saturate-{n}
+  // saturate-{n} — clamped to 0 minimum
   if (str.startsWith("saturate-")) {
     const n = Number(str.slice(9));
-    if (!isNaN(n)) return { key: "filter", value: `saturate(${(n / 100) * sign})` };
+    if (!isNaN(n)) return { key: "filter", value: `saturate(${Math.max(0, (n / 100) * sign)})` };
   }
 
-  // backdrop-blur-{n}
+  // backdrop-blur-{n} — clamped to 0 minimum
   if (str.startsWith("backdrop-blur-")) {
     const n = Number(str.slice(14));
-    if (!isNaN(n)) return { key: "backdropFilter", value: `blur(${n * sign}px)` };
+    if (!isNaN(n)) return { key: "backdropFilter", value: `blur(${Math.max(0, n * sign)}px)` };
   }
 
   // clip-path: clip-[value]
