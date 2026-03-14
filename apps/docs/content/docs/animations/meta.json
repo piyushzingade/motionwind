@@ -1,0 +1,17 @@
+{
+  "title": "Animations",
+  "pages": [
+    "basic-properties",
+    "transforms",
+    "gestures",
+    "scroll",
+    "enter-exit",
+    "physics",
+    "keyframes",
+    "layout",
+    "variants",
+    "svg",
+    "drag",
+    "advanced-effects"
+  ]
+}

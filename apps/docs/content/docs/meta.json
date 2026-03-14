@@ -1,0 +1,14 @@
+{
+  "title": "Motionwind",
+  "pages": [
+    "index",
+    "getting-started",
+    "installation",
+    "syntax",
+    "---Getting Started---",
+    "...animations",
+    "---Reference---",
+    "api",
+    "framework-setup"
+  ]
+}
