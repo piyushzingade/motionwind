@@ -1,0 +1,161 @@
+---
+title: "Installation"
+description: "Set up motionwind in your Next.js, Vite, or other React project."
+---
+
+# Installation
+
+motionwind works with any React project that supports Babel. The fastest way to get started is the CLI, which auto-detects your project type and wires everything up. You can also set things up manually.
+
+## Prerequisites
+
+- **React** 18 or newer
+- **Motion** 11 or newer (the `motion` package, formerly `framer-motion`)
+- **Node.js** 18 or newer
+
+## Quick start with the CLI
+
+Run the following command in your project root:
+
+```bash
+npx create-motionwind init
+```
+
+The CLI will:
+
+1. Detect your project type (Next.js, Vite, or Create React App)
+2. Detect your package manager (npm, yarn, pnpm, or bun)
+3. Install `motionwind` and `motion` as dependencies
+4. Update your build config to include the Babel plugin
+
+After the CLI finishes, start your dev server and begin using `animate-*` classes.
+
+## Manual setup: Next.js
+
+### 1. Install dependencies
+
+```bash
+npm install motionwind motion
+```
+
+### 2. Update next.config.js
+
+Wrap your Next.js config with the `withMotionwind` helper. This adds the motionwind Babel plugin as a webpack pre-processing step that runs before SWC:
+
+```js
+import withMotionwind from "motionwind/next";
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {};
+
+export default withMotionwind(nextConfig);
+```
+
+If you have an existing config with other plugins, wrap the outermost call:
+
+```js
+import withMotionwind from "motionwind/next";
+import withMDX from "@next/mdx";
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  pageExtensions: ["ts", "tsx", "mdx"],
+};
+
+export default withMotionwind(withMDX(nextConfig));
+```
+
+### 3. Start building
+
+```bash
+npm run dev
+```
+
+That is all the setup required. The Babel plugin will process every `.tsx` and `.jsx` file automatically.
+
+## Manual setup: Vite
+
+### 1. Install dependencies
+
+```bash
+npm install motionwind motion
+```
+
+### 2. Update vite.config.ts
+
+Add the motionwind Vite plugin. It must be placed **before** the React plugin so it can transform the source before React's JSX transform runs:
+
+```ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { motionwind } from "motionwind/vite";
+
+export default defineConfig({
+  plugins: [motionwind(), react()],
+});
+```
+
+### 3. Start building
+
+```bash
+npm run dev
+```
+
+## Manual setup: Other bundlers
+
+For any bundler that supports Babel, add the motionwind plugin to your Babel config.
+
+### 1. Install dependencies
+
+```bash
+npm install motionwind motion
+```
+
+### 2. Add to Babel config
+
+Create or update a `.babelrc` file in your project root:
+
+```json
+{
+  "plugins": ["motionwind/babel"]
+}
+```
+
+Or if you use `babel.config.js`:
+
+```js
+module.exports = {
+  plugins: ["motionwind/babel"],
+};
+```
+
+## Verifying the setup
+
+Create a simple test component to confirm everything is working:
+
+```tsx
+export function TestAnimation() {
+  return (
+    <button className="px-6 py-3 bg-indigo-600 text-white rounded-lg animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+      Hover and tap me
+    </button>
+  );
+}
+```
+
+If the setup is correct, hovering the button will scale it up to 110% and tapping it will scale it down to 90%, both with spring physics. If nothing happens, double-check that:
+
+1. The Babel plugin is registered in your build config
+2. The component file has a `.tsx` or `.jsx` extension
+3. The `className` is a static string literal (not a template literal or variable)
+
+## Using with Tailwind CSS
+
+motionwind is designed to coexist with Tailwind CSS. The `animate-*` classes are consumed by the Babel plugin at build time and never reach the browser's CSS. Tailwind classes in the same `className` string pass through unchanged.
+
+No additional Tailwind configuration is needed. However, if Tailwind's JIT compiler warns about unknown `animate-*` classes, you can suppress the warning by adding them to the `safelist` or ignoring the `animate-` prefix in your Tailwind config.
+
+## Next steps
+
+- [Syntax Reference](/docs/syntax) -- learn every available class, property, and configuration option
+- [Getting Started](/docs/getting-started) -- understand the build-time transform in detail
