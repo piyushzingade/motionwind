@@ -12,8 +12,9 @@
   },
   "dependencies": {
     "@repo/ui": "*",
-    "motionwind": "*",
+    "@vercel/analytics": "^2.0.1",
     "motion": "^12.12.1",
+    "motionwind": "*",
     "next": "^16.1.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
