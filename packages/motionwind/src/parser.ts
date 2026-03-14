@@ -16,6 +16,12 @@ import {
 const CACHE_MAX = 1000;
 const cache = new Map<string, ParsedResult>();
 
+/** Tailwind CSS built-in animate-* classes to exclude from warnings */
+const TAILWIND_ANIMATE_CLASSES = new Set([
+  "animate-spin", "animate-ping", "animate-pulse", "animate-bounce",
+  "animate-none",
+]);
+
 /** Evict oldest entries when cache exceeds max size */
 function cacheSet(key: string, value: ParsedResult): void {
   if (cache.size >= CACHE_MAX) {
@@ -749,6 +755,16 @@ export function parseMotionClasses(className: string): ParsedResult {
       layoutConfig,
     );
     if (!consumed) {
+      if (
+        process.env.NODE_ENV !== "production" &&
+        token.startsWith("animate-") &&
+        !TAILWIND_ANIMATE_CLASSES.has(token)
+      ) {
+        console.warn(
+          `[motionwind] Unrecognized class "${token}". ` +
+            `It starts with "animate-" but doesn't match any known pattern.`,
+        );
+      }
       tailwind.push(token);
     }
   }
