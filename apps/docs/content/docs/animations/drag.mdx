@@ -1,0 +1,308 @@
+---
+title: "Drag Interactions"
+description: "Make elements draggable with motionwind utility classes -- axis locking, elasticity, visual feedback, and advanced drag patterns."
+---
+
+# Drag Interactions
+
+motionwind provides built-in classes for Motion's drag system. The Babel plugin translates drag classes into the `drag`, `dragElastic`, and `whileDrag` props on `motion.*` components.
+
+---
+
+## Drag Axes
+
+### Horizontal Only
+
+Lock dragging to the X axis with `animate-drag-x`. The element can only be moved left and right:
+
+```tsx
+<div className="animate-drag-x w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  Drag me
+</div>
+```
+
+Build output:
+
+```tsx
+<motion.div drag="x" className="w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  Drag me
+</motion.div>
+```
+
+<Demo title="Drag X Only">
+  <div className="animate-drag-x w-16 h-16 rounded-xl bg-[#c8ff2e] flex items-center justify-center text-xs font-semibold text-black cursor-grab active:cursor-grabbing select-none">
+    X
+  </div>
+</Demo>
+
+### Vertical Only
+
+Lock dragging to the Y axis with `animate-drag-y`. The element can only be moved up and down:
+
+```tsx
+<div className="animate-drag-y w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  Drag me
+</div>
+```
+
+Build output:
+
+```tsx
+<motion.div drag="y" className="w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  Drag me
+</motion.div>
+```
+
+<Demo title="Drag Y Only">
+  <div className="animate-drag-y w-16 h-16 rounded-xl bg-[#c8ff2e] flex items-center justify-center text-xs font-semibold text-black cursor-grab active:cursor-grabbing select-none">
+    Y
+  </div>
+</Demo>
+
+### Both Axes
+
+Allow dragging in any direction with `animate-drag-both`:
+
+```tsx
+<div className="animate-drag-both w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  Drag me
+</div>
+```
+
+Build output:
+
+```tsx
+<motion.div drag className="w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  Drag me
+</motion.div>
+```
+
+<Demo title="Drag Both Axes">
+  <div className="animate-drag-both w-16 h-16 rounded-xl bg-[#c8ff2e] flex items-center justify-center text-xs font-semibold text-black cursor-grab active:cursor-grabbing select-none">
+    XY
+  </div>
+</Demo>
+
+---
+
+## Drag Elasticity
+
+The `animate-drag-elastic-{n}` class controls how much the element stretches past its constraints (or how snappily it returns to its origin). The value is a number from 0 to 100, mapped to a 0-1 range:
+
+- `animate-drag-elastic-0` -- no elasticity, hard stop at boundaries
+- `animate-drag-elastic-50` -- medium elasticity (default-like feel)
+- `animate-drag-elastic-100` -- maximum elasticity, very stretchy
+
+```tsx
+<div className="animate-drag-both animate-drag-elastic-20 w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  Low elastic
+</div>
+```
+
+Build output:
+
+```tsx
+<motion.div drag dragElastic={0.2} className="w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  Low elastic
+</motion.div>
+```
+
+<Demo title="Drag Elasticity Comparison" className="gap-8">
+  <div className="flex flex-col items-center gap-2">
+    <div className="animate-drag-both animate-drag-elastic-10 w-14 h-14 rounded-xl bg-[#c8ff2e] flex items-center justify-center text-xs font-semibold text-black cursor-grab active:cursor-grabbing select-none">
+      10
+    </div>
+    <span className="text-xs text-fd-muted-foreground">Low</span>
+  </div>
+  <div className="flex flex-col items-center gap-2">
+    <div className="animate-drag-both animate-drag-elastic-50 w-14 h-14 rounded-xl bg-[#c8ff2e] flex items-center justify-center text-xs font-semibold text-black cursor-grab active:cursor-grabbing select-none">
+      50
+    </div>
+    <span className="text-xs text-fd-muted-foreground">Medium</span>
+  </div>
+  <div className="flex flex-col items-center gap-2">
+    <div className="animate-drag-both animate-drag-elastic-100 w-14 h-14 rounded-xl bg-[#c8ff2e] flex items-center justify-center text-xs font-semibold text-black cursor-grab active:cursor-grabbing select-none">
+      100
+    </div>
+    <span className="text-xs text-fd-muted-foreground">High</span>
+  </div>
+</Demo>
+
+---
+
+## Visual Feedback While Dragging
+
+The `animate-drag:` gesture prefix lets you apply visual changes while the element is being actively dragged. This maps to Motion's `whileDrag` prop:
+
+```tsx
+<div className="animate-drag-both animate-drag:scale-110 animate-drag:rotate-5 animate-spring w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  Drag me
+</div>
+```
+
+Build output:
+
+```tsx
+<motion.div
+  drag
+  whileDrag={{ scale: 1.1, rotate: 5 }}
+  transition={{ type: "spring" }}
+  className="w-16 h-16 rounded-xl bg-green-400 cursor-grab"
+>
+  Drag me
+</motion.div>
+```
+
+<Demo title="Drag with Visual Feedback">
+  <div className="animate-drag-both animate-drag:scale-110 animate-drag:rotate-5 animate-spring w-16 h-16 rounded-xl bg-[#c8ff2e] flex items-center justify-center text-xs font-semibold text-black cursor-grab active:cursor-grabbing select-none shadow-lg">
+    Grab
+  </div>
+</Demo>
+
+You can combine `whileDrag` with other gestures. For example, a draggable element that also responds to hover:
+
+```tsx
+<div className="animate-drag-both animate-drag:scale-110 animate-hover:scale-105 animate-hover:opacity-80 animate-spring w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  Multi-gesture
+</div>
+```
+
+<Demo title="Drag + Hover Gestures Combined">
+  <div className="animate-drag-both animate-drag:scale-110 animate-drag:rotate-3 animate-hover:scale-105 animate-hover:opacity-80 animate-spring w-16 h-16 rounded-xl bg-[#c8ff2e] flex items-center justify-center text-xs font-semibold text-black cursor-grab active:cursor-grabbing select-none shadow-lg">
+    Both
+  </div>
+</Demo>
+
+---
+
+## Drag Constraints
+
+Motion's `dragConstraints` prop lets you define boundaries that restrict how far an element can be dragged. Constraints can be pixel values or a ref to a parent element. This prop requires object or ref values that cannot be expressed as a single utility class, so use the Motion API directly:
+
+```tsx
+import { motion, useRef } from "motion/react";
+
+function ConstrainedDrag() {
+  const constraintRef = useRef(null);
+
+  return (
+    <div ref={constraintRef} className="w-64 h-64 bg-gray-900 rounded-xl">
+      <motion.div
+        drag
+        dragConstraints={constraintRef}
+        className="w-16 h-16 bg-green-400 rounded-xl cursor-grab"
+      />
+    </div>
+  );
+}
+```
+
+With pixel values:
+
+```tsx
+<motion.div
+  drag
+  dragConstraints={{ top: -50, left: -50, right: 50, bottom: 50 }}
+  className="w-16 h-16 bg-green-400 rounded-xl cursor-grab"
+/>
+```
+
+---
+
+## Drag Snap to Origin
+
+`dragSnapToOrigin` makes the element animate back to its original position when released. This is a boolean prop on the Motion component:
+
+```tsx
+import { motion } from "motion/react";
+
+function SnapBack() {
+  return (
+    <motion.div
+      drag
+      dragSnapToOrigin
+      className="w-16 h-16 bg-green-400 rounded-xl cursor-grab"
+    >
+      I snap back
+    </motion.div>
+  );
+}
+```
+
+You can combine this with motionwind's drag visual feedback by adding `animate-drag:` classes to the same element in a hybrid approach:
+
+```tsx
+<div className="animate-drag-both animate-drag:scale-110 animate-drag:rotate-5 animate-spring w-16 h-16 rounded-xl bg-green-400 cursor-grab">
+  {/* Note: dragSnapToOrigin needs to be added via Motion API */}
+</div>
+```
+
+---
+
+## Drag Momentum
+
+By default, Motion applies momentum to dragged elements -- when you release, the element continues in the direction of the drag gesture. The `dragMomentum` prop controls this behavior:
+
+```tsx
+import { motion } from "motion/react";
+
+// Disable momentum (element stops immediately on release)
+<motion.div
+  drag
+  dragMomentum={false}
+  className="w-16 h-16 bg-green-400 rounded-xl cursor-grab"
+/>
+
+// With momentum (default behavior)
+<motion.div
+  drag
+  dragMomentum={true}
+  className="w-16 h-16 bg-green-400 rounded-xl cursor-grab"
+/>
+```
+
+---
+
+## Drag Reorder
+
+Motion provides a dedicated `Reorder` component for creating drag-to-reorder lists. This is a higher-level abstraction built on top of the drag system and requires the `Reorder.Group` and `Reorder.Item` components:
+
+```tsx
+import { Reorder } from "motion/react";
+import { useState } from "react";
+
+function ReorderList() {
+  const [items, setItems] = useState(["Item 1", "Item 2", "Item 3", "Item 4"]);
+
+  return (
+    <Reorder.Group axis="y" values={items} onReorder={setItems}>
+      {items.map((item) => (
+        <Reorder.Item
+          key={item}
+          value={item}
+          className="p-4 mb-2 bg-gray-800 rounded-lg cursor-grab"
+          whileDrag={{ scale: 1.05, boxShadow: "0 8px 30px rgba(0,0,0,0.3)" }}
+        >
+          {item}
+        </Reorder.Item>
+      ))}
+    </Reorder.Group>
+  );
+}
+```
+
+Since `Reorder.Group` and `Reorder.Item` are React components (uppercase), the motionwind Babel plugin skips them. Use the Motion API directly for reorderable lists.
+
+---
+
+## Class Reference
+
+| Class | Motion output | Description |
+|---|---|---|
+| `animate-drag-x` | `drag="x"` | Horizontal dragging only |
+| `animate-drag-y` | `drag="y"` | Vertical dragging only |
+| `animate-drag-both` | `drag` | Free dragging on both axes |
+| `animate-drag-elastic-{n}` | `dragElastic={n/100}` | Snap-back elasticity (0-100) |
+| `animate-drag:scale-{n}` | `whileDrag={{ scale: n/100 }}` | Scale while dragging |
+| `animate-drag:rotate-{n}` | `whileDrag={{ rotate: n }}` | Rotate while dragging |
+| `animate-drag:opacity-{n}` | `whileDrag={{ opacity: n/100 }}` | Opacity while dragging |
