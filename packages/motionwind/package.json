@@ -1,6 +1,6 @@
 {
   "name": "motionwind-react",
-  "version": "0.1.0",
+  "version": "0.3.1",
   "type": "module",
   "private": false,
   "description": "Write Motion animations as Tailwind-like classes. Babel plugin transforms them at build time.",
