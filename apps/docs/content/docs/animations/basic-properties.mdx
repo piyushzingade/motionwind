@@ -16,7 +16,7 @@ Fade elements in and out by animating their opacity. Values are specified on a 0
 The parser divides the number by 100, so `opacity-0` becomes `0` and `opacity-100` becomes `1`.
 
 <Demo title="Fade In on Enter">
-  <div className="px-8 py-6 bg-[#c8ff2e]/20 border border-[#c8ff2e]/40 rounded-xl text-center font-medium text-white animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-1000">
+  <div className="px-8 py-6 bg-[#c8ff2e]/20 border border-[#c8ff2e]/40 rounded-xl text-center font-medium text-[var(--color-fg)] animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-1000">
     I faded in
   </div>
 </Demo>
@@ -48,7 +48,7 @@ Scale elements up or down. Values are specified as percentages where `100` equal
 The parser divides by 100, so `scale-110` becomes `1.1`.
 
 <Demo title="Hover to Scale Up">
-  <button className="px-6 py-3 bg-[#c8ff2e] text-black rounded-xl font-medium cursor-pointer animate-hover:scale-110 animate-spring">
+  <button className="px-6 py-3 bg-fd-primary text-fd-primary-foreground rounded-xl font-medium cursor-pointer animate-hover:scale-110 animate-spring">
     Hover me
   </button>
 </Demo>
@@ -77,7 +77,7 @@ The parser divides by 100, so `scale-110` becomes `1.1`.
 Rotate elements by a given number of degrees. Positive values rotate clockwise, negative values rotate counter-clockwise.
 
 <Demo title="Hover to Rotate">
-  <div className="w-16 h-16 bg-[#c8ff2e] rounded-lg flex items-center justify-center text-black font-bold text-xl cursor-pointer animate-hover:rotate-45 animate-spring">
+  <div className="w-16 h-16 bg-fd-primary rounded-lg flex items-center justify-center text-fd-primary-foreground font-bold text-xl cursor-pointer animate-hover:rotate-45 animate-spring">
     R
   </div>
 </Demo>
@@ -112,7 +112,7 @@ This compiles to `whileHover={{ rotate: -90 }}`.
 Slide elements horizontally. The value is in pixels. Positive moves right, negative moves left.
 
 <Demo title="Hover to Slide Right">
-  <div className="px-6 py-3 bg-white/10 border border-white/20 rounded-xl text-white font-medium cursor-pointer animate-hover:x-20 animate-spring">
+  <div className="px-6 py-3 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl text-[var(--color-fg)] font-medium cursor-pointer animate-hover:x-20 animate-spring">
     Slide right
   </div>
 </Demo>
@@ -145,7 +145,7 @@ For sliding left, use a negative value:
 Slide elements vertically. Positive values move down, negative values move up.
 
 <Demo title="Hover to Float Up">
-  <div className="w-20 h-20 bg-[#c8ff2e] rounded-2xl flex items-center justify-center text-black font-bold cursor-pointer animate-hover:-y-20 animate-spring">
+  <div className="w-20 h-20 bg-fd-primary rounded-2xl flex items-center justify-center text-fd-primary-foreground font-bold cursor-pointer animate-hover:-y-20 animate-spring">
     UP
   </div>
 </Demo>
@@ -180,7 +180,7 @@ A common pattern is using `y` with `initial` and `inview` for scroll-reveal effe
 Animate the width of an element. The value is in pixels by default.
 
 <Demo title="Hover to Expand Width">
-  <div className="h-12 w-[100px] bg-[#c8ff2e] rounded-xl flex items-center justify-center text-black font-medium cursor-pointer animate-hover:w-200 animate-spring">
+  <div className="h-12 w-[100px] bg-fd-primary rounded-xl flex items-center justify-center text-fd-primary-foreground font-medium cursor-pointer animate-hover:w-200 animate-spring">
     Expand
   </div>
 </Demo>
@@ -235,7 +235,7 @@ whileHover={{ width: "auto" }}
 Animate the height of an element. The value is in pixels by default.
 
 <Demo title="Hover to Grow Taller">
-  <div className="w-24 h-[48px] bg-[#c8ff2e]/20 border-2 border-[#c8ff2e] rounded-xl flex items-center justify-center text-white font-medium cursor-pointer animate-hover:h-100 animate-spring">
+  <div className="w-24 h-[48px] bg-[#c8ff2e]/20 border-2 border-[#c8ff2e] rounded-xl flex items-center justify-center text-[var(--color-fg)] font-medium cursor-pointer animate-hover:h-100 animate-spring">
     Grow
   </div>
 </Demo>
@@ -290,7 +290,7 @@ whileHover={{ height: "auto" }}
 Animate the border radius to morph between shapes. The value is in pixels.
 
 <Demo title="Hover to Morph Shape">
-  <div className="w-20 h-20 bg-[#c8ff2e] rounded-lg flex items-center justify-center text-black font-bold cursor-pointer animate-hover:rounded-40 animate-spring">
+  <div className="w-20 h-20 bg-fd-primary rounded-lg flex items-center justify-center text-fd-primary-foreground font-bold cursor-pointer animate-hover:rounded-40 animate-spring">
     Hi
   </div>
 </Demo>
@@ -367,7 +367,7 @@ For properties that don't have a dedicated shorthand -- like `backgroundColor` -
 The value inside the brackets is passed through directly. If it parses as a number, it becomes a number; otherwise it stays a string.
 
 <Demo title="Hover to Change Color">
-  <button className="px-6 py-3 bg-white/10 text-white rounded-xl font-medium cursor-pointer border border-white/20 animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-duration-300">
+  <button className="px-6 py-3 bg-[var(--color-surface-elevated)] text-[var(--color-fg)] rounded-xl font-medium cursor-pointer border border-[var(--color-border)] animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-duration-300">
     Hover for color
   </button>
 </Demo>
@@ -458,7 +458,7 @@ Animate the backdrop blur filter on an element. The value is in pixels and maps 
 A common use is combining backdrop blur with a semi-transparent background for frosted-glass effects:
 
 ```html
-<div className="bg-white/10 animate-hover:backdrop-blur-20 animate-duration-500">
+<div className="bg-[var(--color-surface-elevated)] animate-hover:backdrop-blur-20 animate-duration-500">
   Frosted glass on hover
 </div>
 ```
@@ -692,7 +692,7 @@ This pairs well with the `border-{color}` shorthand:
 You can animate multiple properties on the same gesture by stacking classes. Each gesture collects all its property-value pairs into a single object.
 
 <Demo title="Combined Hover Effect">
-  <div className="px-8 py-6 bg-white/5 border border-white/10 rounded-xl text-white font-medium cursor-pointer animate-hover:scale-105 animate-hover:-y-4 animate-hover:rounded-20 animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-spring">
+  <div className="px-8 py-6 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl text-[var(--color-fg)] font-medium cursor-pointer animate-hover:scale-105 animate-hover:-y-4 animate-hover:rounded-20 animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-spring">
     Everything at once
   </div>
 </Demo>
