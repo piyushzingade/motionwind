@@ -21,14 +21,57 @@ export default async function Image() {
           overflow: "hidden",
         }}
       >
-        {/* Dot grid background */}
+        {/* Crosshatch grid with radial mask */}
+        <svg
+          width="1200"
+          height="630"
+          style={{ position: "absolute", inset: 0 }}
+        >
+          <defs>
+            <radialGradient id="fade" cx="50%" cy="45%" r="50%">
+              <stop offset="0%" stopColor="white" stopOpacity="1" />
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
+            </radialGradient>
+            <mask id="gridMask">
+              <rect width="1200" height="630" fill="url(#fade)" />
+            </mask>
+          </defs>
+          <g mask="url(#gridMask)">
+            {Array.from({ length: 34 }, (_, i) => (
+              <line
+                key={`v${i}`}
+                x1={i * 36}
+                y1={0}
+                x2={i * 36}
+                y2={630}
+                stroke="rgba(200,255,46,0.04)"
+                strokeWidth="1"
+              />
+            ))}
+            {Array.from({ length: 18 }, (_, i) => (
+              <line
+                key={`h${i}`}
+                x1={0}
+                y1={i * 36}
+                x2={1200}
+                y2={i * 36}
+                stroke="rgba(200,255,46,0.04)"
+                strokeWidth="1"
+              />
+            ))}
+          </g>
+        </svg>
+
+        {/* Radial glow */}
         <div
           style={{
             position: "absolute",
-            inset: 0,
-            backgroundImage:
-              "radial-gradient(circle, rgba(200,255,46,0.04) 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
+            top: "10%",
+            left: "20%",
+            width: "60%",
+            height: "60%",
+            background:
+              "radial-gradient(ellipse at center, rgba(200,255,46,0.05), transparent 70%)",
           }}
         />
 
@@ -37,9 +80,8 @@ export default async function Image() {
           style={{
             position: "absolute",
             top: 0,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "40%",
+            left: "35%",
+            width: "30%",
             height: "2px",
             background:
               "linear-gradient(90deg, transparent, #c8ff2e, transparent)",
@@ -50,8 +92,8 @@ export default async function Image() {
         <svg
           viewBox="0 0 512 512"
           fill="none"
-          width={72}
-          height={72}
+          width={64}
+          height={64}
           style={{ marginBottom: 28 }}
         >
           <polygon
@@ -61,12 +103,12 @@ export default async function Image() {
           <polygon
             points="181,238 401,238 394,274 174,274"
             fill="#c8ff2e"
-            opacity="0.78"
+            opacity="0.75"
           />
           <polygon
             points="239,294 399,294 392,330 232,330"
             fill="#c8ff2e"
-            opacity="0.59"
+            opacity="0.52"
           />
           <polygon
             points="415,188 439,200 415,212"
@@ -77,7 +119,7 @@ export default async function Image() {
         {/* Title */}
         <div
           style={{
-            fontSize: 72,
+            fontSize: 68,
             fontWeight: 700,
             color: "#f0f0f0",
             fontStyle: "italic",
@@ -91,7 +133,7 @@ export default async function Image() {
         {/* Tagline */}
         <div
           style={{
-            fontSize: 24,
+            fontSize: 22,
             color: "#8a8a9a",
             marginTop: 16,
             letterSpacing: "-0.01em",
@@ -100,44 +142,91 @@ export default async function Image() {
           Motion animations as Tailwind classes
         </div>
 
-        {/* Bottom dashed line */}
+        {/* Thin accent rule below tagline */}
+        <div
+          style={{
+            width: 48,
+            height: 1,
+            marginTop: 28,
+            background:
+              "linear-gradient(90deg, transparent, rgba(200,255,46,0.3), transparent)",
+          }}
+        />
+
+        {/* Bottom bar */}
         <div
           style={{
             position: "absolute",
-            bottom: 60,
+            bottom: 36,
             display: "flex",
-            gap: 8,
+            justifyContent: "space-between",
             alignItems: "center",
+            width: "100%",
+            padding: "0 100px",
           }}
         >
           <div
             style={{
-              width: 120,
-              height: 1,
-              background:
-                "repeating-linear-gradient(90deg, #1e1e2a 0, #1e1e2a 6px, transparent 6px, transparent 10px)",
-            }}
-          />
-          <span
-            style={{
-              fontSize: 13,
-              color: "#5a5a6a",
-              fontFamily: "monospace",
-              textTransform: "uppercase",
-              letterSpacing: "0.12em",
+              display: "flex",
+              gap: 8,
+              alignItems: "center",
             }}
           >
-            docs
-          </span>
-          <div
+            <div
+              style={{
+                width: 80,
+                height: 1,
+                background:
+                  "repeating-linear-gradient(90deg, #1e1e2a 0, #1e1e2a 5px, transparent 5px, transparent 9px)",
+              }}
+            />
+            <span
+              style={{
+                fontSize: 10,
+                color: "#5a5a6a",
+                fontFamily: "monospace",
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+              }}
+            >
+              documentation
+            </span>
+            <div
+              style={{
+                width: 80,
+                height: 1,
+                background:
+                  "repeating-linear-gradient(90deg, #1e1e2a 0, #1e1e2a 5px, transparent 5px, transparent 9px)",
+              }}
+            />
+          </div>
+          <span
             style={{
-              width: 120,
-              height: 1,
-              background:
-                "repeating-linear-gradient(90deg, #1e1e2a 0, #1e1e2a 6px, transparent 6px, transparent 10px)",
+              fontSize: 10,
+              color: "#5a5a6a",
+              fontFamily: "monospace",
+              letterSpacing: "0.05em",
             }}
-          />
+          >
+            motionwind.dev
+          </span>
         </div>
+
+        {/* Corner markers */}
+        <svg
+          width="1200"
+          height="630"
+          style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
+        >
+          <line x1="24" y1="24" x2="34" y2="24" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
+          <line x1="24" y1="24" x2="24" y2="34" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
+          <line x1="1166" y1="24" x2="1176" y2="24" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
+          <line x1="1176" y1="24" x2="1176" y2="34" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
+          <line x1="24" y1="606" x2="34" y2="606" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
+          <line x1="24" y1="596" x2="24" y2="606" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
+          <line x1="1166" y1="606" x2="1176" y2="606" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
+          <line x1="1176" y1="596" x2="1176" y2="606" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
+        </svg>
       </div>
     ),
     { ...size },
