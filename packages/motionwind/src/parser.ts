@@ -93,7 +93,7 @@ const ARBITRARY_VALUE_ALLOWLIST = new Set([
  */
 function parsePropertyValue(
   raw: string,
-): { key: string; value: string | number | number[] } | null {
+): { key: string; value: string | number | (string | number)[] } | null {
   // Arbitrary value: [key=value]
   if (raw.startsWith("[") && raw.endsWith("]")) {
     const inner = raw.slice(1, -1);
