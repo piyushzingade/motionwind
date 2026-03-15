@@ -75,14 +75,18 @@ export function withMotionwind(nextConfig: NextConfig = {}): NextConfig {
   const turbopackRules: Record<string, TurbopackRuleConfig> = {
     ...existingRules,
     "*.tsx": {
-      loaders: [{ loader: "babel-loader", options: babelLoaderOptions }],
-      as: "*.tsx",
       ...(existingRules["*.tsx"] ?? {}),
+      loaders: [
+        { loader: "babel-loader", options: babelLoaderOptions },
+        ...((existingRules["*.tsx"] as TurbopackRuleConfig | undefined)?.loaders ?? []),
+      ],
     },
     "*.jsx": {
-      loaders: [{ loader: "babel-loader", options: babelLoaderOptions }],
-      as: "*.jsx",
       ...(existingRules["*.jsx"] ?? {}),
+      loaders: [
+        { loader: "babel-loader", options: babelLoaderOptions },
+        ...((existingRules["*.jsx"] as TurbopackRuleConfig | undefined)?.loaders ?? []),
+      ],
     },
   };
 
