@@ -330,10 +330,12 @@ describe("React / Next.js integration", () => {
       expect(output).not.toContain("motion.");
     });
 
-    it("skips template literal className", () => {
+    it("transforms template literal className by extracting static animate-* tokens", () => {
       const input = "<div className={`animate-hover:scale-110 ${cls}`}>Hello</div>";
       const output = transform(input);
-      expect(output).not.toContain("motion.");
+      expect(output).toContain("motion.div");
+      expect(output).toContain("whileHover");
+      expect(output).toContain("scale: 1.1");
     });
 
     it("skips ternary className", () => {
@@ -505,7 +507,7 @@ describe("React / Next.js integration", () => {
       expect(output).toContain('ease: "easeOut"');
     });
 
-    it("layout animation for shared transitions", () => {
+    it("layout animation for shared transitions (template literal)", () => {
       const input = `
         interface CardProps { id: string; expanded: boolean; }
         function Card({ id, expanded }: CardProps) {
@@ -516,9 +518,10 @@ describe("React / Next.js integration", () => {
           );
         }
       `;
-      // Template literal className is skipped (dynamic)
+      // Static animate-layout is extracted and compiled; animate-layout-id-${id} stays dynamic
       const output = transform(input);
-      expect(output).not.toContain("motion.div");
+      expect(output).toContain("motion.div");
+      expect(output).toContain("layout");
     });
 
     it("layout with static className", () => {

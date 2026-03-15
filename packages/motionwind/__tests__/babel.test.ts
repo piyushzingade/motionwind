@@ -72,11 +72,13 @@ describe("motionwind babel plugin", () => {
     expect(output).not.toContain("motion.");
   });
 
-  it("skips component elements (uppercase)", () => {
+  it("transforms component elements (uppercase) with motion.create", () => {
     const input = `<Button className="animate-hover:scale-110">Click</Button>`;
     const output = transform(input);
-    expect(output).not.toContain("motion.");
-    expect(output).toContain("Button");
+    expect(output).toContain("motion.create(Button)");
+    expect(output).toContain("_mw_Button");
+    expect(output).toContain("whileHover");
+    expect(output).toContain("scale: 1.1");
   });
 
   it("transforms scroll reveal pattern", () => {
@@ -397,4 +399,77 @@ describe("motionwind babel plugin", () => {
     const output = transform(input);
     expect(output).toContain('clipPath: "inset(0)"');
   });
+
+  // --- Template literal support ---
+
+  it("transforms template literal with static animate classes", () => {
+    const input = "<div className={`bg-blue-500 animate-hover:scale-110 ${cls}`}>Hello</div>";
+    const output = transform(input);
+    expect(output).toContain("motion.div");
+    expect(output).toContain("whileHover");
+    expect(output).toContain("scale: 1.1");
+    // Dynamic part is preserved
+    expect(output).toContain("${cls}");
+  });
+
+  it("transforms template literal with multiple animate classes", () => {
+    const input = "<div className={`animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-500 p-4 ${cls}`}>Hello</div>";
+    const output = transform(input);
+    expect(output).toContain("motion.div");
+    expect(output).toContain("initial");
+    expect(output).toContain("opacity: 0");
+    expect(output).toContain("opacity: 1");
+    expect(output).toContain("duration: 0.5");
+  });
+
+  it("preserves non-animate classes in template literal", () => {
+    const input = "<div className={`p-4 text-white animate-hover:scale-110 ${cls}`}>Hello</div>";
+    const output = transform(input);
+    expect(output).toContain("p-4");
+    expect(output).toContain("text-white");
+  });
+
+  it("transforms template literal with only static animate classes (no expressions)", () => {
+    const input = "<div className={`animate-hover:scale-110 bg-blue-500`}>Hello</div>";
+    const output = transform(input);
+    expect(output).toContain("motion.div");
+    expect(output).toContain("whileHover");
+  });
+
+  // --- Custom component support ---
+
+  it("transforms custom component with motion.create", () => {
+    const input = `<Card className="animate-hover:scale-105 animate-spring">Click</Card>`;
+    const output = transform(input);
+    expect(output).toContain("motion.create(Card)");
+    expect(output).toContain("_mw_Card");
+    expect(output).toContain("whileHover");
+    expect(output).toContain("scale: 1.05");
+    expect(output).toContain('type: "spring"');
+  });
+
+  it("creates motion.create only once for same component used twice", () => {
+    const input = `<><Card className="animate-hover:scale-110">A</Card><Card className="animate-tap:scale-90">B</Card></>`;
+    const output = transform(input);
+    const createCount = (output.match(/motion\.create\(Card\)/g) || []).length;
+    expect(createCount).toBe(1);
+    expect(output).toContain("_mw_Card");
+  });
+
+  it("creates separate motion.create for different components", () => {
+    const input = `<><Card className="animate-hover:scale-110">A</Card><Badge className="animate-tap:scale-90">B</Badge></>`;
+    const output = transform(input);
+    expect(output).toContain("motion.create(Card)");
+    expect(output).toContain("motion.create(Badge)");
+    expect(output).toContain("_mw_Card");
+    expect(output).toContain("_mw_Badge");
+  });
+
+  it("skips custom component without animate classes", () => {
+    const input = `<Card className="p-4 bg-blue-500">Click</Card>`;
+    const output = transform(input);
+    expect(output).not.toContain("motion.create");
+    expect(output).toContain("Card");
+  });
+
 });
