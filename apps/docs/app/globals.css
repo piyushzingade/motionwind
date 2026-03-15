@@ -42,10 +42,12 @@
   --color-code-muted: #9a9a9a;
   --color-selection: rgba(77, 124, 15, 0.12);
   --color-dot-grid: rgba(77, 124, 15, 0.06);
+  --color-demo-glow: rgba(77, 124, 15, 0.06);
+  --color-demo-grid-line: rgba(77, 124, 15, 0.07);
 
   /* Fumadocs overrides */
-  --color-fd-primary: #4d7c0f !important;
-  --color-fd-primary-foreground: #ffffff !important;
+  --color-fd-primary: #c7ff2d !important;
+  --color-fd-primary-foreground: #1a1a1a !important;
 }
 
 /* ── Dark Theme ── */
@@ -67,6 +69,8 @@
   --color-code-muted: #5a5a6a;
   --color-selection: rgba(200, 255, 46, 0.18);
   --color-dot-grid: rgba(200, 255, 46, 0.03);
+  --color-demo-glow: rgba(200, 255, 46, 0.04);
+  --color-demo-grid-line: rgba(200, 255, 46, 0.04);
 
   /* Fumadocs overrides */
   --color-fd-primary: #c8ff2e !important;
@@ -185,30 +189,44 @@ body {
   margin: 0 auto;
 }
 
+.docs-prose h2,
+.docs-prose h3,
+.docs-prose h4 {
+  scroll-margin-top: 5rem;
+}
+
 .docs-prose h2 {
   font-family: var(--font-display), serif;
   font-style: italic;
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--color-fg);
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-  letter-spacing: -0.01em;
+  margin-top: 3rem;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
 }
 
 .docs-prose h3 {
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--color-fg);
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
+  margin-top: 2.25rem;
+  margin-bottom: 0.875rem;
+}
+
+.docs-prose h4 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-fg);
+  margin-top: 1.75rem;
+  margin-bottom: 0.625rem;
 }
 
 .docs-prose p {
   font-size: 0.9375rem;
-  line-height: 1.75;
+  line-height: 1.8;
   color: var(--color-fg-muted);
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .docs-prose ol {
@@ -216,7 +234,7 @@ body {
   counter-reset: docs-counter;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.625rem;
   margin-bottom: 1.5rem;
   padding-left: 0;
 }
@@ -225,7 +243,7 @@ body {
   counter-increment: docs-counter;
   position: relative;
   padding-left: 2.25rem;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   line-height: 1.65;
   color: var(--color-fg-muted);
 }
@@ -238,12 +256,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 1.5rem;
-  height: 1.5rem;
+  min-width: 1.375rem;
+  height: 1.375rem;
   border-radius: 0.375rem;
   background: var(--color-border-subtle);
+  border: 1px solid var(--color-border);
   font-family: var(--font-mono), monospace;
-  font-size: 0.6875rem;
+  font-size: 0.625rem;
   font-weight: 700;
   color: var(--color-fg-muted);
 }
@@ -251,7 +270,7 @@ body {
 .docs-prose ul {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
   margin-bottom: 1.5rem;
   padding-left: 0;
   list-style: none;
@@ -260,7 +279,7 @@ body {
 .docs-prose ul li {
   position: relative;
   padding-left: 1.25rem;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   line-height: 1.65;
   color: var(--color-fg-muted);
 }
@@ -270,8 +289,8 @@ body {
   position: absolute;
   left: 0;
   top: 0.55em;
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: var(--color-accent);
 }
@@ -286,7 +305,8 @@ body {
   font-size: 0.8125rem;
   background: var(--color-border-subtle);
   padding: 0.15em 0.4em;
-  border-radius: 0.25rem;
+  border-radius: 0.3125rem;
+  border: 1px solid var(--color-border);
   color: var(--color-accent);
 }
 
@@ -296,18 +316,32 @@ body {
   background: transparent;
   padding: 0;
   border-radius: 0;
+  border: none;
   color: inherit;
+}
+
+/* Table code — no bg/border, just accent color */
+.docs-prose td code,
+.docs-prose th code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  color: var(--color-accent);
 }
 
 .docs-prose a {
   color: var(--color-accent);
   text-decoration: none;
-  border-bottom: 1px dashed var(--color-accent);
-  transition: border-color 0.2s ease;
+  background-image: linear-gradient(var(--color-accent), var(--color-accent));
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.25s ease-out;
 }
 
 .docs-prose a:hover {
-  border-bottom-style: solid;
+  background-size: 100% 1px;
 }
 
 /* ── Animated link underline ── */
@@ -419,12 +453,27 @@ figure.shiki pre::-webkit-scrollbar {
   overflow: hidden;
 }
 
+
+/* Crosshatch grid that fades out via radial mask */
 .demo-container::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, var(--color-dot-grid) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-image:
+    linear-gradient(to right, var(--color-demo-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-demo-grid-line) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Radial glow behind demo content */
+.demo-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, var(--color-demo-glow), transparent 70%);
   pointer-events: none;
 }
 
@@ -440,10 +489,26 @@ figure.shiki pre::-webkit-scrollbar {
 
 /* ── Table overrides for docs ── */
 .docs-prose table {
+  display: table;
+  table-layout: fixed;
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.625rem;
   margin: 1.5rem 0;
   font-size: 0.8125rem;
+}
+
+/* Responsive wrapper — added by MDX or manually */
+.docs-prose .table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 0.625rem;
+}
+
+.docs-prose .table-wrapper table {
+  margin: 0;
 }
 
 .docs-prose thead th {
@@ -451,10 +516,20 @@ figure.shiki pre::-webkit-scrollbar {
   font-weight: 600;
   color: var(--color-fg);
   padding: 0.625rem 0.75rem;
-  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-elevated);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--color-border);
+  word-break: break-word;
+}
+
+.docs-prose thead th:first-child {
+  border-top-left-radius: 0.5625rem;
+}
+
+.docs-prose thead th:last-child {
+  border-top-right-radius: 0.5625rem;
 }
 
 .docs-prose tbody td {
@@ -462,26 +537,93 @@ figure.shiki pre::-webkit-scrollbar {
   border-bottom: 1px solid var(--color-border-subtle);
   color: var(--color-fg-muted);
   vertical-align: top;
+  word-break: break-word;
+}
+
+.docs-prose tbody tr:nth-child(even) {
+  background: var(--color-surface);
 }
 
 .docs-prose tbody tr:last-child td {
   border-bottom: none;
 }
 
+.docs-prose tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 0.5625rem;
+}
+
+.docs-prose tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 0.5625rem;
+}
+
+/* First-column code gets accent color */
+.docs-prose tbody td:first-child code {
+  color: var(--color-accent);
+}
+
+/* Thin scrollbar for table overflow */
+.docs-prose table::-webkit-scrollbar {
+  height: 4px;
+}
+
+.docs-prose table::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.docs-prose table::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+/* On small screens, allow horizontal scroll */
+@media (max-width: 640px) {
+  .docs-prose table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .docs-prose table thead,
+  .docs-prose table tbody,
+  .docs-prose table tr {
+    display: table;
+    width: 100%;
+    table-layout: auto;
+  }
+
+  .docs-prose table thead {
+    display: table-header-group;
+  }
+
+  .docs-prose table tbody {
+    display: table-row-group;
+  }
+}
+
 /* ── Horizontal rule ── */
 .docs-prose hr {
   border: none;
-  border-top: 1px dashed var(--color-border);
-  margin: 2.5rem 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-border), transparent);
+  margin: 3rem 0;
 }
 
 /* ── Blockquote ── */
 .docs-prose blockquote {
   border-left: 2px solid var(--color-accent);
-  padding-left: 1rem;
+  padding: 0.75rem 1rem;
   margin: 1.5rem 0;
+  background: var(--color-surface);
+  border-radius: 0 0.5rem 0.5rem 0;
   color: var(--color-fg-muted);
   font-style: italic;
+}
+
+.docs-prose blockquote p {
+  margin-bottom: 0.5rem;
+}
+
+.docs-prose blockquote p:last-child {
+  margin-bottom: 0;
 }
 
 /* ── Table of Contents — Organic Thread ── */
