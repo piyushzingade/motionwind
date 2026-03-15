@@ -1,10 +1,16 @@
 import { Resend } from "resend";
 import { NextRequest, NextResponse } from "next/server";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: NextRequest) {
   try {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "Email service not configured" },
+        { status: 503 }
+      );
+    }
+
     const { type, message, email } = await req.json();
 
     if (!type || !message) {
@@ -14,6 +20,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const resend = new Resend(apiKey);
     const { data, error } = await resend.emails.send({
       from: "motionwind <onboarding@resend.dev>",
       to: ["piyushzingade@gmail.com"],
