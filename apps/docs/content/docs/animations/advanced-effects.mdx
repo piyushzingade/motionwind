@@ -69,7 +69,7 @@ Build output:
 Motion automatically alternates (yoyo) infinite repeating animations by default, so the element moves up then back down continuously.
 
 <Demo title="Floating Element">
-  <div className="animate-initial:y-0 animate-enter:y--10 animate-repeat-infinite animate-duration-2000 animate-ease-in-out w-16 h-16 rounded-2xl bg-[#c8ff2e] flex items-center justify-center shadow-lg shadow-[#c8ff2e]/20">
+  <div className="animate-initial:y-0 animate-enter:y--10 animate-repeat-infinite animate-duration-2000 animate-ease-in-out w-16 h-16 rounded-2xl bg-fd-primary flex items-center justify-center shadow-lg shadow-fd-primary/20">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
     </svg>
@@ -99,7 +99,7 @@ Build output:
 
 <Demo title="Breathing Pulse">
   <div className="flex items-center gap-3">
-    <div className="animate-initial:scale-100 animate-enter:scale-105 animate-repeat-infinite animate-duration-2000 animate-ease-in-out w-4 h-4 rounded-full bg-[#c8ff2e] shadow-md shadow-[#c8ff2e]/30" />
+    <div className="animate-initial:scale-100 animate-enter:scale-105 animate-repeat-infinite animate-duration-2000 animate-ease-in-out w-4 h-4 rounded-full bg-fd-primary shadow-md shadow-fd-primary/30" />
     <span className="text-sm text-fd-muted-foreground">System active</span>
   </div>
 </Demo>
@@ -152,7 +152,7 @@ function MagneticButton({ children }) {
 ```
 
 <Demo title="Hover Shift (motionwind Approximation)">
-  <button className="animate-hover:x-3 animate-hover:y--3 animate-spring animate-stiffness-400 animate-damping-15 px-6 py-3 rounded-lg bg-[#c8ff2e] text-black font-semibold cursor-pointer select-none">
+  <button className="animate-hover:x-3 animate-hover:y--3 animate-spring animate-stiffness-400 animate-damping-15 px-6 py-3 rounded-lg bg-fd-primary text-fd-primary-foreground font-semibold cursor-pointer select-none">
     Hover me
   </button>
 </Demo>
@@ -220,7 +220,7 @@ Build output:
 Setting `borderRadius` to `50` (pixels) on a square element creates a circle when the border-radius equals half the element's size. For percentage-based values, use bracket syntax: `animate-hover:[borderRadius=50%]`.
 
 <Demo title="Square to Circle Morph">
-  <div className="animate-hover:rounded-50 animate-duration-500 animate-ease-in-out w-24 h-24 bg-[#c8ff2e] cursor-pointer" />
+  <div className="animate-hover:rounded-50 animate-duration-500 animate-ease-in-out w-24 h-24 bg-fd-primary cursor-pointer" />
 </Demo>
 
 ---
@@ -246,7 +246,7 @@ Build output:
 
 <Demo title="Infinite Loop">
   <div className="w-full max-w-[300px] overflow-hidden">
-    <div className="animate-initial:x-0 animate-enter:x-200 animate-repeat-infinite animate-duration-3000 animate-ease-linear w-8 h-8 rounded-full bg-[#c8ff2e] shadow-md shadow-[#c8ff2e]/20" />
+    <div className="animate-initial:x-0 animate-enter:x-200 animate-repeat-infinite animate-duration-3000 animate-ease-linear w-8 h-8 rounded-full bg-fd-primary shadow-md shadow-fd-primary/20" />
   </div>
 </Demo>
 
@@ -315,7 +315,7 @@ The real power of motionwind is composability. Stack multiple gestures, transiti
 This button lifts and scales on hover, then compresses and snaps back on tap -- all with spring physics. No Motion imports needed.
 
 <Demo title="Combined Hover + Tap">
-  <button className="animate-hover:y--4 animate-hover:scale-105 animate-tap:scale-95 animate-tap:y-0 animate-spring animate-stiffness-300 animate-damping-20 px-8 py-4 rounded-xl bg-[#c8ff2e] text-black font-bold cursor-pointer select-none">
+  <button className="animate-hover:y--4 animate-hover:scale-105 animate-tap:scale-95 animate-tap:y-0 animate-spring animate-stiffness-300 animate-damping-20 px-8 py-4 rounded-xl bg-fd-primary text-fd-primary-foreground font-bold cursor-pointer select-none">
     Interactive Button
   </button>
 </Demo>

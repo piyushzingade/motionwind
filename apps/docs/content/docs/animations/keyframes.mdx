@@ -12,7 +12,7 @@ motionwind supports repeating animations, infinite loops, multi-step keyframe ar
 Combine `animate-enter:rotate-360` with `animate-repeat-infinite`, a duration, and linear easing to create a continuous rotation that never stops.
 
 <Demo title="Continuous spin">
-  <div className="animate-enter:rotate-360 animate-repeat-infinite animate-duration-2000 animate-ease-linear w-16 h-16 rounded-lg bg-[#c8ff2e] flex items-center justify-center text-[#0a0a0f] font-bold text-xl">
+  <div className="animate-enter:rotate-360 animate-repeat-infinite animate-duration-2000 animate-ease-linear w-16 h-16 rounded-lg bg-fd-primary flex items-center justify-center text-fd-primary-foreground font-bold text-xl">
     MW
   </div>
 </Demo>
@@ -52,7 +52,7 @@ At build time, motionwind compiles this to:
 Use `animate-repeat-{n}` to repeat an animation a specific number of times instead of infinitely.
 
 <Demo title="Repeat 3 times">
-  <div className="animate-enter:rotate-360 animate-repeat-3 animate-duration-800 animate-ease-in-out w-14 h-14 rounded-lg bg-[#c8ff2e]/80 flex items-center justify-center text-[#0a0a0f] font-bold">
+  <div className="animate-enter:rotate-360 animate-repeat-3 animate-duration-800 animate-ease-in-out w-14 h-14 rounded-lg bg-fd-primary/80 flex items-center justify-center text-fd-primary-foreground font-bold">
     3x
   </div>
 </Demo>
@@ -85,8 +85,8 @@ The element rotates 360 degrees three times, then stops.
 A pulse animation scales an element up and down continuously. Use `animate-initial:` to set the starting scale and `animate-enter:` for the target, then loop it infinitely.
 
 <Demo title="Pulse">
-  <div className="animate-initial:scale-100 animate-enter:scale-110 animate-repeat-infinite animate-duration-1000 animate-ease-in-out w-20 h-20 rounded-full bg-[#c8ff2e]/60 flex items-center justify-center">
-    <div className="w-10 h-10 rounded-full bg-[#c8ff2e]" />
+  <div className="animate-initial:scale-100 animate-enter:scale-110 animate-repeat-infinite animate-duration-1000 animate-ease-in-out w-20 h-20 rounded-full bg-fd-primary/60 flex items-center justify-center">
+    <div className="w-10 h-10 rounded-full bg-fd-primary" />
   </div>
 </Demo>
 
@@ -119,7 +119,7 @@ Motion automatically alternates between `initial` and `animate` values when `rep
 A loading spinner is a continuous rotation with linear easing so the speed stays constant.
 
 <Demo title="Loading spinner">
-  <div className="animate-enter:rotate-360 animate-repeat-infinite animate-duration-1000 animate-ease-linear w-10 h-10 rounded-full border-4 border-[#c8ff2e]/20 border-t-[#c8ff2e]" />
+  <div className="animate-enter:rotate-360 animate-repeat-infinite animate-duration-1000 animate-ease-linear w-10 h-10 rounded-full border-4 border-fd-primary/20 border-t-fd-primary" />
 </Demo>
 
 ```html
@@ -149,8 +149,8 @@ Keyframe arrays work with all animatable properties: `scale`, `scale-x`, `scale-
 A simple breathing effect that scales up and back down continuously:
 
 <Demo title="Breathing animation">
-  <div className="animate-enter:scale-[100,110,100] animate-repeat-infinite animate-duration-2000 w-20 h-20 rounded-full bg-[#c8ff2e]/60 flex items-center justify-center">
-    <div className="w-10 h-10 rounded-full bg-[#c8ff2e]" />
+  <div className="animate-enter:scale-[100,110,100] animate-repeat-infinite animate-duration-2000 w-20 h-20 rounded-full bg-fd-primary/60 flex items-center justify-center">
+    <div className="w-10 h-10 rounded-full bg-fd-primary" />
   </div>
 </Demo>
 
@@ -181,7 +181,7 @@ The three values `[100,110,100]` become `[1, 1.1, 1]` after the automatic divisi
 Combine keyframe arrays on multiple properties to trace complex paths:
 
 <Demo title="Rectangular path">
-  <div className="animate-enter:x-[0,100,100,0] animate-enter:y-[0,0,-50,0] animate-duration-3000 animate-repeat-infinite animate-ease-in-out w-12 h-12 rounded-lg bg-[#c8ff2e]" />
+  <div className="animate-enter:x-[0,100,100,0] animate-enter:y-[0,0,-50,0] animate-duration-3000 animate-repeat-infinite animate-ease-in-out w-12 h-12 rounded-lg bg-fd-primary" />
 </Demo>
 
 ```html
@@ -244,7 +244,7 @@ motionwind provides classes to control Motion's `repeatType` property, which det
 Use `animate-repeat-reverse` to make an element slide back and forth:
 
 <Demo title="Reverse repeat">
-  <div className="animate-enter:x-100 animate-repeat-infinite animate-repeat-reverse animate-duration-1000 w-12 h-12 rounded-lg bg-[#c8ff2e]" />
+  <div className="animate-enter:x-100 animate-repeat-infinite animate-repeat-reverse animate-duration-1000 w-12 h-12 rounded-lg bg-fd-primary" />
 </Demo>
 
 ```html
@@ -281,8 +281,8 @@ Use `animate-repeat-delay-{ms}` to add a pause between each repetition cycle. Th
 A pulse animation that rests briefly between each beat:
 
 <Demo title="Pulse with repeat delay">
-  <div className="animate-initial:scale-100 animate-enter:scale-110 animate-repeat-infinite animate-repeat-reverse animate-repeat-delay-500 animate-duration-600 animate-ease-in-out w-20 h-20 rounded-full bg-[#c8ff2e]/60 flex items-center justify-center">
-    <div className="w-10 h-10 rounded-full bg-[#c8ff2e]" />
+  <div className="animate-initial:scale-100 animate-enter:scale-110 animate-repeat-infinite animate-repeat-reverse animate-repeat-delay-500 animate-duration-600 animate-ease-in-out w-20 h-20 rounded-full bg-fd-primary/60 flex items-center justify-center">
+    <div className="w-10 h-10 rounded-full bg-fd-primary" />
   </div>
 </Demo>
 
@@ -327,7 +327,7 @@ Each value maps directly to Motion's `times` array. Values should range from `0`
 Combine keyframe arrays with `times` to control exactly when each step of the animation occurs:
 
 <Demo title="Square path with times">
-  <div className="animate-enter:x-[0,100,100,0,0] animate-enter:y-[0,0,-100,-100,0] animate-times-[0,0.25,0.5,0.75,1] animate-duration-4000 animate-repeat-infinite animate-ease-linear w-12 h-12 rounded-lg bg-[#c8ff2e]" />
+  <div className="animate-enter:x-[0,100,100,0,0] animate-enter:y-[0,0,-100,-100,0] animate-times-[0,0.25,0.5,0.75,1] animate-duration-4000 animate-repeat-infinite animate-ease-linear w-12 h-12 rounded-lg bg-fd-primary" />
 </Demo>
 
 ```html
