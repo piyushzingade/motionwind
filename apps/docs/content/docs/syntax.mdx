@@ -600,7 +600,7 @@ Compiles to `transition: { times: [0, 0.3, 0.7, 1] }`.
 ### Complete spring example
 
 ```tsx
-<button className="px-6 py-3 bg-purple-600 text-white rounded-xl animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 animate-bounce-20">
+<button className="px-6 py-3 bg-purple-600 text-[var(--color-fg)] rounded-xl animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 animate-bounce-20">
   Springy Button
 </button>
 ```
@@ -609,7 +609,7 @@ This produces:
 
 ```tsx
 <motion.button
-  className="px-6 py-3 bg-purple-600 text-white rounded-xl"
+  className="px-6 py-3 bg-purple-600 text-[var(--color-fg)] rounded-xl"
   whileHover={{ scale: 1.1 }}
   whileTap={{ scale: 0.9 }}
   transition={{ type: "spring", stiffness: 400, damping: 15, bounce: 0.2 }}

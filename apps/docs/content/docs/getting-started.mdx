@@ -16,7 +16,7 @@ The transform runs in four steps during your build process:
 You add `animate-*` classes to any lowercase HTML element's `className` string, alongside your regular Tailwind or CSS classes:
 
 ```tsx
-<button className="px-4 py-2 bg-blue-600 text-white rounded-lg animate-hover:scale-110 animate-tap:scale-95 animate-duration-200">
+<button className="px-4 py-2 bg-blue-600 text-[var(--color-fg)] rounded-lg animate-hover:scale-110 animate-tap:scale-95 animate-duration-200">
   Click me
 </button>
 ```
@@ -146,7 +146,7 @@ If you also manually pass a Motion prop like `whileHover` to the same element, t
 Here is a practical starting point. A button that scales up on hover, scales down on tap, and uses spring physics:
 
 ```tsx
-<button className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+<button className="px-6 py-3 bg-indigo-600 text-[var(--color-fg)] font-semibold rounded-lg shadow-md animate-hover:scale-110 animate-tap:scale-90 animate-spring">
   Get Started
 </button>
 ```
