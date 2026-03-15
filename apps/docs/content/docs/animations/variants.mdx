@@ -43,7 +43,7 @@ function StaggeredList({ items }: { items: string[] }) {
         <motion.li
           key={item}
           variants={itemVariants}
-          className="rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/10 px-4 py-3 text-white"
+          className="rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/10 px-4 py-3 text-[var(--color-fg)]"
         >
           {item}
         </motion.li>
@@ -68,10 +68,10 @@ If you have a static list (not dynamically rendered), you can approximate a stag
 
 <Demo title="Stagger with delay classes">
   <div className="flex gap-3">
-    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 w-12 h-12 rounded-lg bg-[#c8ff2e] flex items-center justify-center text-[#0a0a0f] font-bold">1</div>
-    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-100 w-12 h-12 rounded-lg bg-[#c8ff2e]/80 flex items-center justify-center text-[#0a0a0f] font-bold">2</div>
-    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-200 w-12 h-12 rounded-lg bg-[#c8ff2e]/60 flex items-center justify-center text-[#0a0a0f] font-bold">3</div>
-    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-300 w-12 h-12 rounded-lg bg-[#c8ff2e]/40 flex items-center justify-center text-[#0a0a0f] font-bold">4</div>
+    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 w-12 h-12 rounded-lg bg-fd-primary flex items-center justify-center text-fd-primary-foreground font-bold">1</div>
+    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-100 w-12 h-12 rounded-lg bg-fd-primary/80 flex items-center justify-center text-fd-primary-foreground font-bold">2</div>
+    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-200 w-12 h-12 rounded-lg bg-fd-primary/60 flex items-center justify-center text-fd-primary-foreground font-bold">3</div>
+    <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500 animate-delay-300 w-12 h-12 rounded-lg bg-fd-primary/40 flex items-center justify-center text-fd-primary-foreground font-bold">4</div>
   </div>
 </Demo>
 
@@ -140,7 +140,7 @@ function ToggleCard({ isActive }: { isActive: boolean }) {
           : "animate-enter:scale-100 animate-enter:opacity-60 animate-spring bg-[#1a1a2e] border-[#1a1a2e]"
       }
     >
-      <p className="text-white font-medium">
+      <p className="text-[var(--color-fg)] font-medium">
         {isActive ? "Active" : "Inactive"}
       </p>
     </mw.div>
@@ -223,7 +223,7 @@ function StatefulCard({ state }: { state: "idle" | "hover" | "active" | "disable
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className="rounded-xl bg-[#1a1a2e] border p-6"
     >
-      <p className="text-white font-medium">State: {state}</p>
+      <p className="text-[var(--color-fg)] font-medium">State: {state}</p>
     </motion.div>
   );
 }
@@ -273,7 +273,7 @@ function Sidebar({ isOpen }: { isOpen: boolean }) {
       {["Home", "Search", "Settings"].map((label) => (
         <motion.div
           key={label}
-          className="flex items-center gap-3 px-4 py-3 text-white"
+          className="flex items-center gap-3 px-4 py-3 text-[var(--color-fg)]"
         >
           <div className="w-8 h-8 rounded-lg bg-[#c8ff2e]/10 flex-shrink-0" />
           <motion.span variants={labelVariants}>

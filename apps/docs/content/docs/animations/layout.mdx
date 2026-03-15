@@ -107,7 +107,7 @@ function SortableList() {
           key={item}
           layout
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/10 px-4 py-3 text-white"
+          className="rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/10 px-4 py-3 text-[var(--color-fg)]"
         >
           {item}
         </motion.div>
@@ -257,7 +257,7 @@ function Gallery({ items }: { items: { id: string; title: string; color: string 
             className="cursor-pointer rounded-xl p-6"
             style={{ backgroundColor: item.color }}
           >
-            <motion.h3 layoutId={`title-${item.id}`} className="font-bold text-white">
+            <motion.h3 layoutId={`title-${item.id}`} className="font-bold text-[var(--color-fg)]">
               {item.title}
             </motion.h3>
           </motion.div>
@@ -276,7 +276,7 @@ function Gallery({ items }: { items: { id: string; title: string; color: string 
           >
             <motion.h3
               layoutId={`title-${selected}`}
-              className="font-bold text-white text-2xl"
+              className="font-bold text-[var(--color-fg)] text-2xl"
             >
               {items.find((i) => i.id === selected)?.title}
             </motion.h3>
@@ -285,7 +285,7 @@ function Gallery({ items }: { items: { id: string; title: string; color: string 
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-white/80 mt-4"
+              className="text-[var(--color-fg-muted)] mt-4"
             >
               Click to close this expanded view.
             </motion.p>
@@ -321,7 +321,7 @@ function ReorderList() {
         <Reorder.Item
           key={item}
           value={item}
-          className="cursor-grab active:cursor-grabbing rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/10 px-4 py-3 text-white select-none"
+          className="cursor-grab active:cursor-grabbing rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/10 px-4 py-3 text-[var(--color-fg)] select-none"
           whileDrag={{
             scale: 1.03,
             boxShadow: "0 8px 24px rgba(200, 255, 46, 0.15)",
@@ -390,7 +390,7 @@ function DynamicGrid() {
             key={item}
             layout
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="rounded-xl bg-[#1a1a2e] border border-[#c8ff2e]/10 p-6 text-center text-white font-bold"
+            className="rounded-xl bg-[#1a1a2e] border border-[#c8ff2e]/10 p-6 text-center text-[var(--color-fg)] font-bold"
           >
             {item}
           </motion.div>
