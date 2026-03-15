@@ -25,7 +25,7 @@ The `animate-hover:` prefix triggers an animation when the user's pointer enters
 This maps to Motion's `whileHover` prop.
 
 <Demo title="Button Grow on Hover">
-  <button className="px-6 py-3 bg-[#c8ff2e] text-black rounded-xl font-medium cursor-pointer animate-hover:scale-110 animate-spring">
+  <button className="px-6 py-3 bg-fd-primary text-fd-primary-foreground rounded-xl font-medium cursor-pointer animate-hover:scale-110 animate-spring">
     Hover me
   </button>
 </Demo>
@@ -52,7 +52,7 @@ This maps to Motion's `whileHover` prop.
 Stack multiple property classes under the `hover` gesture to animate several things at once:
 
 <Demo title="Card Lift on Hover">
-  <div className="w-56 px-6 py-5 bg-white/5 border border-white/10 rounded-2xl cursor-pointer animate-hover:scale-105 animate-hover:-y-4 animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-spring">
+  <div className="w-56 px-6 py-5 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-2xl cursor-pointer text-[var(--color-fg)] animate-hover:scale-105 animate-hover:-y-4 animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-spring">
     <p className="font-semibold text-sm">Pricing Card</p>
     <p className="text-xs mt-1 opacity-70">Hover to preview</p>
   </div>
@@ -90,7 +90,7 @@ The `animate-tap:` prefix triggers while the user is actively pressing/clicking 
 This maps to Motion's `whileTap` prop.
 
 <Demo title="Button Press Effect">
-  <button className="px-8 py-3 bg-[#c8ff2e] text-black rounded-xl font-medium cursor-pointer animate-tap:scale-95 animate-spring">
+  <button className="px-8 py-3 bg-fd-primary text-fd-primary-foreground rounded-xl font-medium cursor-pointer animate-tap:scale-95 animate-spring">
     Press me
   </button>
 </Demo>
@@ -117,7 +117,7 @@ This maps to Motion's `whileTap` prop.
 Add a small rotation on tap for a playful interaction:
 
 <Demo title="Tap to Tilt">
-  <div className="w-16 h-16 bg-[#c8ff2e] rounded-2xl flex items-center justify-center text-2xl cursor-pointer animate-tap:scale-90 animate-tap:rotate-12 animate-spring animate-stiffness-400">
+  <div className="w-16 h-16 bg-fd-primary rounded-2xl flex items-center justify-center text-2xl cursor-pointer animate-tap:scale-90 animate-tap:rotate-12 animate-spring animate-stiffness-400">
     *
   </div>
 </Demo>
@@ -137,7 +137,7 @@ The `animate-focus:` prefix triggers when the element receives keyboard focus (v
 This maps to Motion's `whileFocus` prop. It works best on focusable elements like `input`, `textarea`, `button`, and elements with `tabindex`.
 
 <Demo title="Input Focus Animation">
-  <input className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 outline-none w-64 animate-focus:scale-105 animate-focus:[borderColor=#c8ff2e] animate-spring" placeholder="Click or Tab to focus" />
+  <input className="px-4 py-3 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl text-[var(--color-fg)] placeholder-[var(--color-fg-muted)] outline-none w-64 animate-focus:scale-105 animate-focus:[borderColor=#c8ff2e] animate-spring" placeholder="Click or Tab to focus" />
 </Demo>
 
 ```html
@@ -162,7 +162,7 @@ This maps to Motion's `whileFocus` prop. It works best on focusable elements lik
 Combine focus animations with enter animations for a search bar that scales up and changes background on focus:
 
 <Demo title="Search Bar Focus">
-  <input className="px-5 py-3 bg-white/5 border border-white/10 rounded-full text-white placeholder-white/30 outline-none w-72 animate-focus:scale-105 animate-focus:[backgroundColor=#ffffff15] animate-spring" placeholder="Search..." />
+  <input className="px-5 py-3 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-full text-[var(--color-fg)] placeholder-[var(--color-fg-muted)] outline-none w-72 animate-focus:scale-105 animate-focus:[backgroundColor=#ffffff15] animate-spring" placeholder="Search..." />
 </Demo>
 
 ```html
@@ -181,7 +181,7 @@ The `animate-drag:` prefix triggers while an element is being actively dragged. 
 This maps to Motion's `whileDrag` prop, combined with the `drag` prop.
 
 <Demo title="Draggable Element">
-  <div className="w-20 h-20 bg-[#c8ff2e] rounded-2xl flex items-center justify-center text-black font-bold cursor-grab active:cursor-grabbing select-none animate-drag-both animate-drag:scale-110 animate-drag:rotate-12 animate-spring animate-drag-elastic-50">
+  <div className="w-20 h-20 bg-fd-primary rounded-2xl flex items-center justify-center text-fd-primary-foreground font-bold cursor-grab active:cursor-grabbing select-none animate-drag-both animate-drag:scale-110 animate-drag:rotate-12 animate-spring animate-drag-elastic-50">
     Drag
   </div>
 </Demo>
@@ -215,7 +215,7 @@ This maps to Motion's `whileDrag` prop, combined with the `drag` prop.
 | `animate-drag-elastic-{n}` | Set drag elasticity (divided by 100, so `50` = `0.5`) |
 
 <Demo title="Horizontal Drag Only">
-  <div className="w-16 h-16 bg-[#c8ff2e]/70 rounded-xl flex items-center justify-center text-black font-bold cursor-grab active:cursor-grabbing select-none animate-drag-x animate-drag:scale-105 animate-spring animate-drag-elastic-20">
+  <div className="w-16 h-16 bg-fd-primary/70 rounded-xl flex items-center justify-center text-fd-primary-foreground font-bold cursor-grab active:cursor-grabbing select-none animate-drag-x animate-drag:scale-105 animate-spring animate-drag-elastic-20">
     X
   </div>
 </Demo>
@@ -248,7 +248,7 @@ The `animate-inview:` prefix triggers when an element scrolls into the viewport.
 This maps to Motion's `whileInView` prop.
 
 <Demo title="Scroll Reveal (visible on load)">
-  <div className="px-8 py-6 bg-white/5 border border-white/10 rounded-2xl text-white font-medium animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-600 animate-ease-out">
+  <div className="px-8 py-6 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-2xl text-[var(--color-fg)] font-medium animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-600 animate-ease-out">
     I animate when scrolled into view
   </div>
 </Demo>
@@ -285,7 +285,7 @@ Control how the in-view detection behaves:
 ### Scale Reveal
 
 <Demo title="Scale In on View">
-  <div className="w-32 h-20 bg-[#c8ff2e] rounded-2xl flex items-center justify-center text-black font-bold animate-initial:opacity-0 animate-initial:scale-50 animate-inview:opacity-100 animate-inview:scale-100 animate-once animate-spring">
+  <div className="w-32 h-20 bg-fd-primary rounded-2xl flex items-center justify-center text-fd-primary-foreground font-bold animate-initial:opacity-0 animate-initial:scale-50 animate-inview:opacity-100 animate-inview:scale-100 animate-once animate-spring">
     Pop in
   </div>
 </Demo>
@@ -307,7 +307,7 @@ The real power of motionwind comes from layering multiple gestures on a single e
 The most common combination. Scale up on hover, scale down on tap for a natural button feel.
 
 <Demo title="Hover + Tap Button">
-  <button className="px-8 py-3 bg-[#c8ff2e] text-black rounded-xl font-semibold cursor-pointer animate-hover:scale-110 animate-tap:scale-95 animate-spring">
+  <button className="px-8 py-3 bg-fd-primary text-fd-primary-foreground rounded-xl font-semibold cursor-pointer animate-hover:scale-110 animate-tap:scale-95 animate-spring">
     Interactive button
   </button>
 </Demo>
@@ -336,13 +336,13 @@ Use `initial` to set the hidden state, then `inview` to define the visible state
 
 <Demo title="Slide Up + Fade In">
   <div className="flex gap-4">
-    <div className="w-20 h-20 bg-[#c8ff2e]/20 border border-[#c8ff2e]/40 rounded-xl flex items-center justify-center text-white font-bold animate-initial:opacity-0 animate-initial:y-30 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-ease-out">
+    <div className="w-20 h-20 bg-[var(--color-accent)]/20 border border-[var(--color-accent)]/40 rounded-xl flex items-center justify-center text-[var(--color-fg)] font-bold animate-initial:opacity-0 animate-initial:y-30 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-ease-out">
       1
     </div>
-    <div className="w-20 h-20 bg-[#c8ff2e]/20 border border-[#c8ff2e]/40 rounded-xl flex items-center justify-center text-white font-bold animate-initial:opacity-0 animate-initial:y-30 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-100 animate-ease-out">
+    <div className="w-20 h-20 bg-[var(--color-accent)]/20 border border-[var(--color-accent)]/40 rounded-xl flex items-center justify-center text-[var(--color-fg)] font-bold animate-initial:opacity-0 animate-initial:y-30 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-100 animate-ease-out">
       2
     </div>
-    <div className="w-20 h-20 bg-[#c8ff2e]/20 border border-[#c8ff2e]/40 rounded-xl flex items-center justify-center text-white font-bold animate-initial:opacity-0 animate-initial:y-30 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-200 animate-ease-out">
+    <div className="w-20 h-20 bg-[var(--color-accent)]/20 border border-[var(--color-accent)]/40 rounded-xl flex items-center justify-center text-[var(--color-fg)] font-bold animate-initial:opacity-0 animate-initial:y-30 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 animate-delay-200 animate-ease-out">
       3
     </div>
   </div>
@@ -375,7 +375,7 @@ Use staggered `animate-delay-{ms}` values across sibling elements to create a ca
 Cover all interaction states for form elements:
 
 <Demo title="All Gesture States">
-  <input className="px-5 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 outline-none w-72 animate-hover:scale-102 animate-focus:scale-105 animate-focus:[borderColor=#c8ff2e] animate-tap:scale-98 animate-spring" placeholder="Hover, focus, or tap me" />
+  <input className="px-5 py-3 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl text-[var(--color-fg)] placeholder-[var(--color-fg-muted)] outline-none w-72 animate-hover:scale-102 animate-focus:scale-105 animate-focus:[borderColor=#c8ff2e] animate-tap:scale-98 animate-spring" placeholder="Hover, focus, or tap me" />
 </Demo>
 
 ```html
@@ -402,7 +402,7 @@ Cover all interaction states for form elements:
 For elements that should animate when the component first mounts (not scroll-dependent), use `initial` and `enter`:
 
 <Demo title="Animate on Mount">
-  <div className="px-8 py-4 bg-[#c8ff2e] text-black rounded-xl font-semibold animate-initial:opacity-0 animate-initial:scale-80 animate-initial:-y-10 animate-enter:opacity-100 animate-enter:scale-100 animate-enter:y-0 animate-spring">
+  <div className="px-8 py-4 bg-fd-primary text-fd-primary-foreground rounded-xl font-semibold animate-initial:opacity-0 animate-initial:scale-80 animate-initial:-y-10 animate-enter:opacity-100 animate-enter:scale-100 animate-enter:y-0 animate-spring">
     Animated on mount
   </div>
 </Demo>
