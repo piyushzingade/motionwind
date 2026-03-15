@@ -67,20 +67,18 @@ export function Demo({
   const processed = processChildren(children);
 
   return (
-    <div className="not-prose my-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden">
+    <div className="not-prose my-8 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden shadow-sm">
       {/* Header bar */}
-      <div className="border-b border-[var(--color-border)] px-4 py-2 flex items-center justify-between">
+      <div className="border-b border-[var(--color-border)] bg-[var(--color-surface-elevated)]/50 px-4 py-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" />
-          {title && (
-            <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--color-fg-muted)]">
-              {title}
-            </span>
-          )}
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-accent)] shadow-[0_0_4px_var(--color-accent)]" />
+          <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--color-fg-muted)]">
+            {title || "Result"}
+          </span>
         </div>
         <button
           onClick={handleReplay}
-          className="inline-flex h-6 w-6 items-center justify-center rounded-md text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/[0.06]"
+          className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-fg-muted)] transition-all hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/[0.06] active:scale-90"
           aria-label="Replay animation"
           title="Replay animation"
         >
@@ -104,7 +102,7 @@ export function Demo({
       <div className="demo-container">
         <div
           key={replayKey}
-          className={`relative z-10 flex min-h-[160px] items-center justify-center p-8 ${className}`}
+          className={`relative z-10 flex min-h-[180px] items-center justify-center p-10 ${className}`}
         >
           {processed}
         </div>
