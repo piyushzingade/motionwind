@@ -16,18 +16,31 @@ export interface WebpackConfig {
   };
 }
 
+export interface TurbopackLoaderItem {
+  loader: string;
+  options?: Record<string, unknown>;
+}
+
+export interface TurbopackRuleConfig {
+  loaders: TurbopackLoaderItem[];
+  as?: string;
+}
+
 export interface NextConfig {
   webpack?: (
     config: WebpackConfig,
     context: { isServer: boolean },
   ) => WebpackConfig;
-  turbopack?: Record<string, unknown>;
+  turbopack?: {
+    rules?: Record<string, TurbopackRuleConfig>;
+    [key: string]: unknown;
+  };
   [key: string]: unknown;
 }
 
 /**
- * Wraps a Next.js config to add the motionwind Babel transform
- * as a webpack pre-processing step (runs before SWC).
+ * Wraps a Next.js config to add the motionwind Babel transform.
+ * Works with both webpack and Turbopack (Next.js 15+).
  */
 export function withMotionwind(nextConfig: NextConfig = {}): NextConfig {
   const originalWebpack = nextConfig.webpack;
@@ -46,24 +59,40 @@ export function withMotionwind(nextConfig: NextConfig = {}): NextConfig {
     );
   }
 
-  let turbopackWarned = false;
+  const babelLoaderOptions = {
+    plugins: [babelPluginPath],
+    parserOpts: {
+      plugins: ["typescript", "jsx"],
+    },
+    configFile: false,
+    babelrc: false,
+  };
+
+  // Merge Turbopack rules: add babel-loader for .tsx and .jsx files
+  const existingTurbopack = nextConfig.turbopack ?? {};
+  const existingRules = existingTurbopack.rules ?? {};
+
+  const turbopackRules: Record<string, TurbopackRuleConfig> = {
+    ...existingRules,
+    "*.tsx": {
+      loaders: [{ loader: "babel-loader", options: babelLoaderOptions }],
+      as: "*.tsx",
+      ...(existingRules["*.tsx"] ?? {}),
+    },
+    "*.jsx": {
+      loaders: [{ loader: "babel-loader", options: babelLoaderOptions }],
+      as: "*.jsx",
+      ...(existingRules["*.jsx"] ?? {}),
+    },
+  };
 
   return {
     ...nextConfig,
-    // Provide a turbopack config to suppress the Next.js 15+ warning about
-    // having a webpack config without a turbopack config. The actual Babel
-    // transform only runs under webpack; use `next dev --webpack` for now.
-    turbopack: nextConfig.turbopack ?? {},
+    turbopack: {
+      ...existingTurbopack,
+      rules: turbopackRules,
+    },
     webpack(config: WebpackConfig, context: { isServer: boolean }) {
-      // Warn once if Turbopack is detected (webpack callback still fires for server builds)
-      if (!turbopackWarned && process.env.TURBOPACK === "1") {
-        turbopackWarned = true;
-        console.warn(
-          "[motionwind] Turbopack does not support Babel transforms. " +
-            "motionwind classes will NOT be compiled. " +
-            "Use `next dev --webpack` or `next build` instead.",
-        );
-      }
       // Add babel-loader as a pre-processing rule for JSX/TSX files
       const rule: WebpackRule = {
         test: /\.(tsx|jsx)$/,
@@ -71,16 +100,7 @@ export function withMotionwind(nextConfig: NextConfig = {}): NextConfig {
         use: [
           {
             loader: "babel-loader",
-            options: {
-              plugins: [babelPluginPath],
-              // Enable TypeScript + JSX parsing without extra packages
-              parserOpts: {
-                plugins: ["typescript", "jsx"],
-              },
-              // Don't look for .babelrc files
-              configFile: false,
-              babelrc: false,
-            },
+            options: babelLoaderOptions,
           },
         ],
       };

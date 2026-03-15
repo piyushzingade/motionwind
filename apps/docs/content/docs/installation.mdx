@@ -33,7 +33,7 @@ npm install motionwind-react motion
 
 ### 2. Update next.config.js
 
-Wrap your Next.js config with the `withMotionwind` helper. This adds the motionwind Babel plugin as a webpack pre-processing step that runs before SWC:
+Wrap your Next.js config with the `withMotionwind` helper. This adds the motionwind Babel plugin as a pre-processing step that runs before SWC — works with both webpack and Turbopack:
 
 ```js
 import withMotionwind from "motionwind-react/next";
@@ -64,13 +64,7 @@ export default withMotionwind(withMDX(nextConfig));
 npm run dev
 ```
 
-**Next.js 15+:** If you use Turbopack (the default), add the `--webpack` flag for now. The motionwind Babel transform runs via webpack and is not yet supported under Turbopack:
-
-```bash
-npm run dev -- --webpack
-```
-
-That is all the setup required. The Babel plugin will process every `.tsx` and `.jsx` file automatically.
+That is all the setup required. The Babel plugin will process every `.tsx` and `.jsx` file automatically — both Turbopack (default in Next.js 15+) and webpack are supported out of the box.
 
 ## Manual setup: Vite
 
