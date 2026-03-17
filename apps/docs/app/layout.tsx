@@ -6,6 +6,7 @@ import {
 } from "next/font/google";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "fumadocs-ui/style.css";
 import "./globals.css";
 
@@ -131,6 +132,7 @@ export default function RootLayout({
           {children}
         </RootProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
