@@ -731,3 +731,38 @@ figure.shiki pre::-webkit-scrollbar {
   color: var(--color-accent) !important;
   font-weight: 600;
 }
+
+/* ── Demo buttons ── */
+.demo-btn {
+  padding: 0.375rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-accent);
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.demo-btn:active {
+  transform: scale(0.95);
+}
+
+.demo-btn-primary {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--color-accent);
+  border: none;
+  color: var(--color-accent-fg);
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.demo-btn-primary:active {
+  transform: scale(0.95);
+}

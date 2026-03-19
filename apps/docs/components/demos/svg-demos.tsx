@@ -15,9 +15,8 @@ export function LogoDrawDemo() {
         height="180"
         viewBox="0 0 100 100"
         fill="none"
-        className="text-[#c8ff2e]"
+        className="text-[var(--color-accent)]"
       >
-        {/* Outer hexagon */}
         <motion.path
           d="M50 5 L90 27.5 L90 72.5 L50 95 L10 72.5 L10 27.5 Z"
           stroke="currentColor"
@@ -27,7 +26,6 @@ export function LogoDrawDemo() {
           animate={{ pathLength: 1, opacity: 1 }}
           transition={{ duration: 1.5, ease: "easeInOut" }}
         />
-        {/* Inner diamond */}
         <motion.path
           d="M50 25 L70 50 L50 75 L30 50 Z"
           stroke="currentColor"
@@ -37,7 +35,6 @@ export function LogoDrawDemo() {
           animate={{ pathLength: 1, opacity: 1 }}
           transition={{ duration: 1, delay: 0.8, ease: "easeInOut" }}
         />
-        {/* Center dot */}
         <motion.circle
           cx="50"
           cy="50"
@@ -47,7 +44,6 @@ export function LogoDrawDemo() {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.3, delay: 1.6, type: "spring", stiffness: 400 }}
         />
-        {/* Cross lines */}
         <motion.line
           x1="50" y1="25" x2="50" y2="5"
           stroke="currentColor"
@@ -67,7 +63,7 @@ export function LogoDrawDemo() {
       </svg>
       <button
         onClick={() => setKey((k) => k + 1)}
-        className="px-4 py-1.5 rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/15 text-[#c8ff2e] text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-transform active:scale-95"
+        className="demo-btn"
       >
         Replay
       </button>
@@ -91,18 +87,16 @@ export function CircularProgressDemo() {
     <div className="flex flex-col items-center gap-4">
       <div className="relative">
         <svg width="120" height="120" viewBox="0 0 100 100" className="-rotate-90">
-          {/* Track */}
           <circle
             cx="50" cy="50" r={r}
             fill="none"
-            stroke="rgba(200,255,46,0.08)"
+            className="stroke-[var(--color-border)]"
             strokeWidth="6"
           />
-          {/* Progress */}
           <motion.circle
             cx="50" cy="50" r={r}
             fill="none"
-            stroke="#c8ff2e"
+            className="stroke-[var(--color-accent)]"
             strokeWidth="6"
             strokeLinecap="round"
             strokeDasharray={circumference}
@@ -115,16 +109,13 @@ export function CircularProgressDemo() {
             key={progress}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="text-[#c8ff2e] font-mono font-bold text-lg"
+            className="text-[var(--color-accent)] font-mono font-bold text-lg"
           >
             {progress}%
           </motion.span>
         </div>
       </div>
-      <button
-        onClick={cycle}
-        className="px-4 py-1.5 rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/15 text-[#c8ff2e] text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-transform active:scale-95"
-      >
+      <button onClick={cycle} className="demo-btn">
         Change
       </button>
     </div>
@@ -146,16 +137,16 @@ export function AnimatedCheckboxDemo() {
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div
-              className="w-7 h-7 rounded-lg border-2 flex items-center justify-center transition-colors"
-              style={{
-                borderColor: isOn ? "#c8ff2e" : "rgba(200,255,46,0.15)",
-                backgroundColor: isOn ? "rgba(200,255,46,0.1)" : "transparent",
-              }}
+              className={`w-7 h-7 rounded-lg border-2 flex items-center justify-center transition-colors ${
+                isOn
+                  ? "border-[var(--color-accent)] bg-[var(--color-accent)]/10"
+                  : "border-[var(--color-border)] bg-transparent"
+              }`}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <motion.path
                   d="M5 13l4 4L19 7"
-                  stroke="#c8ff2e"
+                  className="stroke-[var(--color-accent)]"
                   strokeWidth="3"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -169,8 +160,9 @@ export function AnimatedCheckboxDemo() {
               </svg>
             </div>
             <span
-              className="text-xs font-medium transition-colors"
-              style={{ color: isOn ? "#c8ff2e" : "#5a5a6a" }}
+              className={`text-xs font-medium transition-colors ${
+                isOn ? "text-[var(--color-accent)]" : "text-[var(--color-fg-muted)]"
+              }`}
             >
               {i === 0 ? "Design" : "Develop"}
             </span>
@@ -188,7 +180,7 @@ export function PulseRingsDemo() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <svg key={key} width="160" height="160" viewBox="0 0 160 160">
+      <svg key={key} width="160" height="160" viewBox="0 0 160 160" className="text-[var(--color-accent)]">
         {rings.map((i) => (
           <motion.circle
             key={i}
@@ -196,7 +188,7 @@ export function PulseRingsDemo() {
             cy="80"
             r={20 + i * 16}
             fill="none"
-            stroke="#c8ff2e"
+            stroke="currentColor"
             strokeWidth="1"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: [0, 0.6, 0] }}
@@ -209,21 +201,17 @@ export function PulseRingsDemo() {
             style={{ transformOrigin: "80px 80px" }}
           />
         ))}
-        {/* Center filled circle */}
         <motion.circle
           cx="80"
           cy="80"
           r="8"
-          fill="#c8ff2e"
+          fill="currentColor"
           initial={{ scale: 0 }}
           animate={{ scale: [1, 1.15, 1] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
         />
       </svg>
-      <button
-        onClick={() => setKey((k) => k + 1)}
-        className="px-4 py-1.5 rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/15 text-[#c8ff2e] text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-transform active:scale-95"
-      >
+      <button onClick={() => setKey((k) => k + 1)} className="demo-btn">
         Restart
       </button>
     </div>
@@ -232,11 +220,11 @@ export function PulseRingsDemo() {
 
 /* ── 5. Animated Bar Chart ── */
 const chartData = [
-  { label: "Mon", value: 65, color: "#c8ff2e" },
-  { label: "Tue", value: 40, color: "#c8ff2e" },
-  { label: "Wed", value: 85, color: "#c8ff2e" },
-  { label: "Thu", value: 55, color: "#c8ff2e" },
-  { label: "Fri", value: 95, color: "#c8ff2e" },
+  { label: "Mon", value: 65 },
+  { label: "Tue", value: 40 },
+  { label: "Wed", value: 85 },
+  { label: "Thu", value: 55 },
+  { label: "Fri", value: 95 },
 ];
 
 export function AnimatedChartDemo() {
@@ -248,23 +236,21 @@ export function AnimatedChartDemo() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <svg key={key} width={totalW + 20} height="130" viewBox={`0 0 ${totalW + 20} 130`}>
-        {/* Baseline */}
-        <line x1="10" y1="105" x2={totalW + 10} y2="105" stroke="rgba(200,255,46,0.1)" strokeWidth="1" />
+      <svg key={key} width={totalW + 20} height="130" viewBox={`0 0 ${totalW + 20} 130`} className="text-[var(--color-accent)]">
+        <line x1="10" y1="105" x2={totalW + 10} y2="105" className="stroke-[var(--color-border)]" strokeWidth="1" />
 
         {chartData.map((d, i) => {
           const h = (d.value / 100) * maxH;
           const x = 10 + i * (barW + gap);
           return (
             <g key={d.label}>
-              {/* Bar */}
               <motion.rect
                 x={x}
                 y={105 - h}
                 width={barW}
                 height={h}
                 rx="4"
-                fill={d.color}
+                fill="currentColor"
                 fillOpacity={0.15 + (d.value / 100) * 0.6}
                 initial={{ scaleY: 0, originY: "100%" }}
                 animate={{ scaleY: 1 }}
@@ -275,12 +261,11 @@ export function AnimatedChartDemo() {
                 }}
                 style={{ transformOrigin: `${x + barW / 2}px 105px` }}
               />
-              {/* Value label */}
               <motion.text
                 x={x + barW / 2}
                 y={105 - h - 6}
                 textAnchor="middle"
-                fill="#c8ff2e"
+                fill="currentColor"
                 fontSize="8"
                 fontWeight="700"
                 fontFamily="monospace"
@@ -290,12 +275,11 @@ export function AnimatedChartDemo() {
               >
                 {d.value}
               </motion.text>
-              {/* Day label */}
               <text
                 x={x + barW / 2}
                 y="120"
                 textAnchor="middle"
-                fill="#5a5a6a"
+                className="fill-[var(--color-fg-muted)]"
                 fontSize="8"
                 fontFamily="monospace"
               >
@@ -305,10 +289,7 @@ export function AnimatedChartDemo() {
           );
         })}
       </svg>
-      <button
-        onClick={() => setKey((k) => k + 1)}
-        className="px-4 py-1.5 rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/15 text-[#c8ff2e] text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-transform active:scale-95"
-      >
+      <button onClick={() => setKey((k) => k + 1)} className="demo-btn">
         Replay
       </button>
     </div>

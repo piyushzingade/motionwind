@@ -11,19 +11,19 @@ export function ExpandableCardDemo() {
     <motion.div
       layout
       onClick={() => setExpanded(!expanded)}
-      className="cursor-pointer rounded-2xl bg-[#1a1a2e] border border-[#c8ff2e]/10 overflow-hidden select-none"
+      className="cursor-pointer rounded-2xl bg-[var(--color-surface-elevated)] border border-[var(--color-border)] overflow-hidden select-none"
       style={{ width: expanded ? 340 : 220 }}
       transition={{ type: "spring", stiffness: 300, damping: 28 }}
     >
       <motion.div layout="position" className="p-5">
         <motion.div layout="position" className="flex items-center gap-3 mb-1">
-          <div className="w-8 h-8 rounded-lg bg-[#c8ff2e]/15 flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8ff2e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <div className="w-8 h-8 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="stroke-[var(--color-accent)]" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="2" />
               <path d="M3 9h18" />
             </svg>
           </div>
-          <motion.p layout="position" className="text-[#c8ff2e] font-semibold text-sm">
+          <motion.p layout="position" className="text-[var(--color-accent)] font-semibold text-sm">
             Dashboard
           </motion.p>
         </motion.div>
@@ -38,36 +38,36 @@ export function ExpandableCardDemo() {
               className="mt-4 space-y-3"
             >
               <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-400">Revenue</span>
-                <span className="text-[#c8ff2e] font-mono font-semibold">$12,450</span>
+                <span className="text-[var(--color-fg-muted)]">Revenue</span>
+                <span className="text-[var(--color-accent)] font-mono font-semibold">$12,450</span>
               </div>
-              <div className="h-1.5 rounded-full bg-[#c8ff2e]/10 overflow-hidden">
+              <div className="h-1.5 rounded-full bg-[var(--color-accent)]/10 overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full bg-[#c8ff2e]"
+                  className="h-full rounded-full bg-[var(--color-accent)]"
                   initial={{ width: 0 }}
                   animate={{ width: "72%" }}
                   transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
                 />
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-400">Users</span>
-                <span className="text-[#c8ff2e] font-mono font-semibold">1,284</span>
+                <span className="text-[var(--color-fg-muted)]">Users</span>
+                <span className="text-[var(--color-accent)] font-mono font-semibold">1,284</span>
               </div>
-              <div className="h-1.5 rounded-full bg-[#c8ff2e]/10 overflow-hidden">
+              <div className="h-1.5 rounded-full bg-[var(--color-accent)]/10 overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full bg-[#c8ff2e]/70"
+                  className="h-full rounded-full bg-[var(--color-accent)]/70"
                   initial={{ width: 0 }}
                   animate={{ width: "58%" }}
                   transition={{ duration: 0.8, delay: 0.25, ease: "easeOut" }}
                 />
               </div>
-              <p className="text-[10px] text-gray-500 pt-1">Click to collapse</p>
+              <p className="text-[10px] text-[var(--color-fg-muted)] pt-1">Click to collapse</p>
             </motion.div>
           )}
         </AnimatePresence>
 
         {!expanded && (
-          <p className="text-[10px] text-gray-500 mt-2">Click to expand</p>
+          <p className="text-[10px] text-[var(--color-fg-muted)] mt-2">Click to expand</p>
         )}
       </motion.div>
     </motion.div>
@@ -91,10 +91,7 @@ export function ShuffleListDemo() {
 
   return (
     <div className="w-56">
-      <button
-        onClick={shuffle}
-        className="mb-3 w-full px-4 py-2 rounded-lg bg-[#c8ff2e] text-[#0a0a0f] text-xs font-bold uppercase tracking-wider cursor-pointer transition-transform active:scale-95"
-      >
+      <button onClick={shuffle} className="demo-btn-primary mb-3 w-full">
         Shuffle
       </button>
       <div className="space-y-2">
@@ -103,9 +100,9 @@ export function ShuffleListDemo() {
             key={item.id}
             layout
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            className="flex items-center gap-3 rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/8 px-4 py-2.5 text-[var(--color-fg)]"
+            className="flex items-center gap-3 rounded-lg bg-[var(--color-surface-elevated)] border border-[var(--color-border)] px-4 py-2.5 text-[var(--color-fg)]"
           >
-            <span className="text-[#c8ff2e] text-xs">{item.icon}</span>
+            <span className="text-[var(--color-accent)] text-xs">{item.icon}</span>
             <span className="text-sm font-medium">{item.label}</span>
           </motion.div>
         ))}
@@ -122,18 +119,19 @@ export function SharedLayoutTabsDemo() {
 
   return (
     <div className="w-full max-w-sm">
-      <div className="flex gap-1 p-1 rounded-xl bg-[#1a1a2e] border border-[#c8ff2e]/8">
+      <div className="flex gap-1 p-1 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]">
         {TABS.map((tab) => (
           <button
             key={tab}
             onClick={() => setActive(tab)}
-            className="relative flex-1 px-3 py-2 rounded-lg text-xs font-medium cursor-pointer transition-colors z-10"
-            style={{ color: active === tab ? "#0a0a0f" : "#8a8a9a" }}
+            className={`relative flex-1 px-3 py-2 rounded-lg text-xs font-medium cursor-pointer transition-colors z-10 ${
+              active === tab ? "text-[var(--color-accent-fg)]" : "text-[var(--color-fg-muted)]"
+            }`}
           >
             {active === tab && (
               <motion.div
                 layoutId="tab-pill"
-                className="absolute inset-0 rounded-lg bg-[#c8ff2e]"
+                className="absolute inset-0 rounded-lg bg-[var(--color-accent)]"
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
@@ -146,10 +144,10 @@ export function SharedLayoutTabsDemo() {
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="mt-4 p-4 rounded-xl bg-[#1a1a2e]/60 border border-[#c8ff2e]/5"
+        className="mt-4 p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border-subtle)]"
       >
-        <p className="text-xs text-gray-400">
-          Showing <span className="text-[#c8ff2e] font-medium">{active}</span> content
+        <p className="text-xs text-[var(--color-fg-muted)]">
+          Showing <span className="text-[var(--color-accent)] font-medium">{active}</span> content
         </p>
       </motion.div>
     </div>
@@ -168,12 +166,11 @@ export function GridToggleDemo() {
           <button
             key={n}
             onClick={() => setCols(n)}
-            className="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all"
-            style={{
-              background: cols === n ? "#c8ff2e" : "#1a1a2e",
-              color: cols === n ? "#0a0a0f" : "#8a8a9a",
-              border: `1px solid ${cols === n ? "#c8ff2e" : "rgba(200,255,46,0.08)"}`,
-            }}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all border ${
+              cols === n
+                ? "bg-[var(--color-accent)] text-[var(--color-accent-fg)] border-[var(--color-accent)]"
+                : "bg-[var(--color-surface)] text-[var(--color-fg-muted)] border-[var(--color-border)]"
+            }`}
           >
             {n} cols
           </button>
@@ -188,9 +185,9 @@ export function GridToggleDemo() {
             key={item}
             layout
             transition={{ type: "spring", stiffness: 350, damping: 28 }}
-            className="rounded-xl bg-[#1a1a2e] border border-[#c8ff2e]/8 p-4 text-center"
+            className="rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border)] p-4 text-center"
           >
-            <span className="text-[#c8ff2e] font-mono font-bold text-sm">{String(item).padStart(2, "0")}</span>
+            <span className="text-[var(--color-accent)] font-mono font-bold text-sm">{String(item).padStart(2, "0")}</span>
           </motion.div>
         ))}
       </div>
@@ -206,7 +203,7 @@ export function DragReorderDemo() {
 
   return (
     <div className="w-56">
-      <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-3 font-medium">Drag to reorder</p>
+      <p className="text-[10px] text-[var(--color-fg-muted)] uppercase tracking-wider mb-3 font-medium">Drag to reorder</p>
       <Reorder.Group
         axis="y"
         values={items}
@@ -217,14 +214,13 @@ export function DragReorderDemo() {
           <Reorder.Item
             key={item}
             value={item}
-            className="flex items-center gap-3 cursor-grab active:cursor-grabbing rounded-lg bg-[#1a1a2e] border border-[#c8ff2e]/8 px-4 py-2.5 select-none"
+            className="flex items-center gap-3 cursor-grab active:cursor-grabbing rounded-lg bg-[var(--color-surface-elevated)] border border-[var(--color-border)] px-4 py-2.5 select-none"
             whileDrag={{
               scale: 1.04,
-              boxShadow: "0 8px 32px rgba(200, 255, 46, 0.12)",
-              borderColor: "rgba(200, 255, 46, 0.3)",
+              boxShadow: "0 8px 32px var(--color-shadow)",
             }}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5a5a6a" strokeWidth="2.5" strokeLinecap="round">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="stroke-[var(--color-fg-muted)]" strokeWidth="2.5" strokeLinecap="round">
               <circle cx="9" cy="6" r="1" /><circle cx="15" cy="6" r="1" />
               <circle cx="9" cy="12" r="1" /><circle cx="15" cy="12" r="1" />
               <circle cx="9" cy="18" r="1" /><circle cx="15" cy="18" r="1" />
