@@ -1,0 +1,10 @@
+{
+  "extends": "@repo/typescript-config/react-library.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "lib": ["es2022"],
+    "types": ["react-native"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "__tests__"]
+}
