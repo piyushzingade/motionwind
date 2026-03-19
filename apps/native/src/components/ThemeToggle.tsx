@@ -9,8 +9,34 @@ import Animated, {
   interpolateColor,
   Easing,
 } from "react-native-reanimated";
-import { Sun, Moon } from "lucide-react-native";
+import Svg, { Path, Circle, Line } from "react-native-svg";
 import { useTheme } from "../theme";
+
+/** Lucide Sun icon as inline SVG */
+function SunIcon({ size = 20, color = "#f59e0b" }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+      <Circle cx="12" cy="12" r="4" />
+      <Line x1="12" y1="2" x2="12" y2="4" />
+      <Line x1="12" y1="20" x2="12" y2="22" />
+      <Line x1="4.93" y1="4.93" x2="6.34" y2="6.34" />
+      <Line x1="17.66" y1="17.66" x2="19.07" y2="19.07" />
+      <Line x1="2" y1="12" x2="4" y2="12" />
+      <Line x1="20" y1="12" x2="22" y2="12" />
+      <Line x1="4.93" y1="19.07" x2="6.34" y2="17.66" />
+      <Line x1="17.66" y1="6.34" x2="19.07" y2="4.93" />
+    </Svg>
+  );
+}
+
+/** Lucide Moon icon as inline SVG */
+function MoonIcon({ size = 20, color = "#e2e8f0" }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+      <Path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+    </Svg>
+  );
+}
 
 export function ThemeToggle() {
   const { mode, colors, toggle } = useTheme();
@@ -48,7 +74,6 @@ export function ThemeToggle() {
     ],
   }));
 
-  // Sun: visible in light mode
   const sunStyle = useAnimatedStyle(() => ({
     opacity: interpolate(progress.value, [0, 0.5], [1, 0]),
     transform: [
@@ -58,7 +83,6 @@ export function ThemeToggle() {
     position: "absolute" as const,
   }));
 
-  // Moon: visible in dark mode
   const moonStyle = useAnimatedStyle(() => ({
     opacity: interpolate(progress.value, [0.5, 1], [0, 1]),
     transform: [
@@ -72,10 +96,10 @@ export function ThemeToggle() {
     <Pressable onPress={handlePress} hitSlop={8}>
       <Animated.View style={[styles.container, containerStyle]}>
         <Animated.View style={sunStyle}>
-          <Sun size={20} color="#f59e0b" strokeWidth={2.2} />
+          <SunIcon />
         </Animated.View>
         <Animated.View style={moonStyle}>
-          <Moon size={20} color="#e2e8f0" strokeWidth={2.2} />
+          <MoonIcon />
         </Animated.View>
       </Animated.View>
     </Pressable>
