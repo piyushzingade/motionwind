@@ -69,6 +69,8 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
   const itemEls = useRef<(HTMLLIElement | null)[]>([]);
   const trackRef = useRef<SVGPathElement>(null);
   const navRef = useRef<HTMLElement>(null);
+  const isClickScrolling = useRef(false);
+  const clickTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => setMounted(true), []);
 
@@ -129,6 +131,7 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
 
     obsRef.current = new IntersectionObserver(
       (entries) => {
+        if (isClickScrolling.current) return;
         for (const e of entries) {
           if (e.isIntersecting) {
             const id = e.target.id;
@@ -157,6 +160,10 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
       const id = url.slice(1);
       const el = document.getElementById(id);
       if (el) {
+        // Lock out IntersectionObserver during smooth scroll to prevent jitter
+        isClickScrolling.current = true;
+        if (clickTimeout.current) clearTimeout(clickTimeout.current);
+
         const container = getScrollContainer();
         if (container) {
           const elTop = el.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop;
@@ -166,6 +173,11 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
         const idx = items.findIndex((it) => it.url.slice(1) === id);
         if (idx !== -1) setActiveIndex(idx);
         history.replaceState(null, "", url);
+
+        // Release lock after smooth scroll completes
+        clickTimeout.current = setTimeout(() => {
+          isClickScrolling.current = false;
+        }, 600);
       }
     },
     [items],
