@@ -1,0 +1,151 @@
+---
+title: "Springs & Easing"
+description: "Configure spring physics and easing curves for natural-feeling animations."
+---
+
+# Springs & Easing
+
+Every animation needs timing. motionwind-react-native supports two animation types: **timing** (duration + easing curve) and **spring** (physics-based). These map directly to Reanimated's `withTiming` and `withSpring`.
+
+## Timing animations (default)
+
+By default, animations use `withTiming` with an ease-out curve. Configure with:
+
+### Duration
+
+```tsx
+// 300ms animation
+<mw.View className="animate-enter:opacity-100 animate-duration-300" />
+
+// 1000ms animation
+<mw.View className="animate-enter:scale-100 animate-duration-1000" />
+```
+
+> **Note:** On React Native, durations are in **milliseconds** (not seconds like the web package).
+
+### Delay
+
+```tsx
+// Wait 200ms before animating
+<mw.View className="animate-enter:opacity-100 animate-delay-200" />
+```
+
+### Named easing functions
+
+| Class | Reanimated Easing | When to use |
+|---|---|---|
+| `animate-ease-out` | `Easing.out(Easing.cubic)` | Elements entering/appearing (most common) |
+| `animate-ease-in` | `Easing.in(Easing.cubic)` | Elements exiting (rare in UI) |
+| `animate-ease-in-out` | `Easing.inOut(Easing.cubic)` | Elements moving on screen |
+| `animate-ease-linear` | `Easing.linear` | Constant-speed (loaders, progress) |
+| `animate-ease-circ-out` | `Easing.out(Easing.circle)` | Snappy, responsive feel |
+| `animate-ease-circ-in` | `Easing.in(Easing.circle)` | |
+| `animate-ease-circ-in-out` | `Easing.inOut(Easing.circle)` | |
+| `animate-ease-back-out` | `Easing.out(Easing.back(1.7))` | Slight overshoot, playful |
+| `animate-ease-back-in` | `Easing.in(Easing.back(1.7))` | |
+| `animate-ease-back-in-out` | `Easing.inOut(Easing.back(1.7))` | |
+
+### Custom cubic-bezier
+
+```tsx
+// Custom bezier curve: ease-out-quint
+<mw.View className="animate-enter:y-0 animate-ease-[0.23,1,0.32,1]" />
+```
+
+The four values map to `Easing.bezier(x1, y1, x2, y2)`.
+
+## Spring animations
+
+Springs don't have a fixed duration — they simulate real physics. Use them for interactions that should feel alive and natural.
+
+### Enable spring
+
+```tsx
+<mw.View className="animate-enter:scale-100 animate-spring" />
+```
+
+This uses Reanimated's `withSpring` with default physics.
+
+### Configure spring physics
+
+| Class | Property | Default | Description |
+|---|---|---|---|
+| `animate-stiffness-{n}` | `stiffness` | 100 | Higher = snappier, faster |
+| `animate-damping-{n}` | `damping` | 10 | Higher = less oscillation |
+| `animate-mass-{n}` | `mass` | 10 (÷10 → 1.0) | Higher = heavier, slower |
+
+```tsx
+// Snappy spring (high stiffness, moderate damping)
+<mw.Pressable className="animate-tap:scale-95 animate-spring animate-stiffness-400 animate-damping-15">
+  <Text>Snappy button</Text>
+</mw.Pressable>
+
+// Bouncy spring (low damping)
+<mw.View className="animate-enter:y-0 animate-spring animate-stiffness-300 animate-damping-6">
+  <Text>Bounces into place</Text>
+</mw.View>
+
+// Heavy, slow spring
+<mw.View className="animate-enter:scale-100 animate-spring animate-stiffness-100 animate-mass-20 animate-damping-8">
+  <Text>Feels heavy</Text>
+</mw.View>
+```
+
+### Spring presets cheat sheet
+
+| Feel | Stiffness | Damping | Example |
+|---|---|---|---|
+| Snappy button | 400 | 15–20 | `animate-stiffness-400 animate-damping-15` |
+| Bouncy card | 200–300 | 6–8 | `animate-stiffness-300 animate-damping-6` |
+| Smooth slide | 150 | 12–15 | `animate-stiffness-150 animate-damping-12` |
+| Heavy drawer | 100 | 18–25 | `animate-stiffness-100 animate-damping-20` |
+
+## Repeat and loop
+
+### Finite repeat
+
+```tsx
+// Repeat 3 times
+<mw.View className="animate-enter:scale-110 animate-repeat-3" />
+
+// Repeat and reverse (ping-pong)
+<mw.View className="animate-enter:opacity-50 animate-repeat-3 animate-repeat-reverse" />
+```
+
+### Infinite loop
+
+```tsx
+<mw.View className="animate-enter:rotate-360 animate-repeat-infinite animate-ease-linear animate-duration-1200" />
+```
+
+## Stagger children
+
+Delay each child's animation for a cascading effect:
+
+```tsx
+<mw.View className="animate-stagger-100 animate-delay-children-200">
+  <mw.View className="animate-enter:opacity-100 animate-initial:opacity-0" />
+  <mw.View className="animate-enter:opacity-100 animate-initial:opacity-0" />
+  <mw.View className="animate-enter:opacity-100 animate-initial:opacity-0" />
+</mw.View>
+```
+
+- `animate-stagger-100`: Each child animates 100ms after the previous one
+- `animate-delay-children-200`: Wait 200ms before the first child starts
+- `animate-stagger-reverse`: Stagger from last child to first
+
+## When to use spring vs. timing
+
+| Use case | Recommendation |
+|---|---|
+| Tap/press feedback | Spring (feels responsive) |
+| Entrance animations | Timing with ease-out (predictable) |
+| Drag release | Spring (maintains velocity) |
+| Loading spinners | Timing with linear (constant speed) |
+| Color transitions | Timing (springs can overshoot) |
+| Interactive gestures | Spring (interruptible, natural) |
+
+## Next steps
+
+- [Scroll Animations](/docs/react-native/scroll-animations) — Trigger animations on scroll
+- [Drag](/docs/react-native/drag) — Draggable elements

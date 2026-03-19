@@ -1,0 +1,76 @@
+---
+title: "React Native"
+description: "Bring motionwind's Tailwind-like animation classes to React Native with Reanimated."
+---
+
+# React Native
+
+motionwind for React Native lets you animate mobile apps using the same `animate-*` class syntax you already know from the web — powered by `react-native-reanimated` for 60fps native animations.
+
+## Why motionwind on React Native?
+
+- **Same API** — Write `animate-hover:scale-110` on web and `animate-tap:scale-95` on mobile. One mental model, two platforms.
+- **Reanimated under the hood** — Animations run on the UI thread, not JavaScript. Zero dropped frames.
+- **NativeWind compatible** — Non-animation Tailwind classes pass through to NativeWind automatically.
+- **Runtime parsing** — No build-time Babel step needed. The `mw.*` component proxy parses classes at runtime with an LRU cache.
+
+## How it works
+
+```tsx
+import { mw } from "motionwind-react-native";
+
+// This:
+<mw.Pressable className="animate-tap:scale-95 animate-duration-150 bg-blue-500 p-4 rounded-xl">
+  <mw.Text className="text-white font-bold">Press me</mw.Text>
+</mw.Pressable>
+```
+
+The `mw.Pressable` component:
+
+1. **Parses** the className string, separating `animate-*` tokens from regular classes
+2. **Creates** Reanimated shared values for each animated property (`scale`)
+3. **Maps** gestures to RN handlers (`animate-tap:` → `onPressIn` / `onPressOut`)
+4. **Passes** remaining classes (`bg-blue-500 p-4 rounded-xl`) to NativeWind via `className`
+
+## Web vs. Native differences
+
+| Feature | Web (`motionwind-react`) | Native (`motionwind-react-native`) |
+|---|---|---|
+| Animation engine | `motion/react` (Framer Motion) | `react-native-reanimated` |
+| Styling | Tailwind CSS | NativeWind (optional) |
+| `whileHover` | Mouse hover | `onHoverIn/Out` (RN 0.71+ with Pointer Events) |
+| `whileTap` | Click/touch | `onPressIn/Out` |
+| CSS filters | `blur()`, `brightness()`, etc. | Not supported (dropped silently) |
+| CSS units | `vh`, `vw`, `rem`, `em` | Plain numbers (device-independent pixels) |
+| SVG animations | `pathLength`, `pathOffset` | Not supported |
+| `x` / `y` translate | CSS `translateX`/`translateY` | RN `translateX`/`translateY` (auto-mapped) |
+| Rotate values | Number (degrees) | String (`"45deg"`) (auto-formatted) |
+| Build-time transform | Babel plugin | Runtime only (via `mw.*`) |
+| Duration unit | Seconds (`0.3`) | Milliseconds (`300`) |
+
+## Quick example
+
+```tsx
+import { mw } from "motionwind-react-native";
+
+export function WelcomeCard() {
+  return (
+    <mw.View className="animate-enter:opacity-0 animate-enter:y-30 animate-duration-600 animate-ease-out bg-white p-6 rounded-2xl shadow-lg">
+      <mw.Text className="animate-enter:opacity-0 animate-delay-200 text-2xl font-bold text-gray-900">
+        Welcome
+      </mw.Text>
+      <mw.Text className="animate-enter:opacity-0 animate-delay-400 text-gray-500 mt-2">
+        Animations feel native because they are.
+      </mw.Text>
+    </mw.View>
+  );
+}
+```
+
+## Next steps
+
+- [Installation](/docs/react-native/installation) — Set up your project
+- [Components](/docs/react-native/components) — Learn about `mw.*` components
+- [Animations](/docs/react-native/animations) — Entrance, exit, and state animations
+- [Gestures](/docs/react-native/gestures) — Tap, hover, and focus interactions
+- [Hooks](/docs/react-native/hooks) — `useMotionwind` and `useInView` for custom control

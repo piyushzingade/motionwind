@@ -1,0 +1,101 @@
+---
+title: "Scroll Animations"
+description: "Trigger animations when elements scroll into view."
+---
+
+# Scroll Animations
+
+The `animate-inview:` prefix triggers animations when an element enters the viewport. On React Native, this uses layout measurement instead of the web's `IntersectionObserver`.
+
+## Basic usage
+
+```tsx
+<mw.View className="animate-inview:opacity-100 animate-initial:opacity-0 animate-duration-600">
+  <Text>Appears when scrolled into view</Text>
+</mw.View>
+```
+
+## Configuration
+
+### Animate once
+
+By default, the animation triggers every time the element enters the viewport. To animate only on the first appearance:
+
+```tsx
+<mw.View className="animate-inview:opacity-100 animate-initial:opacity-0 animate-once">
+  <Text>Only animates the first time</Text>
+</mw.View>
+```
+
+### Viewport amount
+
+Control how much of the element must be visible before triggering:
+
+```tsx
+// Trigger when any part is visible (default)
+<mw.View className="animate-inview:y-0 animate-amount-0" />
+
+// Trigger when 50% is visible
+<mw.View className="animate-inview:y-0 animate-amount-50" />
+
+// Trigger when fully visible
+<mw.View className="animate-inview:y-0 animate-amount-all" />
+```
+
+### Viewport margin
+
+Add an offset to trigger the animation before the element reaches the viewport edge:
+
+```tsx
+// Trigger 100px before the element enters the viewport
+<mw.View className="animate-inview:opacity-100 animate-margin-100" />
+```
+
+## Using the useInView hook
+
+For more control over viewport detection, use the `useInView` hook directly:
+
+```tsx
+import { useInView } from "motionwind-react-native";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+  useSharedValue,
+} from "react-native-reanimated";
+
+function ScrollReveal({ children }) {
+  const { isInView, onLayout } = useInView({ once: true, margin: 50 });
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(20);
+
+  if (isInView) {
+    opacity.value = withTiming(1, { duration: 600 });
+    translateY.value = withTiming(0, { duration: 600 });
+  }
+
+  const style = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
+
+  return (
+    <Animated.View onLayout={onLayout} style={style}>
+      {children}
+    </Animated.View>
+  );
+}
+```
+
+## Limitations on React Native
+
+Viewport detection on native is more limited than on web:
+
+- **Web** uses `IntersectionObserver` which tracks elements precisely during scroll
+- **Native** uses `onLayout` which fires when the component lays out, not on every scroll frame
+
+For scroll-linked animations that respond to scroll position in real time (e.g., parallax), use Reanimated's `useAnimatedScrollHandler` directly instead of motionwind classes.
+
+## Next steps
+
+- [Drag](/docs/react-native/drag) — Draggable elements with constraints
+- [Hooks](/docs/react-native/hooks) — Custom animation control with hooks

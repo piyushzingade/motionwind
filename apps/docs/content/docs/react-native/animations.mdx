@@ -1,0 +1,159 @@
+---
+title: "Animations"
+description: "Entrance, exit, and state animations with the animate-* class syntax."
+---
+
+# Animations
+
+motionwind-react-native uses the same class syntax as the web package. All animation classes start with `animate-` followed by a gesture prefix and property-value pair.
+
+## Class syntax
+
+```
+animate-{gesture}:{property}-{value}
+```
+
+- **gesture**: When the animation triggers (`enter`, `initial`, `exit`, `tap`, `inview`, etc.)
+- **property**: What to animate (`opacity`, `scale`, `y`, `rotate`, etc.)
+- **value**: The target value (`0`, `95`, `20`, `45`, etc.)
+
+## Entrance animations
+
+Use `animate-initial:` to set the starting state and `animate-enter:` for the target state. The animation runs automatically when the component mounts.
+
+### Fade in
+
+```tsx
+<mw.View className="animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-500">
+  <Text>I fade in on mount</Text>
+</mw.View>
+```
+
+### Slide up + fade
+
+```tsx
+<mw.View className="animate-initial:opacity-0 animate-initial:y-30 animate-enter:opacity-100 animate-enter:y-0 animate-duration-600 animate-ease-out">
+  <Text>I slide up and fade in</Text>
+</mw.View>
+```
+
+### Scale in
+
+```tsx
+<mw.View className="animate-initial:scale-80 animate-initial:opacity-0 animate-enter:scale-100 animate-enter:opacity-100 animate-spring animate-damping-12">
+  <Text>I scale up with a spring</Text>
+</mw.View>
+```
+
+## Animatable properties
+
+### Transform
+
+| Class | Property | Example | Notes |
+|---|---|---|---|
+| `scale-{n}` | `scale` | `scale-110` → 1.1 | Values 0–200, divided by 100 |
+| `scale-x-{n}` | `scaleX` | `scale-x-120` → 1.2 | |
+| `scale-y-{n}` | `scaleY` | `scale-y-80` → 0.8 | |
+| `rotate-{n}` | `rotate` | `rotate-45` → `"45deg"` | Auto-converts to deg string |
+| `rotate-x-{n}` | `rotateX` | `rotate-x-180` → `"180deg"` | |
+| `rotate-y-{n}` | `rotateY` | `rotate-y-90` → `"90deg"` | |
+| `skew-x-{n}` | `skewX` | `skew-x-15` → `"15deg"` | |
+| `skew-y-{n}` | `skewY` | `skew-y-10` → `"10deg"` | |
+| `x-{n}` | `translateX` | `x-20` → 20 | Pixels. Maps to RN `translateX` |
+| `y-{n}` | `translateY` | `y-30` → 30 | Pixels. Maps to RN `translateY` |
+
+### Visual
+
+| Class | Property | Example | Notes |
+|---|---|---|---|
+| `opacity-{n}` | `opacity` | `opacity-0` → 0, `opacity-50` → 0.5 | Values 0–100, divided by 100 |
+| `bg-{color}` | `backgroundColor` | `bg-#ff0000` | Hex, rgb(), rgba(), hsl() |
+| `text-{color}` | `color` | `text-#ffffff` | |
+| `border-{color}` | `borderColor` | `border-#333` | |
+
+### Dimensions & Layout
+
+| Class | Property | Example |
+|---|---|---|
+| `w-{n}` | `width` | `w-200` → 200px |
+| `h-{n}` | `height` | `h-100` → 100px |
+| `rounded-{n}` | `borderRadius` | `rounded-16` → 16 |
+| `border-w-{n}` | `borderWidth` | `border-w-2` → 2 |
+| `p-{n}` | `padding` | `p-20` → 20 |
+| `m-{n}` | `margin` | `m-10` → 10 |
+| `gap-{n}` | `gap` | `gap-8` → 8 |
+
+### Typography
+
+| Class | Property | Example |
+|---|---|---|
+| `text-size-{n}` | `fontSize` | `text-size-24` → 24 |
+| `tracking-{n}` | `letterSpacing` | `tracking-2` → 2 |
+| `leading-{n}` | `lineHeight` | `leading-28` → 28 |
+
+### Position
+
+| Class | Property | Example |
+|---|---|---|
+| `top-{n}` | `top` | `top-10` → 10 |
+| `left-{n}` | `left` | `left-20` → 20 |
+| `right-{n}` | `right` | `right-0` → 0 |
+| `bottom-{n}` | `bottom` | `bottom-50` → 50 |
+
+## Negative values
+
+Prefix any value with `-` for negative numbers:
+
+```tsx
+<mw.View className="animate-enter:y-0 animate-initial:-y-50">
+  <Text>Slides down from above</Text>
+</mw.View>
+```
+
+## Keyframe arrays
+
+Animate through multiple values using bracket syntax:
+
+```tsx
+<mw.View className="animate-enter:scale-[80,110,100] animate-duration-800">
+  <Text>Scale: 0.8 → 1.1 → 1.0</Text>
+</mw.View>
+```
+
+## Combining multiple properties
+
+Chain as many properties as you need on the same gesture:
+
+```tsx
+<mw.View className="
+  animate-initial:opacity-0
+  animate-initial:scale-90
+  animate-initial:y-40
+  animate-initial:rotate-10
+  animate-enter:opacity-100
+  animate-enter:scale-100
+  animate-enter:y-0
+  animate-enter:rotate-0
+  animate-duration-700
+  animate-ease-out
+">
+  <Text>Complex entrance animation</Text>
+</mw.View>
+```
+
+## Web-only properties (not supported)
+
+These properties are supported on web but silently ignored on React Native:
+
+- `blur-*`, `brightness-*`, `contrast-*`, `saturate-*` (CSS filters)
+- `backdrop-blur-*` (backdrop filter)
+- `clip-*` (clip-path)
+- `shadow-*` (box-shadow)
+- `path-length-*`, `path-offset-*`, `path-spacing-*` (SVG)
+
+This means you can share className strings between web and native — unsupported props are dropped without errors.
+
+## Next steps
+
+- [Gestures](/docs/react-native/gestures) — Tap, hover, and focus animations
+- [Springs & Easing](/docs/react-native/springs-and-easing) — Configure animation physics

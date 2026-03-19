@@ -1,0 +1,130 @@
+---
+title: "Gestures"
+description: "Tap, hover, and focus gesture animations for React Native."
+---
+
+# Gestures
+
+Gesture-based animations respond to user interactions. On React Native, these map to native touch handlers instead of DOM events.
+
+## Gesture prefixes
+
+| Class prefix | Web event | RN handler | Description |
+|---|---|---|---|
+| `animate-tap:` | `whileTap` | `onPressIn` / `onPressOut` | While finger is pressing |
+| `animate-hover:` | `whileHover` | `onHoverIn` / `onHoverOut` | Pointer hover (RN 0.71+) |
+| `animate-focus:` | `whileFocus` | `onFocus` / `onBlur` | Element has focus |
+| `animate-enter:` | `animate` | Mount animation | When component mounts |
+| `animate-initial:` | `initial` | Starting state | Before entrance animation |
+| `animate-exit:` | `exit` | Unmount animation | When component unmounts |
+| `animate-inview:` | `whileInView` | Viewport detection | When scrolled into view |
+
+## Tap animations
+
+The most common gesture on mobile. Animates while the user's finger is pressing, then reverts when released.
+
+### Scale on press
+
+```tsx
+<mw.Pressable className="animate-tap:scale-95 animate-duration-150 bg-blue-500 p-4 rounded-xl">
+  <mw.Text className="text-white font-bold text-center">Press me</mw.Text>
+</mw.Pressable>
+```
+
+This scales the button to 0.95 while pressed, then springs back to 1.0 on release. The animation runs on the UI thread, so it stays smooth even if JavaScript is busy.
+
+### Scale + opacity
+
+```tsx
+<mw.Pressable className="animate-tap:scale-92 animate-tap:opacity-70 animate-spring animate-damping-15">
+  <mw.Text>Multi-property tap</mw.Text>
+</mw.Pressable>
+```
+
+### Rotate on tap
+
+```tsx
+<mw.Pressable className="animate-tap:rotate-15 animate-tap:scale-95 animate-spring animate-damping-10">
+  <mw.Text>Tilts on press</mw.Text>
+</mw.Pressable>
+```
+
+## Hover animations
+
+> **Note:** `whileHover` requires React Native 0.71+ with Pointer Events enabled, or a connected mouse/trackpad. On pure touch devices, hover events don't fire.
+
+```tsx
+<mw.View className="animate-hover:scale-105 animate-hover:opacity-90 animate-duration-200">
+  <mw.Text>Hover with a mouse</mw.Text>
+</mw.View>
+```
+
+For cross-platform code, hover classes are silently ignored on devices without pointer support — no errors thrown.
+
+## Focus animations
+
+Useful for `TextInput` and other focusable elements:
+
+```tsx
+<mw.TextInput
+  className="animate-focus:scale-102 animate-focus:border-w-2 animate-spring"
+  placeholder="Focus me"
+  style={{ borderWidth: 1, borderColor: "#ccc", padding: 12, borderRadius: 8 }}
+/>
+```
+
+## Entrance + gesture combined
+
+You can combine entrance animations with gesture animations on the same element:
+
+```tsx
+<mw.Pressable className="
+  animate-initial:opacity-0
+  animate-initial:y-20
+  animate-enter:opacity-100
+  animate-enter:y-0
+  animate-tap:scale-95
+  animate-duration-400
+  animate-ease-out
+  bg-indigo-600
+  p-4
+  rounded-xl
+">
+  <mw.Text className="text-white font-semibold text-center">
+    Fades in, then responds to taps
+  </mw.Text>
+</mw.Pressable>
+```
+
+The entrance animation plays on mount. After that, taps trigger the scale animation. When the finger lifts, the scale returns to the `animate-enter:` state (or defaults).
+
+## Building interactive lists
+
+Combine staggered entrance with tap gestures:
+
+```tsx
+{items.map((item, index) => (
+  <mw.Pressable
+    key={item.id}
+    className={`
+      animate-initial:opacity-0
+      animate-initial:x-30
+      animate-enter:opacity-100
+      animate-enter:x-0
+      animate-delay-${index * 80}
+      animate-tap:scale-98
+      animate-spring
+      bg-white p-4 rounded-lg mb-2
+    `}
+  >
+    <mw.Text className="text-gray-900">{item.title}</mw.Text>
+  </mw.Pressable>
+))}
+```
+
+> **Tip:** For dynamic delay values like `animate-delay-${index * 80}`, you need the runtime `mw.*` components (which is what motionwind-react-native provides).
+
+## Next steps
+
+- [Springs & Easing](/docs/react-native/springs-and-easing) — Fine-tune animation physics
+- [Drag](/docs/react-native/drag) — Draggable elements with constraints

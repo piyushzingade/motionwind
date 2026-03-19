@@ -1,0 +1,202 @@
+---
+title: "Hooks"
+description: "useMotionwind and useInView hooks for custom animation control."
+---
+
+# Hooks
+
+For cases where the `mw.*` component proxy isn't flexible enough, motionwind-react-native exports hooks that give you direct control over the animation pipeline.
+
+## useMotionwind
+
+Parses a motionwind className string and returns Reanimated animated styles, gesture handlers, and animation controls.
+
+### Signature
+
+```tsx
+function useMotionwind(className: string): {
+  animatedStyle: AnimatedStyle;    // Pass to Animated.View's style prop
+  handlers: Record<string, () => void>;  // Gesture handlers (onPressIn, etc.)
+  parsed: ParsedResult;            // The raw parsed result
+  animateTo: (style: NativeAnimatableStyle) => void;  // Animate to a target state
+  resetToBase: () => void;         // Reset to the "enter" state
+};
+```
+
+### Basic usage
+
+```tsx
+import { useMotionwind } from "motionwind-react-native";
+import Animated from "react-native-reanimated";
+
+function CustomAnimatedCard() {
+  const { animatedStyle, handlers } = useMotionwind(
+    "animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-tap:scale-95 animate-duration-400"
+  );
+
+  return (
+    <Animated.View style={[styles.card, animatedStyle]} {...handlers}>
+      <Text>Custom animated card</Text>
+    </Animated.View>
+  );
+}
+```
+
+### Manual animation control
+
+Use `animateTo` and `resetToBase` for custom interaction logic:
+
+```tsx
+function ToggleCard() {
+  const { animatedStyle, animateTo, resetToBase } = useMotionwind(
+    "animate-initial:opacity-50 animate-initial:scale-90 animate-enter:opacity-100 animate-enter:scale-100 animate-spring"
+  );
+  const [expanded, setExpanded] = useState(false);
+
+  const toggle = () => {
+    if (expanded) {
+      resetToBase(); // Animate back to enter state
+    } else {
+      animateTo({ scale: 1.05, opacity: 0.8 }); // Custom target
+    }
+    setExpanded(!expanded);
+  };
+
+  return (
+    <Pressable onPress={toggle}>
+      <Animated.View style={[styles.card, animatedStyle]}>
+        <Text>{expanded ? "Expanded" : "Collapsed"}</Text>
+      </Animated.View>
+    </Pressable>
+  );
+}
+```
+
+### Reading parsed results
+
+Access the raw parsed data for conditional logic:
+
+```tsx
+function ConditionalAnimation({ className }) {
+  const { parsed, animatedStyle, handlers } = useMotionwind(className);
+
+  // Check if any motion was detected
+  if (!parsed.hasMotion) {
+    return <View style={styles.card}><Text>No animation</Text></View>;
+  }
+
+  // Check specific gesture support
+  const hasTapAnimation = !!parsed.gestures.whileTap;
+
+  const Wrapper = hasTapAnimation ? Pressable : View;
+
+  return (
+    <Wrapper {...(hasTapAnimation ? handlers : {})}>
+      <Animated.View style={[styles.card, animatedStyle]}>
+        <Text>Conditional rendering based on parsed classes</Text>
+      </Animated.View>
+    </Wrapper>
+  );
+}
+```
+
+## useInView
+
+Detects when a component enters the visible viewport area. Returns a boolean and an `onLayout` handler.
+
+### Signature
+
+```tsx
+function useInView(config: ViewportConfig): {
+  isInView: boolean;                    // Whether element is in viewport
+  onLayout: (event: LayoutChangeEvent) => void;  // Attach to your component
+  viewRef: React.RefObject<any>;        // Optional ref
+};
+```
+
+### Configuration
+
+```tsx
+interface ViewportConfig {
+  once?: boolean;    // Only trigger once (default: false)
+  amount?: "some" | "all" | number;  // How much must be visible
+  margin?: number;   // Pixel offset for detection
+}
+```
+
+### Basic usage
+
+```tsx
+import { useInView } from "motionwind-react-native";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
+
+function RevealOnScroll({ children }) {
+  const { isInView, onLayout } = useInView({ once: true });
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    if (isInView) {
+      opacity.value = withTiming(1, { duration: 500 });
+    }
+  }, [isInView]);
+
+  const style = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
+
+  return (
+    <Animated.View onLayout={onLayout} style={style}>
+      {children}
+    </Animated.View>
+  );
+}
+```
+
+## parseMotionClasses
+
+The raw parser function — useful for debugging or building custom integrations.
+
+### Signature
+
+```tsx
+function parseMotionClasses(className: string): ParsedResult;
+```
+
+### Usage
+
+```tsx
+import { parseMotionClasses } from "motionwind-react-native";
+
+const result = parseMotionClasses(
+  "animate-tap:scale-95 animate-duration-200 animate-spring bg-blue-500 p-4"
+);
+
+console.log(result);
+// {
+//   nativewindClasses: "bg-blue-500 p-4",
+//   gestures: {
+//     whileTap: { scale: 0.95 }
+//   },
+//   transition: {
+//     type: "spring",
+//     duration: 200
+//   },
+//   viewport: {},
+//   dragConfig: {},
+//   hasMotion: true
+// }
+```
+
+### clearParserCache
+
+The parser uses an LRU cache (max 1000 entries). If you're dynamically generating many unique className strings, you can clear the cache:
+
+```tsx
+import { clearParserCache } from "motionwind-react-native";
+
+clearParserCache();
+```
+
+## Next steps
+
+- [API Reference](/docs/react-native/api-reference) — Complete type definitions and exports

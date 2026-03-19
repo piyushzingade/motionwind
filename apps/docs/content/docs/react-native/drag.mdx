@@ -1,0 +1,99 @@
+---
+title: "Drag"
+description: "Draggable elements with axis locking, elasticity, and snap-back."
+---
+
+# Drag
+
+motionwind-react-native supports drag gestures through `animate-drag-*` classes. These configure the drag behavior — direction, constraints, elasticity, and snap-back.
+
+## Enable drag
+
+```tsx
+// Drag in both directions
+<mw.View className="animate-drag-both bg-indigo-500 w-20 h-20 rounded-xl" />
+
+// Drag horizontal only
+<mw.View className="animate-drag-x bg-blue-500 w-20 h-20 rounded-xl" />
+
+// Drag vertical only
+<mw.View className="animate-drag-y bg-green-500 w-20 h-20 rounded-xl" />
+```
+
+## Snap back to origin
+
+```tsx
+<mw.View className="animate-drag-both animate-drag-snap bg-indigo-500 w-20 h-20 rounded-xl" />
+```
+
+After the user releases, the element springs back to its original position.
+
+## Elasticity
+
+Control how much resistance the element has when dragged beyond constraints:
+
+```tsx
+// 50% elasticity (default-ish)
+<mw.View className="animate-drag-both animate-drag-elastic-50" />
+
+// No elasticity (hard stop at constraint)
+<mw.View className="animate-drag-both animate-drag-elastic-0" />
+
+// Full elasticity (rubber band)
+<mw.View className="animate-drag-both animate-drag-elastic-100" />
+```
+
+## Drag constraints
+
+Limit how far the element can be dragged:
+
+```tsx
+<mw.View className="
+  animate-drag-both
+  animate-drag-constraint-t-100
+  animate-drag-constraint-b-100
+  animate-drag-constraint-l-150
+  animate-drag-constraint-r-150
+" />
+```
+
+| Class | Direction | Example |
+|---|---|---|
+| `animate-drag-constraint-t-{n}` | Top | Max 100px up |
+| `animate-drag-constraint-b-{n}` | Bottom | Max 100px down |
+| `animate-drag-constraint-l-{n}` | Left | Max 150px left |
+| `animate-drag-constraint-r-{n}` | Right | Max 150px right |
+
+## Disable momentum
+
+By default, when the user releases a dragged element, it continues moving based on the release velocity. Disable this for immediate stop:
+
+```tsx
+<mw.View className="animate-drag-both animate-drag-no-momentum" />
+```
+
+## Combining drag with other animations
+
+Drag works alongside entrance and tap animations:
+
+```tsx
+<mw.View className="
+  animate-initial:opacity-0
+  animate-initial:scale-80
+  animate-enter:opacity-100
+  animate-enter:scale-100
+  animate-drag-both
+  animate-drag-snap
+  animate-spring
+  bg-purple-500
+  w-24 h-24
+  rounded-2xl
+">
+  <Text style={{ color: '#fff' }}>Drag me</Text>
+</mw.View>
+```
+
+## Next steps
+
+- [Hooks](/docs/react-native/hooks) — Build custom drag interactions with `useMotionwind`
+- [API Reference](/docs/react-native/api-reference) — Complete type definitions
