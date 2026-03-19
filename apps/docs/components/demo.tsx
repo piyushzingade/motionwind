@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useCallback, type ReactNode } from "react";
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from "react";
 import { mw } from "motionwind-react";
 
 /**
@@ -48,6 +54,32 @@ function processChildren(children: ReactNode): ReactNode {
   });
 }
 
+function useInView(threshold = 0.3) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting) {
+          setInView(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return { ref, inView };
+}
+
 export function Demo({
   children,
   title,
@@ -58,6 +90,7 @@ export function Demo({
   className?: string;
 }) {
   const [replayKey, setReplayKey] = useState(0);
+  const { ref: containerRef, inView } = useInView(0.3);
 
   const handleReplay = useCallback(() => {
     setReplayKey((k) => k + 1);
@@ -98,13 +131,13 @@ export function Demo({
         </button>
       </div>
 
-      {/* Demo area — key changes force full remount to replay animations */}
-      <div className="demo-container">
+      {/* Demo area — mounts children only when in viewport */}
+      <div ref={containerRef} className="demo-container">
         <div
           key={replayKey}
-          className={`relative z-10 flex min-h-[120px] items-center justify-center px-6 py-5 ${className}`}
+          className={`relative z-10 flex min-h-24 items-center justify-center px-6 py-4 ${className}`}
         >
-          {processed}
+          {inView ? processed : null}
         </div>
       </div>
     </div>
