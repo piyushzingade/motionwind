@@ -78,7 +78,7 @@ export function Demo({
         </div>
         <button
           onClick={handleReplay}
-          className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-fg-muted)] transition-all hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/[0.06] active:scale-90"
+          className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-fg-muted)] transition-colors duration-150 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/[0.06] active:scale-95"
           aria-label="Replay animation"
           title="Replay animation"
         >
@@ -102,7 +102,7 @@ export function Demo({
       <div className="demo-container">
         <div
           key={replayKey}
-          className={`relative z-10 flex min-h-[180px] items-center justify-center p-10 ${className}`}
+          className={`relative z-10 flex min-h-[120px] items-center justify-center px-6 py-5 ${className}`}
         >
           {processed}
         </div>
