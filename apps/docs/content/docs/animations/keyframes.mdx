@@ -85,13 +85,13 @@ The element rotates 360 degrees three times, then stops.
 A pulse animation scales an element up and down continuously. Use `animate-initial:` to set the starting scale and `animate-enter:` for the target, then loop it infinitely.
 
 <Demo title="Pulse">
-  <div className="animate-initial:scale-100 animate-enter:scale-110 animate-repeat-infinite animate-duration-1000 animate-ease-in-out w-20 h-20 rounded-full bg-fd-primary/60 flex items-center justify-center">
+  <div className="animate-initial:scale-100 animate-enter:scale-120 animate-repeat-infinite animate-repeat-reverse animate-duration-1000 animate-ease-in-out w-20 h-20 rounded-full bg-fd-primary/60 flex items-center justify-center">
     <div className="w-10 h-10 rounded-full bg-fd-primary" />
   </div>
 </Demo>
 
 ```html
-<div className="animate-initial:scale-100 animate-enter:scale-110 animate-repeat-infinite animate-duration-1000 animate-ease-in-out">
+<div className="animate-initial:scale-100 animate-enter:scale-120 animate-repeat-infinite animate-repeat-reverse animate-duration-1000 animate-ease-in-out">
   <!-- inner content -->
 </div>
 ```
@@ -101,10 +101,11 @@ Compiled output:
 ```tsx
 <motion.div
   initial={{ scale: 1 }}
-  animate={{ scale: 1.1 }}
+  animate={{ scale: 1.2 }}
   transition={{
     duration: 1,
     repeat: Infinity,
+    repeatType: "reverse",
     ease: "easeInOut",
   }}
 >
@@ -119,7 +120,7 @@ Motion automatically alternates between `initial` and `animate` values when `rep
 A loading spinner is a continuous rotation with linear easing so the speed stays constant.
 
 <Demo title="Loading spinner">
-  <div className="animate-enter:rotate-360 animate-repeat-infinite animate-duration-1000 animate-ease-linear w-10 h-10 rounded-full border-4 border-fd-primary/20 border-t-fd-primary" />
+  <div className="animate-enter:rotate-360 animate-repeat-infinite animate-duration-1000 animate-ease-linear w-10 h-10 rounded-full border-4 border-[#c8ff2e]/20 border-t-[#c8ff2e]" />
 </Demo>
 
 ```html
@@ -149,13 +150,13 @@ Keyframe arrays work with all animatable properties: `scale`, `scale-x`, `scale-
 A simple breathing effect that scales up and back down continuously:
 
 <Demo title="Breathing animation">
-  <div className="animate-enter:scale-[100,110,100] animate-repeat-infinite animate-duration-2000 w-20 h-20 rounded-full bg-fd-primary/60 flex items-center justify-center">
+  <div className="animate-enter:scale-[100,120,100] animate-repeat-infinite animate-duration-2000 animate-ease-in-out w-20 h-20 rounded-full bg-fd-primary/60 flex items-center justify-center">
     <div className="w-10 h-10 rounded-full bg-fd-primary" />
   </div>
 </Demo>
 
 ```html
-<div className="animate-enter:scale-[100,110,100] animate-repeat-infinite animate-duration-2000">
+<div className="animate-enter:scale-[100,120,100] animate-repeat-infinite animate-duration-2000 animate-ease-in-out">
   <!-- inner content -->
 </div>
 ```
@@ -164,17 +165,18 @@ Compiled output:
 
 ```tsx
 <motion.div
-  animate={{ scale: [1, 1.1, 1] }}
+  animate={{ scale: [1, 1.2, 1] }}
   transition={{
     duration: 2,
     repeat: Infinity,
+    ease: "easeInOut",
   }}
 >
   {/* inner content */}
 </motion.div>
 ```
 
-The three values `[100,110,100]` become `[1, 1.1, 1]` after the automatic division by 100. Motion interpolates between them evenly across the duration.
+The three values `[100,120,100]` become `[1, 1.2, 1]` after the automatic division by 100. Motion interpolates between them evenly across the duration, with `easeInOut` making each phase feel natural.
 
 ### Multi-step translate (rectangular path)
 
@@ -281,13 +283,13 @@ Use `animate-repeat-delay-{ms}` to add a pause between each repetition cycle. Th
 A pulse animation that rests briefly between each beat:
 
 <Demo title="Pulse with repeat delay">
-  <div className="animate-initial:scale-100 animate-enter:scale-110 animate-repeat-infinite animate-repeat-reverse animate-repeat-delay-500 animate-duration-600 animate-ease-in-out w-20 h-20 rounded-full bg-fd-primary/60 flex items-center justify-center">
+  <div className="animate-initial:scale-100 animate-enter:scale-120 animate-repeat-infinite animate-repeat-reverse animate-repeat-delay-500 animate-duration-600 animate-ease-in-out w-20 h-20 rounded-full bg-fd-primary/60 flex items-center justify-center">
     <div className="w-10 h-10 rounded-full bg-fd-primary" />
   </div>
 </Demo>
 
 ```html
-<div className="animate-initial:scale-100 animate-enter:scale-110 animate-repeat-infinite animate-repeat-reverse animate-repeat-delay-500 animate-duration-600 animate-ease-in-out">
+<div className="animate-initial:scale-100 animate-enter:scale-120 animate-repeat-infinite animate-repeat-reverse animate-repeat-delay-500 animate-duration-600 animate-ease-in-out">
   <!-- inner content -->
 </div>
 ```
@@ -297,7 +299,7 @@ Compiled output:
 ```tsx
 <motion.div
   initial={{ scale: 1 }}
-  animate={{ scale: 1.1 }}
+  animate={{ scale: 1.2 }}
   transition={{
     duration: 0.6,
     repeat: Infinity,

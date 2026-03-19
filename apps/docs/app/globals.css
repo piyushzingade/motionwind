@@ -450,7 +450,7 @@ figure.shiki pre::-webkit-scrollbar {
 /* ── Demo component refinements ── */
 .demo-container {
   position: relative;
-  overflow: hidden;
+  overflow: clip;
 }
 
 /* Ensure text inside demo preview elements is visually centered.

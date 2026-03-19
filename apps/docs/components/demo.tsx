@@ -90,7 +90,7 @@ export function Demo({
   className?: string;
 }) {
   const [replayKey, setReplayKey] = useState(0);
-  const { ref: containerRef, inView } = useInView(0.3);
+  const { ref: containerRef, inView } = useInView(0.05);
 
   const handleReplay = useCallback(() => {
     setReplayKey((k) => k + 1);
