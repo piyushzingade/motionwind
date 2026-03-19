@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Pressable, View, StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -9,22 +9,18 @@ import Animated, {
   interpolateColor,
   Easing,
 } from "react-native-reanimated";
+import { Sun, Moon } from "lucide-react-native";
 import { useTheme } from "../theme";
 
-/**
- * Animated sun/moon toggle.
- * Sun: circle with radiating lines. Moon: circle with a cutout crescent.
- * Morphs between states with spring rotation + scale squish.
- */
 export function ThemeToggle() {
   const { mode, colors, toggle } = useTheme();
   const progress = useSharedValue(mode === "dark" ? 1 : 0);
   const scale = useSharedValue(1);
-  const rotate = useSharedValue(mode === "dark" ? 0 : 0);
+  const rotate = useSharedValue(0);
 
   useEffect(() => {
     progress.value = withTiming(mode === "dark" ? 1 : 0, {
-      duration: 400,
+      duration: 350,
       easing: Easing.out(Easing.cubic),
     });
   }, [mode]);
@@ -52,61 +48,35 @@ export function ThemeToggle() {
     ],
   }));
 
-  // Sun rays: visible when light mode (progress → 0)
-  const raysOpacity = useAnimatedStyle(() => ({
-    opacity: interpolate(progress.value, [0, 0.3], [1, 0]),
+  // Sun: visible in light mode
+  const sunStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(progress.value, [0, 0.5], [1, 0]),
     transform: [
-      { scale: interpolate(progress.value, [0, 0.5], [1, 0.3]) },
+      { scale: interpolate(progress.value, [0, 0.5], [1, 0.5]) },
+      { rotate: `${interpolate(progress.value, [0, 1], [0, -90])}deg` },
     ],
+    position: "absolute" as const,
   }));
 
-  // Moon crescent mask: visible when dark mode (progress → 1)
-  const crescentStyle = useAnimatedStyle(() => ({
+  // Moon: visible in dark mode
+  const moonStyle = useAnimatedStyle(() => ({
     opacity: interpolate(progress.value, [0.5, 1], [0, 1]),
     transform: [
-      {
-        translateX: interpolate(progress.value, [0.5, 1], [8, 0]),
-      },
+      { scale: interpolate(progress.value, [0.5, 1], [0.5, 1]) },
+      { rotate: `${interpolate(progress.value, [0, 1], [90, 0])}deg` },
     ],
-  }));
-
-  // Core circle color
-  const coreStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      progress.value,
-      [0, 1],
-      ["#f59e0b", "#e2e8f0"],
-    ),
+    position: "absolute" as const,
   }));
 
   return (
     <Pressable onPress={handlePress} hitSlop={8}>
       <Animated.View style={[styles.container, containerStyle]}>
-        {/* Sun rays */}
-        <Animated.View style={[styles.raysWrap, raysOpacity]}>
-          {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-            <View
-              key={deg}
-              style={[
-                styles.ray,
-                {
-                  transform: [
-                    { rotate: `${deg}deg` },
-                    { translateY: -13 },
-                  ],
-                },
-              ]}
-            >
-              <View style={styles.rayLine} />
-            </View>
-          ))}
+        <Animated.View style={sunStyle}>
+          <Sun size={20} color="#f59e0b" strokeWidth={2.2} />
         </Animated.View>
-
-        {/* Core circle */}
-        <Animated.View style={[styles.core, coreStyle]} />
-
-        {/* Moon crescent cutout */}
-        <Animated.View style={[styles.crescent, crescentStyle]} />
+        <Animated.View style={moonStyle}>
+          <Moon size={20} color="#e2e8f0" strokeWidth={2.2} />
+        </Animated.View>
       </Animated.View>
     </Pressable>
   );
@@ -119,37 +89,5 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
-    overflow: "hidden",
-  },
-  raysWrap: {
-    position: "absolute",
-    width: 30,
-    height: 30,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  ray: {
-    position: "absolute",
-    alignItems: "center",
-  },
-  rayLine: {
-    width: 2,
-    height: 4,
-    borderRadius: 1,
-    backgroundColor: "#f59e0b",
-  },
-  core: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-  },
-  crescent: {
-    position: "absolute",
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: "#1e1e2a",
-    top: 11,
-    right: 10,
   },
 });
