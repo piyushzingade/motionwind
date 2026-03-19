@@ -6,24 +6,10 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { DemoCard } from "./DemoCard";
-
-function TransformBox({
-  label,
-  color,
-  onAnimate,
-}: {
-  label: string;
-  color: string;
-  onAnimate: () => ReturnType<typeof useAnimatedStyle>;
-}) {
-  return (
-    <Animated.View style={[styles.transformBox, { backgroundColor: color }, onAnimate()]}>
-      <Text style={styles.transformText}>{label}</Text>
-    </Animated.View>
-  );
-}
+import { useTheme } from "../theme";
 
 export function TransformShowcase() {
+  const { colors } = useTheme();
   const [active, setActive] = useState(false);
 
   const scaleVal = useSharedValue(1);
@@ -36,7 +22,6 @@ export function TransformShowcase() {
   const toggle = () => {
     const next = !active;
     setActive(next);
-
     const spring = { damping: 12, stiffness: 200 };
     scaleVal.value = withSpring(next ? 1.3 : 1, spring);
     rotateVal.value = withSpring(next ? 45 : 0, spring);
@@ -46,108 +31,57 @@ export function TransformShowcase() {
     radiusVal.value = withSpring(next ? 30 : 12, spring);
   };
 
-  const scaleStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scaleVal.value }],
-  }));
-  const rotateStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotateVal.value}deg` }],
-  }));
-  const skewStyle = useAnimatedStyle(() => ({
-    transform: [{ skewX: `${skewVal.value}deg` }],
-  }));
-  const translateStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateXVal.value }],
-  }));
-  const opacityStyle = useAnimatedStyle(() => ({
-    opacity: opacityVal.value,
-  }));
-  const radiusStyle = useAnimatedStyle(() => ({
-    borderRadius: radiusVal.value,
-  }));
+  const scaleStyle = useAnimatedStyle(() => ({ transform: [{ scale: scaleVal.value }] }));
+  const rotateStyle = useAnimatedStyle(() => ({ transform: [{ rotate: `${rotateVal.value}deg` }] }));
+  const skewStyle = useAnimatedStyle(() => ({ transform: [{ skewX: `${skewVal.value}deg` }] }));
+  const translateStyle = useAnimatedStyle(() => ({ transform: [{ translateX: translateXVal.value }] }));
+  const opacityStyle = useAnimatedStyle(() => ({ opacity: opacityVal.value }));
+  const radiusStyle = useAnimatedStyle(() => ({ borderRadius: radiusVal.value }));
+
+  const boxes = [
+    { label: "Scale", color: colors.accent, style: scaleStyle },
+    { label: "Rotate", color: "#0ea5e9", style: rotateStyle },
+    { label: "Skew", color: "#10b981", style: skewStyle },
+    { label: "Translate", color: "#f59e0b", style: translateStyle },
+    { label: "Opacity", color: "#ef4444", style: opacityStyle },
+    { label: "Radius", color: "#8b5cf6", style: radiusStyle },
+  ];
 
   return (
-    <DemoCard
-      title="Transform Properties"
-      subtitle="scale, rotate, skew, translate, opacity, borderRadius"
-    >
-      <Pressable style={styles.toggleBtn} onPress={toggle}>
-        <Text style={styles.toggleText}>{active ? "Reset" : "Animate All"}</Text>
+    <DemoCard title="Transform Properties" subtitle="scale, rotate, skew, translate, opacity, borderRadius">
+      <Pressable
+        style={[styles.toggleBtn, { backgroundColor: `${colors.accent}20`, borderColor: `${colors.accent}40` }]}
+        onPress={toggle}
+      >
+        <Text style={[styles.toggleText, { color: colors.accent }]}>
+          {active ? "Reset" : "Animate All"}
+        </Text>
       </Pressable>
-
       <View style={styles.transformGrid}>
-        <View style={styles.transformItem}>
-          <Animated.View style={[styles.transformBox, { backgroundColor: "#6366f1" }, scaleStyle]}>
-            <Text style={styles.transformText}>Scale</Text>
-          </Animated.View>
-        </View>
-        <View style={styles.transformItem}>
-          <Animated.View style={[styles.transformBox, { backgroundColor: "#0ea5e9" }, rotateStyle]}>
-            <Text style={styles.transformText}>Rotate</Text>
-          </Animated.View>
-        </View>
-        <View style={styles.transformItem}>
-          <Animated.View style={[styles.transformBox, { backgroundColor: "#10b981" }, skewStyle]}>
-            <Text style={styles.transformText}>Skew</Text>
-          </Animated.View>
-        </View>
-        <View style={styles.transformItem}>
-          <Animated.View style={[styles.transformBox, { backgroundColor: "#f59e0b" }, translateStyle]}>
-            <Text style={styles.transformText}>Translate</Text>
-          </Animated.View>
-        </View>
-        <View style={styles.transformItem}>
-          <Animated.View style={[styles.transformBox, { backgroundColor: "#ef4444" }, opacityStyle]}>
-            <Text style={styles.transformText}>Opacity</Text>
-          </Animated.View>
-        </View>
-        <View style={styles.transformItem}>
-          <Animated.View style={[styles.transformBox, { backgroundColor: "#8b5cf6" }, radiusStyle]}>
-            <Text style={styles.transformText}>Radius</Text>
-          </Animated.View>
-        </View>
+        {boxes.map((b) => (
+          <View key={b.label} style={styles.transformItem}>
+            <Animated.View style={[styles.transformBox, { backgroundColor: b.color }, b.style]}>
+              <Text style={styles.transformText}>{b.label}</Text>
+            </Animated.View>
+          </View>
+        ))}
       </View>
     </DemoCard>
   );
 }
 
 const styles = StyleSheet.create({
-  transformGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 12,
-    justifyContent: "center",
-  },
-  transformItem: {
-    width: 80,
-    height: 80,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  transformBox: {
-    width: 64,
-    height: 64,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  transformText: {
-    color: "#fff",
-    fontSize: 10,
-    fontWeight: "600",
-  },
+  transformGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12, justifyContent: "center" },
+  transformItem: { width: 80, height: 80, alignItems: "center", justifyContent: "center" },
+  transformBox: { width: 64, height: 64, borderRadius: 12, alignItems: "center", justifyContent: "center" },
+  transformText: { color: "#fff", fontSize: 10, fontWeight: "600" },
   toggleBtn: {
-    backgroundColor: "rgba(99, 102, 241, 0.2)",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 10,
     marginBottom: 16,
     alignSelf: "center",
     borderWidth: 1,
-    borderColor: "rgba(99, 102, 241, 0.3)",
   },
-  toggleText: {
-    color: "#818cf8",
-    fontSize: 14,
-    fontWeight: "600",
-  },
+  toggleText: { fontSize: 14, fontWeight: "600" },
 });

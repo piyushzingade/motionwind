@@ -7,6 +7,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { DemoCard } from "./DemoCard";
+import { useTheme } from "../theme";
 
 function DraggableBox({
   label,
@@ -22,11 +23,8 @@ function DraggableBox({
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const scale = useSharedValue(1);
-
   const pan = Gesture.Pan()
-    .onStart(() => {
-      scale.value = withSpring(1.1, { damping: 15 });
-    })
+    .onStart(() => { scale.value = withSpring(1.1, { damping: 15 }); })
     .onUpdate((e) => {
       if (axis !== "y") translateX.value = e.translationX;
       if (axis !== "x") translateY.value = e.translationY;
@@ -38,7 +36,6 @@ function DraggableBox({
         translateY.value = withSpring(0, { damping: 12, stiffness: 200 });
       }
     });
-
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       { translateX: translateX.value },
@@ -49,9 +46,7 @@ function DraggableBox({
 
   return (
     <GestureDetector gesture={pan}>
-      <Animated.View
-        style={[styles.dragBox, { backgroundColor: color }, animatedStyle]}
-      >
+      <Animated.View style={[styles.dragBox, { backgroundColor: color }, animatedStyle]}>
         <Text style={styles.dragText}>{label}</Text>
       </Animated.View>
     </GestureDetector>
@@ -59,17 +54,15 @@ function DraggableBox({
 }
 
 function ElasticDrag() {
+  const { colors } = useTheme();
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const borderRadius = useSharedValue(30);
-
   const pan = Gesture.Pan()
     .onUpdate((e) => {
-      translateX.value = e.translationX * 0.5; // elastic resistance
+      translateX.value = e.translationX * 0.5;
       translateY.value = e.translationY * 0.5;
-      const dist = Math.sqrt(
-        e.translationX * e.translationX + e.translationY * e.translationY,
-      );
+      const dist = Math.sqrt(e.translationX ** 2 + e.translationY ** 2);
       borderRadius.value = Math.max(10, 30 - dist * 0.1);
     })
     .onEnd(() => {
@@ -77,19 +70,15 @@ function ElasticDrag() {
       translateY.value = withSpring(0, { damping: 8, stiffness: 300 });
       borderRadius.value = withSpring(30, { damping: 8 });
     });
-
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: translateX.value },
-      { translateY: translateY.value },
-    ],
+    transform: [{ translateX: translateX.value }, { translateY: translateY.value }],
     borderRadius: borderRadius.value,
   }));
 
   return (
     <GestureDetector gesture={pan}>
-      <Animated.View style={[styles.elasticBox, animatedStyle]}>
-        <Text style={styles.dragText}>Elastic</Text>
+      <Animated.View style={[styles.dragBox, { backgroundColor: colors.accent }, animatedStyle]}>
+        <Text style={[styles.dragText, { color: colors.accentFg }]}>Elastic</Text>
       </Animated.View>
     </GestureDetector>
   );
@@ -97,10 +86,7 @@ function ElasticDrag() {
 
 export function DragAnimations() {
   return (
-    <DemoCard
-      title="Drag Interactions"
-      subtitle="animate-drag-both animate-drag-snap animate-drag-elastic-50"
-    >
+    <DemoCard title="Drag Interactions" subtitle="animate-drag-both animate-drag-snap">
       <View style={styles.dragArea}>
         <DraggableBox label="Free Drag" color="#6366f1" />
         <DraggableBox label="Snap Back" color="#0ea5e9" snapBack />
@@ -127,17 +113,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  elasticBox: {
-    width: 72,
-    height: 72,
-    backgroundColor: "#f43f5e",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  dragText: {
-    color: "#fff",
-    fontSize: 10,
-    fontWeight: "600",
-    textAlign: "center",
-  },
+  dragText: { color: "#fff", fontSize: 10, fontWeight: "600", textAlign: "center" },
 });

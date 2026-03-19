@@ -9,10 +9,10 @@ import Animated, {
   FadeOut,
 } from "react-native-reanimated";
 import { DemoCard } from "./DemoCard";
-
-const COLORS = ["#6366f1", "#0ea5e9", "#10b981", "#f59e0b", "#ef4444"];
+import { useTheme } from "../theme";
 
 function ExpandableCard() {
+  const { colors } = useTheme();
   const [expanded, setExpanded] = useState(false);
   const height = useSharedValue(60);
   const borderRadius = useSharedValue(16);
@@ -31,11 +31,11 @@ function ExpandableCard() {
 
   return (
     <Pressable onPress={toggle}>
-      <Animated.View style={[styles.expandCard, animatedStyle]}>
-        <Text style={styles.expandTitle}>Tap to Expand</Text>
+      <Animated.View style={[styles.expandCard, { backgroundColor: colors.accent }, animatedStyle]}>
+        <Text style={[styles.expandTitle, { color: colors.accentFg }]}>Tap to Expand</Text>
         {expanded && (
           <Animated.View entering={FadeIn.delay(100)} exiting={FadeOut}>
-            <Text style={styles.expandBody}>
+            <Text style={[styles.expandBody, { color: colors.accentFg, opacity: 0.7 }]}>
               Layout animations make size changes feel smooth and natural.
               Powered by Reanimated's layout transitions.
             </Text>
@@ -47,7 +47,9 @@ function ExpandableCard() {
 }
 
 function ShuffleGrid() {
-  const [items, setItems] = useState(COLORS.map((c, i) => ({ id: i, color: c })));
+  const { colors } = useTheme();
+  const gridColors = [colors.accent, "#0ea5e9", "#10b981", "#f59e0b", "#ef4444"];
+  const [items, setItems] = useState(gridColors.map((c, i) => ({ id: i, color: c })));
 
   const shuffle = () => {
     setItems((prev) => {
@@ -62,8 +64,11 @@ function ShuffleGrid() {
 
   return (
     <View style={styles.shuffleSection}>
-      <Pressable style={styles.shuffleBtn} onPress={shuffle}>
-        <Text style={styles.shuffleBtnText}>Shuffle</Text>
+      <Pressable
+        style={[styles.shuffleBtn, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        onPress={shuffle}
+      >
+        <Text style={[styles.shuffleBtnText, { color: colors.fgMuted }]}>Shuffle</Text>
       </Pressable>
       <View style={styles.shuffleGrid}>
         {items.map((item) => (
@@ -80,10 +85,7 @@ function ShuffleGrid() {
 
 export function LayoutAnimations() {
   return (
-    <DemoCard
-      title="Layout Animations"
-      subtitle="animate-layout animate-layout-id-card"
-    >
+    <DemoCard title="Layout Animations" subtitle="animate-layout animate-layout-id-card">
       <ExpandableCard />
       <View style={{ height: 16 }} />
       <ShuffleGrid />
@@ -92,45 +94,17 @@ export function LayoutAnimations() {
 }
 
 const styles = StyleSheet.create({
-  expandCard: {
-    backgroundColor: "#4f46e5",
-    width: 280,
-    padding: 16,
-    overflow: "hidden",
-  },
-  expandTitle: {
-    color: "#fff",
-    fontSize: 15,
-    fontWeight: "700",
-  },
-  expandBody: {
-    color: "rgba(255,255,255,0.7)",
-    fontSize: 13,
-    marginTop: 12,
-    lineHeight: 20,
-  },
-  shuffleSection: {
-    alignItems: "center",
-    gap: 12,
-  },
+  expandCard: { width: 280, padding: 16, overflow: "hidden" },
+  expandTitle: { fontSize: 15, fontWeight: "700" },
+  expandBody: { fontSize: 13, marginTop: 12, lineHeight: 20 },
+  shuffleSection: { alignItems: "center", gap: 12 },
   shuffleBtn: {
-    backgroundColor: "rgba(255,255,255,0.08)",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
+    borderWidth: 1,
   },
-  shuffleBtnText: {
-    color: "rgba(255,255,255,0.6)",
-    fontSize: 13,
-    fontWeight: "500",
-  },
-  shuffleGrid: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  shuffleBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 10,
-  },
+  shuffleBtnText: { fontSize: 13, fontWeight: "500" },
+  shuffleGrid: { flexDirection: "row", gap: 8 },
+  shuffleBox: { width: 44, height: 44, borderRadius: 10 },
 });
