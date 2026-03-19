@@ -13,9 +13,33 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://motionwind.xyz"),
   title: "Motionwind — Motion animations as Tailwind classes",
   description:
     "Write Motion animations as Tailwind-like classes. A Babel plugin transforms them at build time — zero imports needed.",
+  openGraph: {
+    type: "website",
+    siteName: "Motionwind",
+    title: "Motionwind — Motion animations as Tailwind classes",
+    description:
+      "Write Motion animations as Tailwind-like classes. Zero imports, zero boilerplate, zero runtime overhead.",
+    url: "https://motionwind.xyz",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Motionwind — Motion animations as Tailwind classes",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Motionwind — Motion animations as Tailwind classes",
+    description:
+      "Write Motion animations as Tailwind-like classes. Zero imports, zero boilerplate, zero runtime overhead.",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function RootLayout({

@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   description:
     "Write Motion animations as Tailwind-like utility classes. Build-time Babel transform, zero runtime overhead, no imports needed. Hover, tap, scroll, drag — all as class names.",
-  metadataBase: new URL("https://motionwind.dev"),
+  metadataBase: new URL("https://motionwind.xyz"),
   keywords: [
     "motionwind",
     "motion",
@@ -58,22 +58,31 @@ export const metadata: Metadata = {
   authors: [{ name: "Piyush" }],
   creator: "Piyush",
   alternates: {
-    canonical: "https://motionwind.dev",
+    canonical: "https://motionwind.xyz",
   },
   openGraph: {
     type: "website",
     siteName: "Motionwind",
-    url: "https://motionwind.dev",
+    url: "https://motionwind.xyz",
     title: "Motionwind — Motion animations as Tailwind classes",
     description:
       "Write Motion animations as Tailwind-like classes. Zero imports, zero boilerplate, zero runtime overhead. Supports hover, tap, scroll, drag, and spring physics.",
     locale: "en_US",
+    images: [
+      {
+        url: "https://motionwind.xyz/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Motionwind — Motion animations as Tailwind classes",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Motionwind — Motion animations as Tailwind classes",
     description:
       "Write Motion animations as Tailwind-like classes. Zero imports, zero boilerplate, zero runtime overhead.",
+    images: ["https://motionwind.xyz/opengraph-image"],
   },
   robots: {
     index: true,
@@ -111,7 +120,7 @@ export default function RootLayout({
               operatingSystem: "Any",
               description:
                 "Write Motion animations as Tailwind-like utility classes. Build-time Babel transform with zero runtime overhead.",
-              url: "https://motionwind.dev",
+              url: "https://motionwind.xyz",
               offers: {
                 "@type": "Offer",
                 price: "0",

@@ -189,7 +189,7 @@ export default async function Image() {
                 letterSpacing: "0.12em",
               }}
             >
-              documentation
+              zero-runtime animations
             </span>
             <div
               style={{

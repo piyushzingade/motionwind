@@ -1381,7 +1381,7 @@ export default function Home() {
           {/* Final CTA */}
           <div className="animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-400 animate-ease-out animate-once mt-12 sm:mt-14 flex gap-4 justify-center">
             <a
-              href="https://motionwind.dev/docs/getting-started"
+              href="https://motionwind.xyz/docs/getting-started"
               className="animate-hover:scale-105 animate-tap:scale-95 animate-spring group inline-flex items-center gap-2.5 rounded-xl bg-acid px-6 sm:px-8 py-3.5 text-sm font-semibold text-gray-950 transition-shadow hover:shadow-[0_0_30px_#c8ff2e40]"
             >
               Read the Docs
@@ -1414,7 +1414,7 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-6 text-sm text-text-muted">
             <a
-              href="https://motionwind.dev/docs/getting-started"
+              href="https://motionwind.xyz/docs/getting-started"
               className="hover:text-white transition-colors"
             >
               Docs

@@ -1,11 +1,13 @@
 import { ImageResponse } from "next/og";
+import type { NextRequest } from "next/server";
 
 export const runtime = "edge";
-export const alt = "Motionwind — Motion animations as Tailwind classes";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
 
-export default async function Image() {
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const title = searchParams.get("title") ?? "Documentation";
+  const description = searchParams.get("description") ?? "";
+
   return new ImageResponse(
     (
       <div
@@ -14,8 +16,6 @@ export default async function Image() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
           backgroundColor: "#0a0a0f",
           position: "relative",
           overflow: "hidden",
@@ -66,10 +66,10 @@ export default async function Image() {
         <div
           style={{
             position: "absolute",
-            top: "10%",
-            left: "20%",
-            width: "60%",
-            height: "60%",
+            top: "15%",
+            left: "25%",
+            width: "50%",
+            height: "50%",
             background:
               "radial-gradient(ellipse at center, rgba(200,255,46,0.05), transparent 70%)",
           }}
@@ -88,93 +88,103 @@ export default async function Image() {
           }}
         />
 
-        {/* Logo mark */}
-        <svg
-          viewBox="0 0 512 512"
-          fill="none"
-          width={64}
-          height={64}
-          style={{ marginBottom: 28 }}
-        >
-          <polygon
-            points="123,182 403,182 396,218 116,218"
-            fill="#c8ff2e"
-          />
-          <polygon
-            points="181,238 401,238 394,274 174,274"
-            fill="#c8ff2e"
-            opacity="0.75"
-          />
-          <polygon
-            points="239,294 399,294 392,330 232,330"
-            fill="#c8ff2e"
-            opacity="0.52"
-          />
-          <polygon
-            points="415,188 439,200 415,212"
-            fill="#c8ff2e"
-          />
-        </svg>
-
-        {/* Title */}
+        {/* Content */}
         <div
           style={{
-            fontSize: 68,
-            fontWeight: 700,
-            color: "#f0f0f0",
-            fontStyle: "italic",
-            letterSpacing: "-0.03em",
-            lineHeight: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            justifyContent: "center",
+            padding: "80px 100px",
+            position: "relative",
+            zIndex: 1,
+            flex: 1,
           }}
         >
-          motionwind
+          {/* Logo wind bars */}
+          <svg
+            viewBox="0 0 512 512"
+            fill="none"
+            width={40}
+            height={40}
+            style={{ marginBottom: 32 }}
+          >
+            <polygon
+              points="123,182 403,182 396,218 116,218"
+              fill="#c8ff2e"
+            />
+            <polygon
+              points="181,238 401,238 394,274 174,274"
+              fill="#c8ff2e"
+              opacity="0.75"
+            />
+            <polygon
+              points="239,294 399,294 392,330 232,330"
+              fill="#c8ff2e"
+              opacity="0.52"
+            />
+            <polygon points="415,188 439,200 415,212" fill="#c8ff2e" />
+          </svg>
+
+          {/* Page title */}
+          <div
+            style={{
+              fontSize: 56,
+              fontWeight: 700,
+              color: "#f0f0f0",
+              fontStyle: "italic",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.1,
+              maxWidth: "80%",
+            }}
+          >
+            {title}
+          </div>
+
+          {/* Description */}
+          {description && (
+            <div
+              style={{
+                fontSize: 20,
+                color: "#8a8a9a",
+                marginTop: 16,
+                lineHeight: 1.5,
+                maxWidth: "70%",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "flex",
+              }}
+            >
+              {description.length > 120
+                ? description.slice(0, 120) + "..."
+                : description}
+            </div>
+          )}
         </div>
-
-        {/* Tagline */}
-        <div
-          style={{
-            fontSize: 22,
-            color: "#8a8a9a",
-            marginTop: 16,
-            letterSpacing: "-0.01em",
-          }}
-        >
-          Motion animations as Tailwind classes
-        </div>
-
-        {/* Thin accent rule below tagline */}
-        <div
-          style={{
-            width: 48,
-            height: 1,
-            marginTop: 28,
-            background:
-              "linear-gradient(90deg, transparent, rgba(200,255,46,0.3), transparent)",
-          }}
-        />
 
         {/* Bottom bar */}
         <div
           style={{
             position: "absolute",
-            bottom: 36,
+            bottom: 0,
+            left: 0,
+            right: 0,
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            width: "100%",
-            padding: "0 100px",
+            padding: "0 100px 36px",
           }}
         >
           <div
             style={{
               display: "flex",
-              gap: 8,
               alignItems: "center",
+              gap: 8,
             }}
           >
             <div
               style={{
-                width: 80,
+                width: 60,
                 height: 1,
                 background:
                   "repeating-linear-gradient(90deg, #1e1e2a 0, #1e1e2a 5px, transparent 5px, transparent 9px)",
@@ -189,11 +199,11 @@ export default async function Image() {
                 letterSpacing: "0.12em",
               }}
             >
-              documentation
+              docs
             </span>
             <div
               style={{
-                width: 80,
+                width: 60,
                 height: 1,
                 background:
                   "repeating-linear-gradient(90deg, #1e1e2a 0, #1e1e2a 5px, transparent 5px, transparent 9px)",
@@ -229,6 +239,6 @@ export default async function Image() {
         </svg>
       </div>
     ),
-    { ...size },
+    { width: 1200, height: 630 },
   );
 }

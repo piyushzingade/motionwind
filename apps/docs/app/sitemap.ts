@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { source } from "@/lib/source";
 
-const BASE_URL = "https://motionwind.dev";
+const BASE_URL = "https://motionwind.xyz";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = source.getPages();
