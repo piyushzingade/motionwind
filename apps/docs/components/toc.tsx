@@ -170,6 +170,15 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
     [items],
   );
 
+  /* Auto-scroll TOC to keep active item visible */
+  useEffect(() => {
+    if (activeIndex < 0) return;
+    const el = itemEls.current[activeIndex];
+    if (el) {
+      el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+  }, [activeIndex]);
+
   /* Map active heading position → path progress (not raw scroll %) */
   const tocProgress = useMemo(() => {
     if (activeIndex < 0 || ys.length < 2) return 0;
