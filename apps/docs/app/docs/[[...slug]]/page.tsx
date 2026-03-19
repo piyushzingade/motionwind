@@ -5,6 +5,27 @@ import { Demo } from "@/components/demo";
 import { MWDiv, MWButton, MWSpan, MWInput } from "@/components/mdx-content";
 import { DocsPageHeader } from "@/components/docs-page-header";
 import { TableOfContents } from "@/components/toc";
+import {
+  ExpandableCardDemo,
+  ShuffleListDemo,
+  SharedLayoutTabsDemo,
+  GridToggleDemo,
+  DragReorderDemo,
+} from "@/components/demos/layout-demos";
+import {
+  StaggeredGridDemo,
+  MultiStateDemo,
+  CollapsibleSidebarDemo,
+  NotificationStackDemo,
+  OrchestratedFormDemo,
+} from "@/components/demos/variant-demos";
+import {
+  LogoDrawDemo,
+  CircularProgressDemo,
+  AnimatedCheckboxDemo,
+  PulseRingsDemo,
+  AnimatedChartDemo,
+} from "@/components/demos/svg-demos";
 
 // Motionwind runtime overrides for HTML elements used in Demo blocks.
 // The mw.* components parse animate-* classes into Motion props at runtime.
@@ -16,6 +37,21 @@ const mdxComponents: any = {
   button: MWButton,
   span: MWSpan,
   input: MWInput,
+  ExpandableCardDemo,
+  ShuffleListDemo,
+  SharedLayoutTabsDemo,
+  GridToggleDemo,
+  DragReorderDemo,
+  StaggeredGridDemo,
+  MultiStateDemo,
+  CollapsibleSidebarDemo,
+  NotificationStackDemo,
+  OrchestratedFormDemo,
+  LogoDrawDemo,
+  CircularProgressDemo,
+  AnimatedCheckboxDemo,
+  PulseRingsDemo,
+  AnimatedChartDemo,
 };
 
 export default async function Page(props: {
