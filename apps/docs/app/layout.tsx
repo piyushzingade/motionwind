@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "https://www.motionwind.xyz/opengraph-image",
+        url: "https://www.motionwind.xyz/og-docs.png",
         width: 1200,
         height: 630,
         alt: "Motionwind — Motion animations as Tailwind classes",
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     title: "Motionwind — Motion animations as Tailwind classes",
     description:
       "Write Motion animations as Tailwind-like classes. Zero imports, zero boilerplate, zero runtime overhead.",
-    images: ["https://www.motionwind.xyz/opengraph-image"],
+    images: ["https://www.motionwind.xyz/og-docs.png"],
   },
   robots: {
     index: true,
