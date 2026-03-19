@@ -68,6 +68,7 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
   const listRef = useRef<HTMLUListElement>(null);
   const itemEls = useRef<(HTMLLIElement | null)[]>([]);
   const trackRef = useRef<SVGPathElement>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => setMounted(true), []);
 
@@ -170,12 +171,25 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
     [items],
   );
 
-  /* Auto-scroll TOC to keep active item visible */
+  /* Auto-scroll TOC sidebar to keep active item visible */
   useEffect(() => {
     if (activeIndex < 0) return;
     const el = itemEls.current[activeIndex];
-    if (el) {
-      el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    const sidebar = navRef.current?.closest(".toc-sidebar") as HTMLElement | null;
+    if (!el || !sidebar) return;
+
+    const sidebarRect = sidebar.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+
+    // Check if the active item is outside the visible area of the sidebar
+    const elTop = elRect.top - sidebarRect.top;
+    const elBottom = elTop + elRect.height;
+    const buffer = 40; // px buffer from top/bottom edges
+
+    if (elTop < buffer) {
+      sidebar.scrollBy({ top: elTop - buffer, behavior: "smooth" });
+    } else if (elBottom > sidebarRect.height - buffer) {
+      sidebar.scrollBy({ top: elBottom - sidebarRect.height + buffer, behavior: "smooth" });
     }
   }, [activeIndex]);
 
@@ -202,7 +216,7 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
   const dashOff = totalLen > 0 ? totalLen * (1 - tocProgress) : totalLen;
 
   return (
-    <nav className="toc" aria-label="Table of contents">
+    <nav ref={navRef} className="toc" aria-label="Table of contents">
       <div className="toc-header">
         <span className="toc-header-label">On this page</span>
         <span className="toc-header-pct">
