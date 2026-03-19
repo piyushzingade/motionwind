@@ -21,6 +21,10 @@ import { LayoutAnimations } from "./src/components/LayoutAnimations";
 import { RepeatAnimations } from "./src/components/RepeatAnimations";
 import { TransformShowcase } from "./src/components/TransformShowcase";
 import { MotionwindDemo } from "./src/components/MotionwindDemo";
+import { MorphingShapes } from "./src/components/MorphingShapes";
+import { GestureChain } from "./src/components/GestureChain";
+import { ParticleExplosion } from "./src/components/ParticleExplosion";
+import { WaveAnimation } from "./src/components/WaveAnimation";
 
 export default function App() {
   const [mode, setMode] = useState<ThemeMode>("dark");
@@ -120,6 +124,10 @@ export default function App() {
               <SpringAnimations />
               <EasingShowcase />
               <TransformShowcase />
+              <GestureChain />
+              <MorphingShapes />
+              <ParticleExplosion />
+              <WaveAnimation />
               <DragAnimations />
               <RepeatAnimations />
               <StaggeredList />
