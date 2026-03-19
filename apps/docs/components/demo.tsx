@@ -135,7 +135,7 @@ export function Demo({
       <div ref={containerRef} className="demo-container">
         <div
           key={replayKey}
-          className={`relative z-10 flex min-h-24 items-center justify-center px-6 py-4 ${className}`}
+          className={`relative z-10 flex min-h-[200px] items-center justify-center px-6 py-6 ${className}`}
         >
           {inView ? processed : null}
         </div>
