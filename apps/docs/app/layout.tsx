@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   description:
     "Write Motion animations as Tailwind-like utility classes. Build-time Babel transform, zero runtime overhead, no imports needed. Hover, tap, scroll, drag — all as class names.",
-  metadataBase: new URL("https://motionwind.xyz"),
+  metadataBase: new URL("https://www.motionwind.xyz"),
   keywords: [
     "motionwind",
     "motion",
@@ -58,19 +58,19 @@ export const metadata: Metadata = {
   authors: [{ name: "Piyush" }],
   creator: "Piyush",
   alternates: {
-    canonical: "https://motionwind.xyz",
+    canonical: "https://www.motionwind.xyz",
   },
   openGraph: {
     type: "website",
     siteName: "Motionwind",
-    url: "https://motionwind.xyz",
+    url: "https://www.motionwind.xyz",
     title: "Motionwind — Motion animations as Tailwind classes",
     description:
       "Write Motion animations as Tailwind-like classes. Zero imports, zero boilerplate, zero runtime overhead. Supports hover, tap, scroll, drag, and spring physics.",
     locale: "en_US",
     images: [
       {
-        url: "https://motionwind.xyz/opengraph-image",
+        url: "https://www.motionwind.xyz/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Motionwind — Motion animations as Tailwind classes",
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     title: "Motionwind — Motion animations as Tailwind classes",
     description:
       "Write Motion animations as Tailwind-like classes. Zero imports, zero boilerplate, zero runtime overhead.",
-    images: ["https://motionwind.xyz/opengraph-image"],
+    images: ["https://www.motionwind.xyz/opengraph-image"],
   },
   robots: {
     index: true,
@@ -120,7 +120,7 @@ export default function RootLayout({
               operatingSystem: "Any",
               description:
                 "Write Motion animations as Tailwind-like utility classes. Build-time Babel transform with zero runtime overhead.",
-              url: "https://motionwind.xyz",
+              url: "https://www.motionwind.xyz",
               offers: {
                 "@type": "Offer",
                 price: "0",

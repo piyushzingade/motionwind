@@ -56,8 +56,8 @@ export async function generateMetadata(props: {
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
-  const url = `https://motionwind.xyz${page.url}`;
-  const ogImageUrl = `https://motionwind.xyz/api/og?title=${encodeURIComponent(page.data.title)}${page.data.description ? `&description=${encodeURIComponent(page.data.description)}` : ""}`;
+  const url = `https://www.motionwind.xyz${page.url}`;
+  const ogImageUrl = `https://www.motionwind.xyz/api/og?title=${encodeURIComponent(page.data.title)}${page.data.description ? `&description=${encodeURIComponent(page.data.description)}` : ""}`;
 
   return {
     title: page.data.title,

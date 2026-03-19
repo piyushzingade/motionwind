@@ -13,7 +13,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://motionwind.xyz"),
+  metadataBase: new URL("https://www.motionwind.xyz"),
   title: "Motionwind — Motion animations as Tailwind classes",
   description:
     "Write Motion animations as Tailwind-like classes. A Babel plugin transforms them at build time — zero imports needed.",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: "Motionwind — Motion animations as Tailwind classes",
     description:
       "Write Motion animations as Tailwind-like classes. Zero imports, zero boilerplate, zero runtime overhead.",
-    url: "https://motionwind.xyz",
+    url: "https://www.motionwind.xyz",
     images: [
       {
         url: "/opengraph-image",

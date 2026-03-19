@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Write Motion animations as Tailwind-like utility classes. Build-time Babel transform, zero runtime overhead, no imports needed. Hover, tap, scroll, drag — all as class names.",
   alternates: {
-    canonical: "https://motionwind.xyz",
+    canonical: "https://www.motionwind.xyz",
   },
 };
 

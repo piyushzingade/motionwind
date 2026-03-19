@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       },
     ],
-    sitemap: "https://motionwind.xyz/sitemap.xml",
+    sitemap: "https://www.motionwind.xyz/sitemap.xml",
   };
 }
