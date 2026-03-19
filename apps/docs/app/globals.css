@@ -453,6 +453,19 @@ figure.shiki pre::-webkit-scrollbar {
   overflow: hidden;
 }
 
+/* Ensure text inside demo preview elements is visually centered.
+   Line-height adds invisible space below the baseline; setting it to 1
+   and using flex centering fixes the perceived bottom-heavy padding. */
+.demo-container div[class*="bg-fd-primary"],
+.demo-container button[class*="bg-fd-primary"],
+.demo-container div[class*="bg-\\[#c8ff2e\\]"],
+.demo-container div[class*="bg-\\[#c8ff2e\\]\\/"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
 
 /* Crosshatch grid that fades out via radial mask */
 .demo-container::before {
