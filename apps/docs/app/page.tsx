@@ -50,7 +50,7 @@ export default function DocsHome() {
         </svg>
       </div>
 
-      <div className="flex gap-3 justify-center">
+      <div className="flex flex-wrap gap-3 justify-center">
         <Link
           href="/docs"
           className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-[var(--color-accent-fg)] no-underline transition-all hover:bg-[var(--color-accent-hover)]"
@@ -58,6 +58,15 @@ export default function DocsHome() {
           Get Started
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
         </Link>
+        <a
+          href="https://web.motionwind.xyz/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-accent)] bg-[var(--color-accent)]/[0.06] px-6 py-3 text-sm font-semibold text-[var(--color-accent)] no-underline transition-colors hover:bg-[var(--color-accent)]/[0.12]"
+        >
+          Live Example
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+        </a>
         <Link
           href="/docs/animations/basic-properties"
           className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-3 text-sm font-medium text-[var(--color-fg)] no-underline transition-colors hover:bg-[var(--color-surface-elevated)]"
