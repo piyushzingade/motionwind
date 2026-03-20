@@ -769,42 +769,104 @@ figure.shiki pre::-webkit-scrollbar {
 
 /* ── React Native code block syntax colors ── */
 
+.rn-code-panel {
+  background: #f6f7f9;
+  border-top: 1px solid #e5e7eb;
+}
+.dark .rn-code-panel {
+  background: var(--color-code-bg);
+  border-top-color: var(--color-border);
+}
+.rn-code-panel-header {
+  border-bottom: 1px solid #e5e7eb;
+}
+.dark .rn-code-panel-header {
+  border-bottom-color: var(--color-code-border);
+}
+
 .rn-code-block {
-  color: var(--color-fg-muted);
+  color: #1e293b;
   white-space: pre-wrap;
   word-break: break-word;
 }
+.dark .rn-code-block {
+  color: #a1a1aa;
+}
+
+/* Keywords: import, from, export, const, function, return */
 .rn-hl-keyword {
-  color: #c084fc;
+  color: #7c3aed;
   font-weight: 500;
 }
+.dark .rn-hl-keyword {
+  color: #c084fc;
+}
+
+/* Strings: "...", '...' */
 .rn-hl-string {
+  color: #9f1239;
+}
+.dark .rn-hl-string {
   color: #86efac;
 }
+
+/* Component tags: <mw.View>, <Animated.View> */
 .rn-hl-component {
-  color: #67e8f9;
+  color: #0369a1;
   font-weight: 500;
 }
+.dark .rn-hl-component {
+  color: #67e8f9;
+}
+
+/* HTML tags: <div>, <span> */
 .rn-hl-tag {
+  color: #be185d;
+}
+.dark .rn-hl-tag {
   color: #f472b6;
 }
+
+/* Props: className, style, onPress */
 .rn-hl-prop {
+  color: #0e7490;
+}
+.dark .rn-hl-prop {
   color: #93c5fd;
 }
+
+/* animate-* classes — accent color both modes */
 .rn-hl-animate {
-  color: var(--color-accent);
+  color: #4d7c0f;
   font-weight: 500;
 }
+.dark .rn-hl-animate {
+  color: #c8ff2e;
+}
+
+/* Comments */
 .rn-hl-comment {
-  color: var(--color-code-muted);
+  color: #94a3b8;
   font-style: italic;
 }
+.dark .rn-hl-comment {
+  color: #52525b;
+}
+
+/* Numbers */
 .rn-hl-number {
+  color: #b45309;
+}
+.dark .rn-hl-number {
   color: #fbbf24;
 }
+
+/* Punctuation: < > = { } */
 .rn-hl-punct {
-  color: var(--color-fg-muted);
-  opacity: 0.5;
+  color: #64748b;
+}
+.dark .rn-hl-punct {
+  color: #71717a;
 }
 
 /* ── React Native preview animations ── */
