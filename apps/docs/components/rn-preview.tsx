@@ -110,71 +110,6 @@ function highlightCode(code: string): ReactNode[] {
  * Shows a mobile device frame with an animated preview inside,
  * matching the web <Demo> component's header bar pattern.
  */
-/** Phone frame for a single theme variant */
-function PhoneFrame({
-  children,
-  replayKey,
-  isDark,
-}: {
-  children: ReactNode;
-  replayKey: number;
-  isDark: boolean;
-}) {
-  return (
-    <div className="flex flex-col items-center gap-2">
-      <span
-        className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.15em] text-[var(--color-fg-muted)]/50"
-      >
-        {isDark ? "Dark" : "Light"}
-      </span>
-      <div
-        className={`relative w-[210px] rounded-[26px] border-[3px] overflow-hidden transition-colors duration-300 ${
-          isDark
-            ? "border-[#2a2a3a] bg-[#0a0a0f] shadow-xl shadow-black/30"
-            : "border-[#d4d4d8] bg-[#fafaf9] shadow-xl shadow-black/8"
-        }`}
-      >
-        {/* Status bar */}
-        <div
-          className={`flex items-center justify-between px-5 pt-3 pb-1 ${
-            isDark ? "text-white/40" : "text-black/30"
-          }`}
-        >
-          <span className="text-[8px] font-semibold">9:41</span>
-          <div className="flex items-center gap-1">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.24 4.24 0 0 0-6 0zm-4-4l2 2a7.07 7.07 0 0 1 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
-            </svg>
-            <svg width="12" height="10" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="1" y="6" width="4" height="12" rx="1" opacity=".3" />
-              <rect x="7" y="4" width="4" height="14" rx="1" opacity=".5" />
-              <rect x="13" y="2" width="4" height="16" rx="1" opacity=".7" />
-              <rect x="19" y="0" width="4" height="18" rx="1" />
-            </svg>
-          </div>
-        </div>
-
-        {/* Content area */}
-        <div
-          key={replayKey}
-          data-phone-theme={isDark ? "dark" : "light"}
-          className="px-4 pb-5 pt-2 min-h-[160px] flex items-center justify-center"
-        >
-          {children}
-        </div>
-
-        {/* Home indicator */}
-        <div className="flex justify-center pb-2">
-          <div
-            className={`w-[72px] h-[4px] rounded-full ${
-              isDark ? "bg-white/15" : "bg-black/10"
-            }`}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export function RNPreview({
   children,
@@ -230,14 +165,52 @@ export function RNPreview({
         </button>
       </div>
 
-      {/* Preview area — both light and dark phone frames side by side */}
-      <div className="flex items-start justify-center gap-6 px-4 py-8 demo-container flex-wrap">
-        <PhoneFrame replayKey={replayKey} isDark={true}>
-          {children}
-        </PhoneFrame>
-        <PhoneFrame replayKey={replayKey} isDark={false}>
-          {children}
-        </PhoneFrame>
+      {/* Preview area — single phone that follows site theme */}
+      <div className="flex items-center justify-center px-6 py-8 demo-container">
+        <div
+          className={`relative w-[240px] rounded-[28px] border-[3px] overflow-hidden transition-all duration-300 ${
+            siteIsDark
+              ? "border-[#2a2a3a] bg-[#0a0a0f] shadow-xl shadow-black/30"
+              : "border-[#d4d4d8] bg-[#fafaf9] shadow-xl shadow-black/8"
+          }`}
+        >
+          {/* Status bar */}
+          <div
+            className={`flex items-center justify-between px-5 pt-3 pb-1 transition-colors duration-300 ${
+              siteIsDark ? "text-white/40" : "text-black/30"
+            }`}
+          >
+            <span className="text-[8px] font-semibold">9:41</span>
+            <div className="flex items-center gap-1">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.24 4.24 0 0 0-6 0zm-4-4l2 2a7.07 7.07 0 0 1 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
+              </svg>
+              <svg width="12" height="10" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="1" y="6" width="4" height="12" rx="1" opacity=".3" />
+                <rect x="7" y="4" width="4" height="14" rx="1" opacity=".5" />
+                <rect x="13" y="2" width="4" height="16" rx="1" opacity=".7" />
+                <rect x="19" y="0" width="4" height="18" rx="1" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Content area */}
+          <div
+            key={replayKey}
+            className="px-4 pb-5 pt-2 min-h-[180px] flex items-center justify-center"
+          >
+            {children}
+          </div>
+
+          {/* Home indicator */}
+          <div className="flex justify-center pb-2">
+            <div
+              className={`w-[80px] h-[4px] rounded-full transition-colors duration-300 ${
+                siteIsDark ? "bg-white/15" : "bg-black/10"
+              }`}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Code panel — below the preview */}
