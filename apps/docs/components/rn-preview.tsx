@@ -1,14 +1,45 @@
 "use client";
 
-import React, { useState, useCallback, useEffect, type ReactNode } from "react";
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from "react";
 import { useTheme } from "next-themes";
+
+/** Only triggers once when element enters viewport */
+function useInView(threshold = 0.05) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting) {
+          setInView(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return { ref, inView };
+}
 
 /**
  * Phone-shaped preview component for React Native documentation.
- * Shows a mobile device frame with an animated preview inside.
- * Code examples go below as regular markdown ```tsx blocks (fumadocs handles syntax highlighting).
+ * Mounts children only when scrolled into viewport (like the web Demo).
  */
-
 export function RNPreview({
   children,
   title,
@@ -19,6 +50,7 @@ export function RNPreview({
   const [replayKey, setReplayKey] = useState(0);
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { ref: containerRef, inView } = useInView(0.05);
 
   useEffect(() => setMounted(true), []);
 
@@ -26,7 +58,6 @@ export function RNPreview({
     setReplayKey((k) => k + 1);
   }, []);
 
-  // Before hydration, default to dark
   const siteIsDark = mounted ? resolvedTheme === "dark" : true;
 
   return (
@@ -61,8 +92,8 @@ export function RNPreview({
         </button>
       </div>
 
-      {/* Preview area — single phone that follows site theme */}
-      <div className="flex items-center justify-center px-6 py-8 demo-container">
+      {/* Preview area — mounts children only when in viewport */}
+      <div ref={containerRef} className="flex items-center justify-center px-6 py-8 demo-container">
         <div
           className={`relative w-[240px] rounded-[28px] border-[3px] overflow-hidden transition-all duration-300 ${
             siteIsDark
@@ -90,12 +121,12 @@ export function RNPreview({
             </div>
           </div>
 
-          {/* Content area */}
+          {/* Content — only rendered when in viewport */}
           <div
             key={replayKey}
             className={`px-4 pb-5 pt-2 min-h-[180px] flex items-center justify-center rn-phone-content ${siteIsDark ? "rn-phone-dark" : "rn-phone-light"}`}
           >
-            {children}
+            {inView ? children : null}
           </div>
 
           {/* Home indicator */}
@@ -108,7 +139,6 @@ export function RNPreview({
           </div>
         </div>
       </div>
-
     </div>
   );
 }
@@ -122,7 +152,6 @@ export function AnimBox({
   animation = "fadeSlideUp",
   delay = 0,
   className = "",
-  dark = true,
 }: {
   children?: ReactNode;
   animation?:
@@ -137,7 +166,6 @@ export function AnimBox({
     | "spring";
   delay?: number;
   className?: string;
-  dark?: boolean;
 }) {
   const animClass = `rn-anim-${animation}`;
   return (
