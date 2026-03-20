@@ -1,14 +1,92 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
-import { SIDEBAR_ITEMS } from "./sidebar-items";
+import {
+  WEB_SIDEBAR,
+  RN_SIDEBAR,
+  type Platform,
+} from "./sidebar-items";
 import { FeedbackDialog } from "./feedback-dialog";
 
 const easeOutQuint: [number, number, number, number] = [0.23, 1, 0.32, 1];
+
+/* ── Platform Switcher ── */
+
+function PlatformSwitcher({
+  platform,
+  onSwitch,
+}: {
+  platform: Platform;
+  onSwitch: (p: Platform) => void;
+}) {
+  return (
+    <div className="mx-3 mb-4 flex rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] p-0.5">
+      {(
+        [
+          {
+            id: "web" as const,
+            label: "Web",
+            icon: (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                <path d="M2 12h20" />
+              </svg>
+            ),
+          },
+          {
+            id: "react-native" as const,
+            label: "React Native",
+            icon: (
+              <svg width="14" height="14" viewBox="-10.5 -9.45 21 18.9" fill="none">
+                <circle cx="0" cy="0" r="2" fill="currentColor" />
+                <g stroke="currentColor" strokeWidth="1" fill="none">
+                  <ellipse rx="10" ry="4.5" />
+                  <ellipse rx="10" ry="4.5" transform="rotate(60)" />
+                  <ellipse rx="10" ry="4.5" transform="rotate(120)" />
+                </g>
+              </svg>
+            ),
+          },
+        ]
+      ).map((p) => {
+        const isActive = platform === p.id;
+        return (
+          <button
+            key={p.id}
+            onClick={() => onSwitch(p.id)}
+            className={`
+              relative flex-1 rounded-md px-2 py-1.5 text-[11px] font-medium transition-colors duration-150
+              ${
+                isActive
+                  ? "text-[var(--color-accent)]"
+                  : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
+              }
+            `}
+          >
+            {isActive && (
+              <motion.span
+                layoutId="platform-pill"
+                className="absolute inset-0 rounded-md bg-[var(--color-surface-elevated)] border border-[var(--color-border)]"
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              />
+            )}
+            <span className="relative z-10 inline-flex items-center gap-1.5">
+              {p.icon}
+              {p.label}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── Sidebar Group ── */
 
 function SidebarGroup({
   title,
@@ -61,6 +139,8 @@ function SidebarGroup({
   );
 }
 
+/* ── Main Sidebar ── */
+
 export function DocsSidebar({
   mobileOpen,
   desktopCollapsed,
@@ -71,7 +151,35 @@ export function DocsSidebar({
   onCloseMobile: () => void;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+
+  // Auto-detect platform from URL
+  const isRNPage = pathname.startsWith("/docs/react-native");
+  const [platform, setPlatform] = useState<Platform>(
+    isRNPage ? "react-native" : "web",
+  );
+
+  // Sync platform when URL changes (e.g. browser back/forward)
+  useEffect(() => {
+    if (isRNPage && platform !== "react-native") {
+      setPlatform("react-native");
+    } else if (!isRNPage && platform !== "web") {
+      setPlatform("web");
+    }
+  }, [pathname]);
+
+  const handlePlatformSwitch = (p: Platform) => {
+    setPlatform(p);
+    // Navigate to the platform's landing page
+    if (p === "react-native") {
+      router.push("/docs/react-native");
+    } else {
+      router.push("/docs");
+    }
+  };
+
+  const items = platform === "react-native" ? RN_SIDEBAR : WEB_SIDEBAR;
 
   const sidebarContent = (
     <div className="flex h-full flex-col">
@@ -94,9 +202,17 @@ export function DocsSidebar({
         </Link>
       </div>
 
+      {/* Platform switcher */}
+      <div className="pt-4">
+        <PlatformSwitcher
+          platform={platform}
+          onSwitch={handlePlatformSwitch}
+        />
+      </div>
+
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-4 px-2 no-scrollbar">
-        {SIDEBAR_ITEMS.gettingStarted.map((group) => (
+      <nav className="flex-1 overflow-y-auto py-2 px-2 no-scrollbar">
+        {items.gettingStarted.map((group) => (
           <SidebarGroup
             key={group.title}
             title={group.title}
@@ -105,7 +221,7 @@ export function DocsSidebar({
             onLinkClick={onCloseMobile}
           />
         ))}
-        {SIDEBAR_ITEMS.animations.map((group) => (
+        {items.animations.map((group) => (
           <SidebarGroup
             key={group.title}
             title={group.title}
@@ -114,7 +230,7 @@ export function DocsSidebar({
             onLinkClick={onCloseMobile}
           />
         ))}
-        {SIDEBAR_ITEMS.reference.map((group) => (
+        {items.reference.map((group) => (
           <SidebarGroup
             key={group.title}
             title={group.title}

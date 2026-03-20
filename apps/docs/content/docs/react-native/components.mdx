@@ -1,0 +1,83 @@
+---
+title: "Components"
+description: "The mw.* component proxy — animated React Native components with className parsing."
+---
+
+# Components
+
+The `mw` proxy is the primary API for motionwind-react-native. It creates animated React Native components that parse `animate-*` classes from the `className` prop at runtime.
+
+## Basic usage
+
+<RNPreview title="mw.View — Fade + Slide">
+  <AnimBox animation="fadeSlideUp">
+    <div style={{background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 14, padding: '16px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 15, fontWeight: 600}}>Hello</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## How it works
+
+When you write `<mw.View className="...">`:
+
+1. If **motion classes found**: renders `Animated.View` with Reanimated styles
+2. If **no motion classes**: renders plain `View`, passing className to NativeWind
+
+This means you can use `mw.*` everywhere without a performance penalty.
+
+## Available components
+
+| Component | RN Equivalent | Animated Version |
+|---|---|---|
+| `mw.View` | `View` | `Animated.View` |
+| `mw.Text` | `Text` | `Animated.Text` |
+| `mw.Image` | `Image` | `Animated.Image` |
+| `mw.ScrollView` | `ScrollView` | `Animated.ScrollView` |
+| `mw.Pressable` | `Pressable` | `Animated.Pressable` |
+| `mw.TouchableOpacity` | `TouchableOpacity` | `Animated.TouchableOpacity` |
+| `mw.TextInput` | `TextInput` | `Animated.TextInput` |
+| `mw.FlatList` | `FlatList` | `Animated.FlatList` |
+| `mw.SafeAreaView` | `SafeAreaView` | `Animated.SafeAreaView` |
+
+## Pressable with tap animation
+
+<RNPreview title="mw.Pressable — Tap to Scale">
+  <AnimBox animation="tapScale">
+    <div style={{background: '#c8ff2e', padding: '10px 28px', borderRadius: 10, cursor: 'pointer', userSelect: 'none'}}>
+      <span style={{color: '#0a0a0f', fontSize: 13, fontWeight: 700}}>Submit</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## Mixing animation and style props
+
+Combine `className` (motionwind + NativeWind) with `style` (inline styles):
+
+<RNPreview title="className + style Mixed">
+  <AnimBox animation="scaleIn">
+    <div style={{background: '#1a1a2e', padding: '16px 20px', borderRadius: 14, border: '1px solid #2a2a3a'}}>
+      <span style={{color: '#fff', fontSize: 13, fontWeight: 500}}>Styled + Animated</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## Ref forwarding
+
+All `mw.*` components forward refs:
+
+```tsx
+const viewRef = useRef<View>(null);
+<mw.View ref={viewRef} className="animate-enter:opacity-0" />
+```
+
+## Performance
+
+- LRU cache (max 1000 entries) for parsed className results
+- Components without motion classes render as plain RN components — zero overhead
+- Repeated renders with the same className hit cache, skip re-parsing
+
+## Next steps
+
+- [Animations](/docs/react-native/animations) — Entrance, exit, and transition animations
+- [Gestures](/docs/react-native/gestures) — Tap, hover, and focus interactions

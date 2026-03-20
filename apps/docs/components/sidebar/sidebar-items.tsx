@@ -11,13 +11,15 @@ interface SidebarGroup {
   items: SidebarItem[];
 }
 
+export type Platform = "web" | "react-native";
+
 export interface SidebarConfig {
   gettingStarted: SidebarGroup[];
   animations: SidebarGroup[];
   reference: SidebarGroup[];
 }
 
-export const SIDEBAR_ITEMS: SidebarConfig = {
+export const WEB_SIDEBAR: SidebarConfig = {
   gettingStarted: [
     {
       title: "Getting Started",
@@ -59,3 +61,40 @@ export const SIDEBAR_ITEMS: SidebarConfig = {
     },
   ],
 };
+
+export const RN_SIDEBAR: SidebarConfig = {
+  gettingStarted: [
+    {
+      title: "Getting Started",
+      items: [
+        { title: "Overview", url: "/docs/react-native" },
+        { title: "Installation", url: "/docs/react-native/installation" },
+        { title: "Components", url: "/docs/react-native/components" },
+      ],
+    },
+  ],
+  animations: [
+    {
+      title: "Animations",
+      items: [
+        { title: "Animations", url: "/docs/react-native/animations" },
+        { title: "Gestures", url: "/docs/react-native/gestures" },
+        { title: "Springs & Easing", url: "/docs/react-native/springs-and-easing" },
+        { title: "Scroll Animations", url: "/docs/react-native/scroll-animations" },
+        { title: "Drag", url: "/docs/react-native/drag" },
+      ],
+    },
+  ],
+  reference: [
+    {
+      title: "Reference",
+      items: [
+        { title: "Hooks", url: "/docs/react-native/hooks" },
+        { title: "API Reference", url: "/docs/react-native/api-reference" },
+      ],
+    },
+  ],
+};
+
+/** Keep backward compat — default export for any code that imports SIDEBAR_ITEMS */
+export const SIDEBAR_ITEMS = WEB_SIDEBAR;

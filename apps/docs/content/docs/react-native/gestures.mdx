@@ -1,0 +1,108 @@
+---
+title: "Gestures"
+description: "Tap, hover, and focus gesture animations for React Native."
+---
+
+# Gestures
+
+Gesture-based animations respond to user interactions. On React Native, these map to native touch handlers instead of DOM events.
+
+## Gesture prefixes
+
+| Class prefix | Web event | RN handler | Description |
+|---|---|---|---|
+| `animate-tap:` | `whileTap` | `onPressIn` / `onPressOut` | While finger is pressing |
+| `animate-hover:` | `whileHover` | `onHoverIn` / `onHoverOut` | Pointer hover (RN 0.71+) |
+| `animate-focus:` | `whileFocus` | `onFocus` / `onBlur` | Element has focus |
+| `animate-enter:` | `animate` | Mount animation | When component mounts |
+| `animate-initial:` | `initial` | Starting state | Before entrance animation |
+| `animate-exit:` | `exit` | Unmount animation | When component unmounts |
+
+## Tap animations
+
+The most common gesture on mobile. Animates while the user's finger is pressing, then reverts when released.
+
+### Scale on press
+
+<RNPreview title="Scale on Press">
+  <AnimBox animation="tapScale">
+    <div style={{background: '#3b82f6', padding: '12px 24px', borderRadius: 12, cursor: 'pointer', userSelect: 'none'}}>
+      <span style={{color: '#fff', fontSize: 13, fontWeight: 600}}>Press me</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+### Scale + opacity
+
+<RNPreview title="Multi-property Tap">
+  <AnimBox animation="tapScale">
+    <div style={{background: 'rgba(200,255,46,0.15)', border: '1px solid rgba(200,255,46,0.25)', padding: '12px 24px', borderRadius: 12, cursor: 'pointer', userSelect: 'none'}}>
+      <span style={{color: '#c8ff2e', fontSize: 13, fontWeight: 600}}>Press & hold me</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## Entrance + gesture combined
+
+You can combine entrance animations with gesture animations on the same element:
+
+<RNPreview title="Entrance + Tap Combined">
+  <AnimBox animation="fadeSlideUp">
+    <div className="rn-anim-tapScale" style={{background: '#4f46e5', padding: '12px 20px', borderRadius: 12, cursor: 'pointer', userSelect: 'none'}}>
+      <span style={{color: '#fff', fontSize: 13, fontWeight: 600}}>Fades in, then responds to taps</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## Staggered interactive list
+
+Combine staggered entrance with tap gestures:
+
+<RNPreview title="Staggered List Items">
+  <div style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 6}}>
+    <AnimBox animation="slideRight" delay={0}>
+      <div className="rn-anim-tapScale" style={{background: 'rgba(200,255,46,0.08)', border: '1px solid rgba(200,255,46,0.12)', padding: '10px 14px', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8}}>
+        <span style={{fontSize: 14}}>🎨</span>
+        <span style={{color: '#f0f0f0', fontSize: 12, fontWeight: 500}}>Welcome to Motionwind</span>
+      </div>
+    </AnimBox>
+    <AnimBox animation="slideRight" delay={80}>
+      <div className="rn-anim-tapScale" style={{background: 'rgba(200,255,46,0.08)', border: '1px solid rgba(200,255,46,0.12)', padding: '10px 14px', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8}}>
+        <span style={{fontSize: 14}}>📱</span>
+        <span style={{color: '#f0f0f0', fontSize: 12, fontWeight: 500}}>Built for React Native</span>
+      </div>
+    </AnimBox>
+    <AnimBox animation="slideRight" delay={160}>
+      <div className="rn-anim-tapScale" style={{background: 'rgba(200,255,46,0.08)', border: '1px solid rgba(200,255,46,0.12)', padding: '10px 14px', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8}}>
+        <span style={{fontSize: 14}}>⚡</span>
+        <span style={{color: '#f0f0f0', fontSize: 12, fontWeight: 500}}>Powered by Reanimated</span>
+      </div>
+    </AnimBox>
+  </div>
+</RNPreview>
+
+## Hover animations
+
+> **Note:** `whileHover` requires React Native 0.71+ with Pointer Events enabled, or a connected mouse/trackpad. On pure touch devices, hover events don't fire.
+
+```tsx
+<mw.View className="animate-hover:scale-105 animate-hover:opacity-90 animate-duration-200">
+  <mw.Text>Hover with a mouse</mw.Text>
+</mw.View>
+```
+
+## Focus animations
+
+Useful for `TextInput` and other focusable elements:
+
+```tsx
+<mw.TextInput
+  className="animate-focus:scale-102 animate-focus:border-w-2 animate-spring"
+  placeholder="Focus me"
+/>
+```
+
+## Next steps
+
+- [Springs & Easing](/docs/react-native/springs-and-easing) — Fine-tune animation physics
+- [Drag](/docs/react-native/drag) — Draggable elements with constraints

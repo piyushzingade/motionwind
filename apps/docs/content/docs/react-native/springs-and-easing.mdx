@@ -1,0 +1,135 @@
+---
+title: "Springs & Easing"
+description: "Configure spring physics and easing curves for natural-feeling animations."
+---
+
+# Springs & Easing
+
+Every animation needs timing. motionwind-react-native supports two animation types: **timing** (duration + easing curve) and **spring** (physics-based).
+
+## Timing animations (default)
+
+By default, animations use `withTiming` with an ease-out curve.
+
+### Duration
+
+```tsx
+<mw.View className="animate-enter:opacity-100 animate-duration-300" />
+<mw.View className="animate-enter:scale-100 animate-duration-1000" />
+```
+
+> **Note:** On React Native, durations are in **milliseconds** (not seconds like the web package).
+
+### Named easing functions
+
+| Class | Reanimated Easing | When to use |
+|---|---|---|
+| `animate-ease-out` | `Easing.out(cubic)` | Elements entering (most common) |
+| `animate-ease-in` | `Easing.in(cubic)` | Elements exiting (rare) |
+| `animate-ease-in-out` | `Easing.inOut(cubic)` | Elements moving on screen |
+| `animate-ease-linear` | `Easing.linear` | Constant-speed (loaders) |
+| `animate-ease-circ-out` | `Easing.out(circle)` | Snappy, responsive |
+| `animate-ease-back-out` | `Easing.out(back)` | Slight overshoot, playful |
+
+### Custom cubic-bezier
+
+```tsx
+<mw.View className="animate-enter:y-0 animate-ease-[0.23,1,0.32,1]" />
+```
+
+## Spring animations
+
+Springs simulate real physics. Use them for interactions that should feel alive.
+
+<RNPreview title="Spring Entrance">
+  <AnimBox animation="spring">
+    <div style={{background: 'rgba(200,255,46,0.12)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 14, padding: '16px 20px', textAlign: 'center'}}>
+      <span style={{color: '#c8ff2e', fontSize: 14, fontWeight: 700}}>Spring!</span>
+      <div style={{color: '#8a8a9a', fontSize: 10, marginTop: 2}}>stiffness: 300, damping: 12</div>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+### Configure spring physics
+
+| Class | Property | Default | Description |
+|---|---|---|---|
+| `animate-stiffness-{n}` | `stiffness` | 100 | Higher = snappier |
+| `animate-damping-{n}` | `damping` | 10 | Higher = less oscillation |
+| `animate-mass-{n}` | `mass` | 10 (÷10 → 1.0) | Higher = heavier, slower |
+
+### Spring presets
+
+<RNPreview title="Spring Presets Comparison">
+  <div style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 8}}>
+    <AnimBox animation="spring" delay={0}>
+      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.15)', borderRadius: 10, padding: '10px 14px'}}>
+        <span style={{color: '#c8ff2e', fontSize: 12, fontWeight: 600}}>Snappy</span>
+        <span style={{color: '#8a8a9a', fontSize: 10}}>s:400 d:15</span>
+      </div>
+    </AnimBox>
+    <AnimBox animation="bounce" delay={100}>
+      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.15)', borderRadius: 10, padding: '10px 14px'}}>
+        <span style={{color: '#f59e0b', fontSize: 12, fontWeight: 600}}>Bouncy</span>
+        <span style={{color: '#8a8a9a', fontSize: 10}}>s:300 d:6</span>
+      </div>
+    </AnimBox>
+    <AnimBox animation="fadeSlideUp" delay={200}>
+      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(14,165,233,0.1)', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 10, padding: '10px 14px'}}>
+        <span style={{color: '#0ea5e9', fontSize: 12, fontWeight: 600}}>Smooth</span>
+        <span style={{color: '#8a8a9a', fontSize: 10}}>s:150 d:12</span>
+      </div>
+    </AnimBox>
+    <AnimBox animation="fadeIn" delay={300}>
+      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: 10, padding: '10px 14px'}}>
+        <span style={{color: '#ef4444', fontSize: 12, fontWeight: 600}}>Heavy</span>
+        <span style={{color: '#8a8a9a', fontSize: 10}}>s:100 d:20</span>
+      </div>
+    </AnimBox>
+  </div>
+</RNPreview>
+
+## Repeat and loop
+
+### Infinite pulse
+
+<RNPreview title="Infinite Pulse">
+  <AnimBox animation="pulse">
+    <div style={{width: 48, height: 48, borderRadius: 24, background: 'rgba(200,255,46,0.3)', border: '2px solid rgba(200,255,46,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <div style={{width: 20, height: 20, borderRadius: 10, background: '#c8ff2e'}} />
+    </div>
+  </AnimBox>
+</RNPreview>
+
+```tsx
+// Repeat 3 times
+<mw.View className="animate-enter:scale-110 animate-repeat-3" />
+
+// Infinite loop
+<mw.View className="animate-enter:rotate-360 animate-repeat-infinite animate-ease-linear" />
+```
+
+## Stagger children
+
+```tsx
+<mw.View className="animate-stagger-100 animate-delay-children-200">
+  <mw.View className="animate-enter:opacity-100 animate-initial:opacity-0" />
+  <mw.View className="animate-enter:opacity-100 animate-initial:opacity-0" />
+  <mw.View className="animate-enter:opacity-100 animate-initial:opacity-0" />
+</mw.View>
+```
+
+## When to use spring vs. timing
+
+| Use case | Recommendation |
+|---|---|
+| Tap/press feedback | Spring (feels responsive) |
+| Entrance animations | Timing with ease-out |
+| Drag release | Spring (maintains velocity) |
+| Loading spinners | Timing with linear |
+| Color transitions | Timing (springs can overshoot) |
+
+## Next steps
+
+- [Scroll Animations](/docs/react-native/scroll-animations) — Trigger animations on scroll
+- [Drag](/docs/react-native/drag) — Draggable elements
