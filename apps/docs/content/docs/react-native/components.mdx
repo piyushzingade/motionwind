@@ -9,23 +9,31 @@ The `mw` proxy is the primary API for motionwind-react-native. It creates animat
 
 ## Basic usage
 
-```tsx
-import { mw } from "motionwind-react-native";
+<RNPreview title="mw.View — Fade + Slide" code={`import { mw } from "motionwind-react-native";
 
-<mw.View className="animate-enter:opacity-0 animate-enter:y-20 animate-duration-500">
-  <mw.Text className="text-lg font-bold">Hello</mw.Text>
-</mw.View>
-```
+<mw.View className="
+  animate-enter:opacity-0
+  animate-enter:y-20
+  animate-duration-500">
+  <mw.Text className="text-lg">
+    Hello
+  </mw.Text>
+</mw.View>`}>
+  <AnimBox animation="fadeSlideUp">
+    <div style={{background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 14, padding: '16px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 15, fontWeight: 600}}>Hello</span>
+    </div>
+  </AnimBox>
+</RNPreview>
 
 ## How it works
 
 When you write `<mw.View className="...">`:
 
-1. The className string is parsed for `animate-*` tokens
-2. If **motion classes are found**: the component renders as `Animated.View` with Reanimated styles and gesture handlers attached
-3. If **no motion classes**: the component renders as a plain `View`, passing className to NativeWind
+1. If **motion classes found**: renders `Animated.View` with Reanimated styles
+2. If **no motion classes**: renders plain `View`, passing className to NativeWind
 
-This means you can use `mw.*` everywhere without a performance penalty — components without animations are just regular React Native components.
+This means you can use `mw.*` everywhere without a performance penalty.
 
 ## Available components
 
@@ -41,75 +49,64 @@ This means you can use `mw.*` everywhere without a performance penalty — compo
 | `mw.FlatList` | `FlatList` | `Animated.FlatList` |
 | `mw.SafeAreaView` | `SafeAreaView` | `Animated.SafeAreaView` |
 
-You can access any component name through the proxy — if it exists in the animated components map, it will be wrapped. Unknown names fall back to `Animated.View`.
+## Pressable with tap animation
+
+<RNPreview title="mw.Pressable — Tap to Scale" code={`<mw.Pressable
+  className="
+    animate-tap:scale-95
+    animate-spring
+    animate-damping-15"
+  onPress={() => console.log('pressed')}>
+  <mw.Text className="text-white">
+    Submit
+  </mw.Text>
+</mw.Pressable>`}>
+  <AnimBox animation="tapScale">
+    <div style={{background: '#c8ff2e', padding: '10px 28px', borderRadius: 10, cursor: 'pointer', userSelect: 'none'}}>
+      <span style={{color: '#0a0a0f', fontSize: 13, fontWeight: 700}}>Submit</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## Mixing animation and style props
+
+Combine `className` (motionwind + NativeWind) with `style` (inline styles):
+
+<RNPreview title="className + style Mixed" code={`<mw.View
+  className="
+    animate-enter:opacity-0
+    animate-enter:scale-95
+    animate-duration-400"
+  style={{
+    padding: 20,
+    backgroundColor: '#1a1a2e',
+    borderRadius: 16
+  }}>
+  <mw.Text style={{ color: '#fff' }}>
+    Styled + Animated
+  </mw.Text>
+</mw.View>`}>
+  <AnimBox animation="scaleIn">
+    <div style={{background: '#1a1a2e', padding: '16px 20px', borderRadius: 14, border: '1px solid #2a2a3a'}}>
+      <span style={{color: '#fff', fontSize: 13, fontWeight: 500}}>Styled + Animated</span>
+    </div>
+  </AnimBox>
+</RNPreview>
 
 ## Ref forwarding
 
 All `mw.*` components forward refs:
 
 ```tsx
-import { useRef } from "react";
-import { View } from "react-native";
-import { mw } from "motionwind-react-native";
-
-function MyComponent() {
-  const viewRef = useRef<View>(null);
-
-  return (
-    <mw.View
-      ref={viewRef}
-      className="animate-enter:opacity-0 animate-duration-300"
-    />
-  );
-}
+const viewRef = useRef<View>(null);
+<mw.View ref={viewRef} className="animate-enter:opacity-0" />
 ```
-
-## Mixing animation and style props
-
-You can combine `className` (for motionwind + NativeWind) with `style` (for inline styles). The animated style is applied after your inline style, so animation values take precedence during transitions:
-
-```tsx
-<mw.View
-  className="animate-enter:opacity-0 animate-enter:scale-95 animate-duration-400"
-  style={{ padding: 20, backgroundColor: "#1a1a2e", borderRadius: 16 }}
->
-  <mw.Text style={{ color: "#fff", fontSize: 18 }}>
-    Styled + Animated
-  </mw.Text>
-</mw.View>
-```
-
-## Passing other props
-
-All standard React Native props are forwarded to the underlying component:
-
-```tsx
-<mw.Pressable
-  className="animate-tap:scale-95 animate-spring"
-  onPress={() => console.log("pressed")}
-  accessibilityRole="button"
-  accessibilityLabel="Submit form"
->
-  <mw.Text className="text-white">Submit</mw.Text>
-</mw.Pressable>
-```
-
-## When to use mw.* vs plain components
-
-Use `mw.*` when:
-- The element needs `animate-*` classes
-- You want the flexibility to add animations later without refactoring
-
-Use plain RN components when:
-- The element will never be animated
-- You're inside a performance-critical list item rendered hundreds of times
-- You're using a third-party component that doesn't accept `className`
 
 ## Performance
 
-The `mw.*` proxy uses an LRU cache (max 1000 entries) for parsed className results. Repeated renders with the same className string hit the cache and skip re-parsing.
-
-Components without motion classes render as plain React Native components with zero animation overhead — no Reanimated shared values or animated styles are created.
+- LRU cache (max 1000 entries) for parsed className results
+- Components without motion classes render as plain RN components — zero overhead
+- Repeated renders with the same className hit cache, skip re-parsing
 
 ## Next steps
 

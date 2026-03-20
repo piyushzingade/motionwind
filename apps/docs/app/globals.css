@@ -766,3 +766,73 @@ figure.shiki pre::-webkit-scrollbar {
 .demo-btn-primary:active {
   transform: scale(0.95);
 }
+
+/* ── React Native preview animations ── */
+
+.rn-anim-fadeSlideUp {
+  animation: rn-fadeSlideUp 600ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.rn-anim-fadeIn {
+  animation: rn-fadeIn 500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.rn-anim-scaleIn {
+  animation: rn-scaleIn 500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.rn-anim-slideRight {
+  animation: rn-slideRight 500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.rn-anim-rotate {
+  animation: rn-rotate 600ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.rn-anim-bounce {
+  animation: rn-bounce 800ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.rn-anim-pulse {
+  animation: rn-pulse 1200ms ease-in-out infinite;
+}
+.rn-anim-tapScale {
+  transition: transform 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.rn-anim-tapScale:active {
+  transform: scale(0.92);
+}
+.rn-anim-spring {
+  animation: rn-spring 700ms cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes rn-fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes rn-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes rn-scaleIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes rn-slideRight {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes rn-rotate {
+  from { opacity: 0; transform: rotate(-15deg) scale(0.9); }
+  to { opacity: 1; transform: rotate(0) scale(1); }
+}
+@keyframes rn-bounce {
+  0% { opacity: 0; transform: translateY(30px); }
+  60% { opacity: 1; transform: translateY(-8px); }
+  80% { transform: translateY(4px); }
+  100% { transform: translateY(0); }
+}
+@keyframes rn-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.08); }
+}
+@keyframes rn-spring {
+  0% { opacity: 0; transform: scale(0.8) translateY(10px); }
+  50% { transform: scale(1.05) translateY(-4px); }
+  75% { transform: scale(0.98) translateY(1px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}

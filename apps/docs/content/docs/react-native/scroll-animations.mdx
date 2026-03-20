@@ -5,37 +5,35 @@ description: "Trigger animations when elements scroll into view."
 
 # Scroll Animations
 
-The `animate-inview:` prefix triggers animations when an element enters the viewport. On React Native, this uses layout measurement instead of the web's `IntersectionObserver`.
+The `animate-inview:` prefix triggers animations when an element enters the viewport.
 
 ## Basic usage
 
-```tsx
-<mw.View className="animate-inview:opacity-100 animate-initial:opacity-0 animate-duration-600">
+<RNPreview title="Fade In on Scroll" code={`<mw.View className="
+  animate-inview:opacity-100
+  animate-initial:opacity-0
+  animate-duration-600">
   <Text>Appears when scrolled into view</Text>
-</mw.View>
-```
+</mw.View>`}>
+  <AnimBox animation="fadeIn">
+    <div style={{background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 12, padding: '14px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>Appears when scrolled into view</span>
+    </div>
+  </AnimBox>
+</RNPreview>
 
 ## Configuration
 
 ### Animate once
 
-By default, the animation triggers every time the element enters the viewport. To animate only on the first appearance:
-
 ```tsx
-<mw.View className="animate-inview:opacity-100 animate-initial:opacity-0 animate-once">
-  <Text>Only animates the first time</Text>
-</mw.View>
+<mw.View className="animate-inview:opacity-100 animate-initial:opacity-0 animate-once" />
 ```
 
 ### Viewport amount
 
-Control how much of the element must be visible before triggering:
-
 ```tsx
-// Trigger when any part is visible (default)
-<mw.View className="animate-inview:y-0 animate-amount-0" />
-
-// Trigger when 50% is visible
+// Trigger when 50% visible
 <mw.View className="animate-inview:y-0 animate-amount-50" />
 
 // Trigger when fully visible
@@ -44,58 +42,54 @@ Control how much of the element must be visible before triggering:
 
 ### Viewport margin
 
-Add an offset to trigger the animation before the element reaches the viewport edge:
-
 ```tsx
-// Trigger 100px before the element enters the viewport
+// Trigger 100px before entering viewport
 <mw.View className="animate-inview:opacity-100 animate-margin-100" />
 ```
 
 ## Using the useInView hook
 
-For more control over viewport detection, use the `useInView` hook directly:
+For more control, use the hook directly:
 
-```tsx
-import { useInView } from "motionwind-react-native";
-import Animated, {
-  useAnimatedStyle,
-  withTiming,
-  useSharedValue,
-} from "react-native-reanimated";
+<RNPreview title="useInView Hook" code={`import { useInView } from "motionwind-react-native";
 
 function ScrollReveal({ children }) {
-  const { isInView, onLayout } = useInView({ once: true, margin: 50 });
-  const opacity = useSharedValue(0);
-  const translateY = useSharedValue(20);
+  const { isInView, onLayout } = useInView({
+    once: true,
+    margin: 50,
+  });
 
-  if (isInView) {
-    opacity.value = withTiming(1, { duration: 600 });
-    translateY.value = withTiming(0, { duration: 600 });
-  }
-
-  const style = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateY: translateY.value }],
-  }));
-
+  // Animate based on isInView
   return (
-    <Animated.View onLayout={onLayout} style={style}>
+    <Animated.View onLayout={onLayout}>
       {children}
     </Animated.View>
   );
-}
-```
+}`}>
+  <AnimBox animation="fadeSlideUp">
+    <div style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 6}}>
+      <AnimBox animation="fadeIn" delay={0}>
+        <div style={{background: 'rgba(14,165,233,0.1)', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 8, padding: '8px 12px'}}>
+          <span style={{color: '#0ea5e9', fontSize: 11, fontWeight: 500}}>isInView: true</span>
+        </div>
+      </AnimBox>
+      <AnimBox animation="fadeIn" delay={200}>
+        <div style={{background: 'rgba(200,255,46,0.08)', borderRadius: 8, padding: '8px 12px'}}>
+          <span style={{color: '#8a8a9a', fontSize: 10}}>once: true, margin: 50</span>
+        </div>
+      </AnimBox>
+    </div>
+  </AnimBox>
+</RNPreview>
 
 ## Limitations on React Native
 
-Viewport detection on native is more limited than on web:
+- **Web** uses `IntersectionObserver` — precise scroll tracking
+- **Native** uses `onLayout` — fires on layout, not per scroll frame
 
-- **Web** uses `IntersectionObserver` which tracks elements precisely during scroll
-- **Native** uses `onLayout` which fires when the component lays out, not on every scroll frame
-
-For scroll-linked animations that respond to scroll position in real time (e.g., parallax), use Reanimated's `useAnimatedScrollHandler` directly instead of motionwind classes.
+For real-time scroll-linked animations (parallax), use Reanimated's `useAnimatedScrollHandler` directly.
 
 ## Next steps
 
 - [Drag](/docs/react-native/drag) — Draggable elements with constraints
-- [Hooks](/docs/react-native/hooks) — Custom animation control with hooks
+- [Hooks](/docs/react-native/hooks) — Custom animation control

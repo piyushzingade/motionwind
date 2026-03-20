@@ -5,20 +5,36 @@ description: "Draggable elements with axis locking, elasticity, and snap-back."
 
 # Drag
 
-motionwind-react-native supports drag gestures through `animate-drag-*` classes. These configure the drag behavior — direction, constraints, elasticity, and snap-back.
+motionwind-react-native supports drag gestures through `animate-drag-*` classes.
 
 ## Enable drag
 
-```tsx
-// Drag in both directions
-<mw.View className="animate-drag-both bg-indigo-500 w-20 h-20 rounded-xl" />
+<RNPreview title="Draggable Elements" code={`// Drag both directions
+<mw.View className="animate-drag-both" />
 
-// Drag horizontal only
-<mw.View className="animate-drag-x bg-blue-500 w-20 h-20 rounded-xl" />
+// Horizontal only
+<mw.View className="animate-drag-x" />
 
-// Drag vertical only
-<mw.View className="animate-drag-y bg-green-500 w-20 h-20 rounded-xl" />
-```
+// Vertical only
+<mw.View className="animate-drag-y" />`}>
+  <div style={{display: 'flex', gap: 10, alignItems: 'center'}}>
+    <AnimBox animation="scaleIn" delay={0}>
+      <div style={{width: 52, height: 52, background: '#6366f1', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab'}}>
+        <span style={{color: '#fff', fontSize: 8, fontWeight: 600}}>Both</span>
+      </div>
+    </AnimBox>
+    <AnimBox animation="scaleIn" delay={100}>
+      <div style={{width: 52, height: 52, background: '#0ea5e9', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab'}}>
+        <span style={{color: '#fff', fontSize: 8, fontWeight: 600}}>X only</span>
+      </div>
+    </AnimBox>
+    <AnimBox animation="scaleIn" delay={200}>
+      <div style={{width: 52, height: 52, background: '#10b981', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab'}}>
+        <span style={{color: '#fff', fontSize: 8, fontWeight: 600}}>Y only</span>
+      </div>
+    </AnimBox>
+  </div>
+</RNPreview>
 
 ## Snap back to origin
 
@@ -30,16 +46,16 @@ After the user releases, the element springs back to its original position.
 
 ## Elasticity
 
-Control how much resistance the element has when dragged beyond constraints:
+Control resistance when dragged beyond constraints:
 
 ```tsx
-// 50% elasticity (default-ish)
+// 50% elasticity
 <mw.View className="animate-drag-both animate-drag-elastic-50" />
 
-// No elasticity (hard stop at constraint)
+// No elasticity (hard stop)
 <mw.View className="animate-drag-both animate-drag-elastic-0" />
 
-// Full elasticity (rubber band)
+// Full rubber band
 <mw.View className="animate-drag-both animate-drag-elastic-100" />
 ```
 
@@ -47,51 +63,48 @@ Control how much resistance the element has when dragged beyond constraints:
 
 Limit how far the element can be dragged:
 
-```tsx
-<mw.View className="
+<RNPreview title="Constrained Drag" code={`<mw.View className="
   animate-drag-both
   animate-drag-constraint-t-100
   animate-drag-constraint-b-100
   animate-drag-constraint-l-150
-  animate-drag-constraint-r-150
-" />
-```
+  animate-drag-constraint-r-150">`}>
+  <AnimBox animation="spring">
+    <div style={{width: 56, height: 56, background: '#c8ff2e', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab', boxShadow: '0 0 20px rgba(200,255,46,0.3)'}}>
+      <span style={{color: '#0a0a0f', fontSize: 9, fontWeight: 700}}>Drag</span>
+    </div>
+  </AnimBox>
+</RNPreview>
 
-| Class | Direction | Example |
-|---|---|---|
-| `animate-drag-constraint-t-{n}` | Top | Max 100px up |
-| `animate-drag-constraint-b-{n}` | Bottom | Max 100px down |
-| `animate-drag-constraint-l-{n}` | Left | Max 150px left |
-| `animate-drag-constraint-r-{n}` | Right | Max 150px right |
+| Class | Direction |
+|---|---|
+| `animate-drag-constraint-t-{n}` | Max drag up |
+| `animate-drag-constraint-b-{n}` | Max drag down |
+| `animate-drag-constraint-l-{n}` | Max drag left |
+| `animate-drag-constraint-r-{n}` | Max drag right |
 
 ## Disable momentum
-
-By default, when the user releases a dragged element, it continues moving based on the release velocity. Disable this for immediate stop:
 
 ```tsx
 <mw.View className="animate-drag-both animate-drag-no-momentum" />
 ```
 
-## Combining drag with other animations
+## Combining drag with entrance
 
-Drag works alongside entrance and tap animations:
-
-```tsx
-<mw.View className="
+<RNPreview title="Entrance + Drag" code={`<mw.View className="
   animate-initial:opacity-0
   animate-initial:scale-80
   animate-enter:opacity-100
   animate-enter:scale-100
   animate-drag-both
   animate-drag-snap
-  animate-spring
-  bg-purple-500
-  w-24 h-24
-  rounded-2xl
-">
-  <Text style={{ color: '#fff' }}>Drag me</Text>
-</mw.View>
-```
+  animate-spring">`}>
+  <AnimBox animation="spring">
+    <div style={{background: '#8b5cf6', padding: '14px 20px', borderRadius: 14, cursor: 'grab'}}>
+      <span style={{color: '#fff', fontSize: 12, fontWeight: 600}}>Springs in, then draggable</span>
+    </div>
+  </AnimBox>
+</RNPreview>
 
 ## Next steps
 

@@ -17,7 +17,6 @@ Gesture-based animations respond to user interactions. On React Native, these ma
 | `animate-enter:` | `animate` | Mount animation | When component mounts |
 | `animate-initial:` | `initial` | Starting state | Before entrance animation |
 | `animate-exit:` | `exit` | Unmount animation | When component unmounts |
-| `animate-inview:` | `whileInView` | Viewport detection | When scrolled into view |
 
 ## Tap animations
 
@@ -25,29 +24,100 @@ The most common gesture on mobile. Animates while the user's finger is pressing,
 
 ### Scale on press
 
-```tsx
-<mw.Pressable className="animate-tap:scale-95 animate-duration-150 bg-blue-500 p-4 rounded-xl">
-  <mw.Text className="text-white font-bold text-center">Press me</mw.Text>
-</mw.Pressable>
-```
-
-This scales the button to 0.95 while pressed, then springs back to 1.0 on release. The animation runs on the UI thread, so it stays smooth even if JavaScript is busy.
+<RNPreview title="Scale on Press" code={`<mw.Pressable className="
+  animate-tap:scale-95
+  animate-duration-150
+  bg-blue-500 p-4 rounded-xl">
+  <mw.Text className="text-white font-bold">
+    Press me
+  </mw.Text>
+</mw.Pressable>`}>
+  <AnimBox animation="tapScale">
+    <div style={{background: '#3b82f6', padding: '12px 24px', borderRadius: 12, cursor: 'pointer', userSelect: 'none'}}>
+      <span style={{color: '#fff', fontSize: 13, fontWeight: 600}}>Press me</span>
+    </div>
+  </AnimBox>
+</RNPreview>
 
 ### Scale + opacity
 
-```tsx
-<mw.Pressable className="animate-tap:scale-92 animate-tap:opacity-70 animate-spring animate-damping-15">
+<RNPreview title="Multi-property Tap" code={`<mw.Pressable className="
+  animate-tap:scale-92
+  animate-tap:opacity-70
+  animate-spring
+  animate-damping-15">
   <mw.Text>Multi-property tap</mw.Text>
-</mw.Pressable>
-```
+</mw.Pressable>`}>
+  <AnimBox animation="tapScale">
+    <div style={{background: 'rgba(200,255,46,0.15)', border: '1px solid rgba(200,255,46,0.25)', padding: '12px 24px', borderRadius: 12, cursor: 'pointer', userSelect: 'none'}}>
+      <span style={{color: '#c8ff2e', fontSize: 13, fontWeight: 600}}>Press & hold me</span>
+    </div>
+  </AnimBox>
+</RNPreview>
 
-### Rotate on tap
+## Entrance + gesture combined
 
-```tsx
-<mw.Pressable className="animate-tap:rotate-15 animate-tap:scale-95 animate-spring animate-damping-10">
-  <mw.Text>Tilts on press</mw.Text>
-</mw.Pressable>
-```
+You can combine entrance animations with gesture animations on the same element:
+
+<RNPreview title="Entrance + Tap Combined" code={`<mw.Pressable className="
+  animate-initial:opacity-0
+  animate-initial:y-20
+  animate-enter:opacity-100
+  animate-enter:y-0
+  animate-tap:scale-95
+  animate-duration-400
+  animate-ease-out
+  bg-indigo-600 p-4 rounded-xl">
+  <mw.Text className="text-white">
+    Fades in, then responds to taps
+  </mw.Text>
+</mw.Pressable>`}>
+  <AnimBox animation="fadeSlideUp">
+    <div className="rn-anim-tapScale" style={{background: '#4f46e5', padding: '12px 20px', borderRadius: 12, cursor: 'pointer', userSelect: 'none'}}>
+      <span style={{color: '#fff', fontSize: 13, fontWeight: 600}}>Fades in, then responds to taps</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## Staggered interactive list
+
+Combine staggered entrance with tap gestures:
+
+<RNPreview title="Staggered List Items" code={`{items.map((item, i) => (
+  <mw.Pressable key={item.id}
+    className={\`
+      animate-initial:opacity-0
+      animate-initial:x-30
+      animate-enter:opacity-100
+      animate-enter:x-0
+      animate-delay-\${i * 80}
+      animate-tap:scale-98
+      animate-spring
+    \`}>
+    <mw.Text>{item.title}</mw.Text>
+  </mw.Pressable>
+))}`}>
+  <div style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 6}}>
+    <AnimBox animation="slideRight" delay={0}>
+      <div className="rn-anim-tapScale" style={{background: 'rgba(200,255,46,0.08)', border: '1px solid rgba(200,255,46,0.12)', padding: '10px 14px', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8}}>
+        <span style={{fontSize: 14}}>🎨</span>
+        <span style={{color: '#f0f0f0', fontSize: 12, fontWeight: 500}}>Welcome to Motionwind</span>
+      </div>
+    </AnimBox>
+    <AnimBox animation="slideRight" delay={80}>
+      <div className="rn-anim-tapScale" style={{background: 'rgba(200,255,46,0.08)', border: '1px solid rgba(200,255,46,0.12)', padding: '10px 14px', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8}}>
+        <span style={{fontSize: 14}}>📱</span>
+        <span style={{color: '#f0f0f0', fontSize: 12, fontWeight: 500}}>Built for React Native</span>
+      </div>
+    </AnimBox>
+    <AnimBox animation="slideRight" delay={160}>
+      <div className="rn-anim-tapScale" style={{background: 'rgba(200,255,46,0.08)', border: '1px solid rgba(200,255,46,0.12)', padding: '10px 14px', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8}}>
+        <span style={{fontSize: 14}}>⚡</span>
+        <span style={{color: '#f0f0f0', fontSize: 12, fontWeight: 500}}>Powered by Reanimated</span>
+      </div>
+    </AnimBox>
+  </div>
+</RNPreview>
 
 ## Hover animations
 
@@ -59,8 +129,6 @@ This scales the button to 0.95 while pressed, then springs back to 1.0 on releas
 </mw.View>
 ```
 
-For cross-platform code, hover classes are silently ignored on devices without pointer support — no errors thrown.
-
 ## Focus animations
 
 Useful for `TextInput` and other focusable elements:
@@ -69,60 +137,8 @@ Useful for `TextInput` and other focusable elements:
 <mw.TextInput
   className="animate-focus:scale-102 animate-focus:border-w-2 animate-spring"
   placeholder="Focus me"
-  style={{ borderWidth: 1, borderColor: "#ccc", padding: 12, borderRadius: 8 }}
 />
 ```
-
-## Entrance + gesture combined
-
-You can combine entrance animations with gesture animations on the same element:
-
-```tsx
-<mw.Pressable className="
-  animate-initial:opacity-0
-  animate-initial:y-20
-  animate-enter:opacity-100
-  animate-enter:y-0
-  animate-tap:scale-95
-  animate-duration-400
-  animate-ease-out
-  bg-indigo-600
-  p-4
-  rounded-xl
-">
-  <mw.Text className="text-white font-semibold text-center">
-    Fades in, then responds to taps
-  </mw.Text>
-</mw.Pressable>
-```
-
-The entrance animation plays on mount. After that, taps trigger the scale animation. When the finger lifts, the scale returns to the `animate-enter:` state (or defaults).
-
-## Building interactive lists
-
-Combine staggered entrance with tap gestures:
-
-```tsx
-{items.map((item, index) => (
-  <mw.Pressable
-    key={item.id}
-    className={`
-      animate-initial:opacity-0
-      animate-initial:x-30
-      animate-enter:opacity-100
-      animate-enter:x-0
-      animate-delay-${index * 80}
-      animate-tap:scale-98
-      animate-spring
-      bg-white p-4 rounded-lg mb-2
-    `}
-  >
-    <mw.Text className="text-gray-900">{item.title}</mw.Text>
-  </mw.Pressable>
-))}
-```
-
-> **Tip:** For dynamic delay values like `animate-delay-${index * 80}`, you need the runtime `mw.*` components (which is what motionwind-react-native provides).
 
 ## Next steps
 

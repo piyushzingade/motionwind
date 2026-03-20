@@ -5,198 +5,146 @@ description: "useMotionwind and useInView hooks for custom animation control."
 
 # Hooks
 
-For cases where the `mw.*` component proxy isn't flexible enough, motionwind-react-native exports hooks that give you direct control over the animation pipeline.
+For cases where the `mw.*` component proxy isn't flexible enough, motionwind-react-native exports hooks that give you direct control.
 
 ## useMotionwind
 
 Parses a motionwind className string and returns Reanimated animated styles, gesture handlers, and animation controls.
 
-### Signature
-
-```tsx
-function useMotionwind(className: string): {
-  animatedStyle: AnimatedStyle;    // Pass to Animated.View's style prop
-  handlers: Record<string, () => void>;  // Gesture handlers (onPressIn, etc.)
-  parsed: ParsedResult;            // The raw parsed result
-  animateTo: (style: NativeAnimatableStyle) => void;  // Animate to a target state
-  resetToBase: () => void;         // Reset to the "enter" state
-};
-```
-
-### Basic usage
-
-```tsx
-import { useMotionwind } from "motionwind-react-native";
+<RNPreview title="useMotionwind Hook" code={`import { useMotionwind } from "motionwind-react-native";
 import Animated from "react-native-reanimated";
 
-function CustomAnimatedCard() {
+function Card() {
   const { animatedStyle, handlers } = useMotionwind(
-    "animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-tap:scale-95 animate-duration-400"
+    \`animate-initial:opacity-0
+     animate-initial:y-20
+     animate-enter:opacity-100
+     animate-enter:y-0
+     animate-tap:scale-95
+     animate-duration-400\`
   );
 
   return (
-    <Animated.View style={[styles.card, animatedStyle]} {...handlers}>
-      <Text>Custom animated card</Text>
-    </Animated.View>
+    <Animated.View
+      style={[styles.card, animatedStyle]}
+      {...handlers}
+    />
   );
-}
+}`}>
+  <AnimBox animation="fadeSlideUp">
+    <div className="rn-anim-tapScale" style={{background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 14, padding: '16px 20px', cursor: 'pointer'}}>
+      <span style={{color: '#c8ff2e', fontSize: 13, fontWeight: 700}}>Custom Hook Card</span>
+      <div style={{color: '#8a8a9a', fontSize: 10, marginTop: 4}}>Fade in + tap to scale</div>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+### Return value
+
+```tsx
+const {
+  animatedStyle,  // Pass to Animated.View's style prop
+  handlers,       // Gesture handlers (onPressIn, etc.)
+  parsed,         // Raw parsed result
+  animateTo,      // Animate to a target state
+  resetToBase,    // Reset to "enter" state
+} = useMotionwind(className);
 ```
 
 ### Manual animation control
 
-Use `animateTo` and `resetToBase` for custom interaction logic:
+Use `animateTo` and `resetToBase` for custom logic:
 
-```tsx
-function ToggleCard() {
-  const { animatedStyle, animateTo, resetToBase } = useMotionwind(
-    "animate-initial:opacity-50 animate-initial:scale-90 animate-enter:opacity-100 animate-enter:scale-100 animate-spring"
-  );
-  const [expanded, setExpanded] = useState(false);
+<RNPreview title="Manual Control — Toggle" code={`function ToggleCard() {
+  const { animatedStyle, animateTo, resetToBase }
+    = useMotionwind(\`
+      animate-initial:opacity-50
+      animate-initial:scale-90
+      animate-enter:opacity-100
+      animate-enter:scale-100
+      animate-spring\`);
+  const [on, setOn] = useState(false);
 
   const toggle = () => {
-    if (expanded) {
-      resetToBase(); // Animate back to enter state
-    } else {
-      animateTo({ scale: 1.05, opacity: 0.8 }); // Custom target
-    }
-    setExpanded(!expanded);
+    if (on) resetToBase();
+    else animateTo({ scale: 1.05, opacity: 0.8 });
+    setOn(!on);
   };
 
   return (
     <Pressable onPress={toggle}>
-      <Animated.View style={[styles.card, animatedStyle]}>
-        <Text>{expanded ? "Expanded" : "Collapsed"}</Text>
-      </Animated.View>
+      <Animated.View style={animatedStyle} />
     </Pressable>
   );
-}
-```
-
-### Reading parsed results
-
-Access the raw parsed data for conditional logic:
-
-```tsx
-function ConditionalAnimation({ className }) {
-  const { parsed, animatedStyle, handlers } = useMotionwind(className);
-
-  // Check if any motion was detected
-  if (!parsed.hasMotion) {
-    return <View style={styles.card}><Text>No animation</Text></View>;
-  }
-
-  // Check specific gesture support
-  const hasTapAnimation = !!parsed.gestures.whileTap;
-
-  const Wrapper = hasTapAnimation ? Pressable : View;
-
-  return (
-    <Wrapper {...(hasTapAnimation ? handlers : {})}>
-      <Animated.View style={[styles.card, animatedStyle]}>
-        <Text>Conditional rendering based on parsed classes</Text>
-      </Animated.View>
-    </Wrapper>
-  );
-}
-```
+}`}>
+  <AnimBox animation="spring">
+    <div className="rn-anim-tapScale" style={{background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: 14, padding: '16px 20px', cursor: 'pointer', textAlign: 'center'}}>
+      <span style={{color: '#a78bfa', fontSize: 13, fontWeight: 700}}>Tap to toggle</span>
+      <div style={{color: '#8a8a9a', fontSize: 10, marginTop: 4}}>animateTo ↔ resetToBase</div>
+    </div>
+  </AnimBox>
+</RNPreview>
 
 ## useInView
 
-Detects when a component enters the visible viewport area. Returns a boolean and an `onLayout` handler.
+Detects when a component enters the viewport area.
 
 ### Signature
 
 ```tsx
 function useInView(config: ViewportConfig): {
-  isInView: boolean;                    // Whether element is in viewport
-  onLayout: (event: LayoutChangeEvent) => void;  // Attach to your component
-  viewRef: React.RefObject<any>;        // Optional ref
+  isInView: boolean;
+  onLayout: (event: LayoutChangeEvent) => void;
+  viewRef: React.RefObject<any>;
 };
 ```
 
 ### Configuration
 
 ```tsx
-interface ViewportConfig {
-  once?: boolean;    // Only trigger once (default: false)
-  amount?: "some" | "all" | number;  // How much must be visible
-  margin?: number;   // Pixel offset for detection
-}
-```
-
-### Basic usage
-
-```tsx
-import { useInView } from "motionwind-react-native";
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
-
-function RevealOnScroll({ children }) {
-  const { isInView, onLayout } = useInView({ once: true });
-  const opacity = useSharedValue(0);
-
-  useEffect(() => {
-    if (isInView) {
-      opacity.value = withTiming(1, { duration: 500 });
-    }
-  }, [isInView]);
-
-  const style = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-  }));
-
-  return (
-    <Animated.View onLayout={onLayout} style={style}>
-      {children}
-    </Animated.View>
-  );
-}
+const { isInView, onLayout } = useInView({
+  once: true,      // Only trigger once
+  amount: 0.5,     // 50% must be visible
+  margin: 50,      // 50px offset
+});
 ```
 
 ## parseMotionClasses
 
-The raw parser function — useful for debugging or building custom integrations.
+The raw parser function — useful for debugging or custom integrations.
 
-### Signature
-
-```tsx
-function parseMotionClasses(className: string): ParsedResult;
-```
-
-### Usage
-
-```tsx
-import { parseMotionClasses } from "motionwind-react-native";
+<RNPreview title="Parser Output" code={`import { parseMotionClasses }
+  from "motionwind-react-native";
 
 const result = parseMotionClasses(
   "animate-tap:scale-95 animate-duration-200 animate-spring bg-blue-500 p-4"
 );
 
-console.log(result);
-// {
-//   nativewindClasses: "bg-blue-500 p-4",
-//   gestures: {
-//     whileTap: { scale: 0.95 }
-//   },
-//   transition: {
-//     type: "spring",
-//     duration: 200
-//   },
-//   viewport: {},
-//   dragConfig: {},
-//   hasMotion: true
-// }
-```
+// result.nativewindClasses = "bg-blue-500 p-4"
+// result.gestures.whileTap = { scale: 0.95 }
+// result.transition = { type: "spring", duration: 200 }
+// result.hasMotion = true`}>
+  <div style={{width: '100%'}}>
+    <AnimBox animation="fadeIn">
+      <div style={{fontFamily: 'monospace', fontSize: 10, lineHeight: '18px', color: '#8a8a9a'}}>
+        <div><span style={{color: '#c8ff2e'}}>nativewindClasses:</span> "bg-blue-500 p-4"</div>
+        <div><span style={{color: '#c8ff2e'}}>gestures.whileTap:</span> {"{ scale: 0.95 }"}</div>
+        <div><span style={{color: '#c8ff2e'}}>transition:</span> {"{ type: \"spring\", duration: 200 }"}</div>
+        <div><span style={{color: '#c8ff2e'}}>hasMotion:</span> true</div>
+      </div>
+    </AnimBox>
+  </div>
+</RNPreview>
 
 ### clearParserCache
 
-The parser uses an LRU cache (max 1000 entries). If you're dynamically generating many unique className strings, you can clear the cache:
+The parser uses an LRU cache (max 1000 entries):
 
 ```tsx
 import { clearParserCache } from "motionwind-react-native";
-
 clearParserCache();
 ```
 
 ## Next steps
 
-- [API Reference](/docs/react-native/api-reference) — Complete type definitions and exports
+- [API Reference](/docs/react-native/api-reference) — Complete type definitions

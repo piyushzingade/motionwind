@@ -23,27 +23,71 @@ Use `animate-initial:` to set the starting state and `animate-enter:` for the ta
 
 ### Fade in
 
-```tsx
-<mw.View className="animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-500">
+<RNPreview title="Fade In" code={`<mw.View className="
+  animate-initial:opacity-0
+  animate-enter:opacity-100
+  animate-duration-500">
   <Text>I fade in on mount</Text>
-</mw.View>
-```
+</mw.View>`}>
+  <AnimBox animation="fadeIn">
+    <div style={{background: 'rgba(200,255,46,0.12)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 12, padding: '14px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>I fade in on mount</span>
+    </div>
+  </AnimBox>
+</RNPreview>
 
 ### Slide up + fade
 
-```tsx
-<mw.View className="animate-initial:opacity-0 animate-initial:y-30 animate-enter:opacity-100 animate-enter:y-0 animate-duration-600 animate-ease-out">
+<RNPreview title="Slide Up + Fade" code={`<mw.View className="
+  animate-initial:opacity-0
+  animate-initial:y-30
+  animate-enter:opacity-100
+  animate-enter:y-0
+  animate-duration-600
+  animate-ease-out">
   <Text>I slide up and fade in</Text>
-</mw.View>
-```
+</mw.View>`}>
+  <AnimBox animation="fadeSlideUp">
+    <div style={{background: 'rgba(200,255,46,0.12)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 12, padding: '14px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>I slide up and fade in</span>
+    </div>
+  </AnimBox>
+</RNPreview>
 
-### Scale in
+### Scale in with spring
 
-```tsx
-<mw.View className="animate-initial:scale-80 animate-initial:opacity-0 animate-enter:scale-100 animate-enter:opacity-100 animate-spring animate-damping-12">
+<RNPreview title="Scale In — Spring Physics" code={`<mw.View className="
+  animate-initial:scale-80
+  animate-initial:opacity-0
+  animate-enter:scale-100
+  animate-enter:opacity-100
+  animate-spring
+  animate-damping-12">
   <Text>I scale up with a spring</Text>
-</mw.View>
-```
+</mw.View>`}>
+  <AnimBox animation="spring">
+    <div style={{background: 'rgba(200,255,46,0.12)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 12, padding: '14px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>I scale up with a spring</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+### Slide from left
+
+<RNPreview title="Slide from Left" code={`<mw.View className="
+  animate-initial:opacity-0
+  animate-initial:x--30
+  animate-enter:opacity-100
+  animate-enter:x-0
+  animate-duration-500">
+  <Text>Slide from left</Text>
+</mw.View>`}>
+  <AnimBox animation="slideRight">
+    <div style={{background: 'rgba(14,165,233,0.15)', border: '1px solid rgba(14,165,233,0.25)', borderRadius: 12, padding: '14px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>Slide from left</span>
+    </div>
+  </AnimBox>
+</RNPreview>
 
 ## Animatable properties
 
@@ -57,8 +101,6 @@ Use `animate-initial:` to set the starting state and `animate-enter:` for the ta
 | `rotate-{n}` | `rotate` | `rotate-45` → `"45deg"` | Auto-converts to deg string |
 | `rotate-x-{n}` | `rotateX` | `rotate-x-180` → `"180deg"` | |
 | `rotate-y-{n}` | `rotateY` | `rotate-y-90` → `"90deg"` | |
-| `skew-x-{n}` | `skewX` | `skew-x-15` → `"15deg"` | |
-| `skew-y-{n}` | `skewY` | `skew-y-10` → `"10deg"` | |
 | `x-{n}` | `translateX` | `x-20` → 20 | Pixels. Maps to RN `translateX` |
 | `y-{n}` | `translateY` | `y-30` → 30 | Pixels. Maps to RN `translateY` |
 
@@ -66,10 +108,9 @@ Use `animate-initial:` to set the starting state and `animate-enter:` for the ta
 
 | Class | Property | Example | Notes |
 |---|---|---|---|
-| `opacity-{n}` | `opacity` | `opacity-0` → 0, `opacity-50` → 0.5 | Values 0–100, divided by 100 |
+| `opacity-{n}` | `opacity` | `opacity-50` → 0.5 | Values 0–100, divided by 100 |
 | `bg-{color}` | `backgroundColor` | `bg-#ff0000` | Hex, rgb(), rgba(), hsl() |
 | `text-{color}` | `color` | `text-#ffffff` | |
-| `border-{color}` | `borderColor` | `border-#333` | |
 
 ### Dimensions & Layout
 
@@ -78,27 +119,8 @@ Use `animate-initial:` to set the starting state and `animate-enter:` for the ta
 | `w-{n}` | `width` | `w-200` → 200px |
 | `h-{n}` | `height` | `h-100` → 100px |
 | `rounded-{n}` | `borderRadius` | `rounded-16` → 16 |
-| `border-w-{n}` | `borderWidth` | `border-w-2` → 2 |
 | `p-{n}` | `padding` | `p-20` → 20 |
 | `m-{n}` | `margin` | `m-10` → 10 |
-| `gap-{n}` | `gap` | `gap-8` → 8 |
-
-### Typography
-
-| Class | Property | Example |
-|---|---|---|
-| `text-size-{n}` | `fontSize` | `text-size-24` → 24 |
-| `tracking-{n}` | `letterSpacing` | `tracking-2` → 2 |
-| `leading-{n}` | `lineHeight` | `leading-28` → 28 |
-
-### Position
-
-| Class | Property | Example |
-|---|---|---|
-| `top-{n}` | `top` | `top-10` → 10 |
-| `left-{n}` | `left` | `left-20` → 20 |
-| `right-{n}` | `right` | `right-0` → 0 |
-| `bottom-{n}` | `bottom` | `bottom-50` → 50 |
 
 ## Negative values
 
@@ -114,18 +136,23 @@ Prefix any value with `-` for negative numbers:
 
 Animate through multiple values using bracket syntax:
 
-```tsx
-<mw.View className="animate-enter:scale-[80,110,100] animate-duration-800">
-  <Text>Scale: 0.8 → 1.1 → 1.0</Text>
-</mw.View>
-```
+<RNPreview title="Keyframe Scale" code={`<mw.View className="
+  animate-enter:scale-[80,115,100]
+  animate-duration-800">
+  <Text>Scale: 0.8 → 1.15 → 1.0</Text>
+</mw.View>`}>
+  <AnimBox animation="bounce">
+    <div style={{background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: 12, padding: '14px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>Scale: 0.8 → 1.15 → 1.0</span>
+    </div>
+  </AnimBox>
+</RNPreview>
 
 ## Combining multiple properties
 
 Chain as many properties as you need on the same gesture:
 
-```tsx
-<mw.View className="
+<RNPreview title="Complex Entrance" code={`<mw.View className="
   animate-initial:opacity-0
   animate-initial:scale-90
   animate-initial:y-40
@@ -135,11 +162,14 @@ Chain as many properties as you need on the same gesture:
   animate-enter:y-0
   animate-enter:rotate-0
   animate-duration-700
-  animate-ease-out
-">
-  <Text>Complex entrance animation</Text>
-</mw.View>
-```
+  animate-ease-out">`}>
+  <AnimBox animation="rotate" delay={0}>
+    <div style={{background: 'linear-gradient(135deg, rgba(200,255,46,0.15), rgba(14,165,233,0.15))', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 14, padding: '16px 20px', textAlign: 'center'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 600}}>Multi-property entrance</span>
+      <div style={{color: '#8a8a9a', fontSize: 10, marginTop: 4}}>opacity + scale + translate + rotate</div>
+    </div>
+  </AnimBox>
+</RNPreview>
 
 ## Web-only properties (not supported)
 
