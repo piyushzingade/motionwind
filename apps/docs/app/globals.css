@@ -777,6 +777,98 @@ figure.shiki pre::-webkit-scrollbar {
   transform: scale(0.95);
 }
 
+/* ── React Native phone content theme override ── */
+/* Forces all inline-styled text inside the phone to use theme-appropriate colors */
+
+.rn-phone-content {
+  --rn-fg: #f0f0f0;
+  --rn-fg-muted: #8a8a9a;
+  --rn-accent: #c8ff2e;
+  --rn-accent-fg: #0a0a0f;
+  --rn-surface: rgba(200, 255, 46, 0.1);
+  --rn-border: rgba(200, 255, 46, 0.2);
+}
+.rn-phone-light {
+  --rn-fg: #171717;
+  --rn-fg-muted: #525252;
+  --rn-accent: #4d7c0f;
+  --rn-accent-fg: #ffffff;
+  --rn-surface: rgba(77, 124, 15, 0.08);
+  --rn-border: rgba(77, 124, 15, 0.18);
+}
+
+/* Override all inline color styles inside phone content */
+.rn-phone-light [style*="color: #f0f0f0"],
+.rn-phone-light [style*="color: #fff"],
+.rn-phone-light [style*="color:#f0f0f0"],
+.rn-phone-light [style*="color:#fff"] {
+  color: #171717 !important;
+}
+.rn-phone-light [style*="color: #c8ff2e"],
+.rn-phone-light [style*="color:#c8ff2e"] {
+  color: #4d7c0f !important;
+}
+.rn-phone-light [style*="color: #8a8a9a"],
+.rn-phone-light [style*="color:#8a8a9a"] {
+  color: #525252 !important;
+}
+.rn-phone-light [style*="color: #a78bfa"],
+.rn-phone-light [style*="color:#a78bfa"] {
+  color: #7c3aed !important;
+}
+.rn-phone-light [style*="color: #0ea5e9"],
+.rn-phone-light [style*="color:#0ea5e9"] {
+  color: #0284c7 !important;
+}
+/* Override backgrounds */
+.rn-phone-light [style*="background: rgba(200,255,46"] {
+  background: rgba(77, 124, 15, 0.08) !important;
+}
+.rn-phone-light [style*="background: rgba(200, 255, 46"] {
+  background: rgba(77, 124, 15, 0.08) !important;
+}
+.rn-phone-light [style*="border: 1px solid rgba(200,255,46"],
+.rn-phone-light [style*="border: 1px solid rgba(200, 255, 46"] {
+  border-color: rgba(77, 124, 15, 0.2) !important;
+}
+/* Gradient backgrounds */
+.rn-phone-light [style*="linear-gradient"] {
+  background: rgba(77, 124, 15, 0.06) !important;
+}
+/* Blue/purple surfaces in light */
+.rn-phone-light [style*="background: rgba(14,165,233"],
+.rn-phone-light [style*="background: rgba(14, 165, 233"] {
+  background: rgba(14, 165, 233, 0.08) !important;
+}
+.rn-phone-light [style*="background: rgba(139,92,246"],
+.rn-phone-light [style*="background: rgba(139, 92, 246"] {
+  background: rgba(139, 92, 246, 0.08) !important;
+}
+/* Solid color buttons */
+.rn-phone-light [style*="background: #3b82f6"] {
+  background: #2563eb !important;
+}
+.rn-phone-light [style*="background: #c8ff2e"] {
+  background: #4d7c0f !important;
+  color: #ffffff !important;
+}
+.rn-phone-light [style*="color: #0a0a0f"] {
+  color: #ffffff !important;
+}
+/* Misc surfaces */
+.rn-phone-light [style*="background: #1a1a2e"] {
+  background: #f0f0ec !important;
+}
+.rn-phone-light [style*="border: 1px solid #2a2a3a"] {
+  border-color: #d4d4d0 !important;
+}
+.rn-phone-light [style*="background: #8b5cf6"] {
+  background: #7c3aed !important;
+}
+.rn-phone-light [style*="background: #6366f1"] {
+  background: #4f46e5 !important;
+}
+
 /* ── React Native code block syntax colors ── */
 
 .rn-code-panel {

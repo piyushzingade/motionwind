@@ -197,7 +197,7 @@ export function RNPreview({
           {/* Content area */}
           <div
             key={replayKey}
-            className="px-4 pb-5 pt-2 min-h-[180px] flex items-center justify-center"
+            className={`px-4 pb-5 pt-2 min-h-[180px] flex items-center justify-center rn-phone-content ${siteIsDark ? "rn-phone-dark" : "rn-phone-light"}`}
           >
             {children}
           </div>
