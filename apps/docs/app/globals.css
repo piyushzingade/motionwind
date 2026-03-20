@@ -699,15 +699,11 @@ figure.shiki pre::-webkit-scrollbar {
 .toc-orb-core {
   transition: cx 0.35s cubic-bezier(0.23, 1, 0.32, 1),
               cy 0.35s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.toc-orb-halo {
-  transition: cx 0.35s cubic-bezier(0.23, 1, 0.32, 1),
-              cy 0.35s cubic-bezier(0.23, 1, 0.32, 1);
-  animation: toc-orb-pulse 2.4s ease-in-out infinite;
+  animation: toc-orb-pulse 2s ease-in-out infinite;
 }
 @keyframes toc-orb-pulse {
-  0%, 100% { opacity: 0.7; r: 8; }
-  50% { opacity: 1; r: 11; }
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
 }
 
 

@@ -298,12 +298,15 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
                 <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="1" />
               </linearGradient>
 
-              {/* Radial glow for the orb */}
-              <radialGradient id="toc-orb-glow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.6" />
-                <stop offset="50%" stopColor="var(--color-accent)" stopOpacity="0.15" />
-                <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="0" />
-              </radialGradient>
+              {/* Stronger glow for the orb */}
+              <filter id="toc-orb-bloom" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
             </defs>
 
             {/* background track */}
@@ -336,25 +339,14 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
 
             {/* Luminous orb at the leading edge of the fill */}
             {arrowPos && tocProgress > 0.01 && (
-              <g className="toc-orb">
-                {/* Outer halo */}
-                <circle
-                  cx={arrowPos.x}
-                  cy={arrowPos.y}
-                  r="8"
-                  fill="url(#toc-orb-glow)"
-                  className="toc-orb-halo"
-                />
-                {/* Core dot */}
-                <circle
-                  cx={arrowPos.x}
-                  cy={arrowPos.y}
-                  r="2.5"
-                  fill="var(--color-accent)"
-                  filter="url(#toc-glow)"
-                  className="toc-orb-core"
-                />
-              </g>
+              <circle
+                cx={arrowPos.x}
+                cy={arrowPos.y}
+                r="3"
+                fill="var(--color-accent)"
+                filter="url(#toc-orb-bloom)"
+                className="toc-orb-core"
+              />
             )}
           </svg>
         )}
