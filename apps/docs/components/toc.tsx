@@ -63,14 +63,17 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
   const [totalLen, setTotalLen] = useState(0);
   const [listH, setListH] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [scrollDir, setScrollDir] = useState<"down" | "up">("down");
 
   const obsRef = useRef<IntersectionObserver | null>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const itemEls = useRef<(HTMLLIElement | null)[]>([]);
   const trackRef = useRef<SVGPathElement>(null);
+  const accentRef = useRef<SVGPathElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const isClickScrolling = useRef(false);
   const clickTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastScrollTop = useRef(0);
 
   useEffect(() => setMounted(true), []);
 
@@ -116,6 +119,13 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
       const scrollTop = container.scrollTop;
       const scrollH = container.scrollHeight - container.clientHeight;
       setScrollPct(scrollH > 0 ? Math.min(scrollTop / scrollH, 1) : 0);
+
+      // Track scroll direction
+      const delta = scrollTop - lastScrollTop.current;
+      if (Math.abs(delta) > 2) {
+        setScrollDir(delta > 0 ? "down" : "up");
+      }
+      lastScrollTop.current = scrollTop;
     };
 
     container.addEventListener("scroll", fn, { passive: true });
@@ -222,10 +232,38 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
     return activeIndex === 0 ? Math.max(raw, 0.03) : raw;
   }, [activeIndex, ys, scrollPct]);
 
+  // Compute arrow position at the leading edge of the accent fill
+  const arrowPos = useMemo(() => {
+    if (!accentRef.current || totalLen <= 0 || tocProgress <= 0) return null;
+    try {
+      const filledLen = totalLen * tocProgress;
+      const pt = accentRef.current.getPointAtLength(filledLen);
+      // Get a point slightly before to compute direction
+      const ptPrev = accentRef.current.getPointAtLength(Math.max(0, filledLen - 4));
+      const dx = pt.x - ptPrev.x;
+      const dy = pt.y - ptPrev.y;
+      // Angle of the path tangent at this point (in degrees)
+      const pathAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+      return { x: pt.x, y: pt.y, pathAngle };
+    } catch {
+      return null;
+    }
+  }, [totalLen, tocProgress]);
+
   if (!items.length) return null;
 
   const pathD = buildPath(items, ys);
   const dashOff = totalLen > 0 ? totalLen * (1 - tocProgress) : totalLen;
+
+  // Arrow rotation: flip based on scroll direction
+  // pathAngle gives the tangent direction at the fill tip
+  // For "down" scrolling, the arrow points in the path direction
+  // For "up" scrolling, rotate 180° to point upward
+  const arrowRotation = arrowPos
+    ? scrollDir === "down"
+      ? arrowPos.pathAngle - 90 // path goes mostly downward, -90 to align chevron
+      : arrowPos.pathAngle + 90
+    : 0;
 
   return (
     <nav ref={navRef} className="toc" aria-label="Table of contents">
@@ -269,6 +307,7 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
             {/* scroll-progress accent fill with glow */}
             {pathD && totalLen > 0 && (
               <path
+                ref={accentRef}
                 d={pathD}
                 fill="none"
                 stroke="var(--color-accent)"
@@ -279,6 +318,24 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
                 filter="url(#toc-glow)"
                 className="toc-path-fill"
               />
+            )}
+
+            {/* Directional arrow at the leading edge */}
+            {arrowPos && tocProgress > 0.01 && (
+              <g
+                className="toc-arrow"
+                transform={`translate(${arrowPos.x}, ${arrowPos.y}) rotate(${arrowRotation})`}
+              >
+                <path
+                  d="M -3.5 -3 L 0 3 L 3.5 -3"
+                  fill="none"
+                  stroke="var(--color-accent)"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  filter="url(#toc-glow)"
+                />
+              </g>
             )}
           </svg>
         )}

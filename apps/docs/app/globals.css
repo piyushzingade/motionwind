@@ -696,6 +696,14 @@ figure.shiki pre::-webkit-scrollbar {
   transition: stroke-dashoffset 0.35s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+.toc-arrow {
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
+}
+.toc-arrow path {
+  transition: stroke-dashoffset 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
 
 /* ── TOC list ── */
 .toc-list {
