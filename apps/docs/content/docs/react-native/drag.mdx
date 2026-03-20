@@ -9,14 +9,7 @@ motionwind-react-native supports drag gestures through `animate-drag-*` classes.
 
 ## Enable drag
 
-<RNPreview title="Draggable Elements" code={`// Drag both directions
-<mw.View className="animate-drag-both" />
-
-// Horizontal only
-<mw.View className="animate-drag-x" />
-
-// Vertical only
-<mw.View className="animate-drag-y" />`}>
+<RNPreview title="Draggable Elements">
   <div style={{display: 'flex', gap: 10, alignItems: 'center'}}>
     <AnimBox animation="scaleIn" delay={0}>
       <div style={{width: 52, height: 52, background: '#6366f1', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab'}}>
@@ -63,12 +56,7 @@ Control resistance when dragged beyond constraints:
 
 Limit how far the element can be dragged:
 
-<RNPreview title="Constrained Drag" code={`<mw.View className="
-  animate-drag-both
-  animate-drag-constraint-t-100
-  animate-drag-constraint-b-100
-  animate-drag-constraint-l-150
-  animate-drag-constraint-r-150">`}>
+<RNPreview title="Constrained Drag">
   <AnimBox animation="spring">
     <div style={{width: 56, height: 56, background: '#c8ff2e', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab', boxShadow: '0 0 20px rgba(200,255,46,0.3)'}}>
       <span style={{color: '#0a0a0f', fontSize: 9, fontWeight: 700}}>Drag</span>
@@ -91,14 +79,7 @@ Limit how far the element can be dragged:
 
 ## Combining drag with entrance
 
-<RNPreview title="Entrance + Drag" code={`<mw.View className="
-  animate-initial:opacity-0
-  animate-initial:scale-80
-  animate-enter:opacity-100
-  animate-enter:scale-100
-  animate-drag-both
-  animate-drag-snap
-  animate-spring">`}>
+<RNPreview title="Entrance + Drag">
   <AnimBox animation="spring">
     <div style={{background: '#8b5cf6', padding: '14px 20px', borderRadius: 14, cursor: 'grab'}}>
       <span style={{color: '#fff', fontSize: 12, fontWeight: 600}}>Springs in, then draggable</span>

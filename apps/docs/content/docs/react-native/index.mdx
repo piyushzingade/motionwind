@@ -7,13 +7,7 @@ description: "Bring motionwind's Tailwind-like animation classes to React Native
 
 motionwind for React Native lets you animate mobile apps using the same `animate-*` class syntax you already know from the web — powered by `react-native-reanimated` for 60fps native animations.
 
-<RNPreview title="Welcome Card — Staggered Entrance" code={`<mw.View className="animate-enter:opacity-0
-  animate-enter:y-30 animate-duration-600">
-  <mw.Text className="animate-enter:opacity-0
-    animate-delay-200">Welcome</mw.Text>
-  <mw.Text className="animate-enter:opacity-0
-    animate-delay-400">Animations feel native.</mw.Text>
-</mw.View>`}>
+<RNPreview title="Welcome Card — Staggered Entrance">
   <div style={{width: '100%'}}>
     <AnimBox animation="fadeSlideUp">
       <div style={{background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 16, padding: '16px 20px'}}>
@@ -52,12 +46,7 @@ The `mw.Pressable` component:
 3. **Maps** gestures to RN handlers (`animate-tap:` → `onPressIn` / `onPressOut`)
 4. **Passes** remaining classes (`bg-blue-500 p-4 rounded-xl`) to NativeWind via `className`
 
-<RNPreview title="Tap to Scale — Press Interaction" code={`<mw.Pressable className="
-  animate-tap:scale-95
-  animate-duration-150
-  bg-blue-500 p-4 rounded-xl">
-  <mw.Text>Press me</mw.Text>
-</mw.Pressable>`}>
+<RNPreview title="Tap to Scale — Press Interaction">
   <AnimBox animation="tapScale">
     <div style={{background: '#3b82f6', padding: '12px 24px', borderRadius: 12, cursor: 'pointer', userSelect: 'none'}}>
       <span style={{color: '#fff', fontSize: 13, fontWeight: 600}}>Press me</span>

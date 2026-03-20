@@ -9,16 +9,7 @@ The `mw` proxy is the primary API for motionwind-react-native. It creates animat
 
 ## Basic usage
 
-<RNPreview title="mw.View — Fade + Slide" code={`import { mw } from "motionwind-react-native";
-
-<mw.View className="
-  animate-enter:opacity-0
-  animate-enter:y-20
-  animate-duration-500">
-  <mw.Text className="text-lg">
-    Hello
-  </mw.Text>
-</mw.View>`}>
+<RNPreview title="mw.View — Fade + Slide">
   <AnimBox animation="fadeSlideUp">
     <div style={{background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 14, padding: '16px 20px'}}>
       <span style={{color: '#f0f0f0', fontSize: 15, fontWeight: 600}}>Hello</span>
@@ -51,16 +42,7 @@ This means you can use `mw.*` everywhere without a performance penalty.
 
 ## Pressable with tap animation
 
-<RNPreview title="mw.Pressable — Tap to Scale" code={`<mw.Pressable
-  className="
-    animate-tap:scale-95
-    animate-spring
-    animate-damping-15"
-  onPress={() => console.log('pressed')}>
-  <mw.Text className="text-white">
-    Submit
-  </mw.Text>
-</mw.Pressable>`}>
+<RNPreview title="mw.Pressable — Tap to Scale">
   <AnimBox animation="tapScale">
     <div style={{background: '#c8ff2e', padding: '10px 28px', borderRadius: 10, cursor: 'pointer', userSelect: 'none'}}>
       <span style={{color: '#0a0a0f', fontSize: 13, fontWeight: 700}}>Submit</span>
@@ -72,20 +54,7 @@ This means you can use `mw.*` everywhere without a performance penalty.
 
 Combine `className` (motionwind + NativeWind) with `style` (inline styles):
 
-<RNPreview title="className + style Mixed" code={`<mw.View
-  className="
-    animate-enter:opacity-0
-    animate-enter:scale-95
-    animate-duration-400"
-  style={{
-    padding: 20,
-    backgroundColor: '#1a1a2e',
-    borderRadius: 16
-  }}>
-  <mw.Text style={{ color: '#fff' }}>
-    Styled + Animated
-  </mw.Text>
-</mw.View>`}>
+<RNPreview title="className + style Mixed">
   <AnimBox animation="scaleIn">
     <div style={{background: '#1a1a2e', padding: '16px 20px', borderRadius: 14, border: '1px solid #2a2a3a'}}>
       <span style={{color: '#fff', fontSize: 13, fontWeight: 500}}>Styled + Animated</span>

@@ -23,12 +23,7 @@ Use `animate-initial:` to set the starting state and `animate-enter:` for the ta
 
 ### Fade in
 
-<RNPreview title="Fade In" code={`<mw.View className="
-  animate-initial:opacity-0
-  animate-enter:opacity-100
-  animate-duration-500">
-  <Text>I fade in on mount</Text>
-</mw.View>`}>
+<RNPreview title="Fade In">
   <AnimBox animation="fadeIn">
     <div style={{background: 'rgba(200,255,46,0.12)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 12, padding: '14px 20px'}}>
       <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>I fade in on mount</span>
@@ -38,15 +33,7 @@ Use `animate-initial:` to set the starting state and `animate-enter:` for the ta
 
 ### Slide up + fade
 
-<RNPreview title="Slide Up + Fade" code={`<mw.View className="
-  animate-initial:opacity-0
-  animate-initial:y-30
-  animate-enter:opacity-100
-  animate-enter:y-0
-  animate-duration-600
-  animate-ease-out">
-  <Text>I slide up and fade in</Text>
-</mw.View>`}>
+<RNPreview title="Slide Up + Fade">
   <AnimBox animation="fadeSlideUp">
     <div style={{background: 'rgba(200,255,46,0.12)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 12, padding: '14px 20px'}}>
       <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>I slide up and fade in</span>
@@ -56,15 +43,7 @@ Use `animate-initial:` to set the starting state and `animate-enter:` for the ta
 
 ### Scale in with spring
 
-<RNPreview title="Scale In — Spring Physics" code={`<mw.View className="
-  animate-initial:scale-80
-  animate-initial:opacity-0
-  animate-enter:scale-100
-  animate-enter:opacity-100
-  animate-spring
-  animate-damping-12">
-  <Text>I scale up with a spring</Text>
-</mw.View>`}>
+<RNPreview title="Scale In — Spring Physics">
   <AnimBox animation="spring">
     <div style={{background: 'rgba(200,255,46,0.12)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 12, padding: '14px 20px'}}>
       <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>I scale up with a spring</span>
@@ -74,14 +53,7 @@ Use `animate-initial:` to set the starting state and `animate-enter:` for the ta
 
 ### Slide from left
 
-<RNPreview title="Slide from Left" code={`<mw.View className="
-  animate-initial:opacity-0
-  animate-initial:x--30
-  animate-enter:opacity-100
-  animate-enter:x-0
-  animate-duration-500">
-  <Text>Slide from left</Text>
-</mw.View>`}>
+<RNPreview title="Slide from Left">
   <AnimBox animation="slideRight">
     <div style={{background: 'rgba(14,165,233,0.15)', border: '1px solid rgba(14,165,233,0.25)', borderRadius: 12, padding: '14px 20px'}}>
       <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>Slide from left</span>
@@ -136,11 +108,7 @@ Prefix any value with `-` for negative numbers:
 
 Animate through multiple values using bracket syntax:
 
-<RNPreview title="Keyframe Scale" code={`<mw.View className="
-  animate-enter:scale-[80,115,100]
-  animate-duration-800">
-  <Text>Scale: 0.8 → 1.15 → 1.0</Text>
-</mw.View>`}>
+<RNPreview title="Keyframe Scale">
   <AnimBox animation="bounce">
     <div style={{background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: 12, padding: '14px 20px'}}>
       <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>Scale: 0.8 → 1.15 → 1.0</span>
@@ -152,17 +120,7 @@ Animate through multiple values using bracket syntax:
 
 Chain as many properties as you need on the same gesture:
 
-<RNPreview title="Complex Entrance" code={`<mw.View className="
-  animate-initial:opacity-0
-  animate-initial:scale-90
-  animate-initial:y-40
-  animate-initial:rotate-10
-  animate-enter:opacity-100
-  animate-enter:scale-100
-  animate-enter:y-0
-  animate-enter:rotate-0
-  animate-duration-700
-  animate-ease-out">`}>
+<RNPreview title="Complex Entrance">
   <AnimBox animation="rotate" delay={0}>
     <div style={{background: 'linear-gradient(135deg, rgba(200,255,46,0.15), rgba(14,165,233,0.15))', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 14, padding: '16px 20px', textAlign: 'center'}}>
       <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 600}}>Multi-property entrance</span>

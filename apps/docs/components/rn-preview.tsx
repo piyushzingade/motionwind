@@ -4,121 +4,17 @@ import React, { useState, useCallback, useEffect, type ReactNode } from "react";
 import { useTheme } from "next-themes";
 
 /**
- * Lightweight JSX/TSX syntax highlighter for code blocks.
- * Colors: keywords, strings, components, props, comments, animate-* classes.
- */
-function highlightCode(code: string): ReactNode[] {
-  const lines = code.split("\n");
-  return lines.map((line, lineIdx) => {
-    const parts: ReactNode[] = [];
-    let remaining = line;
-    let key = 0;
-
-    // Process tokens left-to-right
-    while (remaining.length > 0) {
-      let matched = false;
-
-      // Comments: // ...
-      const commentMatch = remaining.match(/^(\/\/.*)/);
-      if (commentMatch) {
-        parts.push(<span key={key++} className="rn-hl-comment">{commentMatch[1]}</span>);
-        remaining = remaining.slice(commentMatch[1]!.length);
-        matched = true;
-        continue;
-      }
-
-      // animate-* classes (accent color)
-      const animMatch = remaining.match(/^(animate-[\w:[\].,=-]+)/);
-      if (animMatch) {
-        parts.push(<span key={key++} className="rn-hl-animate">{animMatch[1]}</span>);
-        remaining = remaining.slice(animMatch[1]!.length);
-        matched = true;
-        continue;
-      }
-
-      // Strings: "..." or '...' or `...`
-      const strMatch = remaining.match(/^("[^"]*"|'[^']*'|`[^`]*`)/);
-      if (strMatch) {
-        parts.push(<span key={key++} className="rn-hl-string">{strMatch[1]}</span>);
-        remaining = remaining.slice(strMatch[1]!.length);
-        matched = true;
-        continue;
-      }
-
-      // JSX tags: <Component or </Component or <mw.View
-      const tagMatch = remaining.match(/^(<\/?)([\w.]+)/);
-      if (tagMatch) {
-        parts.push(<span key={key++} className="rn-hl-punct">{tagMatch[1]}</span>);
-        const tagName = tagMatch[2]!;
-        const isComponent = /^[A-Z]/.test(tagName) || tagName.startsWith("mw.");
-        parts.push(
-          <span key={key++} className={isComponent ? "rn-hl-component" : "rn-hl-tag"}>
-            {tagName}
-          </span>
-        );
-        remaining = remaining.slice(tagMatch[0]!.length);
-        matched = true;
-        continue;
-      }
-
-      // Keywords
-      const kwMatch = remaining.match(/^(import|from|export|function|const|let|return|if|else|className|style|onPress|key)\b/);
-      if (kwMatch) {
-        parts.push(<span key={key++} className="rn-hl-keyword">{kwMatch[1]}</span>);
-        remaining = remaining.slice(kwMatch[1]!.length);
-        matched = true;
-        continue;
-      }
-
-      // Props: word= or word={
-      const propMatch = remaining.match(/^(\w+)(=)/);
-      if (propMatch) {
-        parts.push(<span key={key++} className="rn-hl-prop">{propMatch[1]}</span>);
-        parts.push(<span key={key++} className="rn-hl-punct">{propMatch[2]}</span>);
-        remaining = remaining.slice(propMatch[0]!.length);
-        matched = true;
-        continue;
-      }
-
-      // Numbers
-      const numMatch = remaining.match(/^(\d+\.?\d*)/);
-      if (numMatch) {
-        parts.push(<span key={key++} className="rn-hl-number">{numMatch[1]}</span>);
-        remaining = remaining.slice(numMatch[1]!.length);
-        matched = true;
-        continue;
-      }
-
-      // Default: take one character
-      if (!matched) {
-        parts.push(<span key={key++}>{remaining[0]}</span>);
-        remaining = remaining.slice(1);
-      }
-    }
-
-    return (
-      <React.Fragment key={lineIdx}>
-        {parts}
-        {lineIdx < lines.length - 1 ? "\n" : null}
-      </React.Fragment>
-    );
-  });
-}
-
-/**
  * Phone-shaped preview component for React Native documentation.
- * Shows a mobile device frame with an animated preview inside,
- * matching the web <Demo> component's header bar pattern.
+ * Shows a mobile device frame with an animated preview inside.
+ * Code examples go below as regular markdown ```tsx blocks (fumadocs handles syntax highlighting).
  */
 
 export function RNPreview({
   children,
   title,
-  code,
 }: {
   children: ReactNode;
   title?: string;
-  code?: string;
 }) {
   const [replayKey, setReplayKey] = useState(0);
   const { resolvedTheme } = useTheme();
@@ -213,25 +109,6 @@ export function RNPreview({
         </div>
       </div>
 
-      {/* Code panel — below the preview */}
-      {code && (
-        <div className="rn-code-panel">
-          <div className="rn-code-panel-header px-4 py-2 flex items-center gap-2">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#94a3b8] dark:text-[var(--color-code-muted)]">
-              <polyline points="16 18 22 12 16 6" />
-              <polyline points="8 6 2 12 8 18" />
-            </svg>
-            <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[#94a3b8] dark:text-[var(--color-code-muted)]">
-              Code
-            </span>
-          </div>
-          <pre className="p-4 overflow-x-auto text-[13px] leading-[1.85] font-[family-name:var(--font-mono)]">
-            <code className="rn-code-block">
-              {highlightCode(code)}
-            </code>
-          </pre>
-        </div>
-      )}
     </div>
   );
 }

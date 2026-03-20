@@ -11,26 +11,7 @@ For cases where the `mw.*` component proxy isn't flexible enough, motionwind-rea
 
 Parses a motionwind className string and returns Reanimated animated styles, gesture handlers, and animation controls.
 
-<RNPreview title="useMotionwind Hook" code={`import { useMotionwind } from "motionwind-react-native";
-import Animated from "react-native-reanimated";
-
-function Card() {
-  const { animatedStyle, handlers } = useMotionwind(
-    \`animate-initial:opacity-0
-     animate-initial:y-20
-     animate-enter:opacity-100
-     animate-enter:y-0
-     animate-tap:scale-95
-     animate-duration-400\`
-  );
-
-  return (
-    <Animated.View
-      style={[styles.card, animatedStyle]}
-      {...handlers}
-    />
-  );
-}`}>
+<RNPreview title="useMotionwind Hook">
   <AnimBox animation="fadeSlideUp">
     <div className="rn-anim-tapScale" style={{background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 14, padding: '16px 20px', cursor: 'pointer'}}>
       <span style={{color: '#c8ff2e', fontSize: 13, fontWeight: 700}}>Custom Hook Card</span>
@@ -55,28 +36,7 @@ const {
 
 Use `animateTo` and `resetToBase` for custom logic:
 
-<RNPreview title="Manual Control — Toggle" code={`function ToggleCard() {
-  const { animatedStyle, animateTo, resetToBase }
-    = useMotionwind(\`
-      animate-initial:opacity-50
-      animate-initial:scale-90
-      animate-enter:opacity-100
-      animate-enter:scale-100
-      animate-spring\`);
-  const [on, setOn] = useState(false);
-
-  const toggle = () => {
-    if (on) resetToBase();
-    else animateTo({ scale: 1.05, opacity: 0.8 });
-    setOn(!on);
-  };
-
-  return (
-    <Pressable onPress={toggle}>
-      <Animated.View style={animatedStyle} />
-    </Pressable>
-  );
-}`}>
+<RNPreview title="Manual Control — Toggle">
   <AnimBox animation="spring">
     <div className="rn-anim-tapScale" style={{background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: 14, padding: '16px 20px', cursor: 'pointer', textAlign: 'center'}}>
       <span style={{color: '#a78bfa', fontSize: 13, fontWeight: 700}}>Tap to toggle</span>
@@ -113,17 +73,7 @@ const { isInView, onLayout } = useInView({
 
 The raw parser function — useful for debugging or custom integrations.
 
-<RNPreview title="Parser Output" code={`import { parseMotionClasses }
-  from "motionwind-react-native";
-
-const result = parseMotionClasses(
-  "animate-tap:scale-95 animate-duration-200 animate-spring bg-blue-500 p-4"
-);
-
-// result.nativewindClasses = "bg-blue-500 p-4"
-// result.gestures.whileTap = { scale: 0.95 }
-// result.transition = { type: "spring", duration: 200 }
-// result.hasMotion = true`}>
+<RNPreview title="Parser Output">
   <div style={{width: '100%'}}>
     <AnimBox animation="fadeIn">
       <div style={{fontFamily: 'monospace', fontSize: 10, lineHeight: '18px', color: '#8a8a9a'}}>

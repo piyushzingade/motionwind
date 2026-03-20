@@ -41,14 +41,7 @@ By default, animations use `withTiming` with an ease-out curve.
 
 Springs simulate real physics. Use them for interactions that should feel alive.
 
-<RNPreview title="Spring Entrance" code={`<mw.View className="
-  animate-initial:scale-80
-  animate-initial:opacity-0
-  animate-enter:scale-100
-  animate-enter:opacity-100
-  animate-spring
-  animate-stiffness-300
-  animate-damping-12">`}>
+<RNPreview title="Spring Entrance">
   <AnimBox animation="spring">
     <div style={{background: 'rgba(200,255,46,0.12)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 14, padding: '16px 20px', textAlign: 'center'}}>
       <span style={{color: '#c8ff2e', fontSize: 14, fontWeight: 700}}>Spring!</span>
@@ -67,17 +60,7 @@ Springs simulate real physics. Use them for interactions that should feel alive.
 
 ### Spring presets
 
-<RNPreview title="Spring Presets Comparison" code={`// Snappy button
-animate-stiffness-400 animate-damping-15
-
-// Bouncy card
-animate-stiffness-300 animate-damping-6
-
-// Smooth slide
-animate-stiffness-150 animate-damping-12
-
-// Heavy drawer
-animate-stiffness-100 animate-damping-20`}>
+<RNPreview title="Spring Presets Comparison">
   <div style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 8}}>
     <AnimBox animation="spring" delay={0}>
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.15)', borderRadius: 10, padding: '10px 14px'}}>
@@ -110,12 +93,7 @@ animate-stiffness-100 animate-damping-20`}>
 
 ### Infinite pulse
 
-<RNPreview title="Infinite Pulse" code={`<mw.View className="
-  animate-enter:scale-108
-  animate-enter:opacity-70
-  animate-repeat-infinite
-  animate-repeat-reverse
-  animate-duration-1200">`}>
+<RNPreview title="Infinite Pulse">
   <AnimBox animation="pulse">
     <div style={{width: 48, height: 48, borderRadius: 24, background: 'rgba(200,255,46,0.3)', border: '2px solid rgba(200,255,46,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
       <div style={{width: 20, height: 20, borderRadius: 10, background: '#c8ff2e'}} />

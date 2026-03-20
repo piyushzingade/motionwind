@@ -24,14 +24,7 @@ The most common gesture on mobile. Animates while the user's finger is pressing,
 
 ### Scale on press
 
-<RNPreview title="Scale on Press" code={`<mw.Pressable className="
-  animate-tap:scale-95
-  animate-duration-150
-  bg-blue-500 p-4 rounded-xl">
-  <mw.Text className="text-white font-bold">
-    Press me
-  </mw.Text>
-</mw.Pressable>`}>
+<RNPreview title="Scale on Press">
   <AnimBox animation="tapScale">
     <div style={{background: '#3b82f6', padding: '12px 24px', borderRadius: 12, cursor: 'pointer', userSelect: 'none'}}>
       <span style={{color: '#fff', fontSize: 13, fontWeight: 600}}>Press me</span>
@@ -41,13 +34,7 @@ The most common gesture on mobile. Animates while the user's finger is pressing,
 
 ### Scale + opacity
 
-<RNPreview title="Multi-property Tap" code={`<mw.Pressable className="
-  animate-tap:scale-92
-  animate-tap:opacity-70
-  animate-spring
-  animate-damping-15">
-  <mw.Text>Multi-property tap</mw.Text>
-</mw.Pressable>`}>
+<RNPreview title="Multi-property Tap">
   <AnimBox animation="tapScale">
     <div style={{background: 'rgba(200,255,46,0.15)', border: '1px solid rgba(200,255,46,0.25)', padding: '12px 24px', borderRadius: 12, cursor: 'pointer', userSelect: 'none'}}>
       <span style={{color: '#c8ff2e', fontSize: 13, fontWeight: 600}}>Press & hold me</span>
@@ -59,19 +46,7 @@ The most common gesture on mobile. Animates while the user's finger is pressing,
 
 You can combine entrance animations with gesture animations on the same element:
 
-<RNPreview title="Entrance + Tap Combined" code={`<mw.Pressable className="
-  animate-initial:opacity-0
-  animate-initial:y-20
-  animate-enter:opacity-100
-  animate-enter:y-0
-  animate-tap:scale-95
-  animate-duration-400
-  animate-ease-out
-  bg-indigo-600 p-4 rounded-xl">
-  <mw.Text className="text-white">
-    Fades in, then responds to taps
-  </mw.Text>
-</mw.Pressable>`}>
+<RNPreview title="Entrance + Tap Combined">
   <AnimBox animation="fadeSlideUp">
     <div className="rn-anim-tapScale" style={{background: '#4f46e5', padding: '12px 20px', borderRadius: 12, cursor: 'pointer', userSelect: 'none'}}>
       <span style={{color: '#fff', fontSize: 13, fontWeight: 600}}>Fades in, then responds to taps</span>
@@ -83,20 +58,7 @@ You can combine entrance animations with gesture animations on the same element:
 
 Combine staggered entrance with tap gestures:
 
-<RNPreview title="Staggered List Items" code={`{items.map((item, i) => (
-  <mw.Pressable key={item.id}
-    className={\`
-      animate-initial:opacity-0
-      animate-initial:x-30
-      animate-enter:opacity-100
-      animate-enter:x-0
-      animate-delay-\${i * 80}
-      animate-tap:scale-98
-      animate-spring
-    \`}>
-    <mw.Text>{item.title}</mw.Text>
-  </mw.Pressable>
-))}`}>
+<RNPreview title="Staggered List Items">
   <div style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 6}}>
     <AnimBox animation="slideRight" delay={0}>
       <div className="rn-anim-tapScale" style={{background: 'rgba(200,255,46,0.08)', border: '1px solid rgba(200,255,46,0.12)', padding: '10px 14px', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8}}>
