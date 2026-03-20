@@ -767,6 +767,46 @@ figure.shiki pre::-webkit-scrollbar {
   transform: scale(0.95);
 }
 
+/* ── React Native code block syntax colors ── */
+
+.rn-code-block {
+  color: var(--color-fg-muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.rn-hl-keyword {
+  color: #c084fc;
+  font-weight: 500;
+}
+.rn-hl-string {
+  color: #86efac;
+}
+.rn-hl-component {
+  color: #67e8f9;
+  font-weight: 500;
+}
+.rn-hl-tag {
+  color: #f472b6;
+}
+.rn-hl-prop {
+  color: #93c5fd;
+}
+.rn-hl-animate {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+.rn-hl-comment {
+  color: var(--color-code-muted);
+  font-style: italic;
+}
+.rn-hl-number {
+  color: #fbbf24;
+}
+.rn-hl-punct {
+  color: var(--color-fg-muted);
+  opacity: 0.5;
+}
+
 /* ── React Native preview animations ── */
 
 .rn-anim-fadeSlideUp {

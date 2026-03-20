@@ -3,6 +3,108 @@
 import React, { useState, useCallback, type ReactNode } from "react";
 
 /**
+ * Lightweight JSX/TSX syntax highlighter for code blocks.
+ * Colors: keywords, strings, components, props, comments, animate-* classes.
+ */
+function highlightCode(code: string): ReactNode[] {
+  const lines = code.split("\n");
+  return lines.map((line, lineIdx) => {
+    const parts: ReactNode[] = [];
+    let remaining = line;
+    let key = 0;
+
+    // Process tokens left-to-right
+    while (remaining.length > 0) {
+      let matched = false;
+
+      // Comments: // ...
+      const commentMatch = remaining.match(/^(\/\/.*)/);
+      if (commentMatch) {
+        parts.push(<span key={key++} className="rn-hl-comment">{commentMatch[1]}</span>);
+        remaining = remaining.slice(commentMatch[1]!.length);
+        matched = true;
+        continue;
+      }
+
+      // animate-* classes (accent color)
+      const animMatch = remaining.match(/^(animate-[\w:[\].,=-]+)/);
+      if (animMatch) {
+        parts.push(<span key={key++} className="rn-hl-animate">{animMatch[1]}</span>);
+        remaining = remaining.slice(animMatch[1]!.length);
+        matched = true;
+        continue;
+      }
+
+      // Strings: "..." or '...' or `...`
+      const strMatch = remaining.match(/^("[^"]*"|'[^']*'|`[^`]*`)/);
+      if (strMatch) {
+        parts.push(<span key={key++} className="rn-hl-string">{strMatch[1]}</span>);
+        remaining = remaining.slice(strMatch[1]!.length);
+        matched = true;
+        continue;
+      }
+
+      // JSX tags: <Component or </Component or <mw.View
+      const tagMatch = remaining.match(/^(<\/?)([\w.]+)/);
+      if (tagMatch) {
+        parts.push(<span key={key++} className="rn-hl-punct">{tagMatch[1]}</span>);
+        const tagName = tagMatch[2]!;
+        const isComponent = /^[A-Z]/.test(tagName) || tagName.startsWith("mw.");
+        parts.push(
+          <span key={key++} className={isComponent ? "rn-hl-component" : "rn-hl-tag"}>
+            {tagName}
+          </span>
+        );
+        remaining = remaining.slice(tagMatch[0]!.length);
+        matched = true;
+        continue;
+      }
+
+      // Keywords
+      const kwMatch = remaining.match(/^(import|from|export|function|const|let|return|if|else|className|style|onPress|key)\b/);
+      if (kwMatch) {
+        parts.push(<span key={key++} className="rn-hl-keyword">{kwMatch[1]}</span>);
+        remaining = remaining.slice(kwMatch[1]!.length);
+        matched = true;
+        continue;
+      }
+
+      // Props: word= or word={
+      const propMatch = remaining.match(/^(\w+)(=)/);
+      if (propMatch) {
+        parts.push(<span key={key++} className="rn-hl-prop">{propMatch[1]}</span>);
+        parts.push(<span key={key++} className="rn-hl-punct">{propMatch[2]}</span>);
+        remaining = remaining.slice(propMatch[0]!.length);
+        matched = true;
+        continue;
+      }
+
+      // Numbers
+      const numMatch = remaining.match(/^(\d+\.?\d*)/);
+      if (numMatch) {
+        parts.push(<span key={key++} className="rn-hl-number">{numMatch[1]}</span>);
+        remaining = remaining.slice(numMatch[1]!.length);
+        matched = true;
+        continue;
+      }
+
+      // Default: take one character
+      if (!matched) {
+        parts.push(<span key={key++}>{remaining[0]}</span>);
+        remaining = remaining.slice(1);
+      }
+    }
+
+    return (
+      <React.Fragment key={lineIdx}>
+        {parts}
+        {lineIdx < lines.length - 1 ? "\n" : null}
+      </React.Fragment>
+    );
+  });
+}
+
+/**
  * Phone-shaped preview component for React Native documentation.
  * Shows a mobile device frame with an animated preview inside,
  * matching the web <Demo> component's header bar pattern.
@@ -56,52 +158,55 @@ export function RNPreview({
         </button>
       </div>
 
-      {/* Phone frame + preview */}
-      <div className="flex flex-col lg:flex-row">
-        {/* Preview area — phone frame */}
-        <div className="flex-1 flex items-center justify-center px-6 py-8 demo-container">
-          <div
-            className={`relative w-[240px] rounded-[28px] border-[3px] overflow-hidden shadow-xl ${
-              dark
-                ? "border-[#2a2a3a] bg-[#0a0a0f]"
-                : "border-[#d4d4d8] bg-[#fafaf9]"
-            }`}
-          >
-            {/* Status bar */}
-            <div className={`flex items-center justify-between px-5 pt-3 pb-1 ${dark ? "text-white/40" : "text-black/30"}`}>
-              <span className="text-[8px] font-semibold">9:41</span>
-              <div className="flex items-center gap-1">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.24 4.24 0 0 0-6 0zm-4-4l2 2a7.07 7.07 0 0 1 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" /></svg>
-                <svg width="12" height="10" viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="6" width="4" height="12" rx="1" opacity=".3" /><rect x="7" y="4" width="4" height="14" rx="1" opacity=".5" /><rect x="13" y="2" width="4" height="16" rx="1" opacity=".7" /><rect x="19" y="0" width="4" height="18" rx="1" /></svg>
-              </div>
+      {/* Preview area — phone frame */}
+      <div className="flex items-center justify-center px-6 py-8 demo-container">
+        <div
+          className={`relative w-[240px] rounded-[28px] border-[3px] overflow-hidden shadow-xl ${
+            dark
+              ? "border-[#2a2a3a] bg-[#0a0a0f]"
+              : "border-[#d4d4d8] bg-[#fafaf9]"
+          }`}
+        >
+          {/* Status bar */}
+          <div className={`flex items-center justify-between px-5 pt-3 pb-1 ${dark ? "text-white/40" : "text-black/30"}`}>
+            <span className="text-[8px] font-semibold">9:41</span>
+            <div className="flex items-center gap-1">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.24 4.24 0 0 0-6 0zm-4-4l2 2a7.07 7.07 0 0 1 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" /></svg>
+              <svg width="12" height="10" viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="6" width="4" height="12" rx="1" opacity=".3" /><rect x="7" y="4" width="4" height="14" rx="1" opacity=".5" /><rect x="13" y="2" width="4" height="16" rx="1" opacity=".7" /><rect x="19" y="0" width="4" height="18" rx="1" /></svg>
             </div>
+          </div>
 
-            {/* Content area */}
-            <div key={replayKey} className="px-4 pb-5 pt-2 min-h-[180px] flex items-center justify-center">
-              {children}
-            </div>
+          {/* Content area */}
+          <div key={replayKey} className="px-4 pb-5 pt-2 min-h-[180px] flex items-center justify-center">
+            {children}
+          </div>
 
-            {/* Home indicator */}
-            <div className="flex justify-center pb-2">
-              <div className={`w-[80px] h-[4px] rounded-full ${dark ? "bg-white/15" : "bg-black/10"}`} />
-            </div>
+          {/* Home indicator */}
+          <div className="flex justify-center pb-2">
+            <div className={`w-[80px] h-[4px] rounded-full ${dark ? "bg-white/15" : "bg-black/10"}`} />
           </div>
         </div>
-
-        {/* Code panel */}
-        {code && (
-          <div className="lg:w-[340px] border-t lg:border-t-0 lg:border-l border-[var(--color-border)] bg-[var(--color-code-bg)]">
-            <div className="px-4 py-2 border-b border-[var(--color-code-border)] flex items-center gap-2">
-              <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--color-code-muted)]">
-                Code
-              </span>
-            </div>
-            <pre className="p-4 overflow-x-auto text-[12px] leading-[1.7] font-[family-name:var(--font-mono)]">
-              <code className="text-[var(--color-fg-muted)]">{code}</code>
-            </pre>
-          </div>
-        )}
       </div>
+
+      {/* Code panel — below the preview */}
+      {code && (
+        <div className="border-t border-[var(--color-border)] bg-[var(--color-code-bg)]">
+          <div className="px-4 py-2 border-b border-[var(--color-code-border)] flex items-center gap-2">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--color-code-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+            <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--color-code-muted)]">
+              Code
+            </span>
+          </div>
+          <pre className="p-4 overflow-x-auto text-[12.5px] leading-[1.8] font-[family-name:var(--font-mono)]">
+            <code className="rn-code-block">
+              {highlightCode(code)}
+            </code>
+          </pre>
+        </div>
+      )}
     </div>
   );
 }
