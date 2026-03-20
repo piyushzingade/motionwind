@@ -255,16 +255,6 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
   const pathD = buildPath(items, ys);
   const dashOff = totalLen > 0 ? totalLen * (1 - tocProgress) : totalLen;
 
-  // Arrow rotation: flip based on scroll direction
-  // pathAngle gives the tangent direction at the fill tip
-  // For "down" scrolling, the arrow points in the path direction
-  // For "up" scrolling, rotate 180° to point upward
-  const arrowRotation = arrowPos
-    ? scrollDir === "down"
-      ? arrowPos.pathAngle - 90 // path goes mostly downward, -90 to align chevron
-      : arrowPos.pathAngle + 90
-    : 0;
-
   return (
     <nav ref={navRef} className="toc" aria-label="Table of contents">
       <div className="toc-header">
@@ -308,19 +298,12 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
                 <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="1" />
               </linearGradient>
 
-              {/* Glow version of the gradient */}
-              <linearGradient
-                id="toc-accent-grad-glow"
-                gradientUnits="userSpaceOnUse"
-                x1="0"
-                y1={scrollDir === "down" ? "0" : String(listH)}
-                x2="0"
-                y2={scrollDir === "down" ? String(listH) : "0"}
-              >
-                <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0" />
-                <stop offset="50%" stopColor="var(--color-accent)" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="1" />
-              </linearGradient>
+              {/* Radial glow for the orb */}
+              <radialGradient id="toc-orb-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.6" />
+                <stop offset="50%" stopColor="var(--color-accent)" stopOpacity="0.15" />
+                <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="0" />
+              </radialGradient>
             </defs>
 
             {/* background track */}
@@ -351,20 +334,25 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
               />
             )}
 
-            {/* Directional arrow at the leading edge */}
+            {/* Luminous orb at the leading edge of the fill */}
             {arrowPos && tocProgress > 0.01 && (
-              <g
-                className="toc-arrow"
-                transform={`translate(${arrowPos.x}, ${arrowPos.y}) rotate(${arrowRotation})`}
-              >
-                <path
-                  d="M -3.5 -3 L 0 3 L 3.5 -3"
-                  fill="none"
-                  stroke="var(--color-accent)"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+              <g className="toc-orb">
+                {/* Outer halo */}
+                <circle
+                  cx={arrowPos.x}
+                  cy={arrowPos.y}
+                  r="8"
+                  fill="url(#toc-orb-glow)"
+                  className="toc-orb-halo"
+                />
+                {/* Core dot */}
+                <circle
+                  cx={arrowPos.x}
+                  cy={arrowPos.y}
+                  r="2.5"
+                  fill="var(--color-accent)"
                   filter="url(#toc-glow)"
+                  className="toc-orb-core"
                 />
               </g>
             )}
