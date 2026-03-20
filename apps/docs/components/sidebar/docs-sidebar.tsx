@@ -27,9 +27,32 @@ function PlatformSwitcher({
     <div className="mx-3 mb-4 flex rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] p-0.5">
       {(
         [
-          { id: "web", label: "Web" },
-          { id: "react-native", label: "React Native" },
-        ] as const
+          {
+            id: "web" as const,
+            label: "Web",
+            icon: (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                <path d="M2 12h20" />
+              </svg>
+            ),
+          },
+          {
+            id: "react-native" as const,
+            label: "React Native",
+            icon: (
+              <svg width="14" height="14" viewBox="-10.5 -9.45 21 18.9" fill="none">
+                <circle cx="0" cy="0" r="2" fill="currentColor" />
+                <g stroke="currentColor" strokeWidth="1" fill="none">
+                  <ellipse rx="10" ry="4.5" />
+                  <ellipse rx="10" ry="4.5" transform="rotate(60)" />
+                  <ellipse rx="10" ry="4.5" transform="rotate(120)" />
+                </g>
+              </svg>
+            ),
+          },
+        ]
       ).map((p) => {
         const isActive = platform === p.id;
         return (
@@ -52,7 +75,10 @@ function PlatformSwitcher({
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
-            <span className="relative z-10">{p.label}</span>
+            <span className="relative z-10 inline-flex items-center gap-1.5">
+              {p.icon}
+              {p.label}
+            </span>
           </button>
         );
       })}
