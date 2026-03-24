@@ -45,8 +45,16 @@ export function DocsLayoutClient({ children }: { children: React.ReactNode }) {
       />
       <div className="flex flex-1 flex-col min-h-0 min-w-0">
         <DocsHeader onToggleSidebar={handleToggleSidebar} />
-        <div className="docs-content-wrapper flex-1 overflow-y-auto min-h-0">
+        <div className="docs-content-wrapper relative flex-1 overflow-y-auto min-h-0">
           {children}
+          <div className="progressive-blur" aria-hidden="true">
+            <div className="blur-layer blur-1" />
+            <div className="blur-layer blur-2" />
+            <div className="blur-layer blur-3" />
+            <div className="blur-layer blur-4" />
+            <div className="blur-layer blur-5" />
+            <div className="blur-layer blur-6" />
+          </div>
         </div>
       </div>
     </div>
