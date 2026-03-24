@@ -466,12 +466,8 @@ export default function Home() {
 
                 {/* CTA Buttons */}
                 <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-700 animate-delay-400 animate-ease-out flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10">
-                  <button
-                    onClick={() => openCode("compiled")}
-                    onMouseEnter={() => {
-                      setActiveCode("compiled");
-                      setCodeOpen(true);
-                    }}
+                  <a
+                    href="https://www.motionwind.xyz/docs"
                     className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 group inline-flex items-center gap-2 rounded-lg bg-acid px-5 sm:px-6 py-3 text-sm font-semibold text-gray-950 transition-shadow hover:shadow-[0_0_30px_#c8ff2e40] cursor-pointer"
                   >
                     Get Started
@@ -488,7 +484,7 @@ export default function Home() {
                         d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
                       />
                     </svg>
-                  </button>
+                  </a>
                   <a
                     href="https://github.com/piyushzingade/motionwind"
                     className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-5 sm:px-6 py-3 text-sm font-medium text-white/80 backdrop-blur-sm transition-colors hover:bg-white/10 hover:text-white"
