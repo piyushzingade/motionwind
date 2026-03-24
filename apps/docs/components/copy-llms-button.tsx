@@ -2,21 +2,21 @@
 
 import { useState, useCallback } from "react";
 
-export function CopyLlmsButton() {
+export function CopyLlmsButton({ src = "/llms.txt" }: { src?: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {
     try {
-      const res = await fetch("/llms.txt");
+      const res = await fetch(src);
       const text = await res.text();
       await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // Fallback: open in new tab so user can manually copy
-      window.open("/llms.txt", "_blank");
+      window.open(src, "_blank");
     }
-  }, []);
+  }, [src]);
 
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -47,7 +47,7 @@ export function CopyLlmsButton() {
         )}
       </button>
       <a
-        href="/llms.txt"
+        href={src}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1.5 text-sm transition-colors duration-200"
