@@ -959,11 +959,12 @@ figure.shiki pre::-webkit-scrollbar {
 }
 /* ── Progressive Blur (bottom edge) ── */
 
-.docs-content-wrapper .progressive-blur {
-  position: sticky;
+.progressive-blur {
+  position: absolute;
   bottom: 0;
+  left: 0;
+  right: 0;
   height: 80px;
-  margin-top: -80px;
   pointer-events: none;
   z-index: 40;
 }
