@@ -23,18 +23,27 @@ import { useMotionwind } from "./use-motionwind.js";
 import { parseMotionClasses } from "./parser.js";
 
 /**
+ * Cast to access Animated.View, Animated.Text, etc. which exist at runtime
+ * but are missing from the TypeScript definitions in some reanimated versions.
+ */
+const Anim = Animated as any;
+const createAnimated = Anim.createAnimatedComponent as (
+  component: React.ComponentType<any>,
+) => React.ComponentType<any>;
+
+/**
  * Map of RN component names to their Animated equivalents.
  */
 const ANIMATED_COMPONENTS: Record<string, React.ComponentType<any>> = {
-  View: Animated.View,
-  Text: Animated.Text,
-  Image: Animated.Image,
-  ScrollView: Animated.ScrollView,
-  FlatList: Animated.FlatList,
-  Pressable: Animated.createAnimatedComponent(Pressable),
-  TouchableOpacity: Animated.createAnimatedComponent(TouchableOpacity),
-  TextInput: Animated.createAnimatedComponent(TextInput),
-  SafeAreaView: Animated.createAnimatedComponent(SafeAreaView),
+  View: Anim.View ?? createAnimated(View),
+  Text: Anim.Text ?? createAnimated(Text),
+  Image: Anim.Image ?? createAnimated(Image),
+  ScrollView: Anim.ScrollView ?? createAnimated(ScrollView),
+  FlatList: Anim.FlatList ?? createAnimated(FlatList),
+  Pressable: createAnimated(Pressable),
+  TouchableOpacity: createAnimated(TouchableOpacity),
+  TextInput: createAnimated(TextInput),
+  SafeAreaView: createAnimated(SafeAreaView),
 };
 
 /**

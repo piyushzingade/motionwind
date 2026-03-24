@@ -413,3 +413,105 @@ import { AnimatePresence } from "motion/react";
 2. Focus
 3. Hover
 4. InView / Enter (lowest)
+
+---
+
+# motionwind-react-native — React Native Support
+
+## What is motionwind-react-native?
+
+motionwind-react-native brings the same Tailwind-like animation syntax to React Native, powered by react-native-reanimated. Write `animate-tap:scale-95` and it runs a 60fps native animation via Reanimated shared values. Runtime parsing with LRU cache, no Babel step needed.
+
+## Installation
+
+### Prerequisites
+
+- React 18+ or 19+
+- React Native 0.72+
+- react-native-reanimated 3.x or 4.x
+
+### Expo Setup
+
+```bash
+npx expo install react-native-reanimated react-native-gesture-handler
+npm install motionwind-react-native
+```
+
+### Bare React Native
+
+```bash
+npm install motionwind-react-native react-native-reanimated react-native-gesture-handler
+```
+
+Babel config (Reanimated plugin must be last):
+
+```js
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: ["react-native-reanimated/plugin"],
+  };
+};
+```
+
+## Usage
+
+```tsx
+import { mw } from "motionwind-react-native";
+
+// Fade-in on mount
+<mw.View className="animate-enter:opacity-0 animate-enter:y-20 animate-duration-500">
+  <mw.Text>Fades in</mw.Text>
+</mw.View>
+
+// Tap interaction
+<mw.Pressable className="animate-tap:scale-95 animate-duration-150">
+  <mw.Text>Press me</mw.Text>
+</mw.Pressable>
+
+// Spring animation
+<mw.View className="animate-enter:scale-0 animate-spring animate-stiffness-300 animate-damping-15">
+  <mw.Text>Bounces in</mw.Text>
+</mw.View>
+```
+
+## Available Components
+
+`mw.View`, `mw.Text`, `mw.Image`, `mw.Pressable`, `mw.ScrollView`, `mw.FlatList`, `mw.TextInput`, `mw.TouchableOpacity`, `mw.SafeAreaView`
+
+When no `animate-*` classes are present, renders plain (non-animated) components.
+
+## Hooks
+
+### useMotionwind(className)
+
+```tsx
+import { useMotionwind } from "motionwind-react-native";
+const { animatedStyle, handlers, parsed, animateTo, resetToBase } = useMotionwind(className);
+```
+
+### useInView()
+
+```tsx
+import { useInView } from "motionwind-react-native";
+const { isInView, onLayout, viewRef } = useInView();
+```
+
+## Native-Specific Differences
+
+| Feature | Web (motionwind-react) | Native (motionwind-react-native) |
+|---|---|---|
+| Animation engine | Motion (Framer Motion) | react-native-reanimated |
+| Transform | Build-time Babel | Runtime parsing |
+| Styling | Tailwind CSS | NativeWind (optional) |
+| CSS filters (blur, brightness) | Supported | Silently dropped |
+| CSS units (vh, vw, rem) | Supported | Plain numbers (dp) |
+| Rotate values | Number (degrees) | String ("45deg") auto-formatted |
+| Duration unit | Seconds (0.3) | Milliseconds (300) |
+
+## Syntax
+
+Same `animate-*` syntax as web. All gesture prefixes, animatable properties, transition config, viewport config, and drag config classes work identically. See the web syntax reference above.
+
+Properties silently dropped on native: filter/blur/brightness/contrast/saturate, backdrop-blur, clip, path-length/offset/spacing, box-shadow.
