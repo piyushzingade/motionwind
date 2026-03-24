@@ -10,6 +10,7 @@
     "scroll-animations",
     "drag",
     "hooks",
-    "api-reference"
+    "api-reference",
+    "llms-txt"
   ]
 }

@@ -1,0 +1,288 @@
+---
+title: "LLMs.txt"
+description: "LLM-friendly reference for motionwind-react-native — a single-page summary of the entire API."
+---
+
+# LLMs.txt
+
+This page provides a comprehensive, LLM-friendly reference for `motionwind-react-native`. You can point AI assistants to this page for complete context.
+
+The raw file is also available at [`/llms.txt`](/llms.txt).
+
+---
+
+## What is motionwind-react-native?
+
+motionwind-react-native brings Tailwind-like animation classes to React Native, powered by `react-native-reanimated`. Write `animate-tap:scale-95` and it runs a 60fps native animation via Reanimated shared values. Runtime parsing with LRU cache, no Babel step needed.
+
+## Installation
+
+### Prerequisites
+
+- React 18+ or 19+
+- React Native 0.72+
+- react-native-reanimated 3.x or 4.x
+
+### Expo Setup
+
+```bash
+npx expo install react-native-reanimated react-native-gesture-handler
+npm install motionwind-react-native
+```
+
+### Bare React Native
+
+```bash
+npm install motionwind-react-native react-native-reanimated react-native-gesture-handler
+```
+
+### Babel Config (required for Reanimated)
+
+```js
+// babel.config.js
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: ["react-native-reanimated/plugin"], // must be last
+  };
+};
+```
+
+Clear cache after setup: `npx expo start -c`
+
+## API
+
+### mw.\* Components
+
+```tsx
+import { mw } from "motionwind-react-native";
+```
+
+Available: `mw.View`, `mw.Text`, `mw.Image`, `mw.Pressable`, `mw.ScrollView`, `mw.FlatList`, `mw.TextInput`, `mw.TouchableOpacity`, `mw.SafeAreaView`
+
+When no `animate-*` classes are present, renders plain (non-animated) components for optimal performance.
+
+### useMotionwind(className)
+
+```tsx
+import { useMotionwind } from "motionwind-react-native";
+
+const { animatedStyle, handlers, parsed, animateTo, resetToBase } = useMotionwind(className);
+```
+
+| Return | Description |
+|---|---|
+| `animatedStyle` | Reanimated `useAnimatedStyle` result |
+| `handlers` | `onPressIn`, `onPressOut`, `onHoverIn`, `onHoverOut`, `onFocus`, `onBlur` |
+| `parsed` | Full `ParsedResult` from parsing |
+| `animateTo(style)` | Manually animate to a gesture state |
+| `resetToBase()` | Reset to enter state |
+
+### useInView()
+
+```tsx
+import { useInView } from "motionwind-react-native";
+
+const { isInView, onLayout, viewRef } = useInView();
+```
+
+### parseMotionClasses(className)
+
+```tsx
+import { parseMotionClasses } from "motionwind-react-native";
+
+const result = parseMotionClasses("bg-blue-500 p-4 animate-tap:scale-95 animate-duration-200");
+```
+
+### clearParserCache()
+
+```tsx
+import { clearParserCache } from "motionwind-react-native";
+clearParserCache();
+```
+
+## Syntax Reference
+
+### Format
+
+```
+animate-{gesture}:{property}-{value}     (for animations)
+animate-{config}-{value}                 (for transition/viewport/drag config)
+```
+
+### Gesture Prefixes
+
+| Prefix | Maps to | RN handler | Triggers when |
+|---|---|---|---|
+| `initial` | initial state | — | Before mount |
+| `enter` | animate state | — | On mount |
+| `exit` | exit state | — | On unmount |
+| `tap` | whileTap | `onPressIn`/`onPressOut` | Element pressed |
+| `hover` | whileHover | `onHoverIn`/`onHoverOut` | Pointer enters (RN 0.71+) |
+| `focus` | whileFocus | `onFocus`/`onBlur` | Keyboard focus |
+| `inview` | whileInView | `useInView` | Enters viewport |
+
+### All Animatable Properties
+
+#### Transforms
+
+| Class pattern | RN property | Value handling |
+|---|---|---|
+| `scale-{n}` | `scale` | n/100 (110 → 1.1) |
+| `scale-x-{n}` / `scale-y-{n}` | `scaleX` / `scaleY` | n/100 |
+| `rotate-{n}` | `rotate` | `"{n}deg"` string |
+| `rotate-x-{n}` / `rotate-y-{n}` | `rotateX` / `rotateY` | `"{n}deg"` string |
+| `skew-x-{n}` / `skew-y-{n}` | `skewX` / `skewY` | `"{n}deg"` string |
+| `x-{n}` / `y-{n}` | `translateX` / `translateY` | Pixels |
+
+#### Visual Properties
+
+| Class pattern | RN property | Value handling |
+|---|---|---|
+| `opacity-{n}` | `opacity` | n/100 (0-100 → 0-1) |
+| `bg-{color}` | `backgroundColor` | #hex, rgb(), rgba(), hsl(), hsla() |
+| `text-{color}` | `color` | #hex, rgb(), rgba(), hsl(), hsla() |
+| `border-{color}` | `borderColor` | #hex, rgb(), rgba(), hsl(), hsla() |
+
+#### Layout Properties
+
+| Class pattern | RN property |
+|---|---|
+| `w-{n}` / `h-{n}` | `width` / `height` |
+| `rounded-{n}` | `borderRadius` |
+| `border-w-{n}` | `borderWidth` |
+| `p-{n}` / `m-{n}` / `gap-{n}` | `padding` / `margin` / `gap` |
+| `top-{n}` / `left-{n}` / `right-{n}` / `bottom-{n}` | Position |
+
+#### Typography
+
+| Class pattern | RN property |
+|---|---|
+| `text-size-{n}` | `fontSize` |
+| `tracking-{n}` | `letterSpacing` |
+| `leading-{n}` | `lineHeight` |
+
+#### Keyframe Arrays
+
+`{property}-[v1,v2,v3]` — e.g., `scale-[100,120,100]` → `scale: [1, 1.2, 1]`
+
+### Negative Values
+
+Prefix with `-` after the colon: `animate-tap:-rotate-45` → `rotate: "-45deg"`
+
+## Transition Configuration
+
+| Class | Effect |
+|---|---|
+| `animate-duration-{ms}` | Duration in milliseconds |
+| `animate-delay-{ms}` | Start delay in milliseconds |
+| `animate-delay-children-{ms}` | Delay all children |
+| `animate-spring` | Use spring animation |
+| `animate-stiffness-{n}` | Spring stiffness |
+| `animate-damping-{n}` | Spring damping |
+| `animate-mass-{n}` | Spring mass (n/10) |
+| `animate-ease-linear` | Linear easing |
+| `animate-ease-in` / `animate-ease-out` / `animate-ease-in-out` | Standard easing |
+| `animate-ease-circ-in` / `animate-ease-circ-out` / `animate-ease-circ-in-out` | Circular easing |
+| `animate-ease-back-in` / `animate-ease-back-out` / `animate-ease-back-in-out` | Back easing |
+| `animate-ease-[x1,y1,x2,y2]` | Custom cubic-bezier |
+| `animate-repeat-{n}` | Repeat N times |
+| `animate-repeat-infinite` | Loop forever |
+| `animate-repeat-reverse` | Alternate direction |
+| `animate-stagger-{ms}` | Stagger children |
+| `animate-stagger-reverse` | Reverse stagger |
+
+## Viewport Configuration
+
+| Class | Effect |
+|---|---|
+| `animate-once` | Trigger once then lock |
+| `animate-amount-{n}` | Trigger at n% visibility |
+| `animate-amount-all` | Trigger when fully visible |
+| `animate-margin-{n}` | Add margin threshold |
+
+## Drag Configuration
+
+| Class | Effect |
+|---|---|
+| `animate-drag-x` / `animate-drag-y` / `animate-drag-both` | Drag axis |
+| `animate-drag-elastic-{n}` | Elastic coefficient (n/100) |
+| `animate-drag-snap` | Snap to origin on release |
+| `animate-drag-no-momentum` | Disable momentum |
+| `animate-drag-constraint-t/b/l/r-{n}` | Drag bounds |
+
+## Web-Only Properties (Silently Dropped)
+
+These produce no output on native: `filter-*`, `blur-*`, `brightness-*`, `contrast-*`, `saturate-*`, `backdrop-blur-*`, `clip-*`, `path-length-*`, `path-offset-*`, `path-spacing-*`, `shadow-*`
+
+## Common Patterns
+
+### Mount Animation
+
+```tsx
+<mw.View className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500">
+  <mw.Text>Fades in on mount</mw.Text>
+</mw.View>
+```
+
+### Tap Interaction
+
+```tsx
+<mw.Pressable className="animate-tap:scale-95 animate-duration-150 bg-blue-500 p-4 rounded-xl">
+  <mw.Text className="text-white font-bold">Press me</mw.Text>
+</mw.Pressable>
+```
+
+### Spring Button
+
+```tsx
+<mw.Pressable className="animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15">
+  <mw.Text>Springy</mw.Text>
+</mw.Pressable>
+```
+
+### Infinite Pulse
+
+```tsx
+<mw.View className="animate-enter:scale-[100,110,100] animate-repeat-infinite animate-duration-2000">
+  <mw.Text>Pulsing</mw.Text>
+</mw.View>
+```
+
+### Scroll Reveal
+
+```tsx
+<mw.View className="animate-initial:opacity-0 animate-initial:y-40 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once">
+  <mw.Text>Scroll to reveal</mw.Text>
+</mw.View>
+```
+
+### Draggable Element
+
+```tsx
+<mw.View className="animate-drag-both animate-drag-elastic-50 animate-drag-snap">
+  <mw.Text>Drag me</mw.Text>
+</mw.View>
+```
+
+## Web vs. Native Differences
+
+| Feature | Web (`motionwind-react`) | Native (`motionwind-react-native`) |
+|---|---|---|
+| Animation engine | Motion (Framer Motion) | react-native-reanimated |
+| Transform | Build-time Babel | Runtime parsing |
+| Styling | Tailwind CSS | NativeWind (optional) |
+| CSS filters | Supported | Silently dropped |
+| CSS units (vh, vw, rem) | Supported | Plain numbers (dp) |
+| Rotate values | Number | String (`"45deg"`) auto-formatted |
+| Duration unit | Seconds (0.3) | Milliseconds (300) |
+
+## Peer Dependencies
+
+| Package | Version | Required |
+|---|---|---|
+| `react` | ^18.0.0 or ^19.0.0 | Yes |
+| `react-native` | >=0.72.0 | Yes |
+| `react-native-reanimated` | ^3.0.0 or ^4.0.0 | Yes |
+| `nativewind` | ^4.0.0 | Optional |
