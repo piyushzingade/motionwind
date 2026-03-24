@@ -75,7 +75,7 @@ function PlatformSwitcher({
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
-            <span className="relative z-10 inline-flex items-center gap-1.5">
+            <span className="relative z-10 flex items-center justify-center gap-1.5">
               {p.icon}
               {p.label}
             </span>
