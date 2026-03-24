@@ -4,6 +4,7 @@ import defaultMdxComponents from "fumadocs-ui/mdx";
 import { Demo } from "@/components/demo";
 import { RNPreview, AnimBox } from "@/components/rn-preview";
 import { MWDiv, MWButton, MWSpan, MWInput } from "@/components/mdx-content";
+import { CopyLlmsButton } from "@/components/copy-llms-button";
 import { DocsPageHeader } from "@/components/docs-page-header";
 import { TableOfContents } from "@/components/toc";
 import {
@@ -55,6 +56,7 @@ const mdxComponents: any = {
   AnimatedCheckboxDemo,
   PulseRingsDemo,
   AnimatedChartDemo,
+  CopyLlmsButton,
 };
 
 export default async function Page(props: {
