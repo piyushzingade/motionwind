@@ -139,6 +139,14 @@ export default function RootLayout({
           }}
         >
           {children}
+          <div className="progressive-blur" aria-hidden="true">
+            <div className="blur-layer blur-1" />
+            <div className="blur-layer blur-2" />
+            <div className="blur-layer blur-3" />
+            <div className="blur-layer blur-4" />
+            <div className="blur-layer blur-5" />
+            <div className="blur-layer blur-6" />
+          </div>
         </RootProvider>
         <Analytics />
         <SpeedInsights />

@@ -170,3 +170,70 @@
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
+/* ── Progressive Blur (bottom edge) ── */
+
+.progressive-blur {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.progressive-blur .blur-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.progressive-blur .blur-1 {
+  height: 100%;
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 16.67%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 16.67%);
+}
+
+.progressive-blur .blur-2 {
+  height: 83.33%;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+}
+
+.progressive-blur .blur-3 {
+  height: 66.67%;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 25%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25%);
+}
+
+.progressive-blur .blur-4 {
+  height: 50%;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 33%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 33%);
+}
+
+.progressive-blur .blur-5 {
+  height: 33.33%;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 50%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 50%);
+}
+
+.progressive-blur .blur-6 {
+  height: 16.67%;
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+}
