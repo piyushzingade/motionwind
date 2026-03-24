@@ -1,0 +1,77 @@
+---
+title: "React Native"
+description: "Bring motionwind's Tailwind-like animation classes to React Native with Reanimated."
+---
+
+# React Native
+
+motionwind for React Native lets you animate mobile apps using the same `animate-*` class syntax you already know from the web — powered by `react-native-reanimated` for 60fps native animations.
+
+<RNPreview title="Welcome Card — Staggered Entrance">
+  <div style={{width: '100%'}}>
+    <AnimBox animation="fadeSlideUp">
+      <div style={{background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 16, padding: '16px 20px'}}>
+        <AnimBox animation="fadeIn" delay={200}>
+          <div style={{color: '#f0f0f0', fontSize: 16, fontWeight: 700, marginBottom: 4}}>Welcome</div>
+        </AnimBox>
+        <AnimBox animation="fadeIn" delay={400}>
+          <div style={{color: '#8a8a9a', fontSize: 12}}>Animations feel native because they are.</div>
+        </AnimBox>
+      </div>
+    </AnimBox>
+  </div>
+</RNPreview>
+
+## Why motionwind on React Native?
+
+- **Same API** — Write `animate-hover:scale-110` on web and `animate-tap:scale-95` on mobile. One mental model, two platforms.
+- **Reanimated under the hood** — Animations run on the UI thread, not JavaScript. Zero dropped frames.
+- **NativeWind compatible** — Non-animation Tailwind classes pass through to NativeWind automatically.
+- **Runtime parsing** — No build-time Babel step needed. The `mw.*` component proxy parses classes at runtime with an LRU cache.
+
+## How it works
+
+```tsx
+import { mw } from "motionwind-react-native";
+
+<mw.Pressable className="animate-tap:scale-95 animate-duration-150 bg-blue-500 p-4 rounded-xl">
+  <mw.Text className="text-white font-bold">Press me</mw.Text>
+</mw.Pressable>
+```
+
+The `mw.Pressable` component:
+
+1. **Parses** the className string, separating `animate-*` tokens from regular classes
+2. **Creates** Reanimated shared values for each animated property (`scale`)
+3. **Maps** gestures to RN handlers (`animate-tap:` → `onPressIn` / `onPressOut`)
+4. **Passes** remaining classes (`bg-blue-500 p-4 rounded-xl`) to NativeWind via `className`
+
+<RNPreview title="Tap to Scale — Press Interaction">
+  <AnimBox animation="tapScale">
+    <div style={{background: '#3b82f6', padding: '12px 24px', borderRadius: 12, cursor: 'pointer', userSelect: 'none'}}>
+      <span style={{color: '#fff', fontSize: 13, fontWeight: 600}}>Press me</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## Web vs. Native differences
+
+| Feature | Web (`motionwind-react`) | Native (`motionwind-react-native`) |
+|---|---|---|
+| Animation engine | `motion/react` (Framer Motion) | `react-native-reanimated` |
+| Styling | Tailwind CSS | NativeWind (optional) |
+| `whileHover` | Mouse hover | `onHoverIn/Out` (RN 0.71+) |
+| `whileTap` | Click/touch | `onPressIn/Out` |
+| CSS filters | `blur()`, `brightness()` | Not supported (dropped silently) |
+| CSS units | `vh`, `vw`, `rem`, `em` | Plain numbers (device-independent pixels) |
+| `x` / `y` translate | CSS translate | RN `translateX`/`translateY` (auto-mapped) |
+| Rotate values | Number (degrees) | String (`"45deg"`) (auto-formatted) |
+| Duration unit | Seconds (`0.3`) | Milliseconds (`300`) |
+
+## Next steps
+
+- [Installation](/docs/react-native/installation) — Set up your project
+- [Components](/docs/react-native/components) — Learn about `mw.*` components
+- [Animations](/docs/react-native/animations) — Entrance, exit, and state animations
+- [Gestures](/docs/react-native/gestures) — Tap, hover, and focus interactions
+- [Hooks](/docs/react-native/hooks) — `useMotionwind` and `useInView` for custom control

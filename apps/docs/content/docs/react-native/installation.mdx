@@ -1,0 +1,146 @@
+---
+title: "Installation"
+description: "Set up motionwind-react-native in your Expo or bare React Native project."
+---
+
+# Installation
+
+motionwind-react-native works with Expo and bare React Native projects. It requires `react-native-reanimated` for animations and optionally `nativewind` for Tailwind CSS styling.
+
+## Prerequisites
+
+- **React Native** 0.72 or newer
+- **React** 18 or newer
+- **react-native-reanimated** 3.x or 4.x
+- **Node.js** 18 or newer
+
+## Expo setup
+
+### 1. Install dependencies
+
+```bash
+npx expo install react-native-reanimated react-native-gesture-handler react-native-svg
+```
+
+Then install motionwind:
+
+```bash
+npm install motionwind-react-native
+```
+
+### 2. Add Reanimated Babel plugin
+
+Create or update `babel.config.js` at your project root:
+
+```js
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: ["react-native-reanimated/plugin"],
+  };
+};
+```
+
+> **Important:** The Reanimated plugin must be listed **last** in the plugins array.
+
+### 3. Optional: Add NativeWind
+
+If you want Tailwind CSS classes for styling (not just animations):
+
+```bash
+npm install nativewind tailwindcss
+```
+
+Follow the [NativeWind setup guide](https://www.nativewind.dev/v4/getting-started) for your project type.
+
+### 4. Clear cache and start
+
+```bash
+npx expo start -c
+```
+
+The `-c` flag clears the Metro bundler cache, which is required after adding Babel plugins.
+
+## Bare React Native setup
+
+### 1. Install dependencies
+
+```bash
+npm install motionwind-react-native react-native-reanimated react-native-gesture-handler
+```
+
+### 2. Configure Babel
+
+Add the Reanimated plugin to your `babel.config.js`:
+
+```js
+module.exports = {
+  presets: ["module:@react-native/babel-preset"],
+  plugins: ["react-native-reanimated/plugin"],
+};
+```
+
+### 3. Wrap your app with GestureHandlerRootView
+
+In your root component (usually `App.tsx`):
+
+```tsx
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+export default function App() {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      {/* Your app content */}
+    </GestureHandlerRootView>
+  );
+}
+```
+
+> **Required:** `GestureHandlerRootView` must wrap your entire app for gesture-based animations (`animate-tap:*`, `animate-drag-*`) to work.
+
+## Verify the installation
+
+Create a test component to confirm everything works:
+
+```tsx
+import { mw } from "motionwind-react-native";
+import { Text } from "react-native";
+
+export function TestAnimation() {
+  return (
+    <mw.View className="animate-enter:opacity-0 animate-enter:y-20 animate-duration-500">
+      <Text>If you see this fade in, motionwind is working!</Text>
+    </mw.View>
+  );
+}
+```
+
+If the text fades in and slides up when the component mounts, your setup is complete.
+
+## Troubleshooting
+
+### "Unable to resolve module" errors
+
+If Metro can't find `motionwind-react-native`, make sure you've installed it in the correct directory (your app's root, not the monorepo root) and cleared the cache:
+
+```bash
+npx expo start -c
+# or for bare RN:
+npx react-native start --reset-cache
+```
+
+### Animations not running
+
+1. Confirm the Reanimated Babel plugin is in `babel.config.js`
+2. Confirm you cleared the Metro cache after adding the plugin
+3. Check that `GestureHandlerRootView` wraps your app (required for gestures)
+
+### NativeWind classes not applying
+
+Non-animation classes (like `bg-blue-500`, `p-4`) are passed through as `className`. For these to work, you need NativeWind configured separately. Without NativeWind, use `style` prop for non-animation styling.
+
+## Next steps
+
+- [Components](/docs/react-native/components) — Learn how to use `mw.*` components
+- [Animations](/docs/react-native/animations) — Write your first animations

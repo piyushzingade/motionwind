@@ -1,0 +1,15 @@
+{
+  "title": "React Native",
+  "pages": [
+    "index",
+    "installation",
+    "components",
+    "animations",
+    "gestures",
+    "springs-and-easing",
+    "scroll-animations",
+    "drag",
+    "hooks",
+    "api-reference"
+  ]
+}

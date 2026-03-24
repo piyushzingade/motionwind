@@ -1,0 +1,238 @@
+---
+title: "API Reference"
+description: "Complete type definitions and exports for motionwind-react-native."
+---
+
+# API Reference
+
+Complete reference for all exports from `motionwind-react-native`.
+
+## Exports
+
+```tsx
+import {
+  // Component proxy
+  mw,
+
+  // Hooks
+  useMotionwind,
+  useInView,
+
+  // Parser
+  parseMotionClasses,
+  clearParserCache,
+
+  // Types
+  type ParsedResult,
+  type GestureKey,
+  type AnimatableValues,
+  type NativeAnimatableStyle,
+  type TransitionConfig,
+  type ViewportConfig,
+  type DragConfig,
+} from "motionwind-react-native";
+```
+
+## Types
+
+### GestureKey
+
+```tsx
+type GestureKey =
+  | "whileHover"
+  | "whileTap"
+  | "whileFocus"
+  | "whileInView"
+  | "initial"
+  | "animate"
+  | "exit";
+```
+
+### AnimatableValues
+
+```tsx
+type AnimatableValues = Record<string, string | number | (string | number)[]>;
+```
+
+### NativeAnimatableStyle
+
+All properties that can be animated on React Native:
+
+```tsx
+interface NativeAnimatableStyle {
+  // Transform
+  translateX?: number;
+  translateY?: number;
+  scale?: number;
+  scaleX?: number;
+  scaleY?: number;
+  rotate?: string;      // "45deg"
+  rotateX?: string;
+  rotateY?: string;
+  rotateZ?: string;
+  skewX?: string;       // "15deg"
+  skewY?: string;
+
+  // Layout
+  width?: number | string;
+  height?: number | string;
+  top?: number;
+  left?: number;
+  right?: number;
+  bottom?: number;
+  padding?: number;
+  margin?: number;
+  borderRadius?: number;
+  borderWidth?: number;
+  gap?: number;
+
+  // Visual
+  opacity?: number;
+  backgroundColor?: string;
+  color?: string;
+  borderColor?: string;
+
+  // Typography
+  fontSize?: number;
+  letterSpacing?: number;
+  lineHeight?: number;
+}
+```
+
+### TransitionConfig
+
+```tsx
+interface TransitionConfig {
+  type?: "spring" | "timing";
+  duration?: number;              // Milliseconds
+  delay?: number;                 // Milliseconds
+  easing?:
+    | "linear" | "easeIn" | "easeOut" | "easeInOut"
+    | "circIn" | "circOut" | "circInOut"
+    | "backIn" | "backOut" | "backInOut"
+    | number[];                   // Cubic-bezier [x1, y1, x2, y2]
+  stiffness?: number;
+  damping?: number;
+  mass?: number;
+  overshootClamping?: boolean;
+  restDisplacementThreshold?: number;
+  restSpeedThreshold?: number;
+  repeat?: number;                // -1 for infinite
+  repeatReverse?: boolean;
+  staggerChildren?: number;       // Milliseconds
+  staggerDirection?: 1 | -1;
+  delayChildren?: number;         // Milliseconds
+}
+```
+
+### ViewportConfig
+
+```tsx
+interface ViewportConfig {
+  once?: boolean;
+  amount?: "some" | "all" | number;  // 0–1
+  margin?: number;                    // Pixels
+}
+```
+
+### DragConfig
+
+```tsx
+interface DragConfig {
+  drag?: boolean | "x" | "y";
+  dragElastic?: number;               // 0–1
+  dragSnapToOrigin?: boolean;
+  dragMomentum?: boolean;
+  dragConstraints?: {
+    top?: number;
+    left?: number;
+    right?: number;
+    bottom?: number;
+  };
+}
+```
+
+### ParsedResult
+
+```tsx
+interface ParsedResult {
+  nativewindClasses: string;
+  gestures: Partial<Record<GestureKey, NativeAnimatableStyle>>;
+  transition: TransitionConfig;
+  viewport: ViewportConfig;
+  dragConfig: DragConfig;
+  hasMotion: boolean;
+}
+```
+
+## Class reference
+
+### Gesture prefixes
+
+| Prefix | Maps to | RN Handler |
+|---|---|---|
+| `animate-initial:` | Starting state | Set on mount |
+| `animate-enter:` | Target state | Animated on mount |
+| `animate-exit:` | Exit state | On unmount |
+| `animate-tap:` | `whileTap` | `onPressIn/Out` |
+| `animate-hover:` | `whileHover` | `onHoverIn/Out` |
+| `animate-focus:` | `whileFocus` | `onFocus/Blur` |
+| `animate-inview:` | `whileInView` | `onLayout` detection |
+
+### Transition classes
+
+| Class | Description |
+|---|---|
+| `animate-duration-{ms}` | Animation duration in milliseconds |
+| `animate-delay-{ms}` | Delay before animation starts |
+| `animate-ease-out` | Ease-out cubic curve |
+| `animate-ease-in` | Ease-in cubic curve |
+| `animate-ease-in-out` | Ease-in-out cubic curve |
+| `animate-ease-linear` | Linear (constant speed) |
+| `animate-ease-circ-out` | Circular ease-out |
+| `animate-ease-circ-in` | Circular ease-in |
+| `animate-ease-circ-in-out` | Circular ease-in-out |
+| `animate-ease-back-out` | Back ease-out (overshoot) |
+| `animate-ease-back-in` | Back ease-in |
+| `animate-ease-back-in-out` | Back ease-in-out |
+| `animate-ease-[x1,y1,x2,y2]` | Custom cubic-bezier |
+| `animate-spring` | Use spring physics |
+| `animate-stiffness-{n}` | Spring stiffness |
+| `animate-damping-{n}` | Spring damping |
+| `animate-mass-{n}` | Spring mass (÷10) |
+| `animate-repeat-{n}` | Repeat N times |
+| `animate-repeat-infinite` | Loop forever |
+| `animate-repeat-reverse` | Reverse on repeat |
+| `animate-stagger-{ms}` | Stagger children delay |
+| `animate-stagger-reverse` | Stagger from last child |
+| `animate-delay-children-{ms}` | Delay before first child |
+| `animate-once` | Animate only once (viewport) |
+| `animate-amount-{n}` | Viewport visibility % |
+| `animate-amount-all` | Require full visibility |
+| `animate-margin-{n}` | Viewport detection offset |
+
+### Drag classes
+
+| Class | Description |
+|---|---|
+| `animate-drag-x` | Enable horizontal drag |
+| `animate-drag-y` | Enable vertical drag |
+| `animate-drag-both` | Enable both directions |
+| `animate-drag-elastic-{n}` | Elasticity 0–100 |
+| `animate-drag-snap` | Snap back to origin on release |
+| `animate-drag-no-momentum` | Stop immediately on release |
+| `animate-drag-constraint-t-{n}` | Max drag up (pixels) |
+| `animate-drag-constraint-b-{n}` | Max drag down |
+| `animate-drag-constraint-l-{n}` | Max drag left |
+| `animate-drag-constraint-r-{n}` | Max drag right |
+
+## Peer dependencies
+
+```json
+{
+  "react": "^18.0.0 || ^19.0.0",
+  "react-native": ">=0.72.0",
+  "react-native-reanimated": "^3.0.0 || ^4.0.0",
+  "nativewind": "^4.0.0 (optional)"
+}
+```

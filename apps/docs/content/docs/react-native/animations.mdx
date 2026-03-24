@@ -1,0 +1,147 @@
+---
+title: "Animations"
+description: "Entrance, exit, and state animations with the animate-* class syntax."
+---
+
+# Animations
+
+motionwind-react-native uses the same class syntax as the web package. All animation classes start with `animate-` followed by a gesture prefix and property-value pair.
+
+## Class syntax
+
+```
+animate-{gesture}:{property}-{value}
+```
+
+- **gesture**: When the animation triggers (`enter`, `initial`, `exit`, `tap`, `inview`, etc.)
+- **property**: What to animate (`opacity`, `scale`, `y`, `rotate`, etc.)
+- **value**: The target value (`0`, `95`, `20`, `45`, etc.)
+
+## Entrance animations
+
+Use `animate-initial:` to set the starting state and `animate-enter:` for the target state. The animation runs automatically when the component mounts.
+
+### Fade in
+
+<RNPreview title="Fade In">
+  <AnimBox animation="fadeIn">
+    <div style={{background: 'rgba(200,255,46,0.12)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 12, padding: '14px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>I fade in on mount</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+### Slide up + fade
+
+<RNPreview title="Slide Up + Fade">
+  <AnimBox animation="fadeSlideUp">
+    <div style={{background: 'rgba(200,255,46,0.12)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 12, padding: '14px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>I slide up and fade in</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+### Scale in with spring
+
+<RNPreview title="Scale In — Spring Physics">
+  <AnimBox animation="spring">
+    <div style={{background: 'rgba(200,255,46,0.12)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 12, padding: '14px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>I scale up with a spring</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+### Slide from left
+
+<RNPreview title="Slide from Left">
+  <AnimBox animation="slideRight">
+    <div style={{background: 'rgba(14,165,233,0.15)', border: '1px solid rgba(14,165,233,0.25)', borderRadius: 12, padding: '14px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>Slide from left</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## Animatable properties
+
+### Transform
+
+| Class | Property | Example | Notes |
+|---|---|---|---|
+| `scale-{n}` | `scale` | `scale-110` → 1.1 | Values 0–200, divided by 100 |
+| `scale-x-{n}` | `scaleX` | `scale-x-120` → 1.2 | |
+| `scale-y-{n}` | `scaleY` | `scale-y-80` → 0.8 | |
+| `rotate-{n}` | `rotate` | `rotate-45` → `"45deg"` | Auto-converts to deg string |
+| `rotate-x-{n}` | `rotateX` | `rotate-x-180` → `"180deg"` | |
+| `rotate-y-{n}` | `rotateY` | `rotate-y-90` → `"90deg"` | |
+| `x-{n}` | `translateX` | `x-20` → 20 | Pixels. Maps to RN `translateX` |
+| `y-{n}` | `translateY` | `y-30` → 30 | Pixels. Maps to RN `translateY` |
+
+### Visual
+
+| Class | Property | Example | Notes |
+|---|---|---|---|
+| `opacity-{n}` | `opacity` | `opacity-50` → 0.5 | Values 0–100, divided by 100 |
+| `bg-{color}` | `backgroundColor` | `bg-#ff0000` | Hex, rgb(), rgba(), hsl() |
+| `text-{color}` | `color` | `text-#ffffff` | |
+
+### Dimensions & Layout
+
+| Class | Property | Example |
+|---|---|---|
+| `w-{n}` | `width` | `w-200` → 200px |
+| `h-{n}` | `height` | `h-100` → 100px |
+| `rounded-{n}` | `borderRadius` | `rounded-16` → 16 |
+| `p-{n}` | `padding` | `p-20` → 20 |
+| `m-{n}` | `margin` | `m-10` → 10 |
+
+## Negative values
+
+Prefix any value with `-` for negative numbers:
+
+```tsx
+<mw.View className="animate-enter:y-0 animate-initial:-y-50">
+  <Text>Slides down from above</Text>
+</mw.View>
+```
+
+## Keyframe arrays
+
+Animate through multiple values using bracket syntax:
+
+<RNPreview title="Keyframe Scale">
+  <AnimBox animation="bounce">
+    <div style={{background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: 12, padding: '14px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>Scale: 0.8 → 1.15 → 1.0</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## Combining multiple properties
+
+Chain as many properties as you need on the same gesture:
+
+<RNPreview title="Complex Entrance">
+  <AnimBox animation="rotate" delay={0}>
+    <div style={{background: 'linear-gradient(135deg, rgba(200,255,46,0.15), rgba(14,165,233,0.15))', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 14, padding: '16px 20px', textAlign: 'center'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 600}}>Multi-property entrance</span>
+      <div style={{color: '#8a8a9a', fontSize: 10, marginTop: 4}}>opacity + scale + translate + rotate</div>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## Web-only properties (not supported)
+
+These properties are supported on web but silently ignored on React Native:
+
+- `blur-*`, `brightness-*`, `contrast-*`, `saturate-*` (CSS filters)
+- `backdrop-blur-*` (backdrop filter)
+- `clip-*` (clip-path)
+- `shadow-*` (box-shadow)
+- `path-length-*`, `path-offset-*`, `path-spacing-*` (SVG)
+
+This means you can share className strings between web and native — unsupported props are dropped without errors.
+
+## Next steps
+
+- [Gestures](/docs/react-native/gestures) — Tap, hover, and focus animations
+- [Springs & Easing](/docs/react-native/springs-and-easing) — Configure animation physics

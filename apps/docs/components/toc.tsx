@@ -63,14 +63,17 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
   const [totalLen, setTotalLen] = useState(0);
   const [listH, setListH] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [scrollDir, setScrollDir] = useState<"down" | "up">("down");
 
   const obsRef = useRef<IntersectionObserver | null>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const itemEls = useRef<(HTMLLIElement | null)[]>([]);
   const trackRef = useRef<SVGPathElement>(null);
+  const accentRef = useRef<SVGPathElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const isClickScrolling = useRef(false);
   const clickTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastScrollTop = useRef(0);
 
   useEffect(() => setMounted(true), []);
 
@@ -116,6 +119,13 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
       const scrollTop = container.scrollTop;
       const scrollH = container.scrollHeight - container.clientHeight;
       setScrollPct(scrollH > 0 ? Math.min(scrollTop / scrollH, 1) : 0);
+
+      // Track scroll direction
+      const delta = scrollTop - lastScrollTop.current;
+      if (Math.abs(delta) > 2) {
+        setScrollDir(delta > 0 ? "down" : "up");
+      }
+      lastScrollTop.current = scrollTop;
     };
 
     container.addEventListener("scroll", fn, { passive: true });
@@ -222,6 +232,24 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
     return activeIndex === 0 ? Math.max(raw, 0.03) : raw;
   }, [activeIndex, ys, scrollPct]);
 
+  // Compute arrow position at the leading edge of the accent fill
+  const arrowPos = useMemo(() => {
+    if (!accentRef.current || totalLen <= 0 || tocProgress <= 0) return null;
+    try {
+      const filledLen = totalLen * tocProgress;
+      const pt = accentRef.current.getPointAtLength(filledLen);
+      // Get a point slightly before to compute direction
+      const ptPrev = accentRef.current.getPointAtLength(Math.max(0, filledLen - 4));
+      const dx = pt.x - ptPrev.x;
+      const dy = pt.y - ptPrev.y;
+      // Angle of the path tangent at this point (in degrees)
+      const pathAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+      return { x: pt.x, y: pt.y, pathAngle };
+    } catch {
+      return null;
+    }
+  }, [totalLen, tocProgress]);
+
   if (!items.length) return null;
 
   const pathD = buildPath(items, ys);
@@ -252,6 +280,33 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
               </filter>
+
+              {/* Gradient: fades from transparent → accent along the filled path.
+                  Near the arrow tip = full accent, opposite end = transparent.
+                  Direction flips based on scroll direction. */}
+              <linearGradient
+                id="toc-accent-grad"
+                gradientUnits="userSpaceOnUse"
+                x1="0"
+                y1={scrollDir === "down" ? "0" : String(listH)}
+                x2="0"
+                y2={scrollDir === "down" ? String(listH) : "0"}
+              >
+                <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.05" />
+                <stop offset="40%" stopColor="var(--color-accent)" stopOpacity="0.3" />
+                <stop offset="75%" stopColor="var(--color-accent)" stopOpacity="0.7" />
+                <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="1" />
+              </linearGradient>
+
+              {/* Stronger glow for the orb */}
+              <filter id="toc-orb-bloom" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
             </defs>
 
             {/* background track */}
@@ -266,18 +321,31 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
               />
             )}
 
-            {/* scroll-progress accent fill with glow */}
+            {/* scroll-progress accent fill — gradient stroke */}
             {pathD && totalLen > 0 && (
               <path
+                ref={accentRef}
                 d={pathD}
                 fill="none"
-                stroke="var(--color-accent)"
+                stroke="url(#toc-accent-grad)"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeDasharray={totalLen}
                 strokeDashoffset={dashOff}
                 filter="url(#toc-glow)"
                 className="toc-path-fill"
+              />
+            )}
+
+            {/* Luminous orb at the leading edge of the fill */}
+            {arrowPos && tocProgress > 0.01 && (
+              <circle
+                cx={arrowPos.x}
+                cy={arrowPos.y}
+                r="3"
+                fill="var(--color-accent)"
+                filter="url(#toc-orb-bloom)"
+                className="toc-orb-core"
               />
             )}
           </svg>

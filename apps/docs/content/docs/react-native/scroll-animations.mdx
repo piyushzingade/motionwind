@@ -1,0 +1,76 @@
+---
+title: "Scroll Animations"
+description: "Trigger animations when elements scroll into view."
+---
+
+# Scroll Animations
+
+The `animate-inview:` prefix triggers animations when an element enters the viewport.
+
+## Basic usage
+
+<RNPreview title="Fade In on Scroll">
+  <AnimBox animation="fadeIn">
+    <div style={{background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 12, padding: '14px 20px'}}>
+      <span style={{color: '#f0f0f0', fontSize: 13, fontWeight: 500}}>Appears when scrolled into view</span>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## Configuration
+
+### Animate once
+
+```tsx
+<mw.View className="animate-inview:opacity-100 animate-initial:opacity-0 animate-once" />
+```
+
+### Viewport amount
+
+```tsx
+// Trigger when 50% visible
+<mw.View className="animate-inview:y-0 animate-amount-50" />
+
+// Trigger when fully visible
+<mw.View className="animate-inview:y-0 animate-amount-all" />
+```
+
+### Viewport margin
+
+```tsx
+// Trigger 100px before entering viewport
+<mw.View className="animate-inview:opacity-100 animate-margin-100" />
+```
+
+## Using the useInView hook
+
+For more control, use the hook directly:
+
+<RNPreview title="useInView Hook">
+  <AnimBox animation="fadeSlideUp">
+    <div style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 6}}>
+      <AnimBox animation="fadeIn" delay={0}>
+        <div style={{background: 'rgba(14,165,233,0.1)', border: '1px solid rgba(14,165,233,0.15)', borderRadius: 8, padding: '8px 12px'}}>
+          <span style={{color: '#0ea5e9', fontSize: 11, fontWeight: 500}}>isInView: true</span>
+        </div>
+      </AnimBox>
+      <AnimBox animation="fadeIn" delay={200}>
+        <div style={{background: 'rgba(200,255,46,0.08)', borderRadius: 8, padding: '8px 12px'}}>
+          <span style={{color: '#8a8a9a', fontSize: 10}}>once: true, margin: 50</span>
+        </div>
+      </AnimBox>
+    </div>
+  </AnimBox>
+</RNPreview>
+
+## Limitations on React Native
+
+- **Web** uses `IntersectionObserver` — precise scroll tracking
+- **Native** uses `onLayout` — fires on layout, not per scroll frame
+
+For real-time scroll-linked animations (parallax), use Reanimated's `useAnimatedScrollHandler` directly.
+
+## Next steps
+
+- [Drag](/docs/react-native/drag) — Draggable elements with constraints
+- [Hooks](/docs/react-native/hooks) — Custom animation control
