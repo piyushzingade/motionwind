@@ -1,6 +1,6 @@
 {
   "name": "motionwind-react-native",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Motionwind for React Native — animate with Tailwind-like classes using Reanimated",
   "type": "module",
   "main": "./dist/index.cjs",
