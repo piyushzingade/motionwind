@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+import { createContext, use } from "react";
 
 /** Docs-matching color tokens */
 export const light = {
@@ -49,5 +49,5 @@ export const ThemeContext = createContext<ThemeContextValue>({
 });
 
 export function useTheme() {
-  return useContext(ThemeContext);
+  return use(ThemeContext);
 }
