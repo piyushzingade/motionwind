@@ -2,6 +2,7 @@ import { source } from "@/lib/source";
 import { notFound } from "next/navigation";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { Demo } from "@/components/demo";
+import { Playground } from "@/components/playground";
 import { RNPreview, AnimBox } from "@/components/rn-preview";
 import { MWDiv, MWButton, MWSpan, MWInput } from "@/components/mdx-content";
 import { CopyLlmsButton } from "@/components/copy-llms-button";
@@ -35,6 +36,7 @@ import {
 const mdxComponents: any = {
   ...defaultMdxComponents,
   Demo,
+  Playground,
   RNPreview,
   AnimBox,
   div: MWDiv,
