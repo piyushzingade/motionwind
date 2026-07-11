@@ -1,0 +1,53 @@
+# motionwind-vanilla
+
+Write Motion animations as Tailwind-like `animate-*` classes in plain HTML/JS — no framework. It
+scans the DOM and wires animations with the [Motion](https://motion.dev) vanilla API. Same class
+syntax as the rest of motionwind.
+
+## Install (npm)
+
+```bash
+npm install motionwind-vanilla motion
+```
+
+```js
+import { motionwind } from "motionwind-vanilla";
+const stop = motionwind();          // scans document, returns a cleanup fn
+```
+
+### Options
+
+```ts
+motionwind({
+  root,                  // ParentNode to scan (default: document)
+  selector,              // default: '[class*="animate-"]'
+  respectReducedMotion,  // default: true — honor prefers-reduced-motion
+  observe,               // default: false — MutationObserver wires elements added later (SPA/HTMX)
+});
+```
+
+## Install (CDN, zero build)
+
+Self-contained bundle (Motion included), auto-initializes on load:
+
+```html
+<script src="https://unpkg.com/motionwind-vanilla"></script>
+<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">Click me</button>
+<!-- window.motionwind.motionwind(opts) to re-scan with options -->
+```
+
+## Behavior
+
+- **Supported:** initial/enter, hover, tap, focus, in-view, and scroll-linked (`animate-scroll:*`).
+- **Idempotent:** wiring strips the `animate-*` classes, so re-running never double-wires.
+- **Reduced motion:** with `prefers-reduced-motion`, elements jump to their final/visible state
+  with no animation and gestures/scroll are skipped.
+- **Dynamic DOM:** pass `{ observe: true }` to animate elements added after init.
+- **Not supported (need a component runtime):** drag, layout, exit, and variant *propagation* —
+  use `motionwind-react` or `motionwind-vue` for those.
+
+## Class syntax (summary)
+
+`animate-{hover|tap|focus|inview|initial|enter}:{prop}-{value}`, transitions like
+`animate-duration-300 animate-spring animate-ease-in-out`, viewport `animate-once animate-amount-50`,
+scroll `animate-scroll:y-[0,-200] animate-scroll-container`. See motionwind-core for the full grammar.
