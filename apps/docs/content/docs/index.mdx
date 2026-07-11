@@ -29,6 +29,22 @@ At build time, that single line becomes:
 
 You never import `motion`, you never write prop objects, and the transform disappears from your production bundle.
 
+## Works with your framework
+
+One `animate-*` syntax, every framework — each powered by the shared `motionwind-core` parser.
+
+| Framework | Package | Guide |
+|---|---|---|
+| **React** (Next.js / Vite) | `motionwind-react` | [Framework Setup](/docs/framework-setup#nextjs) |
+| **React Native** / Expo | `motionwind-react-native` | [React Native](/docs/react-native) |
+| **Vue 3** | `motionwind-vue` | [Framework Setup](/docs/framework-setup#vue) |
+| **Vanilla / CDN** | `motionwind-vanilla` | [Framework Setup](/docs/framework-setup#vanilla-js) |
+
+```html
+<!-- The same class, anywhere -->
+<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">Click me</button>
+```
+
 ## Why motionwind?
 
 ### Zero runtime overhead

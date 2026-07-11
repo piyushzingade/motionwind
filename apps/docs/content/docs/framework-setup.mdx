@@ -1,7 +1,18 @@
 ---
 title: "Framework Setup"
-description: "Detailed integration guides for Next.js and Vite, plus troubleshooting common issues."
+description: "Integration guides for React (Next.js, Vite), React Native, Vue, and Vanilla JS — plus troubleshooting."
 ---
+
+motionwind is **multi-framework**. The same `animate-*` class syntax works across React, React
+Native, Vue, and plain HTML/JS — each via a dedicated package built on the shared
+`motionwind-core` parser.
+
+| Framework | Package | How it works |
+|---|---|---|
+| React (Next.js / Vite) | `motionwind-react` | Build-time Babel transform → `motion/react` |
+| React Native / Expo | `motionwind-react-native` | Runtime `mw.*` → Reanimated |
+| Vue 3 | `motionwind-vue` | Build-time template transform → Motion for Vue |
+| Vanilla / CDN | `motionwind-vanilla` | Runtime DOM scan → Motion |
 
 ## Next.js
 
@@ -208,6 +219,121 @@ The plugin works with Vite's Hot Module Replacement out of the box. When you sav
 4. The HMR update is sent to the browser.
 
 Source maps are preserved through the transform, so stack traces and debugger breakpoints point to the correct lines in your source files.
+
+---
+
+## Vue
+
+Vue uses [Motion for Vue](https://motion.dev/docs/vue) under the hood. Install both packages:
+
+```bash
+npm install motionwind-vue motion-v
+```
+
+### Build-time transform (recommended)
+
+Just like the React Babel plugin, a compiler transform lets you write plain elements with
+`animate-*` classes — no per-file imports. Add the transform to `@vitejs/plugin-vue` and register
+the component once:
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import { motionwindTransform } from "motionwind-vue/vite";
+
+export default defineConfig({
+  plugins: [
+    vue({ template: { compilerOptions: { nodeTransforms: [motionwindTransform] } } }),
+  ],
+});
+```
+
+```ts
+// main.ts
+import { createApp } from "vue";
+import { MotionwindPlugin } from "motionwind-vue";
+import App from "./App.vue";
+
+createApp(App).use(MotionwindPlugin).mount("#app");
+```
+
+Now write plain elements — the transform rewrites them at build time:
+
+```vue
+<template>
+  <button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+    Click me
+  </button>
+</template>
+```
+
+### Runtime component (no build step)
+
+Prefer not to touch the compiler? Use the `<Motionwind>` component, the `mw.*` proxy, or the
+`useMotionwind` composable directly:
+
+```vue
+<script setup>
+import { Motionwind } from "motionwind-vue";
+</script>
+
+<template>
+  <Motionwind as="button" class="animate-hover:scale-110 animate-tap:scale-90">
+    Click me
+  </Motionwind>
+</template>
+```
+
+> Only static `class` attributes are transformed (like the React build step). For dynamic
+> `:class`, use `<Motionwind>` / `mw.*`. Scroll-linked (`animate-scroll:*`) is React/vanilla-only
+> for now in Vue.
+
+---
+
+## Vanilla JS
+
+For plain HTML with no framework, `motionwind-vanilla` scans the DOM and wires animations via the
+[Motion](https://motion.dev) vanilla API.
+
+### npm
+
+```bash
+npm install motionwind-vanilla motion
+```
+
+```js
+import { motionwind } from "motionwind-vanilla";
+
+// scans the document; returns a cleanup fn. Options: { observe, respectReducedMotion, root }
+const stop = motionwind({ observe: true });
+```
+
+### CDN (zero build)
+
+The CDN bundle is self-contained (Motion included) and auto-initializes on load:
+
+```html
+<script src="https://unpkg.com/motionwind-vanilla"></script>
+
+<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">Click me</button>
+```
+
+Supports hover, tap, focus, in-view, enter, and scroll-linked. Honors `prefers-reduced-motion`,
+is idempotent across re-runs, and can watch for dynamically-added elements via `{ observe: true }`.
+
+---
+
+## React Native / Expo
+
+See the dedicated [React Native guide](/docs/react-native/installation). In short:
+
+```bash
+npx expo install react-native-reanimated react-native-gesture-handler
+npm install motionwind-react-native nativewind
+```
+
+Then use the `mw.*` runtime components with the same `animate-*` classes.
 
 ---
 

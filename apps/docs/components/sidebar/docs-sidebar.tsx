@@ -57,6 +57,7 @@ function PlatformSwitcher({
         const isActive = platform === p.id;
         return (
           <button
+            type="button"
             key={p.id}
             onClick={() => onSwitch(p.id)}
             className={`
@@ -240,6 +241,17 @@ export function DocsSidebar({
             onLinkClick={onCloseMobile}
           />
         ))}
+        <SidebarGroup
+          title="Frameworks"
+          items={[
+            { title: "React (Next.js / Vite)", url: "/docs/framework-setup" },
+            { title: "React Native", url: "/docs/react-native" },
+            { title: "Vue", url: "/docs/framework-setup#vue" },
+            { title: "Vanilla / CDN", url: "/docs/framework-setup#vanilla-js" },
+          ]}
+          pathname={pathname}
+          onLinkClick={onCloseMobile}
+        />
       </nav>
 
       {/* Footer */}
