@@ -1,0 +1,66 @@
+{
+  "name": "motionwind-vue",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Write Motion animations as Tailwind-like classes in Vue 3 — powered by Motion for Vue.",
+  "author": "piyush555",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piyushzingade/motionwind.git",
+    "directory": "packages/motionwind-vue"
+  },
+  "bugs": {
+    "url": "https://github.com/piyushzingade/motionwind/issues"
+  },
+  "homepage": "https://github.com/piyushzingade/motionwind#readme",
+  "keywords": ["vue", "motion", "motion-v", "animation", "tailwind", "motionwind"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./vite": {
+      "import": "./dist/vite.js",
+      "require": "./dist/vite.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "vite": ["./dist/vite.d.ts"]
+    }
+  },
+  "files": ["dist", "llms.txt"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.0",
+    "motion-v": ">=0.11.0"
+  },
+  "dependencies": {
+    "motionwind-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@vue/compiler-core": "^3.5.13",
+    "eslint": "^9.39.1",
+    "motion-v": "^1.7.2",
+    "tsup": "^8.5.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1",
+    "vue": "^3.5.13"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

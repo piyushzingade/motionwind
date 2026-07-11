@@ -1,0 +1,74 @@
+# motionwind-vue
+
+Write Motion animations as Tailwind-like `animate-*` classes in Vue 3. Powered by
+[Motion for Vue](https://motion.dev/docs/vue) (`motion-v`). Same class syntax as the React package.
+
+## Install
+
+```bash
+npm install motionwind-vue motion-v
+```
+
+## Option A — build-time transform (write plain elements, like React's Babel plugin)
+
+`vite.config.ts`:
+
+```ts
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import { motionwindTransform } from "motionwind-vue/vite";
+
+export default defineConfig({
+  plugins: [vue({ template: { compilerOptions: { nodeTransforms: [motionwindTransform] } } })],
+});
+```
+
+`main.ts` — register the runtime component once:
+
+```ts
+import { createApp } from "vue";
+import { MotionwindPlugin } from "motionwind-vue";
+import App from "./App.vue";
+createApp(App).use(MotionwindPlugin).mount("#app");
+```
+
+Now plain elements with static `class` work:
+
+```vue
+<template>
+  <button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">Click me</button>
+</template>
+```
+
+The transform rewrites native elements whose static `class` contains `animate-*` into
+`<Motionwind as="tag">`. Only static `class` is transformed (dynamic `:class` → use Option B).
+
+## Option B — runtime component (no build step)
+
+```vue
+<script setup>
+import { Motionwind, mw } from "motionwind-vue";
+</script>
+
+<template>
+  <Motionwind as="button" class="animate-hover:scale-110">Click</Motionwind>
+  <!-- or the proxy in render fns: h(mw.button, { class: "animate-hover:scale-110" }) -->
+</template>
+```
+
+Composable:
+
+```ts
+import { useMotionwind } from "motionwind-vue";
+const { motionProps, tailwindClasses, hasMotion } = useMotionwind("animate-hover:scale-110");
+```
+
+## Notes / gotchas
+
+- Motion for Vue names the tap gesture **`whilePress`** (not `whileTap`); the adapter maps
+  motionwind's `animate-tap:*` to it automatically.
+- **`prefers-reduced-motion`** is honored: gesture/entrance props are stripped so content renders
+  at its resting state with no motion.
+- **Scroll-linked** (`animate-scroll:*`) is not yet supported in Vue (a dev warning is logged and
+  the class is ignored). Use `useScroll` from `motion-v` directly, or the React/Vanilla adapters.
+- Supported: hover, tap, focus, in-view, initial/enter/exit, transitions, drag, layout, variants.
