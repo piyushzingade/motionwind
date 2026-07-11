@@ -7,6 +7,7 @@ import {
   withDelay,
   withRepeat,
   withSequence,
+  interpolate,
   Easing,
   type SharedValue,
   type AnimatedStyle,
@@ -18,6 +19,9 @@ import type {
   ParsedResult,
 } from "./types.js";
 import { parseMotionClasses } from "./parser.js";
+import { DEGREE_PROPERTIES } from "./constants.js";
+import { useVariantContext, type VariantContextValue } from "./variant-context.js";
+import { useMotionScrollContext } from "./scroll-context.js";
 
 /** Transform properties that go into the `transform` array */
 const TRANSFORM_KEYS = new Set([
@@ -156,6 +160,14 @@ function collectAnimatableKeys(parsed: ParsedResult): string[] {
       }
     }
   }
+  // Variant target styles also need shared values.
+  for (const style of Object.values(parsed.variants)) {
+    if (style) {
+      for (const key of Object.keys(style)) {
+        keys.add(key);
+      }
+    }
+  }
   return Array.from(keys);
 }
 
@@ -172,6 +184,14 @@ function collectAnimatableKeys(parsed: ParsedResult): string[] {
 export function useMotionwind(className: string) {
   const parsed = useMemo(() => parseMotionClasses(className), [className]);
 
+  const variantCtx = useVariantContext();
+  const scrollCtx = useMotionScrollContext();
+
+  // Resolve the active/initial variant names (self overrides inherited context).
+  const hasVariants = Object.keys(parsed.variants).length > 0;
+  const activeVariant = parsed.variantState.animate ?? variantCtx.active;
+  const initialVariant = parsed.variantState.initial ?? variantCtx.initial;
+
   // Create shared values for each animatable property
   const sharedValues = useRef<Map<string, SharedValue<number | string>>>(
     new Map(),
@@ -187,9 +207,15 @@ export function useMotionwind(className: string) {
   for (const key of animatableKeys) {
     if (!sharedValues.current.has(key)) {
       const initialGesture = parsed.gestures.initial;
+      const initialVariantStyle =
+        initialVariant && parsed.variants[initialVariant]
+          ? parsed.variants[initialVariant]
+          : undefined;
+      // A named initial variant takes precedence over the initial gesture.
+      const source = initialVariantStyle ?? initialGesture;
       const defaultVal = DEFAULT_VALUES[key] ?? 0;
-      const initialVal = initialGesture
-        ? ((initialGesture as Record<string, unknown>)[key] as
+      const initialVal = source
+        ? ((source as Record<string, unknown>)[key] as
             | number
             | string
             | undefined) ?? defaultVal
@@ -256,6 +282,21 @@ export function useMotionwind(className: string) {
     }
   }, [parsed, animateTo]);
 
+  // Animate to the active variant target whenever it changes (self or inherited).
+  useEffect(() => {
+    if (hasVariants && activeVariant) {
+      const target = parsed.variants[activeVariant];
+      if (target) animateTo(target);
+    }
+  }, [hasVariants, activeVariant, parsed, animateTo]);
+
+  // Precompute scroll config outside the worklet.
+  const scrollValues = parsed.scroll.values;
+  const scrollAxis = parsed.scroll.axis;
+  const hasScroll = Object.keys(scrollValues).length > 0;
+  const progressX = scrollCtx.progressX;
+  const progressY = scrollCtx.progressY;
+
   // Build animated style
   const animatedStyle = useAnimatedStyle(() => {
     const style: Record<string, unknown> = {};
@@ -266,6 +307,28 @@ export function useMotionwind(className: string) {
         transforms.push({ [key]: sv.value });
       } else {
         style[key] = sv.value;
+      }
+    }
+
+    // Scroll-linked values interpolate the container progress into style.
+    if (hasScroll) {
+      const progress = scrollAxis === "x" ? progressX : progressY;
+      if (progress) {
+        for (const key in scrollValues) {
+          const range = scrollValues[key]!;
+          const input = range.map((_, i) =>
+            range.length === 1 ? 0 : i / (range.length - 1),
+          );
+          const raw = interpolate(progress.value, input, range);
+          const val: number | string = DEGREE_PROPERTIES.has(key)
+            ? `${raw}deg`
+            : raw;
+          if (TRANSFORM_KEYS.has(key)) {
+            transforms.push({ [key]: val });
+          } else {
+            style[key] = val;
+          }
+        }
       }
     }
 
@@ -300,11 +363,18 @@ export function useMotionwind(className: string) {
     return h;
   }, [parsed.gestures, animateTo, resetToBase]);
 
+  // If this element selects a variant state, propagate it to descendants.
+  const variantProvide: VariantContextValue | undefined =
+    parsed.variantState.animate || parsed.variantState.initial
+      ? { active: activeVariant, initial: initialVariant }
+      : undefined;
+
   return {
     animatedStyle,
     handlers,
     parsed,
     animateTo,
     resetToBase,
+    variantProvide,
   };
 }
