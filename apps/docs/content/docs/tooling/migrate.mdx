@@ -1,0 +1,57 @@
+---
+title: "Migrate from Motion"
+description: "Convert an existing Framer Motion / Motion codebase to motionwind classes with one command."
+---
+
+Already using Motion? The `migrate` codemod rewrites `<motion.* … />` elements into plain
+elements with `animate-*` classes — the reverse of the Babel transform.
+
+## Run it
+
+```bash
+# Preview changes (dry run — nothing is written)
+npx create-motionwind migrate src
+
+# Apply the changes
+npx create-motionwind migrate src --write
+```
+
+Pass files or directories (defaults to the current directory). `node_modules`, `dist`,
+`.next`, and other build folders are skipped automatically.
+
+## What it does
+
+```tsx
+// before
+import { motion } from "motion/react";
+
+<motion.button
+  className="px-6 py-3 rounded-lg"
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.9 }}
+  transition={{ type: "spring", stiffness: 400 }}
+>
+  Click me
+</motion.button>
+```
+
+```tsx
+// after
+<button className="px-6 py-3 rounded-lg animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400">
+  Click me
+</button>
+```
+
+It also drops the now-unused `motion` import.
+
+## Safety
+
+The codemod is conservative: an element is only converted when **every** motion prop can be
+faithfully represented as classes. Elements with dynamic values, spreads, or unsupported
+motion-only props (`variants`, `onAnimationComplete`, `custom`, …) are left untouched and
+reported as skipped — so a migration never changes behavior.
+
+<Callout type="info">
+  The output is reformatted by Babel's code generator. Run your formatter (e.g. Prettier)
+  afterwards to tidy it up.
+</Callout>
