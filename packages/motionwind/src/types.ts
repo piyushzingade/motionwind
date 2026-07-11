@@ -53,6 +53,27 @@ export interface LayoutConfig {
   layoutRoot?: boolean;
 }
 
+export interface ScrollConfig {
+  /** Which scroll axis drives progress. Default "y". */
+  axis: "x" | "y";
+  /** Track the window/root scroll instead of the element's own position. */
+  container: boolean;
+  /** `useScroll` offset, e.g. ["start end", "end start"]. */
+  offset?: [string, string];
+  /** Map of motion style property → literal output range across scroll progress [0,1]. */
+  values: Record<string, number[]>;
+}
+
+/** Named variant target states, keyed by variant name (e.g. "hidden", "visible"). */
+export type VariantMap = Record<string, AnimatableValues>;
+
+/** Which variant name is active for each of Motion's lifecycle props. */
+export interface VariantState {
+  initial?: string;
+  animate?: string;
+  exit?: string;
+}
+
 export interface ParsedResult {
   /** Tailwind classes that pass through untouched */
   tailwindClasses: string;
@@ -66,6 +87,12 @@ export interface ParsedResult {
   dragConfig: DragConfig;
   /** Layout animation configuration */
   layoutConfig: LayoutConfig;
+  /** Scroll-linked animation configuration (progress-driven style values) */
+  scroll: ScrollConfig;
+  /** Named variant target states */
+  variants: VariantMap;
+  /** Active variant state selectors (initial/animate/exit as variant names) */
+  variantState: VariantState;
   /** Whether any motion classes were found */
   hasMotion: boolean;
 }
