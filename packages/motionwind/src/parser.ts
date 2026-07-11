@@ -126,7 +126,11 @@ function parsePropertyValue(
     const valuesStr = keyframeMatch[2]!;
     const propKey = normalizePropertyName(propName);
     if (propKey) {
-      const rawValues = valuesStr.split(",").map((v) => v.trim()).filter(Boolean);
+      const rawValues = valuesStr.split(",").reduce<string[]>((acc, v) => {
+        const t = v.trim();
+        if (t) acc.push(t);
+        return acc;
+      }, []);
       if (rawValues.length > 0) {
         const scaleProps = new Set(["scale", "scaleX", "scaleY", "scaleZ", "opacity", "brightness", "contrast", "saturate"]);
         const parsed: (string | number)[] = [];

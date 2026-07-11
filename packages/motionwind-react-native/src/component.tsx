@@ -5,11 +5,9 @@ import {
   Image,
   ScrollView,
   Pressable,
-  TouchableOpacity,
   TextInput,
   FlatList,
   SectionList,
-  SafeAreaView,
   type LayoutChangeEvent,
 } from "react-native";
 import Animated, {
@@ -45,9 +43,7 @@ const ANIMATED_COMPONENTS: Record<string, React.ComponentType<any>> = {
   ScrollView: Anim.ScrollView ?? createAnimated(ScrollView),
   FlatList: Anim.FlatList ?? createAnimated(FlatList),
   Pressable: createAnimated(Pressable),
-  TouchableOpacity: createAnimated(TouchableOpacity),
   TextInput: createAnimated(TextInput),
-  SafeAreaView: createAnimated(SafeAreaView),
 };
 
 /**
@@ -61,9 +57,7 @@ const PLAIN_COMPONENTS: Record<string, React.ComponentType<any>> = {
   FlatList,
   SectionList,
   Pressable,
-  TouchableOpacity,
   TextInput,
-  SafeAreaView,
 };
 
 interface MotionwindNativeProps {

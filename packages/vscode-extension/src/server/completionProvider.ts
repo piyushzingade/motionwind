@@ -33,25 +33,27 @@ export function handleCompletion(
     const propertyPrefix = gestureColonMatch[2]!;
     const gesturePrefix = gestureColonMatch[1]!;
 
-    // Return property completions, adjusting insertText to include the full class
-    const items: CompletionItem[] = propertyCompletions
-      .filter((item) => {
+    // Return property completions in a single pass (filter + map combined),
+    // adjusting insertText to include the full class.
+    const items: CompletionItem[] = propertyCompletions.reduce<CompletionItem[]>(
+      (acc, item) => {
         const label = item.label as string;
-        return label.startsWith(propertyPrefix) || propertyPrefix === "";
-      })
-      .map((item, index) => {
-        const label = item.label as string;
-        return {
-          ...item,
-          label: `${label}`,
-          insertText: item.insertText
-            ? `animate-${gesturePrefix}:${item.insertText}`
-            : undefined,
-          filterText: `animate-${gesturePrefix}:${label}`,
-          sortText: String(index).padStart(3, "0"),
-          textEdit: undefined,
-        };
-      });
+        if (label.startsWith(propertyPrefix) || propertyPrefix === "") {
+          acc.push({
+            ...item,
+            label: `${label}`,
+            insertText: item.insertText
+              ? `animate-${gesturePrefix}:${item.insertText}`
+              : undefined,
+            filterText: `animate-${gesturePrefix}:${label}`,
+            sortText: String(acc.length).padStart(3, "0"),
+            textEdit: undefined,
+          });
+        }
+        return acc;
+      },
+      [],
+    );
 
     return CompletionList.create(items, false);
   }
