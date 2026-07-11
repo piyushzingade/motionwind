@@ -126,7 +126,11 @@ export default function RootLayout({
                 price: "0",
                 priceCurrency: "USD",
               },
-            }),
+            })
+              // Escape so data can never break out of the <script> tag (e.g. "</script>").
+              .replace(/</g, "\\u003c")
+              .replace(/>/g, "\\u003e")
+              .replace(/&/g, "\\u0026"),
           }}
         />
       </head>
