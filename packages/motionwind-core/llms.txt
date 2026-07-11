@@ -1,0 +1,56 @@
+# motionwind-core
+
+Framework-agnostic core for motionwind. Parses Tailwind-like `animate-*` classes into a
+structured `ParsedResult`. Zero dependencies. This is the shared engine behind the React, React
+Native, Vue, and Vanilla adapters — you usually depend on an adapter, not this directly.
+
+## Install
+
+```bash
+npm install motionwind-core
+```
+
+## API
+
+```ts
+import { parseMotionClasses, classifyMotionToken } from "motionwind-core";
+
+const parsed = parseMotionClasses("px-4 animate-hover:scale-110 animate-spring");
+// parsed.tailwindClasses -> "px-4"
+// parsed.gestures        -> { whileHover: { scale: 1.1 } }
+// parsed.transition      -> { type: "spring" }
+// parsed.hasMotion       -> true
+
+classifyMotionToken("animate-hover:scale-110"); // "gesture"
+classifyMotionToken("animate-spring");          // "transition"
+classifyMotionToken("px-4");                     // "tailwind"
+```
+
+### ParsedResult shape
+
+```ts
+interface ParsedResult {
+  tailwindClasses: string;                              // non-motion classes, passed through
+  gestures: Partial<Record<GestureKey, AnimatableValues>>; // whileHover, whileTap, whileFocus,
+                                                        // whileInView, whileDrag, initial, animate, exit
+  transition: TransitionConfig;                         // duration, delay, ease, type, stiffness, ...
+  viewport: ViewportConfig;                             // once, amount, margin
+  dragConfig: DragConfig;                               // drag, dragElastic, dragConstraints, ...
+  layoutConfig: LayoutConfig;                           // layout, layoutId, layoutScroll, layoutRoot
+  scroll: ScrollConfig;                                 // { axis, container, offset, values }
+  variants: Record<string, AnimatableValues>;           // named variant targets
+  variantState: { initial?: string; animate?: string; exit?: string };
+  hasMotion: boolean;
+}
+```
+
+## Class syntax (summary)
+
+- Gesture: `animate-{hover|tap|focus|inview|drag|initial|enter|exit}:{prop}-{value}` e.g. `animate-hover:scale-110`
+- Props: `scale`, `scale-x/y`, `rotate`, `x`, `y`, `opacity`, `blur`, `grayscale`, `sepia`, `invert`, `hue-rotate`, `w`, `h`, `rounded`, colors (`bg-#hex`), etc. Negative: prefix `-`. Arbitrary: `[key=value]`.
+- Transition: `animate-duration-300` (ms), `animate-delay-500`, `animate-ease-in-out`, `animate-spring`, `animate-stiffness-400`, `animate-damping-20`, `animate-repeat-infinite`.
+- Viewport: `animate-once`, `animate-amount-50`, `animate-margin-100`.
+- Scroll-linked: `animate-scroll:y-[0,-200]`, `animate-scroll:scaleX-[0,1]`, `animate-scroll-axis-x`, `animate-scroll-container`.
+- Variants: `animate-variant-{name}:{prop}-{value}` + `animate-from-{name}` / `animate-to-{name}` / `animate-exit-{name}`.
+
+Values are memoized (LRU). The parser has no framework/runtime code — it only produces data.

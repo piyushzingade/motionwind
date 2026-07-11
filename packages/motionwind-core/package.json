@@ -1,0 +1,56 @@
+{
+  "name": "motionwind-core",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Framework-agnostic core for motionwind — parses animate-* classes into structured motion props. Zero dependencies.",
+  "author": "piyush555",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piyushzingade/motionwind.git",
+    "directory": "packages/motionwind-core"
+  },
+  "bugs": {
+    "url": "https://github.com/piyushzingade/motionwind/issues"
+  },
+  "homepage": "https://github.com/piyushzingade/motionwind#readme",
+  "keywords": ["motionwind", "motion", "animation", "tailwind", "parser"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./parser": {
+      "import": "./dist/parser.js",
+      "require": "./dist/parser.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "parser": ["./dist/parser.d.ts"]
+    }
+  },
+  "files": ["dist", "llms.txt"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "eslint": "^9.39.1",
+    "tsup": "^8.5.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
