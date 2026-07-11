@@ -35,6 +35,10 @@
     "./parser": {
       "import": "./dist/parser.js",
       "require": "./dist/parser.cjs"
+    },
+    "./tooling": {
+      "import": "./dist/tooling.js",
+      "require": "./dist/tooling.cjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -45,7 +49,8 @@
       "babel": ["./dist/babel.d.ts"],
       "next": ["./dist/next.d.ts"],
       "vite": ["./dist/vite.d.ts"],
-      "parser": ["./dist/parser.d.ts"]
+      "parser": ["./dist/parser.d.ts"],
+      "tooling": ["./dist/tooling.d.ts"]
     }
   },
   "files": ["dist"],

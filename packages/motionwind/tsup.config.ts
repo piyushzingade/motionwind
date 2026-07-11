@@ -7,6 +7,7 @@ export default defineConfig({
     next: "src/next.ts",
     vite: "src/vite.ts",
     parser: "src/parser.ts",
+    tooling: "src/tooling.ts",
   },
   format: ["esm", "cjs"],
   dts: true,
