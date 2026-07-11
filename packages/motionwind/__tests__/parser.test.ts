@@ -140,6 +140,53 @@ describe("parseMotionClasses", () => {
         filter: "blur(5px) brightness(1.2) contrast(1.5)",
       });
     });
+
+    it("parses grayscale", () => {
+      const result = parseMotionClasses("animate-hover:grayscale-100");
+      expect(result.gestures.whileHover).toEqual({ filter: "grayscale(1)" });
+    });
+
+    it("parses sepia", () => {
+      const result = parseMotionClasses("animate-hover:sepia-50");
+      expect(result.gestures.whileHover).toEqual({ filter: "sepia(0.5)" });
+    });
+
+    it("parses invert", () => {
+      const result = parseMotionClasses("animate-hover:invert-100");
+      expect(result.gestures.whileHover).toEqual({ filter: "invert(1)" });
+    });
+
+    it("parses hue-rotate with a positive value", () => {
+      const result = parseMotionClasses("animate-hover:hue-rotate-90");
+      expect(result.gestures.whileHover).toEqual({
+        filter: "hue-rotate(90deg)",
+      });
+    });
+
+    it("parses negative hue-rotate", () => {
+      const result = parseMotionClasses("animate-hover:-hue-rotate-45");
+      expect(result.gestures.whileHover).toEqual({
+        filter: "hue-rotate(-45deg)",
+      });
+    });
+
+    it("parses drop-shadow with underscores as spaces", () => {
+      const result = parseMotionClasses(
+        "animate-hover:drop-shadow-[0_4px_8px_#000]",
+      );
+      expect(result.gestures.whileHover).toEqual({
+        filter: "drop-shadow(0 4px 8px #000)",
+      });
+    });
+
+    it("combines the new filters with existing ones", () => {
+      const result = parseMotionClasses(
+        "animate-hover:blur-4 animate-hover:grayscale-100 animate-hover:invert-100",
+      );
+      expect(result.gestures.whileHover).toEqual({
+        filter: "blur(4px) grayscale(1) invert(1)",
+      });
+    });
   });
 
   describe("gesture: dimensions", () => {
@@ -829,6 +876,80 @@ describe("parseMotionClasses", () => {
       const r1 = parseMotionClasses("animate-hover:scale-110");
       const r2 = parseMotionClasses("animate-hover:scale-110");
       expect(r1).toBe(r2); // same reference
+    });
+  });
+
+  describe("scroll-linked animations", () => {
+    it("parses a scroll value range without rescaling", () => {
+      const result = parseMotionClasses("animate-scroll:y-[0,-200]");
+      expect(result.hasMotion).toBe(true);
+      expect(result.scroll.values).toEqual({ y: [0, -200] });
+      expect(result.scroll.axis).toBe("y");
+      expect(result.scroll.container).toBe(false);
+    });
+
+    it("keeps opacity ranges literal (no /100)", () => {
+      const result = parseMotionClasses("animate-scroll:opacity-[1,0]");
+      expect(result.scroll.values).toEqual({ opacity: [1, 0] });
+    });
+
+    it("parses scaleX for a progress bar", () => {
+      const result = parseMotionClasses("animate-scroll:scaleX-[0,1]");
+      expect(result.scroll.values).toEqual({ scaleX: [0, 1] });
+    });
+
+    it("accepts the dash form scale-x", () => {
+      const result = parseMotionClasses("animate-scroll:scale-x-[0,1]");
+      expect(result.scroll.values).toEqual({ scaleX: [0, 1] });
+    });
+
+    it("parses axis, container and offset config", () => {
+      const result = parseMotionClasses(
+        "animate-scroll:rotate-[0,360] animate-scroll-axis-x animate-scroll-container animate-scroll-offset-[start_end,end_start]",
+      );
+      expect(result.scroll.values).toEqual({ rotate: [0, 360] });
+      expect(result.scroll.axis).toBe("x");
+      expect(result.scroll.container).toBe(true);
+      expect(result.scroll.offset).toEqual(["start end", "end start"]);
+    });
+
+    it("supports multi-stop ranges", () => {
+      const result = parseMotionClasses("animate-scroll:opacity-[0,1,0]");
+      expect(result.scroll.values).toEqual({ opacity: [0, 1, 0] });
+    });
+  });
+
+  describe("named variants", () => {
+    it("collects variant definitions into a variants map", () => {
+      const result = parseMotionClasses(
+        "animate-variant-hidden:opacity-0 animate-variant-hidden:y-20 animate-variant-visible:opacity-100 animate-variant-visible:y-0",
+      );
+      expect(result.hasMotion).toBe(true);
+      expect(result.variants).toEqual({
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 },
+      });
+    });
+
+    it("parses from/to/exit state selectors", () => {
+      const result = parseMotionClasses(
+        "animate-from-hidden animate-to-visible animate-exit-hidden",
+      );
+      expect(result.variantState).toEqual({
+        initial: "hidden",
+        animate: "visible",
+        exit: "hidden",
+      });
+    });
+
+    it("combines variant defs with orchestration transition tokens", () => {
+      const result = parseMotionClasses(
+        "animate-variant-visible:opacity-100 animate-to-visible animate-stagger-100 animate-delay-children-200",
+      );
+      expect(result.variants.visible).toEqual({ opacity: 1 });
+      expect(result.variantState.animate).toBe("visible");
+      expect(result.transition.staggerChildren).toBe(0.1);
+      expect(result.transition.delayChildren).toBe(0.2);
     });
   });
 });

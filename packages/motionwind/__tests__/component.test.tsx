@@ -27,6 +27,12 @@ vi.mock("motion/react", () => {
 
   return {
     motion: createMockMotion(),
+    useScroll: () => ({ scrollXProgress: 0, scrollYProgress: 0 }),
+    useTransform: (
+      _progress: unknown,
+      _input: unknown,
+      output: number[] | number,
+    ) => (Array.isArray(output) ? output[0] : output),
   };
 });
 
@@ -79,5 +85,31 @@ describe("mw runtime component", () => {
     const Div = mw.div;
     const Span = mw.span;
     expect(Div).not.toBe(Span);
+  });
+
+  describe("scroll-linked", () => {
+    it("renders a scroll-linked element with mapped style", () => {
+      const { container } = render(
+        <mw.div className="animate-scroll:opacity-[1,0]">Fade</mw.div>,
+      );
+      const el = container.firstChild as HTMLElement;
+      expect(el.getAttribute("data-motion")).toBe("true");
+      // useTransform mock returns the first output value (1)
+      expect(el.style.opacity).toBe("1");
+    });
+  });
+
+  describe("named variants", () => {
+    it("passes variant state selectors through to the motion element", () => {
+      const { container } = render(
+        <mw.div className="animate-variant-hidden:opacity-0 animate-variant-visible:opacity-100 animate-from-hidden animate-to-visible">
+          x
+        </mw.div>,
+      );
+      const el = container.firstChild as HTMLElement;
+      expect(el.getAttribute("data-motion")).toBe("true");
+      expect(el.getAttribute("initial")).toBe("hidden");
+      expect(el.getAttribute("animate")).toBe("visible");
+    });
   });
 });

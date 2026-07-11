@@ -472,4 +472,50 @@ describe("motionwind babel plugin", () => {
     expect(output).toContain("Card");
   });
 
+  describe("scroll-linked animations", () => {
+    it("routes scroll-linked elements to the mw.* runtime", () => {
+      const input = `<div className="animate-scroll:y-[0,-200]">Parallax</div>`;
+      const output = transform(input);
+      expect(output).toContain("mw.div");
+      expect(output).not.toContain("motion.div");
+      expect(output).toContain('import { mw } from "motionwind-react"');
+      expect(output).toContain("use client");
+      // className is preserved intact for the runtime to re-parse
+      expect(output).toContain("animate-scroll:y-[0,-200]");
+    });
+
+    it("does not add a motion import for a scroll-only file", () => {
+      const input = `<div className="animate-scroll:opacity-[1,0]">Fade</div>`;
+      const output = transform(input);
+      expect(output).not.toContain('from "motion/react"');
+    });
+
+    it("warns and skips scroll on a custom component", () => {
+      const input = `<Card className="animate-scroll:y-[0,-200]">x</Card>`;
+      const output = transform(input);
+      expect(output).not.toContain("mw.");
+      expect(output).toContain("Card");
+    });
+  });
+
+  describe("named variants", () => {
+    it("emits a variants object and string state selectors", () => {
+      const input = `<div className="animate-variant-hidden:opacity-0 animate-variant-visible:opacity-100 animate-from-hidden animate-to-visible">x</div>`;
+      const output = transform(input);
+      expect(output).toContain("motion.div");
+      expect(output).toContain("variants=");
+      expect(output).toContain('"hidden"');
+      expect(output).toContain('"visible"');
+      expect(output).toContain('initial="hidden"');
+      expect(output).toContain('animate="visible"');
+    });
+
+    it("string state selector wins over an object gesture on the same prop", () => {
+      const input = `<div className="animate-enter:opacity-100 animate-variant-visible:opacity-100 animate-to-visible">x</div>`;
+      const output = transform(input);
+      // animate should be the string "visible", not an object
+      expect(output).toContain('animate="visible"');
+      expect(output).not.toMatch(/animate=\{\{/);
+    });
+  });
 });
