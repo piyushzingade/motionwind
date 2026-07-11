@@ -1,0 +1,55 @@
+{
+  "name": "eslint-plugin-motionwind",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "ESLint rules for motionwind animation classes — catch unknown classes, duplicate props, and dynamic-className pitfalls.",
+  "author": "piyush555",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piyushzingade/motionwind.git",
+    "directory": "packages/eslint-plugin-motionwind"
+  },
+  "bugs": {
+    "url": "https://github.com/piyushzingade/motionwind/issues"
+  },
+  "homepage": "https://github.com/piyushzingade/motionwind#readme",
+  "keywords": ["eslint", "eslintplugin", "eslint-plugin", "motionwind", "motion", "animation", "tailwind"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "eslint": "^8.57.0 || ^9.0.0"
+  },
+  "dependencies": {
+    "motionwind-react": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@types/eslint": "^9.6.1",
+    "@typescript-eslint/parser": "^8.46.3",
+    "eslint": "^9.39.1",
+    "tsup": "^8.5.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
