@@ -453,9 +453,15 @@ figure.shiki pre::-webkit-scrollbar {
   overflow: clip;
 }
 
-/* Ensure text inside demo preview elements is visually centered.
-   Line-height adds invisible space below the baseline; setting it to 1
-   and using flex centering fixes the perceived bottom-heavy padding. */
+/* Demos render inside .docs-prose, which gives paragraphs a 1.25rem bottom
+   margin. MDX wraps a demo's text in a <p>, so that margin leaks in as phantom
+   bottom padding and pushes content off-center. Strip inherited prose spacing
+   inside the demo so every element sits truly centered in the stage. */
+.docs-prose .demo-container :is(p, h1, h2, h3, h4, ul, ol, pre) {
+  margin: 0;
+}
+
+/* Center text + icons inside demo content boxes (baseline reset). */
 .demo-container div[class*="bg-fd-primary"],
 .demo-container button[class*="bg-fd-primary"],
 .demo-container div[class*="bg-\\[#c8ff2e\\]"],
