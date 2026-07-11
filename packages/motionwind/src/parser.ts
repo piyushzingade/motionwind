@@ -6,6 +6,9 @@ import type {
   ViewportConfig,
   DragConfig,
   LayoutConfig,
+  ScrollConfig,
+  VariantMap,
+  VariantState,
 } from "./types.js";
 import {
   GESTURE_MAP,
@@ -276,6 +279,38 @@ function parsePropertyValue(
     if (!isNaN(n)) return { key: "filter", value: `saturate(${Math.max(0, (n / 100) * sign)})` };
   }
 
+  // grayscale-{n} — 0-100 → 0-1, clamped to 0 minimum
+  if (str.startsWith("grayscale-")) {
+    const n = Number(str.slice(10));
+    if (!isNaN(n)) return { key: "filter", value: `grayscale(${Math.max(0, (n / 100) * sign)})` };
+  }
+
+  // sepia-{n} — 0-100 → 0-1, clamped to 0 minimum
+  if (str.startsWith("sepia-")) {
+    const n = Number(str.slice(6));
+    if (!isNaN(n)) return { key: "filter", value: `sepia(${Math.max(0, (n / 100) * sign)})` };
+  }
+
+  // invert-{n} — 0-100 → 0-1, clamped to 0 minimum
+  if (str.startsWith("invert-")) {
+    const n = Number(str.slice(7));
+    if (!isNaN(n)) return { key: "filter", value: `invert(${Math.max(0, (n / 100) * sign)})` };
+  }
+
+  // hue-rotate-{n} — degrees, supports negative values
+  if (str.startsWith("hue-rotate-")) {
+    const n = Number(str.slice(11));
+    if (!isNaN(n)) return { key: "filter", value: `hue-rotate(${n * sign}deg)` };
+  }
+
+  // drop-shadow: drop-shadow-[value] — underscores become spaces (Tailwind convention)
+  if (str.startsWith("drop-shadow-")) {
+    const val = str.slice(12);
+    if (val.startsWith("[") && val.endsWith("]")) {
+      return { key: "filter", value: `drop-shadow(${val.slice(1, -1).replace(/_/g, " ")})` };
+    }
+  }
+
   // backdrop-blur-{n} — clamped to 0 minimum
   if (str.startsWith("backdrop-blur-")) {
     const n = Number(str.slice(14));
@@ -477,6 +512,43 @@ function normalizePropertyName(name: string): string | null {
   return map[name] ?? null;
 }
 
+/** Normalize a scroll property name to a Motion style key. */
+function normalizeScrollProp(name: string): string | null {
+  const n = name.toLowerCase().replace(/-/g, "");
+  const map: Record<string, string> = {
+    x: "x",
+    y: "y",
+    z: "z",
+    opacity: "opacity",
+    rotate: "rotate",
+    rotatex: "rotateX",
+    rotatey: "rotateY",
+    scale: "scale",
+    scalex: "scaleX",
+    scaley: "scaleY",
+  };
+  return map[n] ?? null;
+}
+
+/**
+ * Parse a scroll value token like "y-[0,-200]" or "scaleX-[0,1]" into a
+ * Motion style key and a literal output range. Unlike gesture values, scroll
+ * ranges are NOT rescaled (0.5 means 0.5, 200 means 200px).
+ */
+function parseScrollValue(
+  raw: string,
+): { key: string; value: number[] } | null {
+  const m = raw.match(/^([\w-]+?)-\[([^\]]+)\]$/);
+  if (!m) return null;
+  const key = normalizeScrollProp(m[1]!);
+  if (!key) return null;
+  const parts = m[2]!
+    .split(",")
+    .map((v) => Number(v.trim()));
+  if (parts.length < 2 || parts.some((n) => isNaN(n))) return null;
+  return { key, value: parts };
+}
+
 /**
  * Classify a single class token and update the result accordingly.
  * Returns true if the token was consumed (is a motionwind class).
@@ -488,6 +560,9 @@ function classifyToken(
   viewport: ViewportConfig,
   dragConfig: DragConfig,
   layoutConfig: LayoutConfig,
+  scroll: ScrollConfig,
+  variants: VariantMap,
+  variantState: VariantState,
 ): boolean {
   if (!token.startsWith("animate-")) return false;
 
@@ -498,6 +573,37 @@ function classifyToken(
   if (colonIdx !== -1) {
     const gesturePrefix = rest.slice(0, colonIdx);
     const propValueStr = rest.slice(colonIdx + 1);
+
+    // Scroll-linked value: animate-scroll:{prop}-[from,to]
+    if (gesturePrefix === "scroll") {
+      const parsed = parseScrollValue(propValueStr);
+      if (parsed) {
+        scroll.values[parsed.key] = parsed.value;
+        return true;
+      }
+      return false;
+    }
+
+    // Variant definition: animate-variant-{name}:{prop-value}
+    if (gesturePrefix.startsWith("variant-")) {
+      const variantName = gesturePrefix.slice(8);
+      const parsed = parsePropertyValue(propValueStr);
+      if (variantName && parsed) {
+        if (!variants[variantName]) variants[variantName] = {};
+        const bucket = variants[variantName]!;
+        if (
+          (parsed.key === "filter" || parsed.key === "backdropFilter") &&
+          typeof parsed.value === "string" &&
+          typeof bucket[parsed.key] === "string"
+        ) {
+          bucket[parsed.key] += ` ${parsed.value}`;
+        } else {
+          bucket[parsed.key] = parsed.value;
+        }
+        return true;
+      }
+      return false;
+    }
 
     if (GESTURE_KEYS.has(gesturePrefix)) {
       const gestureKey = GESTURE_MAP[gesturePrefix]!;
@@ -675,6 +781,37 @@ function classifyToken(
     if (!isNaN(n)) { viewport.margin = `${n}px`; return true; }
   }
 
+  // --- Scroll-linked config tokens ---
+
+  if (rest === "scroll-axis-x") { scroll.axis = "x"; return true; }
+  if (rest === "scroll-axis-y") { scroll.axis = "y"; return true; }
+  if (rest === "scroll-container") { scroll.container = true; return true; }
+
+  // scroll-offset-[start_end,end_start] — underscores become spaces
+  if (rest.startsWith("scroll-offset-[") && rest.endsWith("]")) {
+    const inner = rest.slice(15, -1);
+    const parts = inner.split(",").map((p) => p.trim().replace(/_/g, " "));
+    if (parts.length === 2) {
+      scroll.offset = [parts[0]!, parts[1]!];
+      return true;
+    }
+  }
+
+  // --- Variant state selectors ---
+  // animate-from-{name} → initial, animate-to-{name} → animate, animate-exit-{name} → exit
+  if (rest.startsWith("from-")) {
+    const name = rest.slice(5);
+    if (name && !/\s/.test(name)) { variantState.initial = name; return true; }
+  }
+  if (rest.startsWith("to-")) {
+    const name = rest.slice(3);
+    if (name && !/\s/.test(name)) { variantState.animate = name; return true; }
+  }
+  if (rest.startsWith("exit-")) {
+    const name = rest.slice(5);
+    if (name && !/\s/.test(name)) { variantState.exit = name; return true; }
+  }
+
   // --- Drag config tokens ---
 
   if (rest === "drag-x") { dragConfig.drag = "x"; return true; }
@@ -744,6 +881,9 @@ export function parseMotionClasses(className: string): ParsedResult {
   const viewport: ViewportConfig = {};
   const dragConfig: DragConfig = {};
   const layoutConfig: LayoutConfig = {};
+  const scroll: ScrollConfig = { axis: "y", container: false, values: {} };
+  const variants: VariantMap = {};
+  const variantState: VariantState = {};
 
   for (const token of tokens) {
     const consumed = classifyToken(
@@ -753,6 +893,9 @@ export function parseMotionClasses(className: string): ParsedResult {
       viewport,
       dragConfig,
       layoutConfig,
+      scroll,
+      variants,
+      variantState,
     );
     if (!consumed) {
       if (
@@ -774,7 +917,10 @@ export function parseMotionClasses(className: string): ParsedResult {
     Object.keys(transition).length > 0 ||
     Object.keys(viewport).length > 0 ||
     Object.keys(dragConfig).length > 0 ||
-    Object.keys(layoutConfig).length > 0;
+    Object.keys(layoutConfig).length > 0 ||
+    Object.keys(scroll.values).length > 0 ||
+    Object.keys(variants).length > 0 ||
+    Object.keys(variantState).length > 0;
 
   const result: ParsedResult = {
     tailwindClasses: tailwind.join(" "),
@@ -783,6 +929,9 @@ export function parseMotionClasses(className: string): ParsedResult {
     viewport,
     dragConfig,
     layoutConfig,
+    scroll,
+    variants,
+    variantState,
     hasMotion,
   };
 
@@ -793,4 +942,61 @@ export function parseMotionClasses(className: string): ParsedResult {
 /** Clear the parser memoization cache */
 export function clearParserCache(): void {
   cache.clear();
+}
+
+/** Category of a single class token, used by tooling (linting, sorting). */
+export type MotionTokenCategory =
+  | "variant"
+  | "gesture"
+  | "transition"
+  | "viewport"
+  | "scroll"
+  | "drag"
+  | "layout"
+  | "tailwind"
+  | "unknown";
+
+/** Build throwaway accumulators for single-token classification. */
+function freshAccumulators() {
+  return {
+    gestures: {} as Partial<Record<GestureKey, AnimatableValues>>,
+    transition: {} as TransitionConfig,
+    viewport: {} as ViewportConfig,
+    dragConfig: {} as DragConfig,
+    layoutConfig: {} as LayoutConfig,
+    scroll: { axis: "y", container: false, values: {} } as ScrollConfig,
+    variants: {} as VariantMap,
+    variantState: {} as VariantState,
+  };
+}
+
+/**
+ * Classify a single class token into a motionwind category. Non-motionwind
+ * classes are "tailwind"; `animate-*` classes that don't match any pattern are
+ * "unknown". Reuses the real `classifyToken` so it never drifts from parsing.
+ */
+export function classifyMotionToken(token: string): MotionTokenCategory {
+  if (!token.startsWith("animate-")) return "tailwind";
+  if (TAILWIND_ANIMATE_CLASSES.has(token)) return "tailwind";
+  const a = freshAccumulators();
+  const consumed = classifyToken(
+    token,
+    a.gestures,
+    a.transition,
+    a.viewport,
+    a.dragConfig,
+    a.layoutConfig,
+    a.scroll,
+    a.variants,
+    a.variantState,
+  );
+  if (!consumed) return "unknown";
+  if (token.startsWith("animate-scroll")) return "scroll";
+  if (token.startsWith("animate-variant-")) return "variant";
+  if (Object.keys(a.variantState).length) return "variant";
+  if (Object.keys(a.gestures).length) return "gesture";
+  if (Object.keys(a.viewport).length) return "viewport";
+  if (Object.keys(a.dragConfig).length) return "drag";
+  if (Object.keys(a.layoutConfig).length) return "layout";
+  return "transition";
 }

@@ -266,8 +266,16 @@ function addMotionProps(
   node: t.JSXOpeningElement,
   parsed: ReturnType<typeof parseMotionClasses>,
 ): void {
-  // Add gesture props
+  // Add gesture props — a variant state selector (string) takes precedence over
+  // an object value for the same lifecycle prop (initial/animate/exit).
   for (const [gestureKey, values] of Object.entries(parsed.gestures)) {
+    if (
+      (gestureKey === "initial" && parsed.variantState.initial) ||
+      (gestureKey === "animate" && parsed.variantState.animate) ||
+      (gestureKey === "exit" && parsed.variantState.exit)
+    ) {
+      continue;
+    }
     const objAst = objectToAst(values as AnimatableValues);
     node.attributes.push(
       t.jsxAttribute(
@@ -413,6 +421,48 @@ function addMotionProps(
       t.jsxAttribute(t.jsxIdentifier("layoutRoot"), null),
     );
   }
+
+  // Add variants object: variants={{ hidden: {...}, visible: {...} }}
+  if (Object.keys(parsed.variants).length > 0) {
+    const variantProps = Object.entries(parsed.variants).map(([name, vals]) =>
+      t.objectProperty(
+        t.stringLiteral(name),
+        objectToAst(vals as AnimatableValues),
+      ),
+    );
+    node.attributes.push(
+      t.jsxAttribute(
+        t.jsxIdentifier("variants"),
+        t.jsxExpressionContainer(t.objectExpression(variantProps)),
+      ),
+    );
+  }
+
+  // Add variant state selectors: initial="hidden" animate="visible" exit="hidden"
+  if (parsed.variantState.initial) {
+    node.attributes.push(
+      t.jsxAttribute(
+        t.jsxIdentifier("initial"),
+        t.stringLiteral(parsed.variantState.initial),
+      ),
+    );
+  }
+  if (parsed.variantState.animate) {
+    node.attributes.push(
+      t.jsxAttribute(
+        t.jsxIdentifier("animate"),
+        t.stringLiteral(parsed.variantState.animate),
+      ),
+    );
+  }
+  if (parsed.variantState.exit) {
+    node.attributes.push(
+      t.jsxAttribute(
+        t.jsxIdentifier("exit"),
+        t.stringLiteral(parsed.variantState.exit),
+      ),
+    );
+  }
 }
 
 export default function motionwindBabelPlugin(): PluginObj {
@@ -424,8 +474,10 @@ export default function motionwindBabelPlugin(): PluginObj {
           const programNode = programPath.node as t.Program & {
             _motionwindNeedsImport?: boolean;
             _motionwindNeedsCreate?: boolean;
+            _motionwindNeedsMw?: boolean;
           };
-          if (!programNode._motionwindNeedsImport) return;
+          if (!programNode._motionwindNeedsImport && !programNode._motionwindNeedsMw)
+            return;
 
           // Add "use client" directive if not present
           const body = programPath.node.body;
@@ -440,36 +492,61 @@ export default function motionwindBabelPlugin(): PluginObj {
             ];
           }
 
-          // Add import { motion } from "motion/react" if not present
-          const hasMotionImport = body.some(
-            (node) =>
-              t.isImportDeclaration(node) &&
-              node.source.value === "motion/react" &&
-              node.specifiers.some(
-                (s) =>
-                  t.isImportSpecifier(s) &&
-                  t.isIdentifier(s.imported) &&
-                  s.imported.name === "motion",
-              ),
-          );
-          if (!hasMotionImport) {
-            const importDecl = t.importDeclaration(
-              [
-                t.importSpecifier(
-                  t.identifier("motion"),
-                  t.identifier("motion"),
-                ),
-              ],
-              t.stringLiteral("motion/react"),
-            );
-            // Insert after the last import declaration in the file
-            let insertIdx = 0;
+          const lastImportIdx = () => {
+            let idx = 0;
             for (let i = 0; i < body.length; i++) {
-              if (t.isImportDeclaration(body[i])) {
-                insertIdx = i + 1;
-              }
+              if (t.isImportDeclaration(body[i])) idx = i + 1;
             }
-            body.splice(insertIdx, 0, importDecl);
+            return idx;
+          };
+
+          // Add import { motion } from "motion/react" if needed and not present
+          if (programNode._motionwindNeedsImport) {
+            const hasMotionImport = body.some(
+              (node) =>
+                t.isImportDeclaration(node) &&
+                node.source.value === "motion/react" &&
+                node.specifiers.some(
+                  (s) =>
+                    t.isImportSpecifier(s) &&
+                    t.isIdentifier(s.imported) &&
+                    s.imported.name === "motion",
+                ),
+            );
+            if (!hasMotionImport) {
+              const importDecl = t.importDeclaration(
+                [
+                  t.importSpecifier(
+                    t.identifier("motion"),
+                    t.identifier("motion"),
+                  ),
+                ],
+                t.stringLiteral("motion/react"),
+              );
+              body.splice(lastImportIdx(), 0, importDecl);
+            }
+          }
+
+          // Add import { mw } from "motionwind-react" for scroll-linked elements
+          if (programNode._motionwindNeedsMw) {
+            const hasMwImport = body.some(
+              (node) =>
+                t.isImportDeclaration(node) &&
+                node.source.value === "motionwind-react" &&
+                node.specifiers.some(
+                  (s) =>
+                    t.isImportSpecifier(s) &&
+                    t.isIdentifier(s.imported) &&
+                    s.imported.name === "mw",
+                ),
+            );
+            if (!hasMwImport) {
+              const importDecl = t.importDeclaration(
+                [t.importSpecifier(t.identifier("mw"), t.identifier("mw"))],
+                t.stringLiteral("motionwind-react"),
+              );
+              body.splice(lastImportIdx(), 0, importDecl);
+            }
           }
         },
       },
@@ -538,6 +615,47 @@ export default function motionwindBabelPlugin(): PluginObj {
 
         const parsed = parseMotionClasses(classNameValue);
         if (!parsed.hasMotion) return;
+
+        // Scroll-linked animations need React hooks + a ref, which can't be
+        // expressed as static props. Route these elements to the mw.* runtime,
+        // which sets up useScroll/useTransform. The className is left intact so
+        // the runtime re-parses everything (including any gesture classes).
+        const hasScroll = Object.keys(parsed.scroll.values).length > 0;
+        if (hasScroll) {
+          if (isComponent) {
+            emitBuildWarning(
+              path,
+              `scroll-linked animations (animate-scroll:*) require an HTML element. ` +
+                `Skipping <${tagName}>. Use a lowercase tag or wrap with mw.*.`,
+            );
+            return;
+          }
+          if (isDynamic) {
+            emitBuildWarning(
+              path,
+              `scroll-linked animations (animate-scroll:*) can't be combined with a ` +
+                `dynamic className. Use a static className or the mw.${tagName} runtime.`,
+            );
+            return;
+          }
+          const scrollProgram = path.findParent((p) => p.isProgram());
+          if (scrollProgram) {
+            (scrollProgram.node as t.Program & { _motionwindNeedsMw?: boolean })._motionwindNeedsMw =
+              true;
+          }
+          const mwName = () =>
+            t.jsxMemberExpression(t.jsxIdentifier("mw"), t.jsxIdentifier(tagName));
+          node.name = mwName();
+          const scrollParent = path.parent;
+          if (
+            t.isJSXElement(scrollParent) &&
+            scrollParent.closingElement &&
+            t.isJSXIdentifier(scrollParent.closingElement.name)
+          ) {
+            scrollParent.closingElement.name = mwName();
+          }
+          return;
+        }
 
         // Mark program as needing motion import
         const program = path.findParent((p) => p.isProgram());

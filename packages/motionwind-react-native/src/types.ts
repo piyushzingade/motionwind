@@ -113,6 +113,28 @@ export interface NativeAnimatableStyle {
   lineHeight?: number;
 }
 
+/** Scroll-linked animation configuration (progress-driven style values) */
+export interface ScrollConfig {
+  /** Which scroll axis drives progress. Default "y". */
+  axis: "x" | "y";
+  /** Track a parent scroll container's progress (via mw.ScrollView). */
+  container: boolean;
+  /** Offset hint (kept for parity with web; advisory on native). */
+  offset?: [string, string];
+  /** Map of RN style property → literal output range across scroll progress [0,1]. */
+  values: Record<string, number[]>;
+}
+
+/** Named variant target states, keyed by variant name. */
+export type VariantMap = Record<string, NativeAnimatableStyle>;
+
+/** Which variant name is active for each lifecycle prop. */
+export interface VariantState {
+  initial?: string;
+  animate?: string;
+  exit?: string;
+}
+
 /** Parsed result from motionwind class string, adapted for React Native */
 export interface ParsedResult {
   /** NativeWind/Tailwind classes that pass through untouched */
@@ -125,6 +147,12 @@ export interface ParsedResult {
   viewport: ViewportConfig;
   /** Drag configuration */
   dragConfig: DragConfig;
+  /** Scroll-linked animation configuration */
+  scroll: ScrollConfig;
+  /** Named variant target states */
+  variants: VariantMap;
+  /** Active variant state selectors (initial/animate/exit as variant names) */
+  variantState: VariantState;
   /** Whether any motion classes were found */
   hasMotion: boolean;
 }

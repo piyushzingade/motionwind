@@ -5,6 +5,9 @@ import type {
   TransitionConfig,
   ViewportConfig,
   DragConfig,
+  ScrollConfig,
+  VariantMap,
+  VariantState,
 } from "./types.js";
 import {
   GESTURE_MAP,
@@ -163,12 +166,18 @@ function parsePropertyValue(
     if (!isNaN(n)) return { key: "opacity", value: (n / 100) * sign };
   }
 
-  // blur/brightness/contrast/saturate/backdrop-blur → web-only, skip
+  // filters (blur/brightness/contrast/saturate/grayscale/sepia/invert/hue-rotate/
+  // drop-shadow), backdrop-blur, and clip-path → web-only, skip
   if (
     str.startsWith("blur-") ||
     str.startsWith("brightness-") ||
     str.startsWith("contrast-") ||
     str.startsWith("saturate-") ||
+    str.startsWith("grayscale-") ||
+    str.startsWith("sepia-") ||
+    str.startsWith("invert-") ||
+    str.startsWith("hue-rotate-") ||
+    str.startsWith("drop-shadow-") ||
     str.startsWith("backdrop-blur-") ||
     str.startsWith("clip-")
   ) {
@@ -304,6 +313,39 @@ function normalizePropertyName(name: string): string | null {
   return map[name] ?? null;
 }
 
+/** Normalize a scroll property name to an RN style key. */
+function normalizeScrollProp(name: string): string | null {
+  const n = name.toLowerCase().replace(/-/g, "");
+  const map: Record<string, string> = {
+    x: "translateX",
+    y: "translateY",
+    opacity: "opacity",
+    rotate: "rotate",
+    rotatex: "rotateX",
+    rotatey: "rotateY",
+    scale: "scale",
+    scalex: "scaleX",
+    scaley: "scaleY",
+  };
+  return map[n] ?? null;
+}
+
+/**
+ * Parse a scroll value token like "y-[0,-200]" into an RN style key and a
+ * literal output range (not rescaled).
+ */
+function parseScrollValue(
+  raw: string,
+): { key: string; value: number[] } | null {
+  const m = raw.match(/^([\w-]+?)-\[([^\]]+)\]$/);
+  if (!m) return null;
+  const key = normalizeScrollProp(m[1]!);
+  if (!key) return null;
+  const parts = m[2]!.split(",").map((v) => Number(v.trim()));
+  if (parts.length < 2 || parts.some((n) => isNaN(n))) return null;
+  return { key, value: parts };
+}
+
 /**
  * Classify a single class token and update the result.
  * Returns true if the token was consumed.
@@ -314,6 +356,9 @@ function classifyToken(
   transition: TransitionConfig,
   viewport: ViewportConfig,
   dragConfig: DragConfig,
+  scroll: ScrollConfig,
+  variants: VariantMap,
+  variantState: VariantState,
 ): boolean {
   if (!token.startsWith("animate-")) return false;
 
@@ -324,6 +369,30 @@ function classifyToken(
   if (colonIdx !== -1) {
     const gesturePrefix = rest.slice(0, colonIdx);
     const propValueStr = rest.slice(colonIdx + 1);
+
+    // Scroll-linked value: animate-scroll:{prop}-[from,to]
+    if (gesturePrefix === "scroll") {
+      const parsed = parseScrollValue(propValueStr);
+      if (parsed) {
+        scroll.values[parsed.key] = parsed.value;
+        return true;
+      }
+      return false;
+    }
+
+    // Variant definition: animate-variant-{name}:{prop-value}
+    if (gesturePrefix.startsWith("variant-")) {
+      const variantName = gesturePrefix.slice(8);
+      const parsed = parsePropertyValue(propValueStr);
+      if (variantName && parsed) {
+        if (!variants[variantName])
+          variants[variantName] = {} as NativeAnimatableStyle;
+        (variants[variantName] as Record<string, unknown>)[parsed.key] =
+          parsed.value;
+        return true;
+      }
+      return false;
+    }
 
     if (GESTURE_KEYS.has(gesturePrefix)) {
       const gestureKey = GESTURE_MAP[gesturePrefix]!;
@@ -465,6 +534,53 @@ function classifyToken(
     }
   }
 
+  // --- Scroll-linked config tokens ---
+
+  if (rest === "scroll-axis-x") {
+    scroll.axis = "x";
+    return true;
+  }
+  if (rest === "scroll-axis-y") {
+    scroll.axis = "y";
+    return true;
+  }
+  if (rest === "scroll-container") {
+    scroll.container = true;
+    return true;
+  }
+  if (rest.startsWith("scroll-offset-[") && rest.endsWith("]")) {
+    const inner = rest.slice(15, -1);
+    const parts = inner.split(",").map((p) => p.trim().replace(/_/g, " "));
+    if (parts.length === 2) {
+      scroll.offset = [parts[0]!, parts[1]!];
+      return true;
+    }
+  }
+
+  // --- Variant state selectors ---
+
+  if (rest.startsWith("from-")) {
+    const name = rest.slice(5);
+    if (name && !/\s/.test(name)) {
+      variantState.initial = name;
+      return true;
+    }
+  }
+  if (rest.startsWith("to-")) {
+    const name = rest.slice(3);
+    if (name && !/\s/.test(name)) {
+      variantState.animate = name;
+      return true;
+    }
+  }
+  if (rest.startsWith("exit-")) {
+    const name = rest.slice(5);
+    if (name && !/\s/.test(name)) {
+      variantState.exit = name;
+      return true;
+    }
+  }
+
   // --- Drag config ---
 
   if (rest === "drag-x") {
@@ -539,6 +655,9 @@ export function parseMotionClasses(className: string): ParsedResult {
   const transition: TransitionConfig = {};
   const viewport: ViewportConfig = {};
   const dragConfig: DragConfig = {};
+  const scroll: ScrollConfig = { axis: "y", container: false, values: {} };
+  const variants: VariantMap = {};
+  const variantState: VariantState = {};
 
   for (const token of tokens) {
     const consumed = classifyToken(
@@ -547,6 +666,9 @@ export function parseMotionClasses(className: string): ParsedResult {
       transition,
       viewport,
       dragConfig,
+      scroll,
+      variants,
+      variantState,
     );
     if (!consumed) {
       if (
@@ -567,7 +689,10 @@ export function parseMotionClasses(className: string): ParsedResult {
     Object.keys(gestures).length > 0 ||
     Object.keys(transition).length > 0 ||
     Object.keys(viewport).length > 0 ||
-    Object.keys(dragConfig).length > 0;
+    Object.keys(dragConfig).length > 0 ||
+    Object.keys(scroll.values).length > 0 ||
+    Object.keys(variants).length > 0 ||
+    Object.keys(variantState).length > 0;
 
   const result: ParsedResult = {
     nativewindClasses: nativewind.join(" "),
@@ -575,6 +700,9 @@ export function parseMotionClasses(className: string): ParsedResult {
     transition,
     viewport,
     dragConfig,
+    scroll,
+    variants,
+    variantState,
     hasMotion,
   };
 

@@ -5,9 +5,45 @@ description: "Parent-child orchestration, staggered lists, conditional animation
 
 # Variant Animations
 
-Motion's variant system lets you define named animation states and orchestrate parent-child relationships. Variants are not expressed as motionwind utility classes -- they use Motion's `variants` prop and named state objects.
+Motion's variant system lets you define named animation states and orchestrate parent-child relationships. Motionwind expresses variants declaratively with `animate-variant-*` classes, and you can still drop to Motion's `variants` prop directly for the most advanced cases.
 
-This page covers how variants work, how to approximate stagger effects with motionwind delay classes, and when to use each approach.
+## Variants as classes
+
+Define named states with `animate-variant-{name}:{property}` and select the active state with `animate-from-{name}` (initial), `animate-to-{name}` (animate), and `animate-exit-{name}` (exit):
+
+<Playground initial="animate-variant-hidden:opacity-0 animate-variant-hidden:y-20 animate-variant-visible:opacity-100 animate-variant-visible:y-0 animate-from-hidden animate-to-visible animate-duration-500 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium" text="Named states" />
+
+```html
+<div className="animate-variant-hidden:opacity-0 animate-variant-hidden:y-20 animate-variant-visible:opacity-100 animate-variant-visible:y-0 animate-from-hidden animate-to-visible animate-duration-500">
+  I animate from hidden → visible
+</div>
+```
+
+Compiles to:
+
+```jsx
+<motion.div
+  variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+  initial="hidden"
+  animate="visible"
+  transition={{ duration: 0.5 }}
+/>
+```
+
+### Parent → child orchestration
+
+A parent's active state propagates to children that declare matching variant names. Add
+orchestration with `animate-stagger-{ms}` and `animate-delay-children-{ms}` on the parent —
+children only need the matching `animate-variant-*` definitions (no `from`/`to`).
+
+```html
+<ul className="animate-to-visible animate-stagger-100">
+  <li className="animate-variant-hidden:opacity-0 animate-variant-visible:opacity-100">One</li>
+  <li className="animate-variant-hidden:opacity-0 animate-variant-visible:opacity-100">Two</li>
+</ul>
+```
+
+The rest of this page covers the underlying Motion `variants` API, stagger via delay classes, and when to reach for each approach.
 
 ## Live Examples
 

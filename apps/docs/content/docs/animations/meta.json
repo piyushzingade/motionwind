@@ -5,11 +5,13 @@
     "transforms",
     "gestures",
     "scroll",
+    "scroll-linked",
     "enter-exit",
     "physics",
     "keyframes",
     "layout",
     "variants",
+    "filters",
     "svg",
     "drag",
     "advanced-effects"

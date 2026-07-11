@@ -1,0 +1,49 @@
+---
+title: "Prettier Plugin"
+description: "Sort motionwind animate-* classes into a consistent, canonical order with prettier-plugin-motionwind."
+---
+
+`prettier-plugin-motionwind` sorts your `animate-*` classes into a consistent order on save —
+like `prettier-plugin-tailwindcss`, but for motion classes.
+
+## Install
+
+```bash
+npm install -D prettier-plugin-motionwind
+```
+
+## Configure
+
+```json
+// .prettierrc
+{
+  "plugins": ["prettier-plugin-motionwind"]
+}
+```
+
+Using Tailwind's sorter too? List motionwind **after** it:
+
+```json
+{ "plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-motionwind"] }
+```
+
+## Order
+
+Classes are grouped in this canonical order:
+
+```
+variant defs → gestures → transition → viewport → scroll → drag → layout → unknown → tailwind
+```
+
+For example:
+
+```html
+<!-- before -->
+<div className="px-4 animate-hover:scale-110 animate-spring bg-blue-500 animate-once" />
+
+<!-- after -->
+<div className="animate-hover:scale-110 animate-spring animate-once px-4 bg-blue-500" />
+```
+
+Only static `className` string literals are sorted; classNames without `animate-*` are left
+untouched.

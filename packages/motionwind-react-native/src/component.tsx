@@ -10,17 +10,21 @@ import {
   FlatList,
   SectionList,
   SafeAreaView,
-  type ViewProps,
-  type TextProps,
-  type ImageProps,
-  type ScrollViewProps,
-  type PressableProps,
-  type TouchableOpacityProps,
-  type TextInputProps,
+  type LayoutChangeEvent,
 } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, {
+  useAnimatedRef,
+  useScrollViewOffset,
+  useDerivedValue,
+  useSharedValue,
+} from "react-native-reanimated";
 import { useMotionwind } from "./use-motionwind.js";
 import { parseMotionClasses } from "./parser.js";
+import { MotionwindVariantContext } from "./variant-context.js";
+import {
+  MotionwindScrollContext,
+  type ScrollContextValue,
+} from "./scroll-context.js";
 
 /**
  * Cast to access Animated.View, Animated.Text, etc. which exist at runtime
@@ -69,6 +73,81 @@ interface MotionwindNativeProps {
   [key: string]: any;
 }
 
+/** Assign a node to multiple refs (callback or object refs). */
+function assignRef(ref: React.Ref<unknown> | undefined, node: unknown): void {
+  if (!ref) return;
+  if (typeof ref === "function") ref(node);
+  else (ref as React.MutableRefObject<unknown>).current = node;
+}
+
+/**
+ * A ScrollView that publishes its normalized scroll progress (0→1) to descendant
+ * `mw.*` elements using `animate-scroll:*` classes. Powered by Reanimated's
+ * `useScrollViewOffset`.
+ *
+ * NOTE: React Native scroll-linked support is experimental and validated via
+ * type-checking + unit tests; verify on-device before relying on it.
+ */
+const MotionScrollView = forwardRef<any, MotionwindNativeProps>(
+  function MotionScrollView(props, ref) {
+    const {
+      children,
+      horizontal,
+      onLayout,
+      onContentSizeChange,
+      ...rest
+    } = props;
+
+    const aref = useAnimatedRef();
+    // aref attaches to the Animated.ScrollView below; the cast satisfies
+    // useScrollViewOffset's stricter ref type.
+    const offset = useScrollViewOffset(
+      aref as unknown as Parameters<typeof useScrollViewOffset>[0],
+    );
+    const layoutSize = useSharedValue(0);
+    const contentSize = useSharedValue(0);
+
+    const progress = useDerivedValue(() => {
+      const max = contentSize.value - layoutSize.value;
+      if (max <= 0) return 0;
+      const p = offset.value / max;
+      return p < 0 ? 0 : p > 1 ? 1 : p;
+    });
+
+    const ctx = useMemo<ScrollContextValue>(
+      () => (horizontal ? { progressX: progress } : { progressY: progress }),
+      [horizontal, progress],
+    );
+
+    const AnimatedScrollView = ANIMATED_COMPONENTS.ScrollView!;
+
+    return (
+      <MotionwindScrollContext.Provider value={ctx}>
+        <AnimatedScrollView
+          ref={(node: any) => {
+            assignRef(aref, node);
+            assignRef(ref, node);
+          }}
+          horizontal={horizontal}
+          onLayout={(e: LayoutChangeEvent) => {
+            layoutSize.value = horizontal
+              ? e.nativeEvent.layout.width
+              : e.nativeEvent.layout.height;
+            onLayout?.(e);
+          }}
+          onContentSizeChange={(w: number, h: number) => {
+            contentSize.value = horizontal ? w : h;
+            onContentSizeChange?.(w, h);
+          }}
+          {...rest}
+        >
+          {children}
+        </AnimatedScrollView>
+      </MotionwindScrollContext.Provider>
+    );
+  },
+);
+
 /**
  * Create a motionwind-animated React Native component.
  *
@@ -79,10 +158,11 @@ interface MotionwindNativeProps {
 function createMotionwindNativeComponent(componentName: string) {
   const MotionwindNativeComponent = forwardRef<any, MotionwindNativeProps>(
     function MotionwindNativeComponent(
-      { className = "", style, ...rest },
+      { className = "", style, children, ...rest },
       ref,
     ) {
-      const { animatedStyle, handlers, parsed } = useMotionwind(className);
+      const { animatedStyle, handlers, parsed, variantProvide } =
+        useMotionwind(className);
 
       if (!parsed.hasMotion) {
         // No motion classes — render plain component with NativeWind className
@@ -94,7 +174,9 @@ function createMotionwindNativeComponent(componentName: string) {
             className={className}
             style={style}
             {...rest}
-          />
+          >
+            {children}
+          </PlainComponent>
         );
       }
 
@@ -104,6 +186,15 @@ function createMotionwindNativeComponent(componentName: string) {
       // Pass remaining NativeWind classes via className prop
       const nativewindClassName = parsed.nativewindClasses || undefined;
 
+      // When this element selects a variant state, propagate it to descendants.
+      const content = variantProvide ? (
+        <MotionwindVariantContext.Provider value={variantProvide}>
+          {children}
+        </MotionwindVariantContext.Provider>
+      ) : (
+        children
+      );
+
       return (
         <AnimatedComponent
           ref={ref}
@@ -111,7 +202,9 @@ function createMotionwindNativeComponent(componentName: string) {
           style={[style, animatedStyle]}
           {...handlers}
           {...rest}
-        />
+        >
+          {content}
+        </AnimatedComponent>
       );
     },
   );
@@ -152,8 +245,12 @@ export const mw = new Proxy(
     get(target, prop: string) {
       if (typeof prop !== "string") return undefined;
       if (!target[prop]) {
+        // mw.ScrollView provides scroll progress to descendants for
+        // animate-scroll:* classes, in addition to normal class support.
         (target as Record<string, any>)[prop] =
-          createMotionwindNativeComponent(prop);
+          prop === "ScrollView"
+            ? MotionScrollView
+            : createMotionwindNativeComponent(prop);
       }
       return target[prop];
     },

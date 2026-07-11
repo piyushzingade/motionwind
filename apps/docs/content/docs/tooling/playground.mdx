@@ -1,0 +1,29 @@
+---
+title: "Playground"
+description: "Experiment with motionwind classes live — see the animation and the Motion code it compiles to."
+---
+
+Type motionwind classes and watch them run, alongside the `motion.*` code they compile to.
+
+<Playground initial="animate-hover:scale-110 animate-tap:scale-90 animate-spring rounded-xl bg-fd-primary px-6 py-3 text-fd-primary-foreground font-semibold" tag="button" text="Click me" />
+
+## Full playground
+
+The embedded editor above is a compact version. The full playground — with an element
+picker, presets, share links, and a larger stage — lives on the marketing site at
+[**/play**](https://motionwind.dev/play).
+
+## Using it in your own docs
+
+The `<Playground>` component is available in MDX:
+
+```mdx
+<Playground
+  initial="animate-hover:scale-110 animate-spring"
+  tag="div"
+  text="Hover me"
+/>
+```
+
+It parses classes at runtime with the `mw.*` component and renders the compiled code with
+`generateMotionCode` from `motionwind-react/tooling`.

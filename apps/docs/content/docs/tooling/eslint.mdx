@@ -1,0 +1,48 @@
+---
+title: "ESLint Plugin"
+description: "Catch unknown classes, duplicate props, and dynamic-className pitfalls with eslint-plugin-motionwind."
+---
+
+`eslint-plugin-motionwind` surfaces motionwind mistakes in your editor, using the same parser
+as the Babel plugin so its diagnostics always match what actually compiles.
+
+## Install
+
+```bash
+npm install -D eslint-plugin-motionwind
+```
+
+## Configure (flat config)
+
+```js
+// eslint.config.js
+import motionwind from "eslint-plugin-motionwind";
+
+export default [motionwind.configs.recommended];
+```
+
+## Rules
+
+| Rule | What it catches |
+|---|---|
+| `motionwind/no-unknown-classes` | `animate-*` classes the parser doesn't recognize (typos, wrong values). |
+| `motionwind/no-duplicate-gesture-props` | The same property set twice in one gesture/variant — the last value silently wins. |
+| `motionwind/prefer-mw-for-dynamic` | `animate-*` in a dynamic className on a host element (the Babel plugin can't compile it — use `mw.*`). |
+| `motionwind/exit-requires-presence` | `animate-exit:*` used without importing `AnimatePresence`. |
+
+All rules are `warn` in the recommended config.
+
+## Examples
+
+```tsx
+// ❌ no-unknown-classes — "scail" is a typo
+<div className="animate-hover:scail-110" />
+
+// ❌ no-duplicate-gesture-props — scale set twice
+<div className="animate-hover:scale-110 animate-hover:scale-90" />
+
+// ❌ prefer-mw-for-dynamic — dynamic className on a host element
+<div className={`animate-hover:scale-110 ${cls}`} />
+// ✅ use the runtime component
+<mw.div className={`animate-hover:scale-110 ${cls}`} />
+```

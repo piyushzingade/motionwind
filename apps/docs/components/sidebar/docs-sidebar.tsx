@@ -160,14 +160,15 @@ export function DocsSidebar({
     isRNPage ? "react-native" : "web",
   );
 
-  // Sync platform when URL changes (e.g. browser back/forward)
+  // Sync platform when URL changes (e.g. browser back/forward). The body is
+  // idempotent, so re-running when platform/isRNPage change is a safe no-op.
   useEffect(() => {
     if (isRNPage && platform !== "react-native") {
       setPlatform("react-native");
     } else if (!isRNPage && platform !== "web") {
       setPlatform("web");
     }
-  }, [pathname]);
+  }, [pathname, isRNPage, platform]);
 
   const handlePlatformSwitch = (p: Platform) => {
     setPlatform(p);

@@ -1,6 +1,7 @@
 import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
+import { runMigrate } from "./migrate/index.js";
 
 const RESET = "\x1b[0m";
 const BOLD = "\x1b[1m";
@@ -28,19 +29,29 @@ function install(pm: PackageManager, cwd: string): void {
   execSync(cmds[pm], { cwd, stdio: "inherit" });
 }
 
+function runInstall(): void {
+  const cwd = process.cwd();
+  const pm = detectPackageManager(cwd);
+
+  console.log(`\n${BOLD}motionwind${RESET}\n`);
+  console.log(`${CYAN}→${RESET} Detected package manager: ${BOLD}${pm}${RESET}`);
+  console.log(`${CYAN}→${RESET} Installing motionwind...\n`);
+
+  try {
+    install(pm, cwd);
+    console.log(`\n${GREEN}${BOLD}✓${RESET} motionwind installed successfully.\n`);
+  } catch {
+    console.error(`\n${RED}${BOLD}✗${RESET} Failed to install. Run manually: ${BOLD}${pm} ${pm === "npm" ? "install" : "add"} motionwind${RESET}\n`);
+    process.exit(1);
+  }
+}
+
 // --- Main ---
 
-const cwd = process.cwd();
-const pm = detectPackageManager(cwd);
+const [, , command, ...rest] = process.argv;
 
-console.log(`\n${BOLD}motionwind${RESET}\n`);
-console.log(`${CYAN}→${RESET} Detected package manager: ${BOLD}${pm}${RESET}`);
-console.log(`${CYAN}→${RESET} Installing motionwind...\n`);
-
-try {
-  install(pm, cwd);
-  console.log(`\n${GREEN}${BOLD}✓${RESET} motionwind installed successfully.\n`);
-} catch {
-  console.error(`\n${RED}${BOLD}✗${RESET} Failed to install. Run manually: ${BOLD}${pm} ${pm === "npm" ? "install" : "add"} motionwind${RESET}\n`);
-  process.exit(1);
+if (command === "migrate") {
+  runMigrate(rest);
+} else {
+  runInstall();
 }
