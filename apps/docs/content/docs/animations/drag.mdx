@@ -35,6 +35,12 @@ Build output:
   </div>
 </Demo>
 
+```html
+<div className="animate-drag-x w-16 h-16 rounded-xl bg-fd-primary flex items-center justify-center text-xs font-semibold text-fd-primary-foreground cursor-grab active:cursor-grabbing select-none">
+  X
+</div>
+```
+
 ### Vertical Only
 
 Lock dragging to the Y axis with `animate-drag-y`. The element can only be moved up and down:
@@ -59,6 +65,12 @@ Build output:
   </div>
 </Demo>
 
+```html
+<div className="animate-drag-y w-16 h-16 rounded-xl bg-fd-primary flex items-center justify-center text-xs font-semibold text-fd-primary-foreground cursor-grab active:cursor-grabbing select-none">
+  Y
+</div>
+```
+
 ### Both Axes
 
 Allow dragging in any direction with `animate-drag-both`:
@@ -82,6 +94,12 @@ Build output:
     XY
   </div>
 </Demo>
+
+```html
+<div className="animate-drag-both w-16 h-16 rounded-xl bg-fd-primary flex items-center justify-center text-xs font-semibold text-fd-primary-foreground cursor-grab active:cursor-grabbing select-none">
+  XY
+</div>
+```
 
 ---
 
@@ -128,6 +146,27 @@ Build output:
   </div>
 </Demo>
 
+```html
+<div className="flex flex-col items-center gap-2">
+  <div className="animate-drag-both animate-drag-elastic-10 w-14 h-14 rounded-xl bg-fd-primary flex items-center justify-center text-xs font-semibold text-fd-primary-foreground cursor-grab active:cursor-grabbing select-none">
+    10
+  </div>
+  <span className="text-xs text-fd-muted-foreground">Low</span>
+</div>
+<div className="flex flex-col items-center gap-2">
+  <div className="animate-drag-both animate-drag-elastic-50 w-14 h-14 rounded-xl bg-fd-primary flex items-center justify-center text-xs font-semibold text-fd-primary-foreground cursor-grab active:cursor-grabbing select-none">
+    50
+  </div>
+  <span className="text-xs text-fd-muted-foreground">Medium</span>
+</div>
+<div className="flex flex-col items-center gap-2">
+  <div className="animate-drag-both animate-drag-elastic-100 w-14 h-14 rounded-xl bg-fd-primary flex items-center justify-center text-xs font-semibold text-fd-primary-foreground cursor-grab active:cursor-grabbing select-none">
+    100
+  </div>
+  <span className="text-xs text-fd-muted-foreground">High</span>
+</div>
+```
+
 ---
 
 ## Visual Feedback While Dragging
@@ -159,6 +198,12 @@ Build output:
   </div>
 </Demo>
 
+```html
+<div className="animate-drag-both animate-drag:scale-110 animate-drag:rotate-5 animate-spring w-16 h-16 rounded-xl bg-fd-primary flex items-center justify-center text-xs font-semibold text-fd-primary-foreground cursor-grab active:cursor-grabbing select-none shadow-lg">
+  Grab
+</div>
+```
+
 You can combine `whileDrag` with other gestures. For example, a draggable element that also responds to hover:
 
 ```tsx
@@ -172,6 +217,12 @@ You can combine `whileDrag` with other gestures. For example, a draggable elemen
     Both
   </div>
 </Demo>
+
+```html
+<div className="animate-drag-both animate-drag:scale-110 animate-drag:rotate-3 animate-hover:scale-105 animate-hover:opacity-80 animate-spring w-16 h-16 rounded-xl bg-fd-primary flex items-center justify-center text-xs font-semibold text-fd-primary-foreground cursor-grab active:cursor-grabbing select-none shadow-lg">
+  Both
+</div>
+```
 
 ---
 

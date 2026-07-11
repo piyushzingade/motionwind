@@ -120,6 +120,19 @@ The built-in `path-length-{n}`, `path-offset-{n}`, and `path-spacing-{n}` classe
   </svg>
 </Demo>
 
+```html
+<svg width="200" height="200" viewBox="0 0 200 200" className="text-[#c8ff2e]">
+  <path
+    d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="3"
+    style={{ pathLength: 0 }}
+    className="animate-initial:path-length-0 animate-enter:path-length-1 animate-duration-2000 animate-ease-in-out"
+  />
+</svg>
+```
+
 ---
 
 ## Stroke Animation
@@ -161,6 +174,17 @@ Build output:
   </svg>
 </Demo>
 
+```html
+<svg width="200" height="100" viewBox="0 0 200 100" className="text-[#c8ff2e]">
+  <line
+    x1="10" y1="50" x2="190" y2="50"
+    stroke="currentColor"
+    strokeWidth="2"
+    className="animate-initial:[strokeDasharray=10] animate-enter:[strokeDasharray=1] animate-initial:[strokeDashoffset=200] animate-enter:[strokeDashoffset=0] animate-duration-1500 animate-ease-in-out"
+  />
+</svg>
+```
+
 ---
 
 ## SVG Transforms
@@ -200,6 +224,18 @@ Build output:
   </svg>
 </Demo>
 
+```html
+<svg width="120" height="120" viewBox="0 0 120 120" style={{ overflow: "visible" }} className="text-[#c8ff2e] cursor-pointer">
+  <rect
+    x="30" y="30" width="60" height="60"
+    rx="8"
+    fill="currentColor"
+    className="animate-hover:rotate-45 animate-hover:scale-110 animate-spring"
+    style={{ transformOrigin: "center" }}
+  />
+</svg>
+```
+
 You can combine multiple gestures on SVG elements as well:
 
 ```tsx
@@ -219,6 +255,16 @@ You can combine multiple gestures on SVG elements as well:
     />
   </svg>
 </Demo>
+
+```html
+<svg width="120" height="120" viewBox="0 0 120 120" style={{ overflow: "visible" }} className="text-[#c8ff2e] cursor-pointer">
+  <circle
+    cx="60" cy="60" r="30"
+    fill="currentColor"
+    className="animate-hover:scale-120 animate-tap:scale-90 animate-spring"
+  />
+</svg>
+```
 
 ---
 
