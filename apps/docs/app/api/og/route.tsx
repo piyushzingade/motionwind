@@ -147,11 +147,13 @@ export async function GET(req: NextRequest) {
           {description && (
             <div
               style={{
-                fontSize: 20,
-                color: "#8a8a9a",
-                marginTop: 16,
-                lineHeight: 1.5,
-                maxWidth: "70%",
+                fontSize: 26,
+                fontWeight: 500,
+                color: "#c4c4d2",
+                marginTop: 20,
+                lineHeight: 1.45,
+                letterSpacing: "-0.01em",
+                maxWidth: "78%",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 display: "flex",
