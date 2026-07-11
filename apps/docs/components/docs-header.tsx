@@ -25,6 +25,7 @@ export function DocsHeader({
     <header className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-dashed border-[var(--color-border)] px-4 sticky top-0 bg-[var(--color-bg)]/80 backdrop-blur-md z-40">
       {/* Sidebar toggle — icon only, works on all screen sizes */}
       <button
+        type="button"
         onClick={onToggleSidebar}
         className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)] hover:bg-[var(--color-surface-elevated)]"
         aria-label="Toggle sidebar"

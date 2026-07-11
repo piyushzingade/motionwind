@@ -80,6 +80,7 @@ export function RNPreview({
           </span>
         </div>
         <button
+          type="button"
           onClick={handleReplay}
           className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-fg-muted)] transition-colors duration-150 hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/[0.06] active:scale-95"
           aria-label="Replay animation"

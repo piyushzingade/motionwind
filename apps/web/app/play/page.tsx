@@ -139,12 +139,14 @@ export default function PlaygroundPage() {
         <h1 className="text-sm font-medium text-text-dim">Playground</h1>
         <div className="flex gap-2">
           <button
+            type="button"
             onClick={() => copy("link")}
             className="rounded-md border border-border-subtle px-3 py-1.5 text-xs text-text-dim transition hover:text-white"
           >
             {copied === "link" ? "Copied!" : "Copy link"}
           </button>
           <button
+            type="button"
             onClick={() => copy("code")}
             className="rounded-md bg-acid px-3 py-1.5 text-xs font-semibold text-black transition hover:opacity-90"
           >
@@ -203,6 +205,7 @@ export default function PlaygroundPage() {
             <div className="flex flex-wrap gap-2">
               {PRESETS.map((p) => (
                 <button
+                  type="button"
                   key={p.label}
                   onClick={() => applyPreset(p)}
                   className="rounded-full border border-border-subtle px-3 py-1.5 text-xs text-text-dim transition hover:border-acid/40 hover:text-white"
@@ -221,6 +224,7 @@ export default function PlaygroundPage() {
               Preview
             </span>
             <button
+              type="button"
               onClick={() => setReplayKey((k) => k + 1)}
               className="text-xs text-text-dim transition hover:text-acid"
             >

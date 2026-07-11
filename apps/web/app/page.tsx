@@ -1327,6 +1327,7 @@ export default function Home() {
             </span>
           </div>
           <button
+            type="button"
             onClick={() => setCodeOpen(false)}
             className="w-7 h-7 rounded-md flex items-center justify-center text-text-muted hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
@@ -1350,6 +1351,7 @@ export default function Home() {
         <div className="flex gap-0 px-3 pt-2 border-b border-white/[0.04] overflow-x-auto scrollbar-none">
           {(Object.keys(CODE_EXAMPLES) as CodeKey[]).map((key) => (
             <button
+              type="button"
               key={key}
               onClick={() => setActiveCode(key)}
               className={`px-3 py-2.5 text-[10px] font-medium tracking-wide uppercase whitespace-nowrap transition-colors rounded-t-md cursor-pointer ${

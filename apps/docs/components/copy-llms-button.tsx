@@ -21,6 +21,7 @@ export function CopyLlmsButton({ src = "/llms.txt" }: { src?: string }) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
       <button
+        type="button"
         onClick={handleCopy}
         className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200"
         style={{
