@@ -126,6 +126,41 @@ Arbitrary values: `animate-hover:[backgroundColor=#4f46e5]`
 | `animate-drag-x` | `drag: "x"` |
 | `animate-drag-elastic-50` | `dragElastic: 0.5` |
 
+### Filters
+
+| Class | Effect |
+|---|---|
+| `animate-hover:blur-10` | `filter: blur(10px)` |
+| `animate-hover:grayscale-100` | `filter: grayscale(1)` |
+| `animate-hover:sepia-50` | `filter: sepia(0.5)` |
+| `animate-hover:invert-100` | `filter: invert(1)` |
+| `animate-hover:hue-rotate-90` | `filter: hue-rotate(90deg)` |
+| `animate-hover:drop-shadow-[0_4px_8px_#000]` | `filter: drop-shadow(...)` |
+
+Multiple filter classes on one gesture combine into a single `filter` string.
+
+### Scroll-Linked Animations
+
+Continuously map scroll progress (0→1) onto a style value. These compile to the `mw.*`
+runtime automatically (they need hooks + a ref).
+
+| Class | Effect |
+|---|---|
+| `animate-scroll:y-[0,-200]` | `y` 0 → -200px across scroll |
+| `animate-scroll:opacity-[1,0]` | fade out on scroll |
+| `animate-scroll:scaleX-[0,1]` | progress-bar fill |
+| `animate-scroll-axis-x` | track horizontal scroll |
+| `animate-scroll-container` | track the page instead of the element |
+
+### Named Variants
+
+Define named states and select the active one — a parent's state propagates to children.
+
+```jsx
+<div className="animate-variant-hidden:opacity-0 animate-variant-visible:opacity-100 animate-from-hidden animate-to-visible" />
+// → variants={{ hidden: {opacity:0}, visible: {opacity:1} }} initial="hidden" animate="visible"
+```
+
 ## Dynamic ClassNames
 
 For dynamic classNames that Babel can't statically analyze, use the runtime fallback:
@@ -143,7 +178,30 @@ import { mw } from "motionwind-react";
 | Package | Description |
 |---|---|
 | `motionwind-react` | Core library — parser, Babel plugin, runtime component, framework integrations |
-| `create-motionwind` | CLI to scaffold motionwind in your project |
+| `motionwind-react-native` | React Native runtime (Reanimated + NativeWind) |
+| `create-motionwind` | CLI to scaffold motionwind — and `migrate` an existing Motion codebase to classes |
+| `eslint-plugin-motionwind` | ESLint rules: unknown classes, duplicate props, dynamic-className pitfalls |
+| `prettier-plugin-motionwind` | Sorts `animate-*` classes into a canonical order |
+
+### Tooling
+
+```bash
+# Convert an existing Framer Motion / Motion codebase to classes
+npx create-motionwind migrate src --write
+```
+
+```js
+// eslint.config.js
+import motionwind from "eslint-plugin-motionwind";
+export default [motionwind.configs.recommended];
+```
+
+```json
+// .prettierrc
+{ "plugins": ["prettier-plugin-motionwind"] }
+```
+
+Try classes live in the [Playground](https://motionwind.dev/play).
 
 ## Development
 
