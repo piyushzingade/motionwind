@@ -208,9 +208,13 @@ Compiles to:
 
 ## Parallax Scrolling
 
-Parallax effects require scroll-linked values that update continuously as the user scrolls -- not just when an element enters the viewport. This is beyond what motionwind's declarative class syntax can express, since motionwind maps to discrete animation states rather than continuous scroll progress.
+Parallax effects require scroll-linked values that update continuously as the user scrolls -- not just when an element enters the viewport. Motionwind expresses these with the [`animate-scroll:*`](/docs/animations/scroll-linked) classes:
 
-**Use Motion's `useScroll` and `useTransform` hooks directly:**
+```html
+<div className="animate-scroll:y-[0,-200]">Parallax layer</div>
+```
+
+For fully custom scroll math you can still drop down to Motion's `useScroll` and `useTransform` hooks directly:
 
 ```tsx
 import { motion, useScroll, useTransform } from "motion/react";

@@ -1,0 +1,71 @@
+---
+title: "Scroll-Linked Animations"
+description: "Drive style values continuously from scroll progress with animate-scroll:* classes — parallax, progress bars, and scroll-driven transforms."
+---
+
+Where `animate-inview:` triggers a one-shot animation when an element enters the viewport,
+`animate-scroll:` **continuously** maps scroll progress (0→1) onto a style value. This is the
+declarative equivalent of Motion's `useScroll` + `useTransform`.
+
+<Callout type="info">
+  Scroll-linked elements need React hooks and a ref, so the Babel plugin compiles them to the
+  **`mw.*` runtime component** automatically. You don't have to change anything — write the
+  classes and it works.
+</Callout>
+
+## Syntax
+
+`animate-scroll:{property}-[from,to]` — the range is **literal** (not rescaled):
+
+```html
+<div className="animate-scroll:y-[0,-200]" />        <!-- parallax: y 0 → -200px -->
+<div className="animate-scroll:opacity-[1,0]" />     <!-- fade out on scroll -->
+<div className="animate-scroll:rotate-[0,360]" />    <!-- rotate a full turn -->
+<div className="animate-scroll:scaleX-[0,1]" />      <!-- progress bar -->
+```
+
+Multi-stop ranges work too: `animate-scroll:opacity-[0,1,0]`.
+
+## Configuration
+
+| Class | Effect |
+|---|---|
+| `animate-scroll-axis-x` | Track horizontal scroll (default is vertical) |
+| `animate-scroll-container` | Track the page/root scroll instead of this element's position |
+| `animate-scroll-offset-[start_end,end_start]` | Set the `useScroll` offset (underscores → spaces) |
+
+## Progress bar example
+
+A fixed bar that fills as the page scrolls:
+
+```html
+<div className="animate-scroll:scaleX-[0,1] animate-scroll-container fixed top-0 left-0 h-1 w-full origin-left bg-fd-primary" />
+```
+
+Compiles to an `mw.div` that wires `useScroll({ axis: "y" })` (page scroll) and maps
+`scrollYProgress` → `scaleX`.
+
+## Parallax example
+
+```html
+<div className="animate-scroll:y-[0,-120]">
+  Slower-moving background layer
+</div>
+```
+
+## React Native
+
+Scroll-linked animations work on React Native too, but the element must be inside an
+`mw.ScrollView`, which shares its scroll progress via context:
+
+```tsx
+import { mw } from "motionwind-react-native";
+
+<mw.ScrollView>
+  <mw.View className="animate-scroll:y-[0,-100] animate-scroll-container" />
+</mw.ScrollView>
+```
+
+<Callout type="warn">
+  React Native scroll-linked support is experimental — verify on-device.
+</Callout>

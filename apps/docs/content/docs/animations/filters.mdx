@@ -1,0 +1,52 @@
+---
+title: "Filters"
+description: "Animate CSS filter effects — blur, brightness, contrast, saturate, grayscale, sepia, invert, hue-rotate, and drop-shadow."
+---
+
+Motionwind maps filter classes to Motion's `filter` property. Multiple filter classes on
+the same gesture are combined into a single `filter` string in order.
+
+<Playground initial="animate-hover:grayscale-100 animate-hover:blur-2 animate-duration-300 rounded-xl bg-fd-primary px-6 py-4 text-fd-primary-foreground font-medium" text="Hover me" />
+
+## Available filters
+
+| Class | Compiles to | Notes |
+|---|---|---|
+| `animate-hover:blur-10` | `filter: "blur(10px)"` | pixels |
+| `animate-hover:brightness-150` | `filter: "brightness(1.5)"` | 0–100 → 0–1 |
+| `animate-hover:contrast-200` | `filter: "contrast(2)"` | 0–100 → 0–1 |
+| `animate-hover:saturate-0` | `filter: "saturate(0)"` | 0–100 → 0–1 |
+| `animate-hover:grayscale-100` | `filter: "grayscale(1)"` | 0–100 → 0–1 |
+| `animate-hover:sepia-50` | `filter: "sepia(0.5)"` | 0–100 → 0–1 |
+| `animate-hover:invert-100` | `filter: "invert(1)"` | 0–100 → 0–1 |
+| `animate-hover:hue-rotate-90` | `filter: "hue-rotate(90deg)"` | degrees, supports negatives |
+| `animate-hover:drop-shadow-[0_4px_8px_#000]` | `filter: "drop-shadow(0 4px 8px #000)"` | underscores → spaces |
+
+## Combining filters
+
+Filter classes on the same gesture concatenate:
+
+```html
+<div className="animate-hover:blur-4 animate-hover:grayscale-100 animate-hover:invert-100">
+  ...
+</div>
+```
+
+Compiles to:
+
+```jsx
+<motion.div whileHover={{ filter: "blur(4px) grayscale(1) invert(1)" }} />
+```
+
+## Negative hue-rotate
+
+Prefix with `-` to rotate the other way:
+
+```html
+<div className="animate-hover:-hue-rotate-45" />
+```
+
+<Callout type="info">
+  Filters are a **web-only** feature. On React Native they parse cleanly but are dropped,
+  since Reanimated has no equivalent filter primitive.
+</Callout>
