@@ -1,7 +1,9 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 
-export const runtime = "edge";
+// Node runtime: the Edge bundle for next/og exceeds Vercel's 1 MB Edge Function
+// limit. Node functions have a much larger limit, and next/og runs there too.
+export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
