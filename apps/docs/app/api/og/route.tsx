@@ -9,6 +9,8 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const title = searchParams.get("title") ?? "Documentation";
   const description = searchParams.get("description") ?? "";
+  // Optional framework/section label rendered above the title (e.g. "Vue").
+  const eyebrow = searchParams.get("eyebrow") ?? "";
 
   return new ImageResponse(
     (
@@ -127,6 +129,24 @@ export async function GET(req: NextRequest) {
             />
             <polygon points="415,188 439,200 415,212" fill="#c8ff2e" />
           </svg>
+
+          {/* Framework / section eyebrow */}
+          {eyebrow && (
+            <div
+              style={{
+                display: "flex",
+                fontSize: 22,
+                fontWeight: 600,
+                color: "#c8ff2e",
+                textTransform: "uppercase",
+                letterSpacing: "0.16em",
+                marginBottom: 18,
+                fontFamily: "monospace",
+              }}
+            >
+              {eyebrow}
+            </div>
+          )}
 
           {/* Page title */}
           <div

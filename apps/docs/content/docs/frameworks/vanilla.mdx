@@ -1,0 +1,58 @@
+---
+title: "Vanilla JS & CDN"
+description: "Add motionwind to any HTML page with no framework and no build step. A runtime DOM scan wires up your animate-* classes via the Motion vanilla API."
+---
+
+For plain HTML with no framework, `motionwind-vanilla` scans the DOM and wires
+animations through the [Motion](https://motion.dev) vanilla API — the same
+`animate-*` classes you'd use anywhere else, no build step required.
+
+## npm
+
+```bash
+npm install motionwind-vanilla motion
+```
+
+```js
+import { motionwind } from "motionwind-vanilla";
+
+// Scans the document and returns a cleanup function.
+const stop = motionwind({ observe: true });
+```
+
+```html
+<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+  Click me
+</button>
+```
+
+## CDN (zero build)
+
+The CDN bundle is self-contained (Motion is included) and auto-initializes on
+load — drop in one script tag and start writing classes:
+
+```html
+<script src="https://unpkg.com/motionwind-vanilla"></script>
+
+<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+  Click me
+</button>
+```
+
+## Options
+
+`motionwind(options)` accepts:
+
+| Option | Default | Description |
+|---|---|---|
+| `root` | `document` | Element to scan for `animate-*` classes. |
+| `selector` | `[class*="animate-"]` | Which nodes to wire up. |
+| `observe` | `false` | Watch for dynamically-added elements via a `MutationObserver`. |
+| `respectReducedMotion` | `true` | Skip interactive animations when the user prefers reduced motion. |
+
+## Good to know
+
+- **Supported gestures:** hover, tap, focus, in-view, enter, and scroll-linked.
+- **Idempotent.** Running `motionwind()` more than once won't double-wire an
+  element — safe to call after each DOM update, or pass `{ observe: true }`.
+- **Accessible by default.** Honors `prefers-reduced-motion` unless you opt out.

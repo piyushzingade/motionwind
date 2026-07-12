@@ -1,0 +1,80 @@
+---
+title: "Vue 3"
+description: "Set up motionwind in a Vue 3 app. A build-time template transform rewrites your animate-* classes into Motion for Vue components — the same class syntax as React."
+---
+
+In Vue, motionwind is a **build-time template transform** built on
+[Motion for Vue](https://motion.dev/docs/vue). It rewrites elements with static
+`class` strings containing `animate-*` tokens into animated components, so you
+write plain templates — exactly like the React build step.
+
+## Install
+
+```bash
+npm install motionwind-vue motion-v
+```
+
+## Build-time transform (recommended)
+
+Add the transform to `@vitejs/plugin-vue` and register the plugin once:
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import { motionwindTransform } from "motionwind-vue/vite";
+
+export default defineConfig({
+  plugins: [
+    vue({ template: { compilerOptions: { nodeTransforms: [motionwindTransform] } } }),
+  ],
+});
+```
+
+```ts
+// main.ts
+import { createApp } from "vue";
+import { MotionwindPlugin } from "motionwind-vue";
+import App from "./App.vue";
+
+createApp(App).use(MotionwindPlugin).mount("#app");
+```
+
+Now write plain elements — the transform rewrites them at build time:
+
+```vue
+<template>
+  <button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+    Click me
+  </button>
+</template>
+```
+
+## Runtime component (no build step)
+
+Prefer not to touch the compiler? Use the `<Motionwind>` component, the `mw.*`
+proxy, or the `useMotionwind` composable directly:
+
+```vue
+<script setup>
+import { Motionwind } from "motionwind-vue";
+</script>
+
+<template>
+  <Motionwind as="button" class="animate-hover:scale-110 animate-tap:scale-90">
+    Click me
+  </Motionwind>
+</template>
+```
+
+## Good to know
+
+- **Static `class` only.** Like the React build step, only static `class`
+  attributes are transformed. For dynamic `:class`, use `<Motionwind>` / `mw.*`.
+- **Prop names map automatically.** motionwind emits Motion for Vue's API —
+  e.g. tap gestures use `whilePress`, viewport reveals use `inViewOptions`.
+- **Reduced motion is honored.** Interactive gestures are stripped when the user
+  prefers reduced motion.
+
+> Scroll-linked animations (`animate-scroll:*`) are React/vanilla-only for now
+> in Vue.

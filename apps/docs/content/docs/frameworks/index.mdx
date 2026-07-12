@@ -1,0 +1,45 @@
+---
+title: "Frameworks"
+description: "motionwind runs on React (Next.js & Vite), React Native, Vue 3, and vanilla JS — the same animate-* class syntax everywhere, each via a dedicated package built on the shared motionwind-core parser."
+---
+
+motionwind is **multi-framework**. You write the same `animate-*` utility classes
+in every framework, and a dedicated adapter turns them into real animations —
+whether that happens at build time (React, Vue) or at runtime (React Native,
+vanilla). Every adapter shares the framework-agnostic
+[`motionwind-core`](/docs/api) parser, so the syntax stays identical across the
+stack.
+
+<FrameworkGrid />
+
+## How each adapter works
+
+| Framework | Package | How it works |
+|---|---|---|
+| React (Next.js / Vite) | `motionwind-react` | Build-time Babel transform → `motion/react` |
+| React Native / Expo | `motionwind-react-native` | Runtime `mw.*` → Reanimated |
+| Vue 3 | `motionwind-vue` | Build-time template transform → Motion for Vue |
+| Vanilla / CDN | `motionwind-vanilla` | Runtime DOM scan → Motion |
+
+## One syntax, everywhere
+
+The class grammar never changes. A hover-and-tap spring button looks the same in
+every framework — only the element/import differs:
+
+```tsx
+// React & Vue (build-time): write a plain element
+<button className="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+  Click me
+</button>
+```
+
+```html
+<!-- Vanilla: the same classes on plain HTML -->
+<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+  Click me
+</button>
+```
+
+Pick your framework above to get started, or read the full
+[Framework Setup](/docs/framework-setup) reference for webpack/Vite internals,
+the App Router client/server boundary, and troubleshooting.

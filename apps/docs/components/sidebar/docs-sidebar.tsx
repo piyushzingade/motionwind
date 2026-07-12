@@ -142,10 +142,12 @@ export function DocsSidebar({
         <SidebarGroup
           title="Frameworks"
           items={[
-            { title: "React (Next.js / Vite)", url: "/docs/framework-setup" },
+            { title: "Overview", url: "/docs/frameworks" },
+            { title: "React (Next.js / Vite)", url: "/docs/frameworks/react" },
             { title: "React Native", url: "/docs/react-native" },
-            { title: "Vue", url: "/docs/framework-setup#vue" },
-            { title: "Vanilla / CDN", url: "/docs/framework-setup#vanilla-js" },
+            { title: "Vue", url: "/docs/frameworks/vue" },
+            { title: "Vanilla / CDN", url: "/docs/frameworks/vanilla" },
+            { title: "Setup reference", url: "/docs/framework-setup" },
           ]}
           pathname={pathname}
           onLinkClick={onCloseMobile}
