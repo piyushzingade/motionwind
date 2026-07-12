@@ -79,39 +79,71 @@ function decodeState(hash: string): Partial<Preset> | null {
 }
 
 export default function PlaygroundPage() {
-  const [classes, setClasses] = useState(PRESETS[0]!.classes);
-  const [tag, setTag] = useState<string>(PRESETS[0]!.tag);
-  const [text, setText] = useState(PRESETS[0]!.text);
+  // classes/tag/text are one logical unit (the edited snippet), so they live in
+  // a single state object — a lone setState updates all three in one render.
+  const [editor, setEditor] = useState<{
+    classes: string;
+    tag: string;
+    text: string;
+  }>(() => ({
+    classes: PRESETS[0]!.classes,
+    tag: PRESETS[0]!.tag,
+    text: PRESETS[0]!.text,
+  }));
+  const { classes, tag, text } = editor;
   const [replayKey, setReplayKey] = useState(0);
   const [copied, setCopied] = useState<"link" | "code" | null>(null);
 
-  // Hydrate from the URL hash on first load.
+  // Mirror editor state into the URL hash from the handler that changes it,
+  // rather than a reactive effect — this keeps the page shareable without an
+  // effect chain (a state-change effect feeding a second effect).
+  const writeHash = useCallback(
+    (next: { classes: string; tag: string; text: string }) => {
+      window.history.replaceState(null, "", "#" + encodeState(next));
+    },
+    [],
+  );
+
+  // Hydrate from the URL hash on first load; otherwise seed the hash from the
+  // default preset so "Copy link" works immediately.
   useEffect(() => {
     const decoded = decodeState(window.location.hash);
     if (decoded && decoded.classes !== undefined) {
-      setClasses(decoded.classes);
-      setTag(decoded.tag ?? "div");
-      setText(decoded.text ?? "");
+      setEditor({
+        classes: decoded.classes,
+        tag: decoded.tag ?? "div",
+        text: decoded.text ?? "",
+      });
+    } else {
+      writeHash({
+        classes: PRESETS[0]!.classes,
+        tag: PRESETS[0]!.tag,
+        text: PRESETS[0]!.text,
+      });
     }
-  }, []);
-
-  // Keep the URL hash in sync so the page is shareable.
-  useEffect(() => {
-    const hash = "#" + encodeState({ classes, tag, text });
-    window.history.replaceState(null, "", hash);
-  }, [classes, tag, text]);
+  }, [writeHash]);
 
   const generated = useMemo(
     () => generateMotionCode(tag, classes, { text: text || "Content" }),
     [tag, classes, text],
   );
 
-  const applyPreset = useCallback((preset: Preset) => {
-    setClasses(preset.classes);
-    setTag(preset.tag);
-    setText(preset.text);
-    setReplayKey((k) => k + 1);
-  }, []);
+  const applyPreset = useCallback(
+    (preset: Preset) => {
+      setEditor({
+        classes: preset.classes,
+        tag: preset.tag,
+        text: preset.text,
+      });
+      setReplayKey((k) => k + 1);
+      writeHash({
+        classes: preset.classes,
+        tag: preset.tag,
+        text: preset.text,
+      });
+    },
+    [writeHash],
+  );
 
   const copy = useCallback(
     async (kind: "link" | "code") => {
@@ -158,12 +190,20 @@ export default function PlaygroundPage() {
       <div className="grid gap-px bg-border-subtle lg:grid-cols-[1fr_1.2fr_1fr]">
         {/* Controls */}
         <section className="bg-surface p-6">
-          <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-text-muted">
+          <label
+            htmlFor="pg-classes"
+            className="mb-2 block text-xs font-medium uppercase tracking-wide text-text-muted"
+          >
             Classes
           </label>
           <textarea
+            id="pg-classes"
             value={classes}
-            onChange={(e) => setClasses(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setEditor((s) => ({ ...s, classes: value }));
+              writeHash({ ...editor, classes: value });
+            }}
             spellCheck={false}
             rows={8}
             className="w-full resize-y rounded-lg border border-border-subtle bg-surface-raised p-3 font-mono text-sm text-acid outline-none focus:border-acid/40"
@@ -171,12 +211,20 @@ export default function PlaygroundPage() {
 
           <div className="mt-4 flex items-center gap-4">
             <div className="flex-1">
-              <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-text-muted">
+              <label
+                htmlFor="pg-element"
+                className="mb-1 block text-xs font-medium uppercase tracking-wide text-text-muted"
+              >
                 Element
               </label>
               <select
+                id="pg-element"
                 value={tag}
-                onChange={(e) => setTag(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setEditor((s) => ({ ...s, tag: value }));
+                  writeHash({ ...editor, tag: value });
+                }}
                 className="w-full rounded-lg border border-border-subtle bg-surface-raised p-2 text-sm outline-none focus:border-acid/40"
               >
                 {TAGS.map((t) => (
@@ -187,12 +235,20 @@ export default function PlaygroundPage() {
               </select>
             </div>
             <div className="flex-1">
-              <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-text-muted">
+              <label
+                htmlFor="pg-text"
+                className="mb-1 block text-xs font-medium uppercase tracking-wide text-text-muted"
+              >
                 Text
               </label>
               <input
+                id="pg-text"
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setEditor((s) => ({ ...s, text: value }));
+                  writeHash({ ...editor, text: value });
+                }}
                 className="w-full rounded-lg border border-border-subtle bg-surface-raised p-2 text-sm outline-none focus:border-acid/40"
               />
             </div>

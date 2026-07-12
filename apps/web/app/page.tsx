@@ -1,8 +1,23 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { Typewriter } from "../components/typewriter";
 import { highlightCode } from "../lib/highlight";
+
+/**
+ * Keyboard-activation handler for click-only static elements. Mirrors a native
+ * button: Enter or Space fires `fn`, so keyboard users can trigger the cards
+ * that open the code drawer.
+ */
+function onActivateKey(fn: () => void) {
+  return (e: ReactKeyboardEvent<HTMLElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      fn();
+    }
+  };
+}
 
 /* ────────────────────────────────────────────────────────────────────
  *  CODE SNIPPETS — shown inside the sliding code panel
@@ -262,7 +277,7 @@ export default function Home() {
               <span className="hidden sm:inline text-text-muted"> — the code panel slides in from the right</span>
             </p>
             {/* Animated arrow icon */}
-            <svg className="w-4 h-4 text-acid/50 hidden sm:block animate-bounce-x" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <svg className="w-4 h-4 text-acid/50 hidden sm:block animate-nudge-x" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
             </svg>
           </div>
@@ -444,7 +459,11 @@ export default function Home() {
           <div className="flex flex-col gap-8">
             {/* ── SEARCH BAR FOCUS ── */}
             <div
+              role="button"
+              tabIndex={0}
+              aria-label="View code for the search-bar focus demo"
               onClick={() => openCode("scroll")}
+              onKeyDown={onActivateKey(() => openCode("scroll"))}
               className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-ease-out animate-once preview-card cursor-pointer"
             >
               <div className="preview-titlebar">
@@ -480,7 +499,11 @@ export default function Home() {
 
             {/* ── ALL GESTURE STATES ── */}
             <div
+              role="button"
+              tabIndex={0}
+              aria-label="View code for the gesture-states demo"
               onClick={() => openCode("hover")}
+              onKeyDown={onActivateKey(() => openCode("hover"))}
               className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-100 animate-ease-out animate-once preview-card cursor-pointer"
             >
               <div className="preview-titlebar">
@@ -511,7 +534,11 @@ export default function Home() {
 
             {/* ── GESTURE REFERENCE TABLE ── */}
             <div
+              role="button"
+              tabIndex={0}
+              aria-label="View code for the gesture prefixes reference"
               onClick={() => openCode("syntax")}
+              onKeyDown={onActivateKey(() => openCode("syntax"))}
               className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-200 animate-ease-out animate-once preview-card cursor-pointer"
             >
               <div className="preview-titlebar">
@@ -559,7 +586,11 @@ export default function Home() {
 
             {/* ── SCROLL REVEAL (FADE UP) ── */}
             <div
+              role="button"
+              tabIndex={0}
+              aria-label="View code for the scroll-reveal demo"
               onClick={() => openCode("scroll")}
+              onKeyDown={onActivateKey(() => openCode("scroll"))}
               className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-300 animate-ease-out animate-once preview-card cursor-pointer"
             >
               <div className="preview-titlebar">
@@ -594,7 +625,11 @@ export default function Home() {
 
             {/* ── DRAG INTERACTION ── */}
             <div
+              role="button"
+              tabIndex={0}
+              aria-label="View code for the drag demo"
               onClick={() => openCode("drag")}
+              onKeyDown={onActivateKey(() => openCode("drag"))}
               className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-100 animate-ease-out animate-once preview-card cursor-pointer"
             >
               <div className="preview-titlebar">
@@ -628,7 +663,11 @@ export default function Home() {
 
             {/* ── INFINITE ROTATION ── */}
             <div
+              role="button"
+              tabIndex={0}
+              aria-label="View code for the infinite-loop demo"
               onClick={() => openCode("loop")}
+              onKeyDown={onActivateKey(() => openCode("loop"))}
               className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-200 animate-ease-out animate-once preview-card cursor-pointer"
             >
               <div className="preview-titlebar">
@@ -659,7 +698,11 @@ export default function Home() {
 
             {/* ── SPRING PHYSICS ── */}
             <div
+              role="button"
+              tabIndex={0}
+              aria-label="View code for the spring demo"
               onClick={() => openCode("spring")}
+              onKeyDown={onActivateKey(() => openCode("spring"))}
               className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-300 animate-ease-out animate-once preview-card cursor-pointer"
             >
               <div className="preview-titlebar">
@@ -715,7 +758,11 @@ export default function Home() {
 
           {/* Before / After Code */}
           <div
+            role="button"
+            tabIndex={0}
+            aria-label="View the compiled output"
             onClick={() => openCode("compiled")}
+            onKeyDown={onActivateKey(() => openCode("compiled"))}
             className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once relative grid md:grid-cols-[1fr_auto_1fr] gap-0 items-stretch cursor-pointer group/code"
           >
             {/* Click hint */}
@@ -963,7 +1010,11 @@ export default function Home() {
       <section className="relative py-20 sm:py-24 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div
+            role="button"
+            tabIndex={0}
+            aria-label="View code for the features section"
             onClick={() => openCode("features")}
+            onKeyDown={onActivateKey(() => openCode("features"))}
             className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once text-center mb-12 sm:mb-16 cursor-pointer group/feat"
           >
             <span className="text-xs font-medium tracking-[0.2em] uppercase text-acid/70 mb-4 block">
@@ -1067,7 +1118,11 @@ export default function Home() {
       <section className="relative py-20 sm:py-24 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <div
+            role="button"
+            tabIndex={0}
+            aria-label="View syntax examples"
             onClick={() => openCode("syntax")}
+            onKeyDown={onActivateKey(() => openCode("syntax"))}
             className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once text-center mb-12 sm:mb-16 cursor-pointer group/syn"
           >
             <span className="text-xs font-medium tracking-[0.2em] uppercase text-acid/70 mb-4 block">
@@ -1167,7 +1222,7 @@ export default function Home() {
 
           {/* Framework configs */}
           <div className="animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-300 animate-ease-out animate-once mt-8 sm:mt-10 grid sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
-            <div onClick={() => openCode("nextjs")} className="rounded-xl border border-white/[0.08] bg-surface-raised overflow-hidden text-left cursor-pointer hover:border-acid/20 transition-colors">
+            <div role="button" tabIndex={0} aria-label="View the Next.js setup code" onClick={() => openCode("nextjs")} onKeyDown={onActivateKey(() => openCode("nextjs"))} className="rounded-xl border border-white/[0.08] bg-surface-raised overflow-hidden text-left cursor-pointer hover:border-acid/20 transition-colors">
               <div className="flex items-center gap-2.5 px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
                 <svg
                   className="w-4 h-4 text-white/70"
@@ -1197,7 +1252,7 @@ export default function Home() {
                 </code>
               </pre>
             </div>
-            <div onClick={() => openCode("vite")} className="rounded-xl border border-white/[0.08] bg-surface-raised overflow-hidden text-left cursor-pointer hover:border-acid/20 transition-colors">
+            <div role="button" tabIndex={0} aria-label="View the Vite setup code" onClick={() => openCode("vite")} onKeyDown={onActivateKey(() => openCode("vite"))} className="rounded-xl border border-white/[0.08] bg-surface-raised overflow-hidden text-left cursor-pointer hover:border-acid/20 transition-colors">
               <div className="flex items-center gap-2.5 px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
                 <svg
                   className="w-4 h-4 text-white/70"
@@ -1296,7 +1351,9 @@ export default function Home() {
 
       {/* Backdrop overlay */}
       {codeOpen && (
-        <div
+        <button
+          type="button"
+          aria-label="Close code panel"
           className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
           onClick={() => setCodeOpen(false)}
         />
@@ -1328,6 +1385,7 @@ export default function Home() {
           </div>
           <button
             type="button"
+            aria-label="Close code panel"
             onClick={() => setCodeOpen(false)}
             className="w-7 h-7 rounded-md flex items-center justify-center text-text-muted hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >

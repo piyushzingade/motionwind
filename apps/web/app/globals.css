@@ -111,14 +111,14 @@
   background: linear-gradient(to right, transparent, #c8ff2e15 30%, #c8ff2e15 70%, transparent);
 }
 
-/* Horizontal bounce for arrow hint */
-@keyframes bounce-x {
+/* Horizontal nudge for arrow hint */
+@keyframes nudge-x {
   0%, 100% { transform: translateX(0); }
   50% { transform: translateX(4px); }
 }
 
-.animate-bounce-x {
-  animation: bounce-x 1.5s ease-in-out infinite;
+.animate-nudge-x {
+  animation: nudge-x 1.5s ease-in-out infinite;
 }
 
 /* ── Preview cards (browser-style demo panels) ── */
