@@ -16,22 +16,12 @@ npm install motionwind-react motion
 
 `motion` is a peer dependency (React 18 or 19).
 
-## Configure
+## Set up
 
-### Next.js
+motionwind works in any React setup. **Vite is the recommended, fastest way to
+start** — but the Next.js wrapper is a single line too.
 
-Wrap your config with `withMotionwind`:
-
-```ts
-// next.config.mjs
-import { withMotionwind } from "motionwind-react/next";
-
-export default withMotionwind({
-  // your existing config
-});
-```
-
-### Vite
+### Vite (recommended)
 
 Add the plugin **before** `@vitejs/plugin-react`:
 
@@ -43,6 +33,19 @@ import { motionwind } from "motionwind-react/vite";
 
 export default defineConfig({
   plugins: [motionwind(), react()],
+});
+```
+
+### Next.js
+
+Wrap your config with `withMotionwind`:
+
+```ts
+// next.config.mjs
+import { withMotionwind } from "motionwind-react/next";
+
+export default withMotionwind({
+  // your existing config
 });
 ```
 

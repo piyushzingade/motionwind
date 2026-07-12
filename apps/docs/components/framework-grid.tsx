@@ -13,6 +13,8 @@ interface Framework {
   href: string;
   install: string;
   icon: ReactNode;
+  /** Highlight the recommended starting point (React + Vite). */
+  featured?: boolean;
 }
 
 const ArrowIcon = (
@@ -33,9 +35,10 @@ const ArrowIcon = (
 const FRAMEWORKS: Framework[] = [
   {
     name: "React",
-    tagline: "Next.js & Vite — a build-time Babel transform with zero runtime.",
+    tagline: "Vite & Next.js — a build-time Babel transform, zero runtime.",
     href: "/docs/frameworks/react",
     install: "npm i motionwind-react",
+    featured: true,
     icon: (
       <svg viewBox="-11.5 -10.23 23 20.46" width="20" height="20" aria-hidden="true">
         <circle r="2" fill="currentColor" />
@@ -50,7 +53,7 @@ const FRAMEWORKS: Framework[] = [
   {
     name: "React Native",
     tagline: "Expo — runtime mw.* components powered by Reanimated.",
-    href: "/docs/react-native",
+    href: "/docs/frameworks/react-native",
     install: "npm i motionwind-react-native",
     icon: (
       <svg viewBox="-11.5 -10.23 23 20.46" width="20" height="20" aria-hidden="true">
@@ -96,7 +99,11 @@ export function FrameworkGrid() {
         <Link
           key={f.href}
           href={f.href}
-          className="group flex flex-col gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 no-underline transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-[var(--color-accent)]/40 hover:shadow-[0_8px_24px_-12px_var(--color-shadow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+          className={`group flex flex-col gap-3 rounded-xl border bg-[var(--color-surface)] p-5 no-underline transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-[var(--color-accent)]/50 hover:shadow-[0_8px_24px_-12px_var(--color-shadow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${
+            f.featured
+              ? "border-[var(--color-accent)]/40"
+              : "border-[var(--color-border)]"
+          }`}
         >
           <div className="flex items-center gap-3">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-elevated)] text-[var(--color-accent)]">
@@ -105,6 +112,11 @@ export function FrameworkGrid() {
             <span className="text-[15px] font-semibold text-[var(--color-fg)]">
               {f.name}
             </span>
+            {f.featured ? (
+              <span className="rounded-full border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-[var(--color-accent)]">
+                Recommended
+              </span>
+            ) : null}
             {ArrowIcon}
           </div>
           <p className="text-[13px] leading-relaxed text-[var(--color-fg-muted)]">

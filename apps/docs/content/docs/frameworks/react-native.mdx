@@ -1,0 +1,63 @@
+---
+title: "React Native (Expo)"
+description: "Set up motionwind in a React Native / Expo app. Runtime mw.* components turn your animate-* classes into Reanimated-powered animations."
+---
+
+In React Native, motionwind is a **runtime** adapter: the `mw.*` components parse
+`animate-*` classes and drive them with
+[Reanimated](https://docs.swmansion.com/react-native-reanimated/) on the UI
+thread — the same class syntax as the web, no build step.
+
+## Install
+
+```bash
+npx expo install react-native-reanimated react-native-gesture-handler
+npm install motionwind-react-native nativewind
+```
+
+## Set up
+
+Add the Reanimated Babel plugin (it must be **last**) in `babel.config.js`:
+
+```js
+// babel.config.js
+module.exports = {
+  presets: ["babel-preset-expo"],
+  plugins: ["react-native-reanimated/plugin"],
+};
+```
+
+Wrap your app in `GestureHandlerRootView` so gesture animations work:
+
+```tsx
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+export default function App() {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      {/* your app */}
+    </GestureHandlerRootView>
+  );
+}
+```
+
+## Write animations
+
+Use the `mw.*` components with the same `animate-*` classes:
+
+```tsx
+import { mw } from "motionwind-react-native";
+
+<mw.Pressable className="animate-tap:scale-90 animate-spring">
+  <mw.Text className="text-white font-bold">Press me</mw.Text>
+</mw.Pressable>
+```
+
+## Good to know
+
+- **Runtime, not build-time.** Unlike React/Vue, there's no compiler step —
+  `mw.*` parses classes at runtime, so dynamic `className` works out of the box.
+- **Reanimated-powered.** Gestures and springs run on the UI thread for smooth
+  60fps animations.
+- Full component list, hooks, and platform notes live in the dedicated
+  [React Native guide](/docs/react-native/installation).

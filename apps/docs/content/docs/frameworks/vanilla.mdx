@@ -7,39 +7,28 @@ For plain HTML with no framework, `motionwind-vanilla` scans the DOM and wires
 animations through the [Motion](https://motion.dev) vanilla API — the same
 `animate-*` classes you'd use anywhere else, no build step required.
 
-## npm
+## Install
 
 ```bash
 npm install motionwind-vanilla motion
 ```
 
-```js
-import { motionwind } from "motionwind-vanilla";
-
-// Scans the document and returns a cleanup function.
-const stop = motionwind({ observe: true });
-```
-
-```html
-<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
-  Click me
-</button>
-```
-
-## CDN (zero build)
-
-The CDN bundle is self-contained (Motion is included) and auto-initializes on
-load — drop in one script tag and start writing classes:
+Or skip the install entirely with the self-contained CDN bundle (Motion
+included), which auto-initializes on load:
 
 ```html
 <script src="https://unpkg.com/motionwind-vanilla"></script>
-
-<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
-  Click me
-</button>
 ```
 
-## Options
+## Set up
+
+With npm, scan the document once (it returns a cleanup function):
+
+```js
+import { motionwind } from "motionwind-vanilla";
+
+const stop = motionwind({ observe: true });
+```
 
 `motionwind(options)` accepts:
 
@@ -49,6 +38,18 @@ load — drop in one script tag and start writing classes:
 | `selector` | `[class*="animate-"]` | Which nodes to wire up. |
 | `observe` | `false` | Watch for dynamically-added elements via a `MutationObserver`. |
 | `respectReducedMotion` | `true` | Skip interactive animations when the user prefers reduced motion. |
+
+The CDN bundle runs this for you — no call needed.
+
+## Write animations
+
+Add `animate-*` classes to any element:
+
+```html
+<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+  Click me
+</button>
+```
 
 ## Good to know
 
