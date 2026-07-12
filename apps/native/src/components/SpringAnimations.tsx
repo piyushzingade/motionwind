@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import Animated, {
   useSharedValue,
@@ -25,12 +25,13 @@ function SpringBall({
 }) {
   const { colors } = useTheme();
   const translateY = useSharedValue(0);
-  const [active, setActive] = useState(false);
+  // Only read inside the handler to pick a direction — never rendered — so a
+  // ref avoids an extra re-render on every toggle.
+  const active = useRef(false);
 
   const toggle = () => {
-    const target = active ? 0 : -40;
-    translateY.value = withSpring(target, { damping, stiffness });
-    setActive(!active);
+    active.current = !active.current;
+    translateY.value = withSpring(active.current ? -40 : 0, { damping, stiffness });
   };
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -64,9 +65,13 @@ function BouncyLoader() {
       false,
     );
     dot1.value = anim;
-    setTimeout(() => { dot2.value = withRepeat(withSequence(withTiming(-12, { duration: 300, easing: Easing.out(Easing.cubic) }), withTiming(0, { duration: 300, easing: Easing.in(Easing.cubic) })), -1, false); }, 100);
-    setTimeout(() => { dot3.value = withRepeat(withSequence(withTiming(-12, { duration: 300, easing: Easing.out(Easing.cubic) }), withTiming(0, { duration: 300, easing: Easing.in(Easing.cubic) })), -1, false); }, 200);
-  }, []);
+    const t2 = setTimeout(() => { dot2.value = withRepeat(withSequence(withTiming(-12, { duration: 300, easing: Easing.out(Easing.cubic) }), withTiming(0, { duration: 300, easing: Easing.in(Easing.cubic) })), -1, false); }, 100);
+    const t3 = setTimeout(() => { dot3.value = withRepeat(withSequence(withTiming(-12, { duration: 300, easing: Easing.out(Easing.cubic) }), withTiming(0, { duration: 300, easing: Easing.in(Easing.cubic) })), -1, false); }, 200);
+    return () => {
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, [dot1, dot2, dot3]);
 
   const s1 = useAnimatedStyle(() => ({ transform: [{ translateY: dot1.value }] }));
   const s2 = useAnimatedStyle(() => ({ transform: [{ translateY: dot2.value }] }));

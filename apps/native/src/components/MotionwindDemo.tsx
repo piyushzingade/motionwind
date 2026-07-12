@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import Animated, {
   FadeInDown,
@@ -7,6 +7,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { DemoCard } from "./DemoCard";
 import { useTheme } from "../theme";
 
@@ -51,25 +52,34 @@ function TapScaleBox() {
   const { colors } = useTheme();
   const scale = useSharedValue(1);
 
+  // Drive the press animation on the UI thread via a tap gesture, so mutating
+  // the shared value never blocks the JS thread.
+  const gesture = Gesture.Tap()
+    .onBegin(() => {
+      scale.value = withSpring(0.92, { damping: 15 });
+    })
+    .onFinalize(() => {
+      scale.value = withSpring(1, { damping: 15 });
+    });
+
   const style = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
 
   return (
-    <Pressable
-      onPressIn={() => { scale.value = withSpring(0.92, { damping: 15 }); }}
-      onPressOut={() => { scale.value = withSpring(1, { damping: 15 }); }}
-    >
+    <GestureDetector gesture={gesture}>
       <Animated.View style={[styles.demoBox, { backgroundColor: `${colors.accent}30`, borderColor: `${colors.accent}40` }, style]}>
         <Text style={[styles.demoBoxText, { color: colors.fg }]}>Press & hold</Text>
       </Animated.View>
-    </Pressable>
+    </GestureDetector>
   );
 }
 
 function SpringBox() {
   const { colors } = useTheme();
-  const [toggled, setToggled] = useState(false);
+  // Direction flag read only inside the handler, never rendered — a ref avoids
+  // an extra re-render on each toggle.
+  const toggled = useRef(false);
   const translateY = useSharedValue(0);
   const rotate = useSharedValue(0);
 
@@ -78,8 +88,8 @@ function SpringBox() {
   }));
 
   const toggle = () => {
-    const next = !toggled;
-    setToggled(next);
+    toggled.current = !toggled.current;
+    const next = toggled.current;
     translateY.value = withSpring(next ? -30 : 0, { stiffness: 400, damping: 10 });
     rotate.value = withSpring(next ? 180 : 0, { stiffness: 400, damping: 10 });
   };

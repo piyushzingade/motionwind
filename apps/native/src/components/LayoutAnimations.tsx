@@ -49,7 +49,9 @@ function ExpandableCard() {
 function ShuffleGrid() {
   const { colors } = useTheme();
   const gridColors = [colors.accent, "#0ea5e9", "#10b981", "#f59e0b", "#ef4444"];
-  const [items, setItems] = useState(gridColors.map((c, i) => ({ id: i, color: c })));
+  const [items, setItems] = useState(() =>
+    gridColors.map((c, i) => ({ id: i, color: c })),
+  );
 
   const shuffle = () => {
     setItems((prev) => {

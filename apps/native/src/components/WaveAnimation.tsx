@@ -62,7 +62,7 @@ function WaveBar({ index, total }: { index: number; total: number }) {
         false,
       ),
     );
-  }, []);
+  }, [index, total, height, colorProgress]);
 
   const barStyle = useAnimatedStyle(() => ({
     height: height.value,
@@ -85,15 +85,16 @@ function WaveBar({ index, total }: { index: number; total: number }) {
  * Orbiting dots — dots that orbit around a center point
  * with different speeds and radii.
  */
+const ORBITS = [
+  { radius: 35, duration: 3000, size: 8, delay: 0 },
+  { radius: 35, duration: 3000, size: 6, delay: 1500 },
+  { radius: 55, duration: 4500, size: 6, delay: 0 },
+  { radius: 55, duration: 4500, size: 5, delay: 2250 },
+  { radius: 20, duration: 2000, size: 5, delay: 500 },
+];
+
 function OrbitingDots() {
   const { colors } = useTheme();
-  const orbits = [
-    { radius: 35, duration: 3000, size: 8, delay: 0 },
-    { radius: 35, duration: 3000, size: 6, delay: 1500 },
-    { radius: 55, duration: 4500, size: 6, delay: 0 },
-    { radius: 55, duration: 4500, size: 5, delay: 2250 },
-    { radius: 20, duration: 2000, size: 5, delay: 500 },
-  ];
 
   return (
     <View style={styles.orbitContainer}>
@@ -106,8 +107,12 @@ function OrbitingDots() {
       <View style={[styles.centerDot, { backgroundColor: colors.accent }]} />
 
       {/* Orbiting dots */}
-      {orbits.map((orbit, i) => (
-        <OrbitDot key={i} {...orbit} color={i % 2 === 0 ? colors.accent : "#0ea5e9"} />
+      {ORBITS.map((orbit, i) => (
+        <OrbitDot
+          key={`${orbit.radius}-${orbit.duration}-${orbit.size}-${orbit.delay}`}
+          {...orbit}
+          color={i % 2 === 0 ? colors.accent : "#0ea5e9"}
+        />
       ))}
     </View>
   );
@@ -137,7 +142,7 @@ function OrbitDot({
         false,
       ),
     );
-  }, []);
+  }, [delay, duration, angle]);
 
   const style = useAnimatedStyle(() => {
     const rad = (angle.value * Math.PI) / 180;

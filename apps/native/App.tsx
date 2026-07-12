@@ -1,13 +1,10 @@
 import React, { useState, useMemo } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  StatusBar,
-  SafeAreaView,
-} from "react-native";
+import { View, Text, ScrollView, StyleSheet, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  SafeAreaProvider,
+  SafeAreaView,
+} from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { ThemeContext, light, dark, type ThemeMode } from "./src/theme";
 import { ThemeToggle } from "./src/components/ThemeToggle";
@@ -42,7 +39,8 @@ export default function App() {
   return (
     <ThemeContext.Provider value={theme}>
       <GestureHandlerRootView style={[styles.root, { backgroundColor: colors.bg }]}>
-        <SafeAreaView style={styles.safe}>
+        <SafeAreaProvider>
+          <SafeAreaView style={styles.safe}>
           <StatusBar
             barStyle={mode === "dark" ? "light-content" : "dark-content"}
             backgroundColor={colors.bg}
@@ -144,7 +142,8 @@ export default function App() {
               </Text>
             </View>
           </ScrollView>
-        </SafeAreaView>
+          </SafeAreaView>
+        </SafeAreaProvider>
       </GestureHandlerRootView>
     </ThemeContext.Provider>
   );

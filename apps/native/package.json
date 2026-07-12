@@ -13,7 +13,6 @@
     "expo": "~55.0.8",
     "expo-linear-gradient": "~14.1.4",
     "expo-status-bar": "~55.0.4",
-    "lucide-react-native": "^0.577.0",
     "motionwind-react-native": "workspace:*",
     "nativewind": "^4.1.23",
     "react": "19.2.0",

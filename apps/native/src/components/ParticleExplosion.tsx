@@ -15,6 +15,7 @@ import { useTheme } from "../theme";
 
 const PARTICLE_COUNT = 12;
 const RING_COUNT = 8;
+const PARTICLE_SIZES = [6, 8, 5, 7, 4, 9, 6, 5, 8, 7, 4, 6];
 
 /**
  * Advanced: Particle explosion + ring burst effect.
@@ -35,10 +36,6 @@ function Particle({
   total: number;
 }) {
   const { colors } = useTheme();
-  const angle = (index / total) * Math.PI * 2;
-  const distance = 50 + Math.random() * 30;
-  const targetX = Math.cos(angle) * distance;
-  const targetY = Math.sin(angle) * distance;
 
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -47,6 +44,12 @@ function Particle({
 
   useEffect(() => {
     if (trigger === 0) return;
+    // Compute the burst target at trigger time so the random spread is fixed
+    // for this burst rather than recomputed on every render.
+    const angle = (index / total) * Math.PI * 2;
+    const distance = 50 + Math.random() * 30;
+    const targetX = Math.cos(angle) * distance;
+    const targetY = Math.sin(angle) * distance;
     const stagger = index * 20;
 
     // Burst outward
@@ -79,9 +82,8 @@ function Particle({
       translateY.value = 0;
     }, 800);
     return () => clearTimeout(timeout);
-  }, [trigger]);
+  }, [trigger, index, total, translateX, translateY, scale, opacity]);
 
-  const sizes = [6, 8, 5, 7, 4, 9, 6, 5, 8, 7, 4, 6];
   const particleColors = [
     colors.accent,
     "#f43f5e",
@@ -96,7 +98,7 @@ function Particle({
     "#0ea5e9",
     "#f59e0b",
   ];
-  const size = sizes[index % sizes.length]!;
+  const size = PARTICLE_SIZES[index % PARTICLE_SIZES.length]!;
   const color = particleColors[index % particleColors.length]!;
 
   const style = useAnimatedStyle(() => ({
@@ -144,7 +146,7 @@ function RingBurst({ trigger }: { trigger: number }) {
       withTiming(3, { duration: 0 }),
       withTiming(0.5, { duration: 500 }),
     );
-  }, [trigger]);
+  }, [trigger, scale, opacity, borderWidth]);
 
   const style = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],

@@ -35,10 +35,11 @@ function EasingBar({
 
   useEffect(() => {
     width.value = 0;
-    setTimeout(() => {
+    const id = setTimeout(() => {
       width.value = withTiming(1, { duration: 800, easing });
     }, 50);
-  }, [trigger]);
+    return () => clearTimeout(id);
+  }, [trigger, easing, width]);
 
   const barStyle = useAnimatedStyle(() => ({
     width: `${width.value * 100}%`,

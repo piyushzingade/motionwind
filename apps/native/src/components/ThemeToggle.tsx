@@ -49,7 +49,7 @@ export function ThemeToggle() {
       duration: 350,
       easing: Easing.out(Easing.cubic),
     });
-  }, [mode]);
+  }, [mode, progress]);
 
   const handlePress = () => {
     rotate.value = withSpring(rotate.value + 360, {

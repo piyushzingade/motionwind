@@ -19,7 +19,7 @@ function PulsingCircle() {
   useEffect(() => {
     scale.value = withRepeat(withTiming(1.3, { duration: 1000, easing: Easing.inOut(Easing.cubic) }), -1, true);
     opacity.value = withRepeat(withTiming(0.2, { duration: 1000, easing: Easing.inOut(Easing.cubic) }), -1, true);
-  }, []);
+  }, [scale, opacity]);
 
   const outerStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -42,7 +42,7 @@ function SpinningLoader() {
 
   useEffect(() => {
     rotate.value = withRepeat(withTiming(360, { duration: 1200, easing: Easing.linear }), -1, false);
-  }, []);
+  }, [rotate]);
 
   const style = useAnimatedStyle(() => ({
     transform: [{ rotate: `${rotate.value}deg` }],
@@ -66,7 +66,7 @@ function BreathingBox() {
   useEffect(() => {
     scale.value = withRepeat(withSequence(withTiming(1.15, { duration: 1500, easing: Easing.inOut(Easing.cubic) }), withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.cubic) })), -1, false);
     borderRadius.value = withRepeat(withSequence(withTiming(28, { duration: 1500, easing: Easing.inOut(Easing.cubic) }), withTiming(16, { duration: 1500, easing: Easing.inOut(Easing.cubic) })), -1, false);
-  }, []);
+  }, [scale, borderRadius]);
 
   const style = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -96,7 +96,7 @@ function ShakeAnimation() {
     shake();
     const interval = setInterval(shake, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [translateX]);
 
   const style = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],

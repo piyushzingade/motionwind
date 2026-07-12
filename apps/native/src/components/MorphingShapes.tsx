@@ -67,7 +67,7 @@ function MorphShape({ index, trigger }: { index: number; trigger: number }) {
         withTiming(0, { duration: 400 }),
       ),
     );
-  }, [trigger]);
+  }, [trigger, index, borderRadius, rotation, scale, colorProgress, glowOpacity]);
 
   const shapeStyle = useAnimatedStyle(() => ({
     borderRadius: borderRadius.value,
