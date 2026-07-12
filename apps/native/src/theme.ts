@@ -1,7 +1,30 @@
 import { createContext, use } from "react";
 
+/**
+ * Semantic color tokens for the native app, mirroring the web/docs design
+ * system. Both palettes conform to `ThemeColors`, so either can be assigned
+ * wherever a theme is expected (no literal-type mismatch between light/dark).
+ */
+export interface ThemeColors {
+  bg: string;
+  fg: string;
+  fgMuted: string;
+  accent: string;
+  accentHover: string;
+  accentFg: string;
+  border: string;
+  borderSubtle: string;
+  surface: string;
+  surfaceElevated: string;
+  shadow: string;
+  codeBg: string;
+  selection: string;
+}
+
+export type ThemeMode = "light" | "dark";
+
 /** Docs-matching color tokens */
-export const light = {
+export const light: ThemeColors = {
   bg: "#fafaf9",
   fg: "#171717",
   fgMuted: "#64646e",
@@ -15,9 +38,9 @@ export const light = {
   shadow: "rgba(0,0,0,0.06)",
   codeBg: "#f6f6f2",
   selection: "rgba(77,124,15,0.12)",
-} as const;
+};
 
-export const dark = {
+export const dark: ThemeColors = {
   bg: "#0a0a0f",
   fg: "#f0f0f0",
   fgMuted: "#8a8a9a",
@@ -31,10 +54,7 @@ export const dark = {
   shadow: "rgba(0,0,0,0.5)",
   codeBg: "#0c0c14",
   selection: "rgba(200,255,46,0.18)",
-} as const;
-
-export type ThemeColors = typeof light;
-export type ThemeMode = "light" | "dark";
+};
 
 export interface ThemeContextValue {
   mode: ThemeMode;
