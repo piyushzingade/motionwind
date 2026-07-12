@@ -18,7 +18,7 @@ interface Framework {
 const ArrowIcon = (
   <svg
     aria-hidden="true"
-    className="ml-auto h-4 w-4 shrink-0 text-[var(--color-fg-muted)] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--color-accent)]"
+    className="ml-auto h-4 w-4 shrink-0 text-[var(--color-fg-muted)] transition-[transform,color] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-[var(--color-accent)] motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -96,7 +96,7 @@ export function FrameworkGrid() {
         <Link
           key={f.href}
           href={f.href}
-          className="group flex flex-col gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 no-underline transition-colors duration-150 hover:border-[var(--color-accent)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)]"
+          className="group flex flex-col gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 no-underline transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-[var(--color-accent)]/40 hover:shadow-[0_8px_24px_-12px_var(--color-shadow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
         >
           <div className="flex items-center gap-3">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-elevated)] text-[var(--color-accent)]">

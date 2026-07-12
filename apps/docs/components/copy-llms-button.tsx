@@ -23,12 +23,11 @@ export function CopyLlmsButton({ src = "/llms.txt" }: { src?: string }) {
       <button
         type="button"
         onClick={handleCopy}
-        className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200"
-        style={{
-          background: copied ? "var(--color-accent)" : "var(--color-surface-elevated)",
-          color: copied ? "var(--color-accent-fg)" : "var(--color-fg)",
-          border: `1px solid ${copied ? "var(--color-accent)" : "var(--color-border)"}`,
-        }}
+        className={`inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-medium transition-colors duration-200 ${
+          copied
+            ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-accent-fg)]"
+            : "border-[var(--color-border)] bg-[var(--color-surface-elevated)] text-[var(--color-fg)] hover:border-[var(--color-accent)]/40"
+        }`}
       >
         {copied ? (
           <>
@@ -51,8 +50,7 @@ export function CopyLlmsButton({ src = "/llms.txt" }: { src?: string }) {
         href={src}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 text-sm transition-colors duration-200"
-        style={{ color: "var(--color-fg-muted)" }}
+        className="inline-flex items-center gap-1.5 text-sm text-[var(--color-fg-muted)] transition-colors duration-200 hover:text-[var(--color-fg)]"
       >
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 8.5v4a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 2 12.5v-7A1.5 1.5 0 0 1 3.5 4H8" />

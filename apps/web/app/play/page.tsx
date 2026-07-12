@@ -288,13 +288,7 @@ export default function PlaygroundPage() {
             </button>
           </div>
           <div
-            className="flex flex-1 items-center justify-center overflow-auto p-10"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
-              backgroundSize: "16px 16px",
-              minHeight: "60vh",
-            }}
+            className="flex min-h-[60vh] flex-1 items-center justify-center overflow-auto bg-[radial-gradient(circle,#ffffff0d_1px,transparent_1px)] p-10 [background-size:16px_16px]"
           >
             <Preview key={replayKey} className={classes}>
               {text}
