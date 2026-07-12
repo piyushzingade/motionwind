@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { LazyMotion, domAnimation, m, AnimatePresence } from "motion/react";
 import {
   WEB_SIDEBAR,
@@ -13,79 +13,6 @@ import {
 import { FeedbackDialog } from "./feedback-dialog";
 
 const easeOutQuint: [number, number, number, number] = [0.23, 1, 0.32, 1];
-
-/* ── Platform Switcher ── */
-
-function PlatformSwitcher({
-  platform,
-  onSwitch,
-}: {
-  platform: Platform;
-  onSwitch: (p: Platform) => void;
-}) {
-  return (
-    <div className="mx-3 mb-4 flex rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] p-0.5">
-      {(
-        [
-          {
-            id: "web" as const,
-            label: "Web",
-            icon: (
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                <path d="M2 12h20" />
-              </svg>
-            ),
-          },
-          {
-            id: "react-native" as const,
-            label: "React Native",
-            icon: (
-              <svg width="14" height="14" viewBox="-10.5 -9.45 21 18.9" fill="none">
-                <circle cx="0" cy="0" r="2" fill="currentColor" />
-                <g stroke="currentColor" strokeWidth="1" fill="none">
-                  <ellipse rx="10" ry="4.5" />
-                  <ellipse rx="10" ry="4.5" transform="rotate(60)" />
-                  <ellipse rx="10" ry="4.5" transform="rotate(120)" />
-                </g>
-              </svg>
-            ),
-          },
-        ]
-      ).map((p) => {
-        const isActive = platform === p.id;
-        return (
-          <button
-            type="button"
-            key={p.id}
-            onClick={() => onSwitch(p.id)}
-            className={`
-              relative flex-1 rounded-md px-2 py-1.5 text-[11px] font-medium transition-colors duration-150
-              ${
-                isActive
-                  ? "text-[var(--color-accent)]"
-                  : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
-              }
-            `}
-          >
-            {isActive && (
-              <m.span
-                layoutId="platform-pill"
-                className="absolute inset-0 rounded-md bg-[var(--color-surface-elevated)] border border-[var(--color-border)]"
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              />
-            )}
-            <span className="relative z-10 flex items-center justify-center gap-1.5">
-              {p.icon}
-              {p.label}
-            </span>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
 
 /* ── Sidebar Group ── */
 
@@ -152,33 +79,13 @@ export function DocsSidebar({
   onCloseMobile: () => void;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
-  // Auto-detect platform from URL
-  const isRNPage = pathname.startsWith("/docs/react-native");
-  const [platform, setPlatform] = useState<Platform>(
-    isRNPage ? "react-native" : "web",
-  );
-
-  // Sync platform when the URL's platform changes (e.g. browser back/forward)
-  // by adjusting state during render with a prev-value comparison — the
-  // React-recommended alternative to a sync effect.
-  const [prevIsRNPage, setPrevIsRNPage] = useState(isRNPage);
-  if (isRNPage !== prevIsRNPage) {
-    setPrevIsRNPage(isRNPage);
-    setPlatform(isRNPage ? "react-native" : "web");
-  }
-
-  const handlePlatformSwitch = (p: Platform) => {
-    setPlatform(p);
-    // Navigate to the platform's landing page
-    if (p === "react-native") {
-      router.push("/docs/react-native");
-    } else {
-      router.push("/docs");
-    }
-  };
+  // Platform is derived from the URL — React Native docs live under
+  // /docs/react-native; everything else is Web.
+  const platform: Platform = pathname.startsWith("/docs/react-native")
+    ? "react-native"
+    : "web";
 
   const items = platform === "react-native" ? RN_SIDEBAR : WEB_SIDEBAR;
 
@@ -201,14 +108,6 @@ export function DocsSidebar({
             v0.1
           </span>
         </Link>
-      </div>
-
-      {/* Platform switcher */}
-      <div className="pt-4">
-        <PlatformSwitcher
-          platform={platform}
-          onSwitch={handlePlatformSwitch}
-        />
       </div>
 
       {/* Navigation */}
