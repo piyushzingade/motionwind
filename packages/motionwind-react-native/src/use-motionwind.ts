@@ -283,12 +283,14 @@ export function useMotionwind(className: string) {
   }, [parsed, animateTo]);
 
   // Animate to the active variant target whenever it changes (self or inherited).
+  // `variantCtx.active` is listed explicitly since `activeVariant` derives from
+  // it, so the effect always animates to the freshest inherited variant.
   useEffect(() => {
     if (hasVariants && activeVariant) {
       const target = parsed.variants[activeVariant];
       if (target) animateTo(target);
     }
-  }, [hasVariants, activeVariant, parsed, animateTo]);
+  }, [hasVariants, activeVariant, parsed, animateTo, variantCtx.active]);
 
   // Precompute scroll config outside the worklet.
   const scrollValues = parsed.scroll.values;

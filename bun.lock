@@ -162,7 +162,6 @@
       "version": "0.3.1",
       "dependencies": {
         "@babel/core": "^7.26.0",
-        "@babel/generator": "^7.26.0",
         "@babel/parser": "^7.26.0",
         "@babel/plugin-syntax-jsx": "^7.28.6",
         "@babel/types": "^7.26.0",
