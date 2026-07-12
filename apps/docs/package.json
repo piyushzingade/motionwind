@@ -12,7 +12,6 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@repo/ui": "*",
     "@types/mdx": "^2.0.13",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",

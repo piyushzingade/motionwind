@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { LazyMotion, domAnimation, m } from "motion/react";
 
 const easeOutQuint: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
@@ -12,39 +12,40 @@ export function DocsPageHeader({
   description?: string;
 }) {
   return (
+    <LazyMotion features={domAnimation}>
     <header className="mb-10">
       {/* Mono label */}
-      <motion.p
+      <m.p
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, ease: easeOutQuint, delay: 0 }}
         className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-fg-muted)] mb-3"
       >
         Documentation
-      </motion.p>
+      </m.p>
 
-      <motion.h1
+      <m.h1
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: easeOutQuint, delay: 0.05 }}
         className="font-[family-name:var(--font-display)] text-3xl italic text-[var(--color-fg)] sm:text-4xl tracking-tight"
       >
         {title}
-      </motion.h1>
+      </m.h1>
 
       {description && (
-        <motion.p
+        <m.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: easeOutQuint, delay: 0.1 }}
           className="mt-3 max-w-2xl text-base leading-relaxed text-[var(--color-fg-muted)]"
         >
           {description}
-        </motion.p>
+        </m.p>
       )}
 
       {/* Dashed accent underline */}
-      <motion.div
+      <m.div
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 0.5, ease: easeOutQuint, delay: 0.2 }}
@@ -66,7 +67,8 @@ export function DocsPageHeader({
             strokeWidth="1"
           />
         </svg>
-      </motion.div>
+      </m.div>
     </header>
+    </LazyMotion>
   );
 }

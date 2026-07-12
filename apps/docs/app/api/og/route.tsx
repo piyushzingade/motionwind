@@ -216,7 +216,7 @@ export async function GET(req: NextRequest) {
           </div>
           <span
             style={{
-              fontSize: 10,
+              fontSize: 16,
               color: "#5a5a6a",
               fontFamily: "monospace",
               letterSpacing: "0.05em",

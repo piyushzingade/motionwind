@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "motion/react";
+import { LazyMotion, domAnimation, m, AnimatePresence } from "motion/react";
 import {
   WEB_SIDEBAR,
   RN_SIDEBAR,
@@ -70,7 +70,7 @@ function PlatformSwitcher({
             `}
           >
             {isActive && (
-              <motion.span
+              <m.span
                 layoutId="platform-pill"
                 className="absolute inset-0 rounded-md bg-[var(--color-surface-elevated)] border border-[var(--color-border)]"
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -124,7 +124,7 @@ function SidebarGroup({
                 `}
               >
                 {isActive && (
-                  <motion.span
+                  <m.span
                     layoutId="sidebar-active"
                     className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-[2px] rounded-full bg-[var(--color-accent)]"
                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
@@ -161,15 +161,14 @@ export function DocsSidebar({
     isRNPage ? "react-native" : "web",
   );
 
-  // Sync platform when URL changes (e.g. browser back/forward). The body is
-  // idempotent, so re-running when platform/isRNPage change is a safe no-op.
-  useEffect(() => {
-    if (isRNPage && platform !== "react-native") {
-      setPlatform("react-native");
-    } else if (!isRNPage && platform !== "web") {
-      setPlatform("web");
-    }
-  }, [pathname, isRNPage, platform]);
+  // Sync platform when the URL's platform changes (e.g. browser back/forward)
+  // by adjusting state during render with a prev-value comparison — the
+  // React-recommended alternative to a sync effect.
+  const [prevIsRNPage, setPrevIsRNPage] = useState(isRNPage);
+  if (isRNPage !== prevIsRNPage) {
+    setPrevIsRNPage(isRNPage);
+    setPlatform(isRNPage ? "react-native" : "web");
+  }
 
   const handlePlatformSwitch = (p: Platform) => {
     setPlatform(p);
@@ -284,30 +283,39 @@ export function DocsSidebar({
   );
 
   return (
-    <>
+    <LazyMotion features={domAnimation}>
       {/* Desktop sidebar — collapsible */}
-      <motion.aside
+      <m.aside
         initial={false}
         animate={{ width: desktopCollapsed ? 0 : 260 }}
         transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="hidden md:flex h-screen flex-shrink-0 flex-col border-r border-dashed border-[var(--color-border)] bg-[var(--color-bg)] sticky top-0 overflow-hidden"
       >
         <div className="w-[260px] h-full">{sidebarContent}</div>
-      </motion.aside>
+      </m.aside>
 
       {/* Mobile overlay */}
       <AnimatePresence>
         {mobileOpen && (
           <>
-            <motion.div
+            <m.div
+              role="button"
+              tabIndex={0}
+              aria-label="Close navigation sidebar"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm md:hidden"
               onClick={onCloseMobile}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onCloseMobile();
+                }
+              }}
             />
-            <motion.aside
+            <m.aside
               initial={{ x: -280 }}
               animate={{ x: 0 }}
               exit={{ x: -280 }}
@@ -315,10 +323,10 @@ export function DocsSidebar({
               className="fixed left-0 top-0 z-50 h-screen w-[280px] bg-[var(--color-bg)] border-r border-[var(--color-border)] md:hidden"
             >
               {sidebarContent}
-            </motion.aside>
+            </m.aside>
           </>
         )}
       </AnimatePresence>
-    </>
+    </LazyMotion>
   );
 }

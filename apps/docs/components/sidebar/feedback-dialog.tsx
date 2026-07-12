@@ -1,8 +1,30 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useEffectEvent,
+  useSyncExternalStore,
+} from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, LazyMotion, domMax, m } from "motion/react";
+
+const emptySubscribe = () => () => {};
+
+/**
+ * Portal target guarded behind a client-only render path: `null` on the server
+ * and during hydration, `document.body` once mounted on the client. Using
+ * `useSyncExternalStore` with a stable server snapshot avoids reading a browser
+ * global during render.
+ */
+function usePortalTarget(): HTMLElement | null {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => document.body,
+    () => null,
+  );
+}
 
 const FEEDBACK_TYPES = [
   {
@@ -62,21 +84,33 @@ export function FeedbackDialog({
   );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Reset status on the open transition by adjusting state during render —
+  // the React-recommended alternative to a reset-in-effect.
+  const [prevOpen, setPrevOpen] = useState(open);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    if (open) setStatus("idle");
+  }
+
+  // Focus the textarea shortly after opening (a genuine DOM side effect).
   useEffect(() => {
-    if (open) {
-      setStatus("idle");
-      setTimeout(() => textareaRef.current?.focus(), 150);
-    }
+    if (!open) return;
+    const id = setTimeout(() => textareaRef.current?.focus(), 150);
+    return () => clearTimeout(id);
   }, [open]);
 
+  // useEffectEvent keeps the latest onClose without re-subscribing the listener
+  // every time the parent re-renders.
+  const onEscape = useEffectEvent(() => onClose());
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onEscape();
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- onEscape is a useEffectEvent; Effect Events must not be listed as effect dependencies
+  }, [open]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -104,27 +138,36 @@ export function FeedbackDialog({
   }
 
   const charCount = message.length;
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const portalTarget = usePortalTarget();
 
-  if (!mounted) return null;
+  if (!portalTarget) return null;
 
   return createPortal(
-    <AnimatePresence>
-      {open && (
-        <>
+    <LazyMotion features={domMax}>
+      <AnimatePresence>
+        {open && (
+          <>
           {/* Backdrop */}
-          <motion.div
+          <m.div
+            role="button"
+            tabIndex={0}
+            aria-label="Close feedback dialog"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-[6px]"
             onClick={onClose}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onClose();
+              }
+            }}
           />
 
           {/* Dialog */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.96, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
@@ -162,6 +205,7 @@ export function FeedbackDialog({
                   </div>
                   <button
                     type="button"
+                    aria-label="Close feedback dialog"
                     onClick={onClose}
                     className="flex h-6 w-6 items-center justify-center rounded-md text-[var(--color-fg-muted)]/60 transition-all hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-fg)]"
                   >
@@ -210,7 +254,7 @@ export function FeedbackDialog({
                             </span>
                             {t.label}
                             {active && (
-                              <motion.span
+                              <m.span
                                 layoutId="feedback-type-dot"
                                 className="absolute -top-px -right-px h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]"
                                 transition={{ type: "spring", stiffness: 400, damping: 28 }}
@@ -301,14 +345,14 @@ export function FeedbackDialog({
                     >
                       <AnimatePresence mode="wait">
                         {status === "sending" ? (
-                          <motion.span
+                          <m.span
                             key="sending"
                             initial={{ opacity: 0, y: 6 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -6 }}
                             className="flex items-center gap-1.5"
                           >
-                            <motion.span
+                            <m.span
                               animate={{ rotate: 360 }}
                               transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
                               className="inline-block"
@@ -316,11 +360,11 @@ export function FeedbackDialog({
                               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                 <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                               </svg>
-                            </motion.span>
+                            </m.span>
                             Sending
-                          </motion.span>
+                          </m.span>
                         ) : status === "sent" ? (
-                          <motion.span
+                          <m.span
                             key="sent"
                             initial={{ opacity: 0, y: 6 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -331,18 +375,18 @@ export function FeedbackDialog({
                               <polyline points="20 6 9 17 4 12" />
                             </svg>
                             Sent!
-                          </motion.span>
+                          </m.span>
                         ) : status === "error" ? (
-                          <motion.span
+                          <m.span
                             key="error"
                             initial={{ opacity: 0, y: 6 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -6 }}
                           >
                             Retry
-                          </motion.span>
+                          </m.span>
                         ) : (
-                          <motion.span
+                          <m.span
                             key="idle"
                             initial={{ opacity: 0, y: 6 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -354,7 +398,7 @@ export function FeedbackDialog({
                               <line x1="22" y1="2" x2="11" y2="13" />
                               <polygon points="22 2 15 22 11 13 2 9 22 2" />
                             </svg>
-                          </motion.span>
+                          </m.span>
                         )}
                       </AnimatePresence>
                     </button>
@@ -362,10 +406,11 @@ export function FeedbackDialog({
                 </div>
               </form>
             </div>
-          </motion.div>
+          </m.div>
         </>
       )}
-    </AnimatePresence>,
-    document.body,
+      </AnimatePresence>
+    </LazyMotion>,
+    portalTarget,
   );
 }

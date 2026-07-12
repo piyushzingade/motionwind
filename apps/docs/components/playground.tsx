@@ -34,6 +34,7 @@ export function Playground({
   return (
     <div className="not-prose my-6 overflow-hidden rounded-xl border border-fd-border">
       <textarea
+        aria-label="Editable motionwind classes"
         value={classes}
         onChange={(e) => setClasses(e.target.value)}
         spellCheck={false}

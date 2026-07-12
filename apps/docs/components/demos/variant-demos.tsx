@@ -212,8 +212,11 @@ export function NotificationStackDemo() {
   const [notifs, setNotifs] = useState<{ id: number; msg: string }[]>([]);
 
   const add = () => {
-    const msg = NOTIF_MESSAGES[notifId % NOTIF_MESSAGES.length]!;
-    setNotifs((prev) => [...prev.slice(-3), { id: notifId++, msg }]);
+    // Resolve the next id in the handler, not inside the state updater —
+    // updaters must be pure (React may call them more than once).
+    const id = notifId++;
+    const msg = NOTIF_MESSAGES[id % NOTIF_MESSAGES.length]!;
+    setNotifs((prev) => [...prev.slice(-3), { id, msg }]);
   };
 
   const remove = (id: number) => {

@@ -4,7 +4,13 @@ import { useState, useCallback, useEffect } from "react";
 import { DocsSidebar } from "./sidebar/docs-sidebar";
 import { DocsHeader } from "./docs-header";
 
-export function DocsLayoutClient({ children }: { children: React.ReactNode }) {
+export function DocsLayoutClient({
+  children,
+  starCount = null,
+}: {
+  children: React.ReactNode;
+  starCount?: number | null;
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopCollapsed, setDesktopCollapsed] = useState(false);
 
@@ -44,7 +50,7 @@ export function DocsLayoutClient({ children }: { children: React.ReactNode }) {
         onCloseMobile={handleCloseMobile}
       />
       <div className="relative flex flex-1 flex-col min-h-0 min-w-0">
-        <DocsHeader onToggleSidebar={handleToggleSidebar} />
+        <DocsHeader onToggleSidebar={handleToggleSidebar} starCount={starCount} />
         <div className="docs-content-wrapper flex-1 overflow-y-auto min-h-0">
           {children}
         </div>

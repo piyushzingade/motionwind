@@ -1,26 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 
 export function DocsHeader({
   onToggleSidebar,
+  starCount = null,
 }: {
   onToggleSidebar: () => void;
+  /** Star count fetched server-side in the docs layout (avoids a client fetch). */
+  starCount?: number | null;
 }) {
-  const [starCount, setStarCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    fetch("https://api.github.com/repos/piyushzingade/motionwind")
-      .then((res) => res.json())
-      .then((data) => {
-        if (typeof data.stargazers_count === "number") {
-          setStarCount(data.stargazers_count);
-        }
-      })
-      .catch(() => {});
-  }, []);
   return (
     <header className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-dashed border-[var(--color-border)] px-4 sticky top-0 bg-[var(--color-bg)]/80 backdrop-blur-md z-40">
       {/* Sidebar toggle — icon only, works on all screen sizes */}

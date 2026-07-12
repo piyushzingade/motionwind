@@ -8,6 +8,7 @@ import React, {
   type ReactNode,
 } from "react";
 import { useTheme } from "next-themes";
+import { useMounted } from "../lib/use-mounted";
 
 /** Only triggers once when element enters viewport */
 function useInView(threshold = 0.05) {
@@ -49,10 +50,8 @@ export function RNPreview({
 }) {
   const [replayKey, setReplayKey] = useState(0);
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const { ref: containerRef, inView } = useInView(0.05);
-
-  useEffect(() => setMounted(true), []);
 
   const handleReplay = useCallback(() => {
     setReplayKey((k) => k + 1);

@@ -8,6 +8,7 @@ import {
   useMemo,
   type ReactNode,
 } from "react";
+import { useMounted } from "../lib/use-mounted";
 
 interface TOCItem {
   title: ReactNode;
@@ -62,7 +63,7 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
   const [ys, setYs] = useState<number[]>([]);
   const [totalLen, setTotalLen] = useState(0);
   const [listH, setListH] = useState(0);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const [scrollDir, setScrollDir] = useState<"down" | "up">("down");
 
   const obsRef = useRef<IntersectionObserver | null>(null);
@@ -74,8 +75,6 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
   const isClickScrolling = useRef(false);
   const clickTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastScrollTop = useRef(0);
-
-  useEffect(() => setMounted(true), []);
 
   const measure = useCallback(() => {
     const list = listRef.current;

@@ -95,6 +95,3 @@ export const RN_SIDEBAR: SidebarConfig = {
     },
   ],
 };
-
-/** Keep backward compat — default export for any code that imports SIDEBAR_ITEMS */
-export const SIDEBAR_ITEMS = WEB_SIDEBAR;

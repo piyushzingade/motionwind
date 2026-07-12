@@ -128,11 +128,11 @@ export function AnimatedCheckboxDemo() {
 
   return (
     <div className="flex items-center gap-6">
-      {[false, true].map((_, i) => {
+      {[false, true].map((slot, i) => {
         const isOn = i === 0 ? checked : !checked;
         return (
           <button
-            key={i}
+            key={String(slot)}
             onClick={() => setChecked(!checked)}
             className="flex items-center gap-3 cursor-pointer group"
           >
