@@ -7,10 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-07-16
+
 ### Added
 
-- **More CSS filters**: `grayscale`, `sepia`, `invert`, `hue-rotate`, and `drop-shadow-[…]` (web; parsed-and-dropped on React Native)
-- **Scroll-linked animations**: `animate-scroll:{prop}-[from,to]` with `animate-scroll-axis-x`, `animate-scroll-container`, and `animate-scroll-offset-[…]`. The Babel plugin routes these to the `mw.*` runtime (`useScroll`/`useTransform`); React Native support via a scroll-progress context on `mw.ScrollView` (experimental)
+- One shared core parser, typed intermediate representation, configuration API, syntax registry, recipes, plugin contract, and adapter capability contract
+- Typed `motionwind.config.ts`, named duration/easing/spring tokens, `animate-preset-*`, and `mw.create(Component)`
+- Reliable `init`, `doctor`, `migrate`, and `add` CLI workflows with framework/package-manager detection and dry runs
+- Shared unplugin integrations, GitHub-backed recipe registry, Motionwind Studio, MCP tools, installable starters, and community governance
+- Synchronized v2 packages, Changesets release automation, npm provenance, canaries, generated changelogs, source maps, and compatibility CI
+- **More CSS filters**: `grayscale`, `sepia`, `invert`, `hue-rotate`, and `drop-shadow-[…]` (web; reported as unsupported by the React Native adapter)
+- **Scroll-linked animations**: `animate-scroll:{prop}-[from,to]` with `animate-scroll-axis-x`, `animate-scroll-container`, and `animate-scroll-offset-[…]`. The Babel plugin routes these to the `mw.*` runtime (`useScroll`/`useTransform`); React Native beta support uses a scroll-progress context on `mw.ScrollView`
 - **First-class named variants**: `animate-variant-{name}:{prop-value}` definitions plus `animate-from/to/exit-{name}` state selectors, with parent→child propagation (context-based on React Native)
 - **`motionwind-react/tooling`** entry: `analyzeClassName`, `classifyMotionToken`, `sortMotionClasses`, and `generateMotionCode`
 - **`eslint-plugin-motionwind`**: `no-unknown-classes`, `no-duplicate-gesture-props`, `prefer-mw-for-dynamic`, `exit-requires-presence`
@@ -44,4 +51,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Full TypeScript support with exported types
 - Dual CJS/ESM package output
 
+[2.0.0]: https://github.com/piyushzingade/motionwind/releases/tag/v2.0.0
 [0.1.0]: https://github.com/piyushzingade/motionwind/releases/tag/v0.1.0
