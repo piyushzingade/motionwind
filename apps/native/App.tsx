@@ -1,10 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { View, Text, ScrollView, StyleSheet, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-  SafeAreaProvider,
-  SafeAreaView,
-} from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { ThemeContext, light, dark, type ThemeMode } from "./src/theme";
 import { ThemeToggle } from "./src/components/ThemeToggle";
@@ -38,110 +35,116 @@ export default function App() {
 
   return (
     <ThemeContext.Provider value={theme}>
-      <GestureHandlerRootView style={[styles.root, { backgroundColor: colors.bg }]}>
+      <GestureHandlerRootView
+        style={[styles.root, { backgroundColor: colors.bg }]}
+      >
         <SafeAreaProvider>
           <SafeAreaView style={styles.safe}>
-          <StatusBar
-            barStyle={mode === "dark" ? "light-content" : "dark-content"}
-            backgroundColor={colors.bg}
-          />
-          <ScrollView
-            style={styles.scroll}
-            contentContainerStyle={styles.content}
-            showsVerticalScrollIndicator={false}
-          >
-            {/* Header */}
-            <Animated.View
-              entering={FadeInDown.duration(600)}
-              style={styles.header}
+            <StatusBar
+              barStyle={mode === "dark" ? "light-content" : "dark-content"}
+              backgroundColor={colors.bg}
+            />
+            <ScrollView
+              style={styles.scroll}
+              contentContainerStyle={styles.content}
+              showsVerticalScrollIndicator={false}
             >
-              <View style={styles.headerLeft}>
-                <Text style={[styles.logo, { color: colors.fg }]}>motionwind</Text>
-                <Text
-                  style={[
-                    styles.badge,
-                    {
-                      color: colors.accent,
-                      backgroundColor: `${colors.accent}18`,
-                    },
-                  ]}
-                >
-                  react-native
-                </Text>
-              </View>
-              <ThemeToggle />
-            </Animated.View>
-
-            <Animated.View
-              entering={FadeInDown.delay(100).duration(600)}
-              style={styles.heroTextWrap}
-            >
-              <Text style={[styles.heroTitle, { color: colors.fg }]}>
-                Animate with{"\n"}Tailwind classes
-              </Text>
-              <Text style={[styles.heroSub, { color: colors.fgMuted }]}>
-                The same motionwind API you love on the web, now powered by
-                Reanimated for buttery-smooth 60fps native animations.
-              </Text>
-            </Animated.View>
-
-            {/* Feature pills */}
-            <Animated.View
-              entering={FadeInDown.delay(200).duration(600)}
-              style={styles.pills}
-            >
-              {[
-                "Reanimated 3",
-                "NativeWind",
-                "Spring Physics",
-                "Gestures",
-                "Layout Anim",
-              ].map((label) => (
-                <View
-                  key={label}
-                  style={[
-                    styles.pill,
-                    {
-                      backgroundColor: colors.surface,
-                      borderColor: colors.border,
-                    },
-                  ]}
-                >
-                  <Text style={[styles.pillText, { color: colors.fgMuted }]}>
-                    {label}
+              {/* Header */}
+              <Animated.View
+                entering={FadeInDown.duration(600)}
+                style={styles.header}
+              >
+                <View style={styles.headerLeft}>
+                  <Text style={[styles.logo, { color: colors.fg }]}>
+                    motionwind
+                  </Text>
+                  <Text
+                    style={[
+                      styles.badge,
+                      {
+                        color: colors.accent,
+                        backgroundColor: `${colors.accent}18`,
+                      },
+                    ]}
+                  >
+                    react-native
                   </Text>
                 </View>
-              ))}
-            </Animated.View>
+                <ThemeToggle />
+              </Animated.View>
 
-            {/* Demo sections */}
-            <View style={styles.demos}>
-              <MotionwindDemo />
-              <EntranceAnimations />
-              <TapAnimations />
-              <SpringAnimations />
-              <EasingShowcase />
-              <TransformShowcase />
-              <GestureChain />
-              <MorphingShapes />
-              <ParticleExplosion />
-              <WaveAnimation />
-              <DragAnimations />
-              <RepeatAnimations />
-              <StaggeredList />
-              <LayoutAnimations />
-            </View>
+              <Animated.View
+                entering={FadeInDown.delay(100).duration(600)}
+                style={styles.heroTextWrap}
+              >
+                <Text style={[styles.heroTitle, { color: colors.fg }]}>
+                  Animate with{"\n"}Tailwind classes
+                </Text>
+                <Text style={[styles.heroSub, { color: colors.fgMuted }]}>
+                  The same motionwind API you love on the web, now powered by
+                  Reanimated for buttery-smooth 60fps native animations.
+                </Text>
+              </Animated.View>
 
-            {/* Footer */}
-            <View style={[styles.footer, { borderTopColor: colors.border }]}>
-              <Text style={[styles.footerText, { color: colors.fgMuted }]}>
-                motionwind-react-native v0.1.0
-              </Text>
-              <Text style={[styles.footerSub, { color: colors.borderSubtle }]}>
-                Built with Reanimated + Gesture Handler
-              </Text>
-            </View>
-          </ScrollView>
+              {/* Feature pills */}
+              <Animated.View
+                entering={FadeInDown.delay(200).duration(600)}
+                style={styles.pills}
+              >
+                {[
+                  "Reanimated 3",
+                  "NativeWind",
+                  "Spring Physics",
+                  "Gestures",
+                  "Layout Anim",
+                ].map((label) => (
+                  <View
+                    key={label}
+                    style={[
+                      styles.pill,
+                      {
+                        backgroundColor: colors.surface,
+                        borderColor: colors.border,
+                      },
+                    ]}
+                  >
+                    <Text style={[styles.pillText, { color: colors.fgMuted }]}>
+                      {label}
+                    </Text>
+                  </View>
+                ))}
+              </Animated.View>
+
+              {/* Demo sections */}
+              <View style={styles.demos}>
+                <MotionwindDemo />
+                <EntranceAnimations />
+                <TapAnimations />
+                <SpringAnimations />
+                <EasingShowcase />
+                <TransformShowcase />
+                <GestureChain />
+                <MorphingShapes />
+                <ParticleExplosion />
+                <WaveAnimation />
+                <DragAnimations />
+                <RepeatAnimations />
+                <StaggeredList />
+                <LayoutAnimations />
+              </View>
+
+              {/* Footer */}
+              <View style={[styles.footer, { borderTopColor: colors.border }]}>
+                <Text style={[styles.footerText, { color: colors.fgMuted }]}>
+                  motionwind-react-native v2.0.0
+                </Text>
+                <Text
+                  style={[styles.footerSub, { color: colors.borderSubtle }]}
+                >
+                  Built with Reanimated + Gesture Handler
+                </Text>
+              </View>
+            </ScrollView>
           </SafeAreaView>
         </SafeAreaProvider>
       </GestureHandlerRootView>
