@@ -1,9 +1,9 @@
 {
   "name": "create-motionwind",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "type": "module",
   "private": false,
-  "description": "Install motionwind with your package manager",
+  "description": "Install, diagnose, migrate, and extend Motionwind projects",
   "author": "piyush555",
   "license": "MIT",
   "repository": {
@@ -18,7 +18,9 @@
   "bin": {
     "create-motionwind": "./dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -28,10 +30,15 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "motionwind-core": "^2.0.0",
     "@babel/generator": "^7.26.0",
     "@babel/parser": "^7.26.0",
     "@babel/traverse": "^7.26.0",
     "@babel/types": "^7.26.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
