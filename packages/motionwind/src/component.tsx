@@ -1,16 +1,64 @@
 "use client";
 
 import React from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { MotionConfig, motion, useScroll, useTransform } from "motion/react";
 import type { MotionProps } from "motion/react";
-import { parseMotionClasses } from "./parser.js";
-import type { ParsedResult } from "./types.js";
+import {
+  parseMotionClasses,
+  type MotionwindConfig,
+  type ParsedResult,
+} from "motionwind-core";
 
 type HTMLTag = keyof React.JSX.IntrinsicElements;
 
 type MotionwindProps<T extends HTMLTag> = React.ComponentPropsWithRef<T> & {
   className?: string;
 };
+
+const MotionwindConfigContext = React.createContext<
+  MotionwindConfig | undefined
+>(undefined);
+
+const reducedMotionDeclarations = `
+  [data-motionwind-motion] {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transform: none !important;
+    translate: none !important;
+    rotate: none !important;
+    scale: none !important;
+    transition-duration: 0.01ms !important;
+  }
+`;
+
+function reducedMotionStyles(
+  policy: MotionwindConfig["reducedMotion"],
+): string {
+  if (policy === "never") return "";
+  if (policy === "always") return reducedMotionDeclarations;
+  return `@media (prefers-reduced-motion: reduce) {${reducedMotionDeclarations}}`;
+}
+
+export function MotionwindProvider({
+  config,
+  children,
+}: {
+  config: MotionwindConfig;
+  children: React.ReactNode;
+}) {
+  const reducedMotion = config.reducedMotion ?? "user";
+  return (
+    <MotionwindConfigContext.Provider value={config}>
+      {reducedMotion !== "never" ? (
+        <style data-motionwind-reduced-motion={reducedMotion}>
+          {reducedMotionStyles(reducedMotion)}
+        </style>
+      ) : null}
+      <MotionConfig reducedMotion={reducedMotion}>{children}</MotionConfig>
+    </MotionwindConfigContext.Provider>
+  );
+}
 
 // Bounded by the finite set of HTML tags (~100), but cap at 200 as a safety measure
 const COMPONENT_CACHE_MAX = 200;
@@ -20,7 +68,9 @@ function getMotionComponent(tag: string): React.ComponentType<MotionProps> {
   const cached = componentCache.get(tag);
   if (cached) return cached;
 
-  const component = (motion as unknown as Record<string, React.ComponentType<MotionProps>>)[tag];
+  const component = (
+    motion as unknown as Record<string, React.ComponentType<MotionProps>>
+  )[tag];
   if (component) {
     if (componentCache.size >= COMPONENT_CACHE_MAX) {
       const firstKey = componentCache.keys().next().value;
@@ -49,6 +99,10 @@ function applyParsedProps(
   motionProps: Record<string, unknown>,
   parsed: ParsedResult,
 ): void {
+  // The provider uses this stable marker to suppress transform-based motion
+  // when reduced motion is requested. The compiler emits the same marker.
+  motionProps["data-motionwind-motion"] = "";
+
   // Gesture props — but a variant state selector (string) takes precedence over
   // an object value for the same lifecycle prop.
   for (const [key, value] of Object.entries(parsed.gestures)) {
@@ -71,7 +125,8 @@ function applyParsedProps(
   }
 
   // Drag config
-  if (parsed.dragConfig.drag !== undefined) motionProps.drag = parsed.dragConfig.drag;
+  if (parsed.dragConfig.drag !== undefined)
+    motionProps.drag = parsed.dragConfig.drag;
   if (parsed.dragConfig.dragElastic !== undefined)
     motionProps.dragElastic = parsed.dragConfig.dragElastic;
   if (parsed.dragConfig.dragSnapToOrigin !== undefined)
@@ -84,7 +139,8 @@ function applyParsedProps(
     motionProps.dragConstraints = parsed.dragConfig.dragConstraints;
 
   // Layout config
-  if (parsed.layoutConfig.layout !== undefined) motionProps.layout = parsed.layoutConfig.layout;
+  if (parsed.layoutConfig.layout !== undefined)
+    motionProps.layout = parsed.layoutConfig.layout;
   if (parsed.layoutConfig.layoutId !== undefined)
     motionProps.layoutId = parsed.layoutConfig.layoutId;
   if (parsed.layoutConfig.layoutScroll !== undefined)
@@ -93,14 +149,17 @@ function applyParsedProps(
     motionProps.layoutRoot = parsed.layoutConfig.layoutRoot;
 
   // Named variants
-  if (Object.keys(parsed.variants).length > 0) motionProps.variants = parsed.variants;
-  if (parsed.variantState.initial) motionProps.initial = parsed.variantState.initial;
-  if (parsed.variantState.animate) motionProps.animate = parsed.variantState.animate;
+  if (Object.keys(parsed.variants).length > 0)
+    motionProps.variants = parsed.variants;
+  if (parsed.variantState.initial)
+    motionProps.initial = parsed.variantState.initial;
+  if (parsed.variantState.animate)
+    motionProps.animate = parsed.variantState.animate;
   if (parsed.variantState.exit) motionProps.exit = parsed.variantState.exit;
 }
 
 interface ScrollMotionProps {
-  tag: string;
+  component: React.ComponentType<MotionProps>;
   parsed: ParsedResult;
   rest: Record<string, unknown>;
 }
@@ -112,13 +171,14 @@ interface ScrollMotionProps {
  * stable across the component's lifetime.
  */
 const ScrollMotion = React.forwardRef<Element, ScrollMotionProps>(
-  function ScrollMotion({ tag, parsed, rest }, ref) {
+  function ScrollMotion({ component: Component, parsed, rest }, ref) {
     const localRef = React.useRef<Element | null>(null);
     const setRef = React.useCallback(
       (node: Element | null) => {
         localRef.current = node;
         if (typeof ref === "function") ref(node);
-        else if (ref) (ref as React.MutableRefObject<Element | null>).current = node;
+        else if (ref)
+          (ref as React.MutableRefObject<Element | null>).current = node;
       },
       [ref],
     );
@@ -145,8 +205,11 @@ const ScrollMotion = React.forwardRef<Element, ScrollMotionProps>(
       style[key] = useTransform(progress, input, range);
     }
 
-    const Component = getMotionComponent(tag);
-    const motionProps: Record<string, unknown> = { ...rest, ref: setRef, style };
+    const motionProps: Record<string, unknown> = {
+      ...rest,
+      ref: setRef,
+      style,
+    };
     if (parsed.tailwindClasses) motionProps.className = parsed.tailwindClasses;
     applyParsedProps(motionProps, parsed);
 
@@ -157,8 +220,9 @@ const ScrollMotion = React.forwardRef<Element, ScrollMotionProps>(
 function createMotionwindComponent<T extends HTMLTag>(tag: T) {
   const MotionwindComponent = React.forwardRef<Element, MotionwindProps<T>>(
     function MotionwindComponent(props, ref) {
+      const config = React.useContext(MotionwindConfigContext);
       const { className = "", ...rest } = props;
-      const parsed = parseMotionClasses(className);
+      const parsed = parseMotionClasses(className, config);
 
       if (!parsed.hasMotion) {
         // No motion classes, render plain element
@@ -171,7 +235,7 @@ function createMotionwindComponent<T extends HTMLTag>(tag: T) {
       if (Object.keys(parsed.scroll.values).length > 0) {
         return React.createElement(ScrollMotion, {
           key: className,
-          tag: tag as string,
+          component: getMotionComponent(tag as string),
           parsed,
           rest,
           ref,
@@ -199,6 +263,65 @@ function createMotionwindComponent<T extends HTMLTag>(tag: T) {
   return MotionwindComponent;
 }
 
+type AnyComponent = React.ElementType;
+const customComponentCache = new WeakMap<object, unknown>();
+
+function createCustomMotionwindComponent<T extends AnyComponent>(Component: T) {
+  if (typeof Component === "string") {
+    throw new Error(`[motionwind] Use mw.${Component} for intrinsic elements.`);
+  }
+  const key = Component as object;
+  const cached = customComponentCache.get(key);
+  if (cached)
+    return cached as React.ComponentType<React.ComponentPropsWithRef<T>>;
+
+  const MotionComponent = motion.create(
+    Component,
+  ) as React.ComponentType<MotionProps>;
+  const MotionwindCustom = React.forwardRef<
+    unknown,
+    React.ComponentPropsWithoutRef<T>
+  >(function MotionwindCustom(props, ref) {
+    const config = React.useContext(MotionwindConfigContext);
+    const { className = "", ...rest } =
+      props as React.ComponentPropsWithoutRef<T> & {
+        className?: string;
+      };
+    const parsed = parseMotionClasses(className, config);
+
+    if (!parsed.hasMotion) {
+      const PlainComponent = Component as React.ElementType;
+      return React.createElement(PlainComponent, { ...rest, className, ref });
+    }
+
+    if (Object.keys(parsed.scroll.values).length > 0) {
+      return React.createElement(ScrollMotion, {
+        key: className,
+        component: MotionComponent,
+        parsed,
+        rest,
+        ref: ref as React.Ref<Element>,
+      });
+    }
+
+    const motionProps: Record<string, unknown> = { ...rest, ref };
+    if (parsed.tailwindClasses) motionProps.className = parsed.tailwindClasses;
+    applyParsedProps(motionProps, parsed);
+    return React.createElement(MotionComponent, motionProps as MotionProps);
+  });
+  const componentMetadata = Component as {
+    displayName?: string;
+    name?: string;
+  };
+  const componentName =
+    componentMetadata.displayName ?? componentMetadata.name ?? "Component";
+  MotionwindCustom.displayName = `mw.create(${componentName})`;
+  customComponentCache.set(key, MotionwindCustom);
+  return MotionwindCustom as React.ComponentType<
+    React.ComponentPropsWithRef<T>
+  >;
+}
+
 /**
  * Runtime fallback for dynamic classNames and scroll-linked animations.
  * Use `mw.div`, `mw.button`, etc. like `motion.div` but with
@@ -213,12 +336,25 @@ function createMotionwindComponent<T extends HTMLTag>(tag: T) {
  * </mw.button>
  * ```
  */
-export const mw = new Proxy({} as Record<string, ReturnType<typeof createMotionwindComponent>>, {
+type MotionwindIntrinsicComponents = {
+  [T in HTMLTag]: ReturnType<typeof createMotionwindComponent<T>>;
+};
+
+export type MotionwindProxy = MotionwindIntrinsicComponents & {
+  create: typeof createCustomMotionwindComponent;
+};
+
+export const mw = new Proxy({} as MotionwindProxy, {
   get(_target, prop: string) {
     if (typeof prop !== "string") return undefined;
-    if (!_target[prop]) {
-      _target[prop] = createMotionwindComponent(prop as HTMLTag);
+    if (prop === "create") return createCustomMotionwindComponent;
+    const components = _target as unknown as Record<
+      string,
+      ReturnType<typeof createMotionwindComponent>
+    >;
+    if (!components[prop]) {
+      components[prop] = createMotionwindComponent(prop as HTMLTag);
     }
-    return _target[prop];
+    return components[prop];
   },
 });

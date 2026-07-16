@@ -8,6 +8,20 @@ vi.mock("motion/react", () => {
       {},
       {
         get(_target, prop) {
+          if (prop === "create") {
+            return (CustomComponent: React.ElementType) => {
+              const MotionCustom = React.forwardRef(
+                (props: Record<string, unknown>, ref: React.Ref<unknown>) =>
+                  React.createElement(CustomComponent, {
+                    ...props,
+                    ref,
+                    "data-motion": "true",
+                  }),
+              );
+              MotionCustom.displayName = "motion.create(MockComponent)";
+              return MotionCustom;
+            };
+          }
           // Return a simple forwarding component for each tag
           const Component = React.forwardRef(
             (props: Record<string, unknown>, ref: React.Ref<unknown>) => {
@@ -27,6 +41,7 @@ vi.mock("motion/react", () => {
 
   return {
     motion: createMockMotion(),
+    MotionConfig: ({ children }: { children: React.ReactNode }) => children,
     useScroll: () => ({ scrollXProgress: 0, scrollYProgress: 0 }),
     useTransform: (
       _progress: unknown,
@@ -37,9 +52,23 @@ vi.mock("motion/react", () => {
 });
 
 import { render, screen } from "@testing-library/react";
-import { mw } from "../src/component.js";
+import { MotionwindProvider, mw } from "../src/component.js";
 
 describe("mw runtime component", () => {
+  it("emits an OS-aware reduced-motion policy", () => {
+    const { container } = render(
+      <MotionwindProvider config={{ reducedMotion: "user" }}>
+        <mw.button className="animate-hover:scale-110">Save</mw.button>
+      </MotionwindProvider>,
+    );
+    const style = container.querySelector("[data-motionwind-reduced-motion]");
+    expect(style?.textContent).toContain("prefers-reduced-motion: reduce");
+    expect(style?.textContent).toContain("transform: none !important");
+    expect(
+      container.querySelector("button")?.hasAttribute("data-motionwind-motion"),
+    ).toBe(true);
+  });
+
   it("renders a plain element when no motion classes", () => {
     const { container } = render(
       <mw.div className="px-4 bg-blue-500">Hello</mw.div>,
@@ -69,9 +98,7 @@ describe("mw runtime component", () => {
   });
 
   it("renders text content", () => {
-    render(
-      <mw.span className="animate-hover:scale-110">Test Text</mw.span>,
-    );
+    render(<mw.span className="animate-hover:scale-110">Test Text</mw.span>);
     expect(screen.getByText("Test Text")).toBeTruthy();
   });
 
@@ -85,6 +112,25 @@ describe("mw runtime component", () => {
     const Div = mw.div;
     const Span = mw.span;
     expect(Div).not.toBe(Span);
+  });
+
+  it("creates and caches typed design-system wrappers", () => {
+    const Button = React.forwardRef<
+      HTMLButtonElement,
+      React.ComponentProps<"button">
+    >((props, ref) => <button ref={ref} {...props} />);
+    Button.displayName = "Button";
+    const MotionButton = mw.create(Button);
+    expect(mw.create(Button)).toBe(MotionButton);
+
+    const { container } = render(
+      <MotionButton className="primary animate-tap:scale-95">
+        Save
+      </MotionButton>,
+    );
+    const element = container.firstChild as HTMLElement;
+    expect(element.className).toBe("primary");
+    expect(element.dataset.motion).toBe("true");
   });
 
   describe("scroll-linked", () => {
