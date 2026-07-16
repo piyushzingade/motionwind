@@ -1,0 +1,38 @@
+name: Feature proposal
+description: Propose a focused addition to Motionwind.
+labels: [enhancement, needs-triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Developer problem
+      description: Explain the workflow problem without prescribing an API first.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        [
+          Core syntax,
+          Adapter,
+          Compiler integration,
+          CLI,
+          Editor tooling,
+          Recipe or preset,
+          Studio,
+        ]
+    validations:
+      required: true
+  - type: textarea
+    id: escape
+    attributes:
+      label: Why direct Motion APIs are not enough
+      description: Motionwind deliberately covers common declarative cases rather than every Motion API.

@@ -1,0 +1,44 @@
+name: Bug report
+description: Report a reproducible Motionwind problem.
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping Motionwind become more reliable.
+  - type: dropdown
+    id: adapter
+    attributes:
+      label: Adapter
+      options:
+        [React, Next.js, Vue, Vanilla JavaScript, React Native, Tooling, CLI]
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Motionwind, Motion, framework, runtime, and package-manager versions.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Link a repository or include the smallest code sample that reproduces the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I ran `create-motionwind doctor`.
+          required: true
+        - label: I searched existing issues and discussions.
+          required: true

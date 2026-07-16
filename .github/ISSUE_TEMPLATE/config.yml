@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and support
+    url: https://github.com/piyushzingade/motionwind/discussions
+    about: Ask usage questions and share examples in Discussions.
+  - name: Security report
+    url: https://github.com/piyushzingade/motionwind/security/advisories/new
+    about: Privately report a security vulnerability.

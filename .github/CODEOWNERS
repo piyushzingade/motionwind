@@ -1,0 +1,9 @@
+# Core grammar and release infrastructure remain founder-reviewed until another
+# core maintainer completes the contributor ladder in GOVERNANCE.md.
+/packages/motionwind-core/ @piyushzingade
+/packages/motionwind/ @piyushzingade
+/.github/workflows/ @piyushzingade
+/.changeset/ @piyushzingade
+/registry/ @piyushzingade
+
+# Package-level owners are added here when promoted to package maintainer.
