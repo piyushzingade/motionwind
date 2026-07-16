@@ -8,7 +8,10 @@ export type GestureKey =
   | "animate"
   | "exit";
 
-export type AnimatableValues = Record<string, string | number | (string | number)[]>;
+export type AnimatableValues = Record<
+  string,
+  string | number | (string | number)[]
+>;
 
 export interface TransitionConfig {
   type?: "spring" | "tween" | "inertia";
@@ -43,7 +46,12 @@ export interface DragConfig {
   dragSnapToOrigin?: boolean;
   dragMomentum?: boolean;
   dragDirectionLock?: boolean;
-  dragConstraints?: { top?: number; left?: number; right?: number; bottom?: number };
+  dragConstraints?: {
+    top?: number;
+    left?: number;
+    right?: number;
+    bottom?: number;
+  };
 }
 
 export interface LayoutConfig {
@@ -95,4 +103,6 @@ export interface ParsedResult {
   variantState: VariantState;
   /** Whether any motion classes were found */
   hasMotion: boolean;
+  /** Non-fatal parser and plugin diagnostics. */
+  diagnostics: import("./config.js").MotionwindDiagnostic[];
 }
