@@ -1,26 +1,53 @@
+import {
+  parseMotionClasses as parseCoreMotionClasses,
+  type AnimatableValues as CoreAnimatableValues,
+  type MotionwindConfig,
+  type MotionwindDiagnostic,
+  type ParsedResult as CoreParsedResult,
+} from "motionwind-core";
 import type {
+  DragConfig,
   GestureKey,
   NativeAnimatableStyle,
   ParsedResult,
-  TransitionConfig,
-  ViewportConfig,
-  DragConfig,
   ScrollConfig,
+  TransitionConfig,
   VariantMap,
-  VariantState,
+  ViewportConfig,
 } from "./types.js";
-import {
-  GESTURE_MAP,
-  GESTURE_KEYS,
-  EASING_MAP,
-  TAILWIND_ANIMATE_CLASSES,
-  DEGREE_PROPERTIES,
-  WEB_ONLY_PROPERTIES,
-  WEB_TO_RN_PROPERTY_MAP,
-} from "./constants.js";
 
 const CACHE_MAX = 1000;
 const cache = new Map<string, ParsedResult>();
+const DEGREE_PROPERTIES = new Set([
+  "rotate",
+  "rotateX",
+  "rotateY",
+  "rotateZ",
+  "skewX",
+  "skewY",
+]);
+const WEB_ONLY_PROPERTIES = new Set([
+  "filter",
+  "backdropFilter",
+  "clipPath",
+  "boxShadow",
+  "pathLength",
+  "pathOffset",
+  "pathSpacing",
+  "perspective",
+  "z",
+]);
+const NATIVE_GESTURES = new Set<GestureKey>([
+  "whileHover",
+  "whileTap",
+  "whileFocus",
+  "initial",
+  "animate",
+  "exit",
+]);
+const WEB_ONLY_TOKEN =
+  /(?:^|:)(?:blur-|brightness-|contrast-|saturate-|grayscale-|sepia-|invert-|hue-rotate-|drop-shadow-|backdrop-blur-|clip-path-|path-length-|path-offset-|path-spacing-|perspective-|z-)/;
+type NativeValue = string | number | (string | number)[];
 
 function cacheSet(key: string, value: ParsedResult): void {
   if (cache.size >= CACHE_MAX) {
@@ -30,691 +57,210 @@ function cacheSet(key: string, value: ParsedResult): void {
   cache.set(key, value);
 }
 
-/**
- * Parse a numeric value. Returns the number or null.
- * RN doesn't support CSS units like vh/vw/rem in animations,
- * so we only accept plain numbers and percentages (as numbers).
- */
-function parseNumericValue(str: string, sign: number): number | null {
-  // Percentage: 100pct → 100 (as a number, caller handles semantics)
-  if (str.endsWith("pct")) {
-    const n = Number(str.slice(0, -3));
-    if (isNaN(n)) return null;
-    return n * sign;
-  }
-
-  // Pixels: 50px → 50 (RN uses device-independent pixels by default)
-  if (str.endsWith("px")) {
-    const n = Number(str.slice(0, -2));
-    if (isNaN(n)) return null;
-    return n * sign;
-  }
-
-  // Plain number
-  const n = Number(str);
-  if (isNaN(n)) return null;
-  return n * sign;
+function nativeKey(key: string): string {
+  if (key === "x") return "translateX";
+  if (key === "y") return "translateY";
+  return key;
 }
 
-/**
- * Parse a property-value pair from a motionwind class token.
- * Returns an RN-compatible key-value pair.
- *
- * Key differences from web parser:
- * - "x"/"y" → "translateX"/"translateY"
- * - rotate/skew values become degree strings ("45deg")
- * - filter/backdrop/clipPath/SVG props are dropped (web-only)
- * - No CSS unit strings — everything resolves to numbers
- */
-function parsePropertyValue(
-  raw: string,
-): { key: string; value: string | number | number[] } | null {
-  // Negative prefix
-  let negative = false;
-  let str = raw;
-  if (str.startsWith("-")) {
-    negative = true;
-    str = str.slice(1);
+function nativeValue(
+  key: string,
+  value: CoreAnimatableValues[string],
+): NativeValue {
+  if (!DEGREE_PROPERTIES.has(key)) return value;
+  if (Array.isArray(value)) {
+    return value.map((item) =>
+      typeof item === "number" ? `${item}deg` : item,
+    );
   }
-  const sign = negative ? -1 : 1;
-
-  // Keyframe array: property-[v1,v2,v3]
-  const keyframeMatch = str.match(/^(\w+(?:-\w+)?)-\[([^\]]+)\]$/);
-  if (keyframeMatch) {
-    const propName = keyframeMatch[1]!;
-    const valuesStr = keyframeMatch[2]!;
-    const propKey = normalizePropertyName(propName);
-    if (propKey && !WEB_ONLY_PROPERTIES.has(propKey)) {
-      const rawValues = valuesStr.split(",").reduce<string[]>((acc, v) => {
-        const t = v.trim();
-        if (t) acc.push(t);
-        return acc;
-      }, []);
-      const scaleProps = new Set(["scale", "scaleX", "scaleY", "opacity"]);
-      const parsed: number[] = [];
-      let valid = true;
-      for (const rv of rawValues) {
-        const n = Number(rv);
-        if (isNaN(n)) {
-          valid = false;
-          break;
-        }
-        parsed.push(scaleProps.has(propKey) ? n / 100 : n);
-      }
-      if (valid && parsed.length > 0) {
-        const finalKey = WEB_TO_RN_PROPERTY_MAP[propKey] ?? propKey;
-        return { key: finalKey, value: parsed };
-      }
-    }
-    return null;
-  }
-
-  // --- Transform properties ---
-
-  // scale-x-{n}, scale-y-{n}, scale-{n}
-  if (str.startsWith("scale-x-")) {
-    const n = Number(str.slice(8));
-    if (!isNaN(n)) return { key: "scaleX", value: (n / 100) * sign };
-  }
-  if (str.startsWith("scale-y-")) {
-    const n = Number(str.slice(8));
-    if (!isNaN(n)) return { key: "scaleY", value: (n / 100) * sign };
-  }
-  if (str.startsWith("scale-")) {
-    const n = Number(str.slice(6));
-    if (!isNaN(n)) return { key: "scale", value: (n / 100) * sign };
-  }
-
-  // rotate-x-{n}, rotate-y-{n}, rotate-{n} → degree strings
-  if (str.startsWith("rotate-x-")) {
-    const n = Number(str.slice(9));
-    if (!isNaN(n)) return { key: "rotateX", value: `${n * sign}deg` };
-  }
-  if (str.startsWith("rotate-y-")) {
-    const n = Number(str.slice(9));
-    if (!isNaN(n)) return { key: "rotateY", value: `${n * sign}deg` };
-  }
-  if (str.startsWith("rotate-")) {
-    const n = Number(str.slice(7));
-    if (!isNaN(n)) return { key: "rotate", value: `${n * sign}deg` };
-  }
-
-  // skew-x-{n}, skew-y-{n}
-  if (str.startsWith("skew-x-")) {
-    const n = Number(str.slice(7));
-    if (!isNaN(n)) return { key: "skewX", value: `${n * sign}deg` };
-  }
-  if (str.startsWith("skew-y-")) {
-    const n = Number(str.slice(7));
-    if (!isNaN(n)) return { key: "skewY", value: `${n * sign}deg` };
-  }
-
-  // x-{n} → translateX, y-{n} → translateY
-  if (str.startsWith("x-")) {
-    const val = parseNumericValue(str.slice(2), sign);
-    if (val !== null) return { key: "translateX", value: val };
-  }
-  if (str.startsWith("y-")) {
-    const val = parseNumericValue(str.slice(2), sign);
-    if (val !== null) return { key: "translateY", value: val };
-  }
-
-  // --- Visual properties ---
-
-  // opacity-{n}
-  if (str.startsWith("opacity-")) {
-    const n = Number(str.slice(8));
-    if (!isNaN(n)) return { key: "opacity", value: (n / 100) * sign };
-  }
-
-  // filters (blur/brightness/contrast/saturate/grayscale/sepia/invert/hue-rotate/
-  // drop-shadow), backdrop-blur, and clip-path → web-only, skip
-  if (
-    str.startsWith("blur-") ||
-    str.startsWith("brightness-") ||
-    str.startsWith("contrast-") ||
-    str.startsWith("saturate-") ||
-    str.startsWith("grayscale-") ||
-    str.startsWith("sepia-") ||
-    str.startsWith("invert-") ||
-    str.startsWith("hue-rotate-") ||
-    str.startsWith("drop-shadow-") ||
-    str.startsWith("backdrop-blur-") ||
-    str.startsWith("clip-")
-  ) {
-    return null;
-  }
-
-  // --- Dimensions ---
-
-  if (str.startsWith("rounded-")) {
-    const n = Number(str.slice(8));
-    if (!isNaN(n)) return { key: "borderRadius", value: n * sign };
-  }
-  if (str.startsWith("w-")) {
-    const val = parseNumericValue(str.slice(2), sign);
-    if (val !== null) return { key: "width", value: val };
-  }
-  if (str.startsWith("h-")) {
-    const val = parseNumericValue(str.slice(2), sign);
-    if (val !== null) return { key: "height", value: val };
-  }
-
-  // --- Position ---
-
-  if (str.startsWith("top-")) {
-    const val = parseNumericValue(str.slice(4), sign);
-    if (val !== null) return { key: "top", value: val };
-  }
-  if (str.startsWith("left-")) {
-    const val = parseNumericValue(str.slice(5), sign);
-    if (val !== null) return { key: "left", value: val };
-  }
-  if (str.startsWith("right-")) {
-    const val = parseNumericValue(str.slice(6), sign);
-    if (val !== null) return { key: "right", value: val };
-  }
-  if (str.startsWith("bottom-")) {
-    const val = parseNumericValue(str.slice(7), sign);
-    if (val !== null) return { key: "bottom", value: val };
-  }
-
-  // --- Spacing ---
-
-  if (str.startsWith("p-")) {
-    const val = parseNumericValue(str.slice(2), sign);
-    if (val !== null) return { key: "padding", value: val };
-  }
-  if (str.startsWith("m-")) {
-    const val = parseNumericValue(str.slice(2), sign);
-    if (val !== null) return { key: "margin", value: val };
-  }
-  if (str.startsWith("gap-")) {
-    const val = parseNumericValue(str.slice(4), sign);
-    if (val !== null) return { key: "gap", value: val };
-  }
-
-  // --- Typography ---
-
-  if (str.startsWith("text-size-")) {
-    const val = parseNumericValue(str.slice(10), sign);
-    if (val !== null) return { key: "fontSize", value: val };
-  }
-  if (str.startsWith("tracking-")) {
-    const val = parseNumericValue(str.slice(9), sign);
-    if (val !== null) return { key: "letterSpacing", value: val };
-  }
-  if (str.startsWith("leading-")) {
-    const val = parseNumericValue(str.slice(8), sign);
-    if (val !== null) return { key: "lineHeight", value: val };
-  }
-
-  // --- Border ---
-
-  if (str.startsWith("border-w-")) {
-    const n = Number(str.slice(9));
-    if (!isNaN(n)) return { key: "borderWidth", value: n * sign };
-  }
-
-  // --- SVG path props → web-only, skip ---
-  if (
-    str.startsWith("path-length-") ||
-    str.startsWith("path-offset-") ||
-    str.startsWith("path-spacing-")
-  ) {
-    return null;
-  }
-
-  // --- Color properties ---
-
-  if (str.startsWith("bg-")) {
-    const color = str.slice(3);
-    if (isValidColor(color)) return { key: "backgroundColor", value: color };
-    return null;
-  }
-  if (str.startsWith("text-")) {
-    const color = str.slice(5);
-    if (isValidColor(color)) return { key: "color", value: color };
-    return null;
-  }
-  if (str.startsWith("border-")) {
-    const color = str.slice(7);
-    if (isValidColor(color)) return { key: "borderColor", value: color };
-    return null;
-  }
-
-  return null;
+  return typeof value === "number" ? `${value}deg` : value;
 }
 
-const HEX_COLOR_RE =
-  /^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
-const FUNC_COLOR_RE = /^(?:rgb|rgba|hsl|hsla)\(.+\)$/;
-
-function isValidColor(color: string): boolean {
-  return HEX_COLOR_RE.test(color) || FUNC_COLOR_RE.test(color);
+function nativeStyle(
+  values: CoreAnimatableValues | undefined,
+): NativeAnimatableStyle | undefined {
+  if (!values) return undefined;
+  const style: Record<string, NativeValue> = {};
+  for (const [key, value] of Object.entries(values)) {
+    if (WEB_ONLY_PROPERTIES.has(key)) continue;
+    const mapped = nativeKey(key);
+    style[mapped] = nativeValue(mapped, value);
+  }
+  return Object.keys(style).length > 0
+    ? (style as NativeAnimatableStyle)
+    : undefined;
 }
 
-function normalizePropertyName(name: string): string | null {
-  const map: Record<string, string> = {
-    scale: "scale",
-    "scale-x": "scaleX",
-    "scale-y": "scaleY",
-    rotate: "rotate",
-    "rotate-x": "rotateX",
-    "rotate-y": "rotateY",
-    x: "translateX",
-    y: "translateY",
-    opacity: "opacity",
-    "skew-x": "skewX",
-    "skew-y": "skewY",
-    w: "width",
-    h: "height",
-    rounded: "borderRadius",
+function nativeTransition(
+  core: CoreParsedResult["transition"],
+): TransitionConfig {
+  const transition: TransitionConfig = {};
+  if (core.type) transition.type = core.type === "spring" ? "spring" : "timing";
+  if (core.duration !== undefined) transition.duration = core.duration * 1000;
+  if (core.delay !== undefined) transition.delay = core.delay * 1000;
+  if (core.ease !== undefined)
+    transition.easing = core.ease as TransitionConfig["easing"];
+  if (core.stiffness !== undefined) transition.stiffness = core.stiffness;
+  if (core.damping !== undefined) transition.damping = core.damping;
+  if (core.mass !== undefined) transition.mass = core.mass;
+  if (core.repeat !== undefined)
+    transition.repeat = core.repeat === Infinity ? -1 : core.repeat;
+  if (core.repeatType !== undefined)
+    transition.repeatReverse = core.repeatType === "reverse";
+  if (core.staggerChildren !== undefined)
+    transition.staggerChildren = core.staggerChildren * 1000;
+  if (core.staggerDirection !== undefined)
+    transition.staggerDirection = core.staggerDirection;
+  if (core.delayChildren !== undefined)
+    transition.delayChildren = core.delayChildren * 1000;
+  if (core.restSpeed !== undefined)
+    transition.restSpeedThreshold = core.restSpeed;
+  if (core.restDelta !== undefined)
+    transition.restDisplacementThreshold = core.restDelta;
+  return transition;
+}
+
+function nativeViewport(core: CoreParsedResult["viewport"]): ViewportConfig {
+  const viewport: ViewportConfig = {};
+  if (core.once !== undefined) viewport.once = core.once;
+  if (core.amount !== undefined) viewport.amount = core.amount;
+  if (core.margin !== undefined)
+    viewport.margin = Number.parseFloat(core.margin);
+  return viewport;
+}
+
+function nativeScroll(core: CoreParsedResult["scroll"]): ScrollConfig {
+  const values: Record<string, number[]> = {};
+  for (const [key, range] of Object.entries(core.values)) {
+    if (WEB_ONLY_PROPERTIES.has(key)) continue;
+    values[nativeKey(key)] = range;
+  }
+  return {
+    axis: core.axis,
+    container: core.container,
+    offset: core.offset,
+    values,
   };
-  return map[name] ?? null;
 }
 
-/** Normalize a scroll property name to an RN style key. */
-function normalizeScrollProp(name: string): string | null {
-  const n = name.toLowerCase().replace(/-/g, "");
-  const map: Record<string, string> = {
-    x: "translateX",
-    y: "translateY",
-    opacity: "opacity",
-    rotate: "rotate",
-    rotatex: "rotateX",
-    rotatey: "rotateY",
-    scale: "scale",
-    scalex: "scaleX",
-    scaley: "scaleY",
-  };
-  return map[n] ?? null;
+function unsupportedDiagnostic(
+  code: string,
+  message: string,
+): MotionwindDiagnostic {
+  return { code, message, severity: "warning" };
+}
+
+function isDevelopment(): boolean {
+  if (typeof __DEV__ !== "undefined") return __DEV__;
+  return true;
 }
 
 /**
- * Parse a scroll value token like "y-[0,-200]" into an RN style key and a
- * literal output range (not rescaled).
+ * Parse once with motionwind-core, then adapt the stable Motion-first IR to
+ * Reanimated property names and millisecond timing. React Native never owns a
+ * second syntax implementation.
  */
-function parseScrollValue(
-  raw: string,
-): { key: string; value: number[] } | null {
-  const m = raw.match(/^([\w-]+?)-\[([^\]]+)\]$/);
-  if (!m) return null;
-  const key = normalizeScrollProp(m[1]!);
-  if (!key) return null;
-  const parts = m[2]!.split(",").map((v) => Number(v.trim()));
-  if (parts.length < 2 || parts.some((n) => isNaN(n))) return null;
-  return { key, value: parts };
-}
-
-/**
- * Classify a single class token and update the result.
- * Returns true if the token was consumed.
- */
-function classifyToken(
-  token: string,
-  gestures: Partial<Record<GestureKey, NativeAnimatableStyle>>,
-  transition: TransitionConfig,
-  viewport: ViewportConfig,
-  dragConfig: DragConfig,
-  scroll: ScrollConfig,
-  variants: VariantMap,
-  variantState: VariantState,
-): boolean {
-  if (!token.startsWith("animate-")) return false;
-
-  const rest = token.slice(8);
-
-  // --- Gesture prefix: animate-{gesture}:{property-value} ---
-  const colonIdx = rest.indexOf(":");
-  if (colonIdx !== -1) {
-    const gesturePrefix = rest.slice(0, colonIdx);
-    const propValueStr = rest.slice(colonIdx + 1);
-
-    // Scroll-linked value: animate-scroll:{prop}-[from,to]
-    if (gesturePrefix === "scroll") {
-      const parsed = parseScrollValue(propValueStr);
-      if (parsed) {
-        scroll.values[parsed.key] = parsed.value;
-        return true;
-      }
-      return false;
-    }
-
-    // Variant definition: animate-variant-{name}:{prop-value}
-    if (gesturePrefix.startsWith("variant-")) {
-      const variantName = gesturePrefix.slice(8);
-      const parsed = parsePropertyValue(propValueStr);
-      if (variantName && parsed) {
-        if (!variants[variantName])
-          variants[variantName] = {} as NativeAnimatableStyle;
-        (variants[variantName] as Record<string, unknown>)[parsed.key] =
-          parsed.value;
-        return true;
-      }
-      return false;
-    }
-
-    if (GESTURE_KEYS.has(gesturePrefix)) {
-      const gestureKey = GESTURE_MAP[gesturePrefix]!;
-      const parsed = parsePropertyValue(propValueStr);
-      if (parsed) {
-        if (!gestures[gestureKey])
-          gestures[gestureKey] = {} as NativeAnimatableStyle;
-        (gestures[gestureKey] as Record<string, unknown>)[parsed.key] =
-          parsed.value;
-        return true;
-      }
-    }
-    return false;
-  }
-
-  // --- Transition config tokens ---
-
-  if (rest.startsWith("duration-")) {
-    const ms = Number(rest.slice(9));
-    if (!isNaN(ms)) {
-      transition.duration = ms;
-      return true;
-    }
-  }
-
-  if (rest.startsWith("delay-children-")) {
-    const ms = Number(rest.slice(15));
-    if (!isNaN(ms)) {
-      transition.delayChildren = ms;
-      return true;
-    }
-  }
-
-  if (rest.startsWith("delay-")) {
-    const ms = Number(rest.slice(6));
-    if (!isNaN(ms)) {
-      transition.delay = ms;
-      return true;
-    }
-  }
-
-  // Custom cubic-bezier: ease-[n,n,n,n]
-  if (rest.startsWith("ease-[") && rest.endsWith("]")) {
-    const inner = rest.slice(6, -1);
-    const values = inner.split(",").map((v) => Number(v.trim()));
-    if (values.length === 4 && values.every((v) => !isNaN(v))) {
-      transition.easing = values;
-      return true;
-    }
-  }
-
-  // Named easing
-  for (const [suffix, easeValue] of Object.entries(EASING_MAP)) {
-    if (rest === suffix) {
-      transition.easing = easeValue as TransitionConfig["easing"];
-      return true;
-    }
-  }
-
-  // Spring
-  if (rest === "spring") {
-    transition.type = "spring";
-    return true;
-  }
-  if (rest.startsWith("stiffness-")) {
-    const n = Number(rest.slice(10));
-    if (!isNaN(n)) {
-      transition.stiffness = n;
-      return true;
-    }
-  }
-  if (rest.startsWith("damping-")) {
-    const n = Number(rest.slice(8));
-    if (!isNaN(n)) {
-      transition.damping = n;
-      return true;
-    }
-  }
-  if (rest.startsWith("mass-")) {
-    const n = Number(rest.slice(5));
-    if (!isNaN(n)) {
-      transition.mass = n / 10;
-      return true;
-    }
-  }
-
-  // Repeat
-  if (rest === "repeat-infinite") {
-    transition.repeat = -1;
-    return true;
-  }
-  if (rest === "repeat-reverse") {
-    transition.repeatReverse = true;
-    return true;
-  }
-  if (rest.startsWith("repeat-")) {
-    const n = Number(rest.slice(7));
-    if (!isNaN(n)) {
-      transition.repeat = n;
-      return true;
-    }
-  }
-
-  // Stagger
-  if (rest === "stagger-reverse") {
-    transition.staggerDirection = -1;
-    return true;
-  }
-  if (rest.startsWith("stagger-")) {
-    const ms = Number(rest.slice(8));
-    if (!isNaN(ms)) {
-      transition.staggerChildren = ms;
-      return true;
-    }
-  }
-
-  // --- Viewport config ---
-
-  if (rest === "once") {
-    viewport.once = true;
-    return true;
-  }
-  if (rest === "amount-all") {
-    viewport.amount = "all";
-    return true;
-  }
-  if (rest.startsWith("amount-")) {
-    const n = Number(rest.slice(7));
-    if (!isNaN(n)) {
-      viewport.amount = n / 100;
-      return true;
-    }
-  }
-  if (rest.startsWith("margin-")) {
-    const n = Number(rest.slice(7));
-    if (!isNaN(n)) {
-      viewport.margin = n;
-      return true;
-    }
-  }
-
-  // --- Scroll-linked config tokens ---
-
-  if (rest === "scroll-axis-x") {
-    scroll.axis = "x";
-    return true;
-  }
-  if (rest === "scroll-axis-y") {
-    scroll.axis = "y";
-    return true;
-  }
-  if (rest === "scroll-container") {
-    scroll.container = true;
-    return true;
-  }
-  if (rest.startsWith("scroll-offset-[") && rest.endsWith("]")) {
-    const inner = rest.slice(15, -1);
-    const parts = inner.split(",").map((p) => p.trim().replace(/_/g, " "));
-    if (parts.length === 2) {
-      scroll.offset = [parts[0]!, parts[1]!];
-      return true;
-    }
-  }
-
-  // --- Variant state selectors ---
-
-  if (rest.startsWith("from-")) {
-    const name = rest.slice(5);
-    if (name && !/\s/.test(name)) {
-      variantState.initial = name;
-      return true;
-    }
-  }
-  if (rest.startsWith("to-")) {
-    const name = rest.slice(3);
-    if (name && !/\s/.test(name)) {
-      variantState.animate = name;
-      return true;
-    }
-  }
-  if (rest.startsWith("exit-")) {
-    const name = rest.slice(5);
-    if (name && !/\s/.test(name)) {
-      variantState.exit = name;
-      return true;
-    }
-  }
-
-  // --- Drag config ---
-
-  if (rest === "drag-x") {
-    dragConfig.drag = "x";
-    return true;
-  }
-  if (rest === "drag-y") {
-    dragConfig.drag = "y";
-    return true;
-  }
-  if (rest === "drag-both") {
-    dragConfig.drag = true;
-    return true;
-  }
-  if (rest.startsWith("drag-elastic-")) {
-    const n = Number(rest.slice(13));
-    if (!isNaN(n)) {
-      dragConfig.dragElastic = n / 100;
-      return true;
-    }
-  }
-  if (rest === "drag-snap") {
-    dragConfig.dragSnapToOrigin = true;
-    return true;
-  }
-  if (rest === "drag-no-momentum") {
-    dragConfig.dragMomentum = false;
-    return true;
-  }
-
-  // Drag constraints
-  if (rest.startsWith("drag-constraint-")) {
-    const sub = rest.slice(16);
-    const sides: Record<string, string> = {
-      "t-": "top",
-      "l-": "left",
-      "r-": "right",
-      "b-": "bottom",
-    };
-    for (const [prefix, side] of Object.entries(sides)) {
-      if (sub.startsWith(prefix)) {
-        const n = Number(sub.slice(2));
-        if (!isNaN(n)) {
-          if (!dragConfig.dragConstraints) dragConfig.dragConstraints = {};
-          (dragConfig.dragConstraints as Record<string, number>)[side] = n;
-          return true;
-        }
-      }
-    }
-  }
-
-  // Layout keywords are web-only (Reanimated handles layout differently)
-  if (rest.startsWith("layout")) return true;
-
-  return false;
-}
-
-/**
- * Parse a className string and extract motionwind animation classes
- * into structured React Native / Reanimated props.
- *
- * Non-motionwind classes pass through as `nativewindClasses` for NativeWind/Tailwind.
- * Results are memoized by input string.
- */
-export function parseMotionClasses(className: string): ParsedResult {
-  const cached = cache.get(className);
+export function parseMotionClasses(
+  className: string,
+  config?: MotionwindConfig,
+): ParsedResult {
+  const cached = config ? undefined : cache.get(className);
   if (cached) return cached;
 
-  const tokens = className.split(/\s+/).filter(Boolean);
-  const nativewind: string[] = [];
-  const gestures: Partial<Record<GestureKey, NativeAnimatableStyle>> = {};
-  const transition: TransitionConfig = {};
-  const viewport: ViewportConfig = {};
-  const dragConfig: DragConfig = {};
-  const scroll: ScrollConfig = { axis: "y", container: false, values: {} };
-  const variants: VariantMap = {};
-  const variantState: VariantState = {};
+  const core = parseCoreMotionClasses(className, config);
+  const diagnostics = [...core.diagnostics];
+  const gestures: ParsedResult["gestures"] = {};
+  for (const [gesture, values] of Object.entries(core.gestures)) {
+    if (gesture === "whileInView") {
+      diagnostics.push(
+        unsupportedDiagnostic(
+          "unsupported-native-inview",
+          "React Native in-view classes require direct useInView orchestration in v2.",
+        ),
+      );
+      continue;
+    }
+    if (!NATIVE_GESTURES.has(gesture as GestureKey)) continue;
+    const style = nativeStyle(values);
+    if (style) gestures[gesture as GestureKey] = style;
+  }
 
-  for (const token of tokens) {
-    const consumed = classifyToken(
-      token,
-      gestures,
-      transition,
-      viewport,
-      dragConfig,
-      scroll,
-      variants,
-      variantState,
+  const variants: VariantMap = {};
+  for (const [name, values] of Object.entries(core.variants)) {
+    const style = nativeStyle(values);
+    if (style) variants[name] = style;
+  }
+
+  let dragConfig: DragConfig = {};
+  if (Object.keys(core.dragConfig).length > 0 || core.gestures.whileDrag) {
+    diagnostics.push(
+      unsupportedDiagnostic(
+        "unsupported-native-drag",
+        "React Native drag classes require a direct Gesture Handler integration in v2.",
+      ),
     );
-    if (!consumed) {
-      if (
-        __DEV__ &&
-        token.startsWith("animate-") &&
-        !TAILWIND_ANIMATE_CLASSES.has(token)
-      ) {
-        console.warn(
-          `[motionwind-rn] Unrecognized class "${token}". ` +
-            `It starts with "animate-" but doesn't match any known pattern.`,
-        );
-      }
-      nativewind.push(token);
+    dragConfig = {};
+  }
+  if (Object.keys(core.layoutConfig).length > 0) {
+    diagnostics.push(
+      unsupportedDiagnostic(
+        "unsupported-native-layout",
+        "Use a Reanimated layout transition directly; layout classes are not consumed on React Native.",
+      ),
+    );
+  }
+
+  const unsupportedTokens = className
+    .split(/\s+/)
+    .filter(
+      (token) => token.startsWith("animate-") && WEB_ONLY_TOKEN.test(token),
+    );
+  if (unsupportedTokens.length > 0) {
+    diagnostics.push(
+      unsupportedDiagnostic(
+        "unsupported-native-property",
+        `Unsupported React Native properties: ${unsupportedTokens.join(", ")}.`,
+      ),
+    );
+  }
+  if (isDevelopment()) {
+    for (const diagnostic of diagnostics.filter(({ code }) =>
+      code.startsWith("unsupported-native"),
+    )) {
+      console.warn(`[motionwind-rn] ${diagnostic.message}`);
     }
   }
 
+  const nativewindClasses = [core.tailwindClasses, ...unsupportedTokens]
+    .filter(Boolean)
+    .join(" ");
+  const scroll = nativeScroll(core.scroll);
   const hasMotion =
     Object.keys(gestures).length > 0 ||
-    Object.keys(transition).length > 0 ||
-    Object.keys(viewport).length > 0 ||
-    Object.keys(dragConfig).length > 0 ||
-    Object.keys(scroll.values).length > 0 ||
+    Object.keys(core.transition).length > 0 ||
     Object.keys(variants).length > 0 ||
-    Object.keys(variantState).length > 0;
+    Object.keys(core.variantState).length > 0 ||
+    Object.keys(scroll.values).length > 0;
 
   const result: ParsedResult = {
-    nativewindClasses: nativewind.join(" "),
+    nativewindClasses,
     gestures,
-    transition,
-    viewport,
+    transition: nativeTransition(core.transition),
+    viewport: nativeViewport(core.viewport),
     dragConfig,
     scroll,
     variants,
-    variantState,
+    variantState: core.variantState,
     hasMotion,
+    diagnostics,
   };
 
-  cacheSet(className, result);
+  if (!config) cacheSet(className, result);
   return result;
 }
 
-/** Clear the parser memoization cache */
 export function clearParserCache(): void {
   cache.clear();
 }
 
-// RN global __DEV__ fallback
 declare const __DEV__: boolean;

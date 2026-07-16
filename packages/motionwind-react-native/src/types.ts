@@ -155,4 +155,6 @@ export interface ParsedResult {
   variantState: VariantState;
   /** Whether any motion classes were found */
   hasMotion: boolean;
+  /** Shared parser and adapter capability diagnostics. */
+  diagnostics: import("motionwind-core").MotionwindDiagnostic[];
 }

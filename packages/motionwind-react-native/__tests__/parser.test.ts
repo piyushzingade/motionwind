@@ -112,4 +112,36 @@ describe("parseMotionClasses (react-native)", () => {
       });
     });
   });
+
+  describe("shared v2 core", () => {
+    it("expands built-in presets through motionwind-core", () => {
+      const result = parseMotionClasses("animate-preset-button-press");
+      expect(result.gestures.whileTap).toEqual({ scale: 0.95 });
+      expect(result.transition).toMatchObject({
+        type: "spring",
+        stiffness: 420,
+        damping: 24,
+      });
+    });
+
+    it("adapts named config tokens to Reanimated milliseconds", () => {
+      const result = parseMotionClasses(
+        "animate-duration-fast animate-enter:opacity-100",
+        {
+          tokens: { durations: { fast: 160 } },
+        },
+      );
+      expect(result.transition.duration).toBe(160);
+    });
+
+    it("reports capability gaps instead of silently consuming them", () => {
+      const result = parseMotionClasses("animate-layout animate-drag-y");
+      expect(result.diagnostics.map(({ code }) => code)).toEqual(
+        expect.arrayContaining([
+          "unsupported-native-layout",
+          "unsupported-native-drag",
+        ]),
+      );
+    });
+  });
 });
