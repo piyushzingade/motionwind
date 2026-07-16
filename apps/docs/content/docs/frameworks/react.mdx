@@ -1,79 +1,92 @@
 ---
-title: "React (Next.js & Vite)"
-description: "Set up motionwind in a React app. A build-time Babel transform rewrites your animate-* classes into Motion components — zero runtime, zero imports."
+title: "React, Vite, and Next.js"
+description: "Install and configure the stable Motionwind v2 React adapter."
 ---
 
-In React, motionwind is a **build-time Babel transform**. It scans your JSX for
-static `className` strings containing `animate-*` tokens and rewrites those
-elements into `motion.*` components with the right Motion props — so you write
-plain elements and ship zero extra runtime.
+# React, Vite, and Next.js
 
-## Install
+The stable React adapter compiles static `animate-*` tokens to `motion/react`
+props. Runtime parsing is explicit through `mw.*` or `mw.create(Component)`.
 
 ```bash
-npm install motionwind-react motion
+npm install motionwind-react@2 motion motionwind-core@2
 ```
 
-`motion` is a peer dependency (React 18 or 19).
+## Vite
 
-## Set up
-
-motionwind works in any React setup. **Vite is the recommended, fastest way to
-start** — but the Next.js wrapper is a single line too.
-
-### Vite (recommended)
-
-Add the plugin **before** `@vitejs/plugin-react`:
+Place Motionwind before the React plugin and pass the typed project config:
 
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { motionwind } from "motionwind-react/vite";
+import motionwindConfig from "./motionwind.config";
 
 export default defineConfig({
-  plugins: [motionwind(), react()],
+  plugins: [motionwind(motionwindConfig), react()],
 });
 ```
 
-### Next.js
+## Next.js
 
-Wrap your config with `withMotionwind`:
+The wrapper adds pre-transform rules for webpack and Turbopack while preserving
+existing rules and the existing webpack callback:
 
 ```ts
-// next.config.mjs
-import { withMotionwind } from "motionwind-react/next";
+// next.config.ts
+import withMotionwind from "motionwind-react/next";
+import motionwindConfig from "./motionwind.config";
 
-export default withMotionwind({
-  // your existing config
-});
+export default withMotionwind({}, motionwindConfig);
 ```
 
-## Write animations
+Transformed files receive the Motion import and client directive they require.
+Because that changes the React Server Component boundary, keep animated islands
+small: place classes in a dedicated client-facing component rather than on an
+otherwise server-only page.
 
-Add `animate-*` classes to any lowercase HTML element — no import, no `"use client"`:
+## Apply runtime policy
 
-<Demo title="Hover & tap">
-  <button className="px-6 py-3 bg-fd-primary text-fd-primary-foreground rounded-xl font-medium cursor-pointer animate-hover:scale-110 animate-tap:scale-90 animate-spring">
-    Click me
-  </button>
-</Demo>
+The build plugin reads tokens and presets. Wrap the client-facing application
+tree with the same config so reduced-motion policy and dynamic components use
+it too:
 
 ```tsx
-<button className="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
-  Click me
-</button>
+"use client";
+
+import { MotionwindProvider } from "motionwind-react";
+import config from "../motionwind.config";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <MotionwindProvider config={config}>{children}</MotionwindProvider>;
+}
 ```
 
-## Good to know
+## Runtime and design-system components
 
-- **Static strings only.** The transform reads literal `className` strings. For
-  dynamic or conditional classes, use the `mw.*` runtime components
-  (`import { mw } from "motionwind-react"`).
-- **`"use client"` is automatic.** In the App Router, any transformed file gets
-  `"use client"` and the `motion/react` import injected for you.
-- **Lowercase tags only.** `<div>`/`<button>` are transformed; custom components
-  (`<Card>`) are skipped — apply classes to an element inside instead.
+```tsx
+import { mw } from "motionwind-react";
+import { Button } from "./button";
 
-For webpack/Vite internals, the client/server boundary, and troubleshooting, see
-the full [Framework Setup](/docs/framework-setup) guide.
+const MotionButton = mw.create(Button);
+
+export function App() {
+  return (
+    <>
+      <mw.div className={`animate-enter:opacity-${ready ? "100" : "0"}`} />
+      <MotionButton className="animate-hover:scale-105 animate-tap:scale-95">
+        Save
+      </MotionButton>
+    </>
+  );
+}
+```
+
+`mw.create` requires the design-system component to forward its ref and DOM
+props. Static lowercase elements remain the compiler's primary path.
+
+React supports gestures, in-view, scroll-linked animation, drag, layout,
+variants, SVG, exit props, and reduced motion. Exit still requires Motion's
+`AnimatePresence`. See [Compatibility](/docs/compatibility) for the tested edge
+cases.

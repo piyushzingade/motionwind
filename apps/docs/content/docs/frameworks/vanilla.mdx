@@ -1,59 +1,52 @@
 ---
-title: "Vanilla JS & CDN"
-description: "Add motionwind to any HTML page with no framework and no build step. A runtime DOM scan wires up your animate-* classes via the Motion vanilla API."
+title: "Vanilla JavaScript"
+description: "Install and configure the stable Motionwind v2 browser adapter."
 ---
 
-For plain HTML with no framework, `motionwind-vanilla` scans the DOM and wires
-animations through the [Motion](https://motion.dev) vanilla API — the same
-`animate-*` classes you'd use anywhere else, no build step required.
+# Vanilla JavaScript
 
-## Install
+`motionwind-vanilla` scans DOM elements and wires them to Motion's JavaScript
+API. It supports HTML and SVG class attributes, including dynamically inserted
+elements when observation is enabled.
 
 ```bash
-npm install motionwind-vanilla motion
+npm install motionwind-vanilla@2 motion motionwind-core@2
 ```
-
-Or skip the install entirely with the self-contained CDN bundle (Motion
-included), which auto-initializes on load:
-
-```html
-<script src="https://unpkg.com/motionwind-vanilla"></script>
-```
-
-## Set up
-
-With npm, scan the document once (it returns a cleanup function):
 
 ```js
 import { motionwind } from "motionwind-vanilla";
+import config from "./motionwind.config";
 
-const stop = motionwind({ observe: true });
+const stop = motionwind({
+  config,
+  observe: true,
+  respectReducedMotion: true,
+});
+
+// Call stop() when the page or island is disposed.
 ```
 
-`motionwind(options)` accepts:
+Options:
 
-| Option | Default | Description |
-|---|---|---|
-| `root` | `document` | Element to scan for `animate-*` classes. |
-| `selector` | `[class*="animate-"]` | Which nodes to wire up. |
-| `observe` | `false` | Watch for dynamically-added elements via a `MutationObserver`. |
-| `respectReducedMotion` | `true` | Skip interactive animations when the user prefers reduced motion. |
+| Option                 | Default               | Purpose                                                                     |
+| ---------------------- | --------------------- | --------------------------------------------------------------------------- |
+| `root`                 | `document`            | Root node to scan.                                                          |
+| `selector`             | `[class*="animate-"]` | Candidate element selector.                                                 |
+| `observe`              | `false`               | Wire elements added by an SPA, HTMX, or other DOM update.                   |
+| `respectReducedMotion` | `true`                | Render the resting state and skip interaction/scroll motion when requested. |
+| `config`               | `{}`                  | Tokens, presets, plugins, diagnostics, and adapter target.                  |
 
-The CDN bundle runs this for you — no call needed.
-
-## Write animations
-
-Add `animate-*` classes to any element:
+The CDN bundle is self-contained and initializes automatically:
 
 ```html
-<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
-  Click me
+<script src="https://unpkg.com/motionwind-vanilla@2"></script>
+<button
+  class="animate-hover:scale-110 animate-tap:scale-90 animate-focus:scale-105"
+>
+  Test
 </button>
 ```
 
-## Good to know
-
-- **Supported gestures:** hover, tap, focus, in-view, enter, and scroll-linked.
-- **Idempotent.** Running `motionwind()` more than once won't double-wire an
-  element — safe to call after each DOM update, or pass `{ observe: true }`.
-- **Accessible by default.** Honors `prefers-reduced-motion` unless you opt out.
+Vanilla supports initial/enter, hover, tap, focus, in-view, continuous scroll,
+SVG paths, and reduced motion. Drag, layout projection, exit orchestration, and
+variant propagation require a component runtime and produce warnings.

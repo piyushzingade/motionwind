@@ -1,45 +1,29 @@
 ---
 title: "Frameworks"
-description: "motionwind runs on React (Next.js & Vite), React Native, Vue 3, and vanilla JS — the same animate-* class syntax everywhere, each via a dedicated package built on the shared motionwind-core parser."
+description: "Choose the tested Motionwind v2 adapter for React, Vue, JavaScript, or React Native."
 ---
 
-motionwind is **multi-framework**. You write the same `animate-*` utility classes
-in every framework, and a dedicated adapter turns them into real animations —
-whether that happens at build time (React, Vue) or at runtime (React Native,
-vanilla). Every adapter shares the framework-agnostic
-[`motionwind-core`](/docs/api) parser, so the syntax stays identical across the
-stack.
+# Frameworks
+
+Motionwind v2 keeps one class grammar and one parser while allowing each runtime
+to expose an honest capability set.
 
 <FrameworkGrid />
 
-## How each adapter works
+| Target                 | Package                   | Tier   | Default path                            |
+| ---------------------- | ------------------------- | ------ | --------------------------------------- |
+| Next.js and React/Vite | `motionwind-react`        | Stable | Build-time JSX transform                |
+| Vue/Vite and Nuxt      | `motionwind-vue`          | Stable | Template transform or runtime component |
+| Browser JavaScript     | `motionwind-vanilla`      | Stable | Runtime DOM scan                        |
+| React Native and Expo  | `motionwind-react-native` | Beta   | Runtime `mw.*` components               |
 
-| Framework | Package | How it works |
-|---|---|---|
-| React (Next.js / Vite) | `motionwind-react` | Build-time Babel transform → `motion/react` |
-| React Native / Expo | `motionwind-react-native` | Runtime `mw.*` → Reanimated |
-| Vue 3 | `motionwind-vue` | Build-time template transform → Motion for Vue |
-| Vanilla / CDN | `motionwind-vanilla` | Runtime DOM scan → Motion |
+The same syntax does not mean every platform has the same primitives. Web hover,
+SVG paths, layout projection, native scroll views, and drag recognizers have
+different runtime requirements. Motionwind checks the adapter's declared
+capabilities and reports unsupported syntax; consult the
+[Compatibility Matrix](/docs/compatibility) when sharing classes.
 
-## One syntax, everywhere
-
-The class grammar never changes. A hover-and-tap spring button looks the same in
-every framework — only the element/import differs:
-
-```tsx
-// React & Vue (build-time): write a plain element
-<button className="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
-  Click me
-</button>
-```
-
-```html
-<!-- Vanilla: the same classes on plain HTML -->
-<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
-  Click me
-</button>
-```
-
-Pick your framework above to get started, or read the full
-[Framework Setup](/docs/framework-setup) reference for webpack/Vite internals,
-the App Router client/server boundary, and troubleshooting.
+All official paths are installed and exercised from packed npm artifacts in CI.
+The suite covers framework builds plus interaction, keyboard, reduced-motion,
+SSR/hydration, diagnostics, source-map, tree-shaking, and bundle-budget cases
+where the target supports them.

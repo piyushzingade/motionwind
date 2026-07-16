@@ -1,32 +1,37 @@
 ---
-title: "Vue 3"
-description: "Set up motionwind in a Vue 3 app. A build-time template transform rewrites your animate-* classes into Motion for Vue components — the same class syntax as React."
+title: "Vue and Nuxt"
+description: "Install and configure the stable Motionwind v2 adapter for Vue/Vite and Nuxt."
 ---
 
-In Vue, motionwind is a **build-time template transform** built on
-[Motion for Vue](https://motion.dev/docs/vue). It rewrites elements with static
-`class` strings containing `animate-*` tokens into animated components, so you
-write plain templates — exactly like the React build step.
+# Vue and Nuxt
 
-## Install
+The stable Vue adapter maps shared parser output to Motion for Vue.
 
 ```bash
-npm install motionwind-vue motion-v
+npm install motionwind-vue@2 motion-v @vueuse/core motionwind-core@2
 ```
 
-## Set up
+## Vue with Vite
 
-Add the transform to `@vitejs/plugin-vue` and register the plugin once:
+Use a configured node transform for typed tokens and presets, then install the
+plugin with the same config:
 
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import { motionwindTransform } from "motionwind-vue/vite";
+import { createMotionwindTransform } from "motionwind-vue/vite";
+import motionwindConfig from "./motionwind.config";
 
 export default defineConfig({
   plugins: [
-    vue({ template: { compilerOptions: { nodeTransforms: [motionwindTransform] } } }),
+    vue({
+      template: {
+        compilerOptions: {
+          nodeTransforms: [createMotionwindTransform(motionwindConfig)],
+        },
+      },
+    }),
   ],
 });
 ```
@@ -36,44 +41,37 @@ export default defineConfig({
 import { createApp } from "vue";
 import { MotionwindPlugin } from "motionwind-vue";
 import App from "./App.vue";
+import motionwindConfig from "../motionwind.config";
 
-createApp(App).use(MotionwindPlugin).mount("#app");
+createApp(App).use(MotionwindPlugin, motionwindConfig).mount("#app");
 ```
 
-Prefer not to touch the compiler? Skip the transform and use the runtime
-`<Motionwind>` component (or the `mw.*` proxy / `useMotionwind` composable):
+Static `class` attributes on native elements are transformed. Dynamic `:class`
+values use `<Motionwind>`, `mw.*`, or `useMotionwind`.
+
+## Nuxt
+
+Register the runtime component in a Nuxt plugin. This is the tested Nuxt path:
+
+```ts
+// plugins/motionwind.ts
+import { MotionwindPlugin } from "motionwind-vue";
+import motionwindConfig from "../motionwind.config";
+
+export default defineNuxtPlugin((nuxtApp) => {
+  nuxtApp.vueApp.use(MotionwindPlugin, motionwindConfig);
+});
+```
 
 ```vue
-<script setup>
-import { Motionwind } from "motionwind-vue";
-</script>
-
-<template>
-  <Motionwind as="button" class="animate-hover:scale-110 animate-tap:scale-90">
-    Click me
-  </Motionwind>
-</template>
+<Motionwind
+  as="button"
+  class="animate-hover:scale-105 animate-tap:scale-95 animate-focus:scale-102"
+>
+  Save
+</Motionwind>
 ```
 
-## Write animations
-
-With the transform installed, write plain elements — no per-file imports:
-
-```vue
-<template>
-  <button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
-    Click me
-  </button>
-</template>
-```
-
-## Good to know
-
-- **Static `class` only.** Like the React build step, only static `class`
-  attributes are transformed. For dynamic `:class`, use `<Motionwind>` / `mw.*`.
-- **Prop names map automatically.** motionwind emits Motion for Vue's API —
-  e.g. tap gestures use `whilePress`, viewport reveals use `inViewOptions`.
-- **Reduced motion is honored.** Interactive gestures are stripped when the user
-  prefers reduced motion.
-- Scroll-linked animations (`animate-scroll:*`) are React/vanilla-only in Vue
-  for now.
+Vue supports gestures, in-view, drag, layout, variants, SVG, and reduced-motion
+handling. Continuous `animate-scroll:*` classes report an adapter warning; use
+Motion for Vue's scroll composables directly until the capability is promoted.
