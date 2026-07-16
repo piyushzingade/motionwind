@@ -1,0 +1,71 @@
+---
+title: "Motionwind v2"
+description: "What is included in Motionwind v2.0.0, how packages are versioned, and how to upgrade safely."
+---
+
+# Motionwind v2.0.0
+
+Motionwind v2 is the community release of the shared `animate-*` language. The
+public packages are synchronized at `2.0.0`; internal example and documentation
+applications keep their own private versions because they are not published to
+npm.
+
+## Support tiers
+
+| Tier | Targets | Commitment |
+|---|---|---|
+| Stable | React, Next.js, React/Vite, Vue, Nuxt, vanilla JavaScript | Release and compatibility gates must pass before publishing. |
+| Beta | React Native and Expo | The supported subset is tested; capability gaps produce diagnostics. |
+| Community | Future Svelte, Solid, Astro, and third-party adapters | Maintainer-owned until they meet the official-adapter promotion policy. |
+
+## What changed
+
+- `motionwind-core` is the single parser, type, constants, registry, config,
+  plugin, preset, and adapter-contract implementation.
+- `motionwind.config.ts` adds typed duration, easing, spring, and preset tokens,
+  strict diagnostics, reduced-motion policy, plugins, and an adapter target.
+- `animate-preset-{name}` ships reusable interactions such as `button-press`,
+  `dialog-enter`, `list-stagger`, and `page-reveal`.
+- `mw.create(Component)` animates design-system components without changing the
+  lowercase host-element compiler behavior.
+- `create-motionwind` can initialize, diagnose, migrate, and install presets.
+- The ESLint, Prettier, VS Code, MCP, playground, compiler, and adapters read
+  one data-driven syntax registry.
+- Packed-artifact tests install the same tarballs intended for npm into Next.js,
+  React/Vite, Vue/Vite, Nuxt, vanilla, and Expo starter applications.
+
+Motionwind remains focused on the common 80% of interface animation. Use Motion
+or the platform API directly for imperative timelines, custom gesture
+recognizers, and adapter capabilities marked as unsupported.
+
+## Upgrade from an earlier release
+
+The existing `animate-*` syntax and unscoped package names are preserved.
+
+```bash
+# Preview changes without writing or installing anything
+npx create-motionwind@2 init --dry-run
+
+# Apply supported source migrations, then inspect the diff
+npx create-motionwind@2 migrate src --write
+
+# Verify dependencies and integration files
+npx create-motionwind@2 doctor
+```
+
+Add `motionwind-core@2` to direct dependencies when your project imports
+`defineConfig`, extension helpers, parser types, or the definition registry.
+The framework initializer does this automatically.
+
+For React runtime components or React Native, pass the same config through
+`MotionwindProvider`. Build integrations receive the config in their plugin or
+wrapper call. See [Configuration](/docs/configuration) for exact examples.
+
+## Compatibility policy
+
+`ParsedResult` is the Motion-first intermediate representation stabilized for
+v2. Breaking public behavior follows semantic versioning, canary releases,
+migration guidance, and at least two minor releases of deprecation before
+removal. See the live [Compatibility Matrix](/docs/compatibility) for the exact
+adapter contract.
+

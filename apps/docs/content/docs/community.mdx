@@ -1,0 +1,24 @@
+---
+title: "Community and support"
+description: "Support tiers, contribution ownership, releases, and the GitHub-backed Motionwind recipe registry."
+---
+
+## Support tiers
+
+- **Stable:** React, Next.js, Vite, Vue, and vanilla JavaScript.
+- **Beta:** React Native while behavior and documentation move toward parity.
+- **Community:** additional adapters maintained outside the core-team support guarantee.
+
+The repository includes installable starters for Next.js, React/Vite, Vue/Vite,
+Nuxt, vanilla HTML, and Expo. CI tests the supported Node matrix, every package
+artifact, and the shared recipe registry.
+
+## Recipe registry
+
+Recipes are reviewed JSON manifests in [`registry/recipes`](https://github.com/piyushzingade/motionwind/tree/main/registry/recipes). Each entry declares accessibility guidance, adapters, compatibility, bundle impact, source, version, and maintainer. Submit a manifest pull request and run `bun run registry:check`; no registry account or custom backend is required.
+
+## Maintainer path
+
+Ownership grows through contributor → triager → package maintainer → core maintainer. See the repository's governance, support, security, Code of Conduct, and contributing policies before opening an issue or pull request.
+
+Roadmap reviews happen monthly, with a compatibility and release report each quarter.

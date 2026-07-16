@@ -1,0 +1,80 @@
+---
+title: "Configuration"
+description: "Define animation tokens, presets, diagnostics, reduced-motion policy, plugins, and the adapter target in one typed file."
+---
+
+Create `motionwind.config.ts` at the project root:
+
+```ts
+import { defineConfig } from "motionwind-core";
+
+export default defineConfig({
+  adapter: "react",
+  strict: true,
+  reducedMotion: "user",
+  tokens: {
+    durations: { fast: 160, deliberate: 480 },
+    easings: { product: [0.22, 1, 0.36, 1] },
+    springs: { responsive: { stiffness: 420, damping: 28 } },
+  },
+  presets: {
+    "card-enter":
+      "animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-deliberate",
+  },
+});
+```
+
+Tokens and presets become classes:
+
+```html
+<button
+  class="animate-hover:scale-105 animate-duration-fast animate-ease-product"
+/>
+<article class="animate-preset-card-enter" />
+<button class="animate-spring-responsive animate-tap:scale-95" />
+```
+
+Pass the config to the integration for the target framework. For example:
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import motionwind from "motionwind-react/vite";
+import motionwindConfig from "./motionwind.config";
+
+export default defineConfig({
+  plugins: [motionwind(motionwindConfig), react()],
+});
+```
+
+The other adapters receive the same object through their supported entry point:
+
+```ts
+// Next.js
+export default withMotionwind(nextConfig, motionwindConfig);
+
+// Vue/Vite
+createMotionwindTransform(motionwindConfig);
+createApp(App).use(MotionwindPlugin, motionwindConfig);
+
+// Vanilla JavaScript
+motionwind({ config: motionwindConfig });
+```
+
+React and React Native runtime components use a provider:
+
+```tsx
+<MotionwindProvider config={motionwindConfig}>
+  <App />
+</MotionwindProvider>
+```
+
+`strict: true` promotes unknown presets and invalid extension syntax from
+warnings to error diagnostics. CI, lint, MCP, and custom build integrations can
+fail on those diagnostics; runtime adapters expose the same errors through
+`ParsedResult.diagnostics`.
+`reducedMotion` accepts `"user"`, `"always"`, or `"never"`; applications should
+normally use `"user"`.
+
+Motionwind ships reviewed presets including `animate-preset-button-press`, `animate-preset-dialog-enter`, `animate-preset-list-stagger`, and `animate-preset-page-reveal`.

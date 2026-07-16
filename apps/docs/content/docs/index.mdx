@@ -1,115 +1,93 @@
 ---
 title: "Introduction"
-description: "motionwind lets you write Motion animations as Tailwind-like utility classes, compiled away at build time."
+description: "Motionwind v2 is a shared Motion utility language for React, Vue, JavaScript, and React Native."
 ---
 
-# motionwind
+# Motionwind v2
 
-motionwind brings the expressiveness of [Motion](https://motion.dev/) (formerly Framer Motion) into the Tailwind CSS mental model. Instead of writing verbose JSX props, you declare animations as familiar utility classes directly in your `className` string.
-
-A Babel plugin runs at build time, finds every `animate-*` class, parses them into Motion props, and rewrites the element as a `motion.*` component -- all before your code ever reaches the browser.
-
-```tsx
-<div className="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
-  Hover or tap me
-</div>
-```
-
-At build time, that single line becomes:
+Motionwind brings Motion's animation model to Tailwind-like `animate-*` utility
+classes. Write interaction and transition intent next to your styles; the
+selected adapter turns that shared language into Motion or Reanimated behavior.
 
 ```tsx
-<motion.div
-  whileHover={{ scale: 1.1 }}
-  whileTap={{ scale: 0.9 }}
-  transition={{ type: "spring" }}
->
-  Hover or tap me
-</motion.div>
+<button className="animate-hover:scale-110 animate-tap:scale-90 animate-focus:scale-105 animate-spring">
+  Hover, press, or focus me
+</button>
 ```
 
-You never import `motion`, you never write prop objects, and the transform disappears from your production bundle.
+On the React compile-time path this becomes a `motion.button` with `whileHover`,
+`whileTap`, `whileFocus`, and `transition` props. The animation tokens disappear
+from `className`, ordinary CSS or Tailwind classes remain, and no runtime parser
+is shipped. Dynamic React/Vue classes, vanilla JavaScript, and React Native use
+explicit runtime adapters.
 
-## Works with your framework
+## One language, four adapters
 
-One `animate-*` syntax, every framework — each powered by the shared `motionwind-core` parser.
+Every official package uses the registry and `ParsedResult` intermediate
+representation from `motionwind-core`.
 
-| Framework | Package | Guide |
-|---|---|---|
-| **React** (Next.js / Vite) | `motionwind-react` | [Framework Setup](/docs/framework-setup#nextjs) |
-| **React Native** / Expo | `motionwind-react-native` | [React Native](/docs/react-native) |
-| **Vue 3** | `motionwind-vue` | [Framework Setup](/docs/framework-setup#vue) |
-| **Vanilla / CDN** | `motionwind-vanilla` | [Framework Setup](/docs/framework-setup#vanilla-js) |
+| Target                     | Package                   | Status | Execution model                                     |
+| -------------------------- | ------------------------- | ------ | --------------------------------------------------- |
+| React, Next.js, React/Vite | `motionwind-react`        | Stable | Compile time by default; `mw.*` runtime fallback    |
+| Vue and Nuxt               | `motionwind-vue`          | Stable | Compile time by default; component runtime fallback |
+| Vanilla JavaScript         | `motionwind-vanilla`      | Stable | DOM runtime backed by Motion                        |
+| React Native and Expo      | `motionwind-react-native` | Beta   | `mw.*` runtime backed by Reanimated                 |
 
-```html
-<!-- The same class, anywhere -->
-<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">Click me</button>
+Use the [Compatibility Matrix](/docs/compatibility) before sharing a class across
+targets. Unsupported adapter features produce actionable diagnostics instead of
+being ignored silently.
+
+## Why Motionwind
+
+### Familiar and colocated
+
+The grammar is predictable: `animate-{gesture}:{property}-{value}`. Hover, tap,
+focus, in-view, initial, enter, exit, and drag targets use the same property
+vocabulary, while duration, easing, spring, viewport, scroll, layout, and variant
+classes configure behavior.
+
+### Typed team conventions
+
+`motionwind.config.ts` provides named duration, easing, and spring tokens,
+reusable presets, strict diagnostics, reduced-motion policy, plugins, and an
+adapter target.
+
+```ts
+import { defineConfig } from "motionwind-core";
+
+export default defineConfig({
+  adapter: "react",
+  strict: true,
+  reducedMotion: "user",
+  tokens: {
+    durations: { fast: 160 },
+    springs: { responsive: { stiffness: 420, damping: 28 } },
+  },
+});
 ```
 
-## Why motionwind?
+### Motion-first, not Motion-replacing
 
-### Zero runtime overhead
+Motionwind is intentionally designed for the common 80% of UI animation. Keep
+using direct Motion APIs for complex timelines, imperative control, custom
+motion values, or framework features outside an adapter's declared capability
+set. The two approaches can coexist in the same application.
 
-The Babel plugin does all the work at compile time. There is no extra runtime parser shipping with your app. The `animate-*` classes are consumed entirely by the transform and do not appear in the final CSS or HTML output. What ships to the browser is plain Motion code.
+## Core syntax
 
-### Familiar syntax
+- Gestures: `animate-hover:`, `animate-tap:`, `animate-focus:`,
+  `animate-inview:`, `animate-drag:`, `animate-initial:`, `animate-enter:`, and
+  `animate-exit:`.
+- Properties: transforms such as `scale`, `rotate`, `x`, and `y`; visual values
+  such as `opacity`; dimensions; colors; and adapter-specific SVG properties.
+- Transitions: `animate-duration-*`, `animate-ease-*`, `animate-spring`, spring
+  physics, delays, repeats, and stagger settings.
+- Reuse: `animate-preset-{name}` and named variant definitions.
 
-If you know Tailwind, you already know motionwind. The class pattern is `animate-{gesture}:{property}-{value}`. Gestures like `hover`, `tap`, `focus`, and `inview` map directly to Motion's `whileHover`, `whileTap`, `whileFocus`, and `whileInView`. Properties like `scale`, `rotate`, `x`, `y`, and `opacity` work exactly as you would expect.
+## Start here
 
-### Colocation
-
-Animations live right next to the styles they modify. No separate animation files, no variant objects to define elsewhere. A single `className` string describes the element's visual appearance, layout, and motion behavior.
-
-### Full Motion power
-
-motionwind supports gestures, scroll-triggered animations, enter/exit transitions, spring physics, drag, viewport detection, repeating animations, and arbitrary Motion properties via bracket syntax. Anything you can do with Motion, you can express as a class.
-
-## Core concepts
-
-### Gesture prefixes
-
-Every animation class starts with `animate-` followed by a gesture prefix and a colon:
-
-- `animate-hover:` -- runs while the pointer is over the element
-- `animate-tap:` -- runs while the element is pressed
-- `animate-focus:` -- runs while the element has keyboard focus
-- `animate-inview:` -- runs when the element enters the viewport
-- `animate-drag:` -- runs while the element is being dragged
-- `animate-initial:` -- the starting state before the enter animation
-- `animate-enter:` -- the target state for mount/entrance animations
-- `animate-exit:` -- the state to animate to when the element unmounts
-
-### Animatable properties
-
-After the gesture prefix, you specify a property and value:
-
-- **Transform**: `scale`, `scale-x`, `scale-y`, `rotate`, `rotate-x`, `rotate-y`, `skew-x`, `skew-y`, `x`, `y`
-- **Visual**: `opacity`, `blur`, `brightness`, `contrast`, `saturate`
-- **Layout**: `w` (width), `h` (height), `rounded` (border-radius)
-
-### Transition configuration
-
-Global transition settings are written without a gesture prefix:
-
-- `animate-duration-300` -- 300ms duration
-- `animate-ease-in-out` -- easing function
-- `animate-spring` -- spring physics
-- `animate-stiffness-200` -- spring stiffness
-- `animate-repeat-3` -- repeat 3 times
-
-### Dynamic classNames
-
-The Babel plugin only transforms static string literals. For dynamic or conditional classNames, motionwind provides a runtime component API:
-
-```tsx
-import { mw } from "motionwind-react";
-
-<mw.button className={`animate-hover:scale-110 ${isActive ? "bg-blue-500" : "bg-gray-500"}`}>
-  Click
-</mw.button>
-```
-
-## Next steps
-
-- [Getting Started](/docs/getting-started) -- understand how the build-time transform works
-- [Installation](/docs/installation) -- set up motionwind in your project
-- [Syntax Reference](/docs/syntax) -- complete guide to every class and option
+- [What's new in v2.0.0](/docs/v2)
+- [Install Motionwind](/docs/installation)
+- [Choose a framework](/docs/frameworks)
+- [Configure tokens and presets](/docs/configuration)
+- [Read the compatibility contract](/docs/compatibility)

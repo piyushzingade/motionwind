@@ -1,0 +1,63 @@
+---
+title: "Extensions and adapters"
+description: "Extend Motionwind with typed properties, diagnostics, presets, and runtime adapters without changing core."
+---
+
+## Plugins
+
+`defineMotionwindPlugin()` registers definitions, presets, parser transforms, and diagnostics. Declare the compatible core range so projects can reject incompatible combinations.
+
+```ts
+import { defineMotionwindPlugin } from "motionwind-core";
+
+export const productMotion = defineMotionwindPlugin({
+  name: "product-motion",
+  version: "1.0.0",
+  core: ">=2 <3",
+  presets: {
+    "success-pop": "animate-enter:scale-100 animate-spring",
+  },
+  definitions: [
+    {
+      id: "product.success",
+      category: "property",
+      label: "success-",
+      snippet: "success-${1:100}",
+      description: "Product-specific success emphasis.",
+    },
+  ],
+});
+```
+
+Definitions feed the same machine-readable registry used by parsing, completions, formatting, linting, Studio, and AI tools.
+
+## Adapters
+
+`defineMotionwindAdapter()` maps the stable `ParsedResult` intermediate representation to a runtime. Capabilities make unsupported behavior explicit.
+
+```ts
+import { defineMotionwindAdapter } from "motionwind-core";
+
+export const customAdapter = defineMotionwindAdapter({
+  name: "motionwind-custom",
+  version: "1.0.0",
+  capabilities: {
+    gestures: true,
+    scroll: false,
+    layout: true,
+    drag: false,
+    variants: true,
+    svg: true,
+    "reduced-motion": true,
+  },
+  compile(parsed, context: { element: unknown }) {
+    return { element: context.element, motion: parsed };
+  },
+});
+```
+
+Community adapters become official only after they have a named maintainer, compatibility fixtures, documentation, and two stable releases.
+
+## Shared build integrations
+
+`motionwind-unplugin` exposes `vite`, `rollup`, `webpack`, `rspack`, and `esbuild` entry points backed by one compiler layer. React projects can continue using the focused Babel, Vite, and Next.js entry points.

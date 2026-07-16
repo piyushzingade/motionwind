@@ -1,0 +1,21 @@
+---
+title: "v2 compatibility"
+description: "The tested Motionwind v2 support matrix for every official framework and capability."
+---
+
+Motionwind v2 treats compatibility as executable data. CI validates this table against each adapter's exported capability contract and installs every starter from packed npm artifacts.
+
+| Framework           | Tier   | Gestures | Scroll  | Layout      | Drag        | Variants    | SVG     | Reduced motion | SSR / hydration |
+| ------------------- | ------ | -------- | ------- | ----------- | ----------- | ----------- | ------- | -------------- | --------------- |
+| Next.js             | Stable | Pass     | Pass    | Pass        | Pass        | Pass        | Pass    | Pass           | Pass            |
+| React + Vite        | Stable | Pass     | Pass    | Pass        | Pass        | Pass        | Pass    | Pass           | N/A             |
+| Vue + Vite          | Stable | Pass     | Warning | Pass        | Pass        | Pass        | Pass    | Pass           | N/A             |
+| Nuxt                | Stable | Pass     | Warning | Pass        | Pass        | Pass        | Pass    | Pass           | Pass            |
+| Vanilla JavaScript  | Stable | Pass     | Pass    | Unsupported | Unsupported | Unsupported | Pass    | Pass           | N/A             |
+| Expo / React Native | Beta   | Beta     | Beta    | Warning     | Warning     | Beta        | Warning | Pass           | N/A             |
+
+“Warning” means the adapter detects the syntax, explains the capability gap, and leaves direct Motion or platform APIs available. It never means silently ignored. The canonical source is [`fixtures/compatibility-matrix.json`](https://github.com/piyushzingade/motionwind/blob/main/fixtures/compatibility-matrix.json).
+
+The golden suite covers hover, tap, focus and keyboard access, enter/exit, in-view, scroll linkage, drag, layout, variants, SVG paths, presets, strict diagnostics, reduced motion, SSR output, hydration, source maps, tree shaking, and bundle budgets. Framework jobs install and build Next.js, React/Vite, Vue/Vite, Nuxt, vanilla, and Expo from the exact tarballs intended for npm. Their browser scenarios are read from the same matrix, assert declared scale values instead of merely checking for a transform, and fail on runtime, console, hydration, high-severity, or critical security errors.
+
+React Native remains beta: v2 supports the shared parser, presets, plugins, timing adaptation, variants, scroll context, and reduced motion. Drag, layout transitions, in-view orchestration, and SVG report actionable warnings and require direct platform APIs until their adapter fixtures reach parity.

@@ -1,154 +1,81 @@
 ---
 title: "Installation"
-description: "Set up motionwind in your Next.js, Vite, or other React project."
+description: "Install Motionwind v2 in Next.js, React/Vite, Vue/Nuxt, vanilla JavaScript, or React Native/Expo."
 ---
 
-# Installation
+# Install Motionwind v2
 
-motionwind works with any React project that supports Babel. The fastest way to get started is the CLI, which auto-detects your project type and wires everything up. You can also set things up manually.
-
-## Prerequisites
-
-- **React** 18 or newer
-- **Motion** 11 or newer (the `motion` package, formerly `framer-motion`)
-- **Node.js** 18 or newer
-
-## Quick start with the CLI
-
-Run the following command in your project root:
+The initializer detects your framework and package manager, installs the
+published v2 adapter and peers, creates `motionwind.config.ts`, and only edits a
+build file when it can do so safely.
 
 ```bash
-npx create-motionwind
+npx create-motionwind@2 init --dry-run
+npx create-motionwind@2 init
 ```
 
-The CLI auto-detects your package manager (npm, yarn, pnpm, or bun) and installs `motionwind-react` for you. Then follow the manual setup steps below to configure your build tool.
-
-## Manual setup: Next.js
-
-### 1. Install dependencies
+Detection covers Next.js, React/Vite, Vue/Vite, Nuxt, vanilla JavaScript, React
+Native, and Expo with npm, pnpm, Yarn, or Bun. Use an explicit target when
+auto-detection is not possible:
 
 ```bash
-npm install motionwind-react motion
+npx create-motionwind@2 init --framework=next
+npx create-motionwind@2 init --framework=react
+npx create-motionwind@2 init --framework=vue
+npx create-motionwind@2 init --framework=vanilla
+npx create-motionwind@2 init --framework=react-native
 ```
 
-### 2. Update next.config.js
+The command preserves existing Vite, Next.js, and Babel configuration it cannot
+merge reliably and prints the exact manual snippet instead. `--dry-run` never
+writes files or installs dependencies.
 
-Wrap your Next.js config with the `withMotionwind` helper. This adds the motionwind Babel plugin as a pre-processing step that runs before SWC — works with both webpack and Turbopack:
+## Manual packages
 
-```js
-import withMotionwind from "motionwind-react/next";
+| Target                | Install                                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Next.js or React/Vite | `npm install motionwind-react@2 motion motionwind-core@2`                                                                 |
+| Vue/Vite or Nuxt      | `npm install motionwind-vue@2 motion-v @vueuse/core motionwind-core@2`                                                    |
+| Vanilla JavaScript    | `npm install motionwind-vanilla@2 motion motionwind-core@2`                                                               |
+| React Native or Expo  | `npm install motionwind-react-native@2 react-native-reanimated react-native-gesture-handler nativewind motionwind-core@2` |
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {};
+Next, apply the integration for your target:
 
-export default withMotionwind(nextConfig);
-```
+- [React, Vite, and Next.js](/docs/frameworks/react)
+- [Vue and Nuxt](/docs/frameworks/vue)
+- [Vanilla JavaScript](/docs/frameworks/vanilla)
+- [React Native and Expo](/docs/react-native/installation)
 
-If you have an existing config with other plugins, wrap the outermost call:
+Tailwind CSS and NativeWind are styling integrations, not required for the
+`animate-*` parser itself. Non-animation classes pass through unchanged.
 
-```js
-import withMotionwind from "motionwind-react/next";
-import withMDX from "@next/mdx";
+## Verify the setup
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  pageExtensions: ["ts", "tsx", "mdx"],
-};
-
-export default withMotionwind(withMDX(nextConfig));
-```
-
-### 3. Start building
+Run the diagnostic after installation:
 
 ```bash
-npm run dev
+npx create-motionwind@2 doctor
 ```
 
-That is all the setup required. The Babel plugin will process every `.tsx` and `.jsx` file automatically — both Turbopack (default in Next.js 15+) and webpack are supported out of the box.
+On web, verify hover, pointer press, and keyboard focus:
 
-## Manual setup: Vite
-
-### 1. Install dependencies
-
-```bash
-npm install motionwind-react motion
+```html
+<button
+  class="animate-hover:scale-110 animate-tap:scale-90 animate-focus:scale-105 animate-spring"
+>
+  Test Motionwind
+</button>
 ```
 
-### 2. Update vite.config.ts
-
-Add the motionwind Vite plugin. It must be placed **before** the React plugin so it can transform the source before React's JSX transform runs:
-
-```ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import { motionwind } from "motionwind-react/vite";
-
-export default defineConfig({
-  plugins: [motionwind(), react()],
-});
-```
-
-### 3. Start building
-
-```bash
-npm run dev
-```
-
-## Manual setup: Other bundlers
-
-For any bundler that supports Babel, add the motionwind plugin to your Babel config.
-
-### 1. Install dependencies
-
-```bash
-npm install motionwind-react motion
-```
-
-### 2. Add to Babel config
-
-Create or update a `.babelrc` file in your project root:
-
-```json
-{
-  "plugins": ["motionwind-react/babel"]
-}
-```
-
-Or if you use `babel.config.js`:
-
-```js
-module.exports = {
-  plugins: ["motionwind-react/babel"],
-};
-```
-
-## Verifying the setup
-
-Create a simple test component to confirm everything is working:
+On React Native, use a supported `mw.*` component and test a press interaction:
 
 ```tsx
-export function TestAnimation() {
-  return (
-    <button className="px-6 py-3 bg-indigo-600 text-[var(--color-fg)] rounded-lg animate-hover:scale-110 animate-tap:scale-90 animate-spring">
-      Hover and tap me
-    </button>
-  );
-}
+import { mw } from "motionwind-react-native";
+
+<mw.Pressable className="animate-tap:scale-90 animate-spring">
+  <mw.Text>Test Motionwind</mw.Text>
+</mw.Pressable>;
 ```
 
-If the setup is correct, hovering the button will scale it up to 110% and tapping it will scale it down to 90%, both with spring physics. If nothing happens, double-check that:
-
-1. The Babel plugin is registered in your build config
-2. The component file has a `.tsx` or `.jsx` extension
-3. The `className` is a static string literal (not a template literal or variable)
-
-## Using with Tailwind CSS
-
-motionwind is designed to coexist with Tailwind CSS. The `animate-*` classes are consumed by the Babel plugin at build time and never reach the browser's CSS. Tailwind classes in the same `className` string pass through unchanged.
-
-No additional Tailwind configuration is needed. However, if Tailwind's JIT compiler warns about unknown `animate-*` classes, you can suppress the warning by adding them to the `safelist` or ignoring the `animate-` prefix in your Tailwind config.
-
-## Next steps
-
-- [Syntax Reference](/docs/syntax) -- learn every available class, property, and configuration option
-- [Getting Started](/docs/getting-started) -- understand the build-time transform in detail
+If setup still fails, compare the project with the installable starter for the
+same framework and run `doctor` before filing an issue.
