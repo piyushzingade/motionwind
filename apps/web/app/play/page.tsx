@@ -1,311 +1,571 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { ComponentType, ReactNode } from "react";
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useState,
+  type ComponentType,
+  type ReactNode,
+} from "react";
 import Link from "next/link";
-import { mw } from "motionwind-react";
+import { MotionConfig } from "motion/react";
+import {
+  MOTIONWIND_RECIPES,
+  mw,
+  parseMotionClasses,
+  type MotionwindRecipe,
+} from "motionwind-react";
 import { generateMotionCode } from "motionwind-react/tooling";
 import { highlightCode } from "../../lib/highlight";
 
-const TAGS = ["div", "button", "span", "a", "section", "img"] as const;
+type Target = "react" | "vue" | "javascript" | "react-native";
+type StageSize = "phone" | "tablet" | "desktop";
 
-interface Preset {
-  label: string;
+interface StudioState {
+  classes: string;
   tag: string;
   text: string;
-  classes: string;
+  target: Target;
 }
 
-const PRESETS: Preset[] = [
-  {
-    label: "Hover & tap",
-    tag: "button",
-    text: "Click me",
-    classes:
-      "animate-hover:scale-110 animate-tap:scale-90 animate-spring rounded-xl bg-acid px-6 py-3 text-black font-semibold",
-  },
-  {
-    label: "Scroll reveal",
-    tag: "div",
-    text: "I fade up on view",
-    classes:
-      "animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-500 rounded-xl bg-surface-overlay px-6 py-4 text-white",
-  },
-  {
-    label: "Scroll-linked rotate",
-    tag: "div",
-    text: "Rotate with scroll",
-    classes:
-      "animate-scroll:rotate-[0,360] rounded-xl bg-acid px-6 py-4 text-black font-semibold",
-  },
-  {
-    label: "Variants",
-    tag: "div",
-    text: "Named states",
-    classes:
-      "animate-variant-hidden:opacity-0 animate-variant-hidden:y-20 animate-variant-visible:opacity-100 animate-variant-visible:y-0 animate-from-hidden animate-to-visible animate-duration-500 rounded-xl bg-surface-overlay px-6 py-4 text-white",
-  },
-  {
-    label: "Filters on hover",
-    tag: "div",
-    text: "Hover to grayscale",
-    classes:
-      "animate-hover:grayscale-100 animate-hover:blur-2 animate-duration-300 rounded-xl bg-acid px-6 py-4 text-black font-semibold",
-  },
-  {
-    label: "Infinite spin",
-    tag: "div",
-    text: "↻",
-    classes:
-      "animate-enter:rotate-360 animate-repeat-infinite animate-duration-2000 animate-ease-linear grid h-16 w-16 place-items-center rounded-full bg-acid text-2xl text-black",
-  },
+const TAGS = ["div", "button", "span", "a", "section"] as const;
+const TARGETS: { id: Target; label: string }[] = [
+  { id: "react", label: "React" },
+  { id: "vue", label: "Vue" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "react-native", label: "Native" },
 ];
+const STAGES: { id: StageSize; label: string; width: number }[] = [
+  { id: "phone", label: "S", width: 340 },
+  { id: "tablet", label: "M", width: 560 },
+  { id: "desktop", label: "L", width: 900 },
+];
+const PREVIEW_SKIN = "rounded-xl bg-acid px-6 py-3 font-semibold text-black";
+const INITIAL: StudioState = {
+  classes: `${MOTIONWIND_RECIPES[0]!.classes} ${PREVIEW_SKIN}`,
+  tag: "button",
+  text: "Ship the interaction",
+  target: "react",
+};
 
-function encodeState(state: { classes: string; tag: string; text: string }): string {
-  const params = new URLSearchParams(state);
-  return params.toString();
+function encodeState(state: StudioState): string {
+  return new URLSearchParams(Object.entries(state)).toString();
 }
 
-function decodeState(hash: string): Partial<Preset> | null {
-  if (!hash) return null;
+function decodeState(hash: string): StudioState | null {
   const params = new URLSearchParams(hash.replace(/^#/, ""));
   const classes = params.get("classes");
-  if (classes === null) return null;
+  if (!classes) return null;
+  const target = params.get("target") as Target | null;
   return {
     classes,
     tag: params.get("tag") ?? "div",
     text: params.get("text") ?? "",
+    target: TARGETS.some(({ id }) => id === target) ? target! : "react",
   };
 }
 
-export default function PlaygroundPage() {
-  // classes/tag/text are one logical unit (the edited snippet), so they live in
-  // a single state object — a lone setState updates all three in one render.
-  const [editor, setEditor] = useState<{
-    classes: string;
-    tag: string;
-    text: string;
-  }>(() => ({
-    classes: PRESETS[0]!.classes,
-    tag: PRESETS[0]!.tag,
-    text: PRESETS[0]!.text,
-  }));
-  const { classes, tag, text } = editor;
+function replaceClass(classes: string, matcher: RegExp, next: string): string {
+  return [...classes.split(/\s+/).filter((token) => !matcher.test(token)), next]
+    .filter(Boolean)
+    .join(" ");
+}
+
+function numericToken(
+  classes: string,
+  prefix: string,
+  fallback: number,
+): number {
+  const token = classes.split(/\s+/).find((value) => value.startsWith(prefix));
+  const value = token ? Number(token.slice(prefix.length)) : NaN;
+  return Number.isFinite(value) ? value : fallback;
+}
+
+function ControlLabel({
+  htmlFor,
+  children,
+  value,
+}: {
+  htmlFor: string;
+  children: ReactNode;
+  value?: ReactNode;
+}) {
+  return (
+    <label
+      htmlFor={htmlFor}
+      className="mb-2 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-text-muted"
+    >
+      <span>{children}</span>
+      {value ? <span className="text-acid">{value}</span> : null}
+    </label>
+  );
+}
+
+function RangeControl({
+  id,
+  label,
+  value,
+  min,
+  max,
+  step = 1,
+  unit,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step?: number;
+  unit?: string;
+  onChange: (value: number) => void;
+}) {
+  const progress = ((value - min) / (max - min)) * 100;
+  return (
+    <div>
+      <ControlLabel htmlFor={id} value={`${value}${unit ?? ""}`}>
+        {label}
+      </ControlLabel>
+      <input
+        id={id}
+        className="studio-range"
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        style={{ "--range-progress": `${progress}%` } as React.CSSProperties}
+        onChange={(event) => onChange(Number(event.target.value))}
+      />
+    </div>
+  );
+}
+
+function Timeline({
+  duration,
+  delay,
+  replayKey,
+}: {
+  duration: number;
+  delay: number;
+  replayKey: number;
+}) {
+  const total = Math.max(duration + delay, 1);
+  return (
+    <div className="border-t border-border-subtle px-5 py-4">
+      <div className="mb-3 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.18em] text-text-muted">
+        <span>Timeline</span>
+        <span>{total}ms</span>
+      </div>
+      <div className="studio-timeline relative h-8 overflow-hidden rounded-md border border-white/5 bg-black/30">
+        <div
+          className="absolute inset-y-0 border-r border-dashed border-white/15 bg-white/[0.025]"
+          style={{ width: `${(delay / total) * 100}%` }}
+        />
+        <div
+          key={replayKey}
+          className="studio-playhead absolute inset-y-0 w-px bg-acid shadow-[0_0_12px_#c8ff2e]"
+          style={{ animationDuration: `${Math.max(total, 240)}ms` }}
+        />
+        <div className="absolute inset-x-2 top-1/2 h-px bg-gradient-to-r from-acid/10 via-acid/60 to-acid/10" />
+      </div>
+    </div>
+  );
+}
+
+function RecipeButton({
+  recipe,
+  active,
+  onClick,
+}: {
+  recipe: MotionwindRecipe;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className="group w-full border-b border-border-subtle px-4 py-3 text-left transition-colors hover:bg-white/[0.025] aria-pressed:bg-acid/[0.055]"
+    >
+      <span className="mb-1 flex items-center justify-between text-xs font-semibold text-white">
+        {recipe.name}
+        <span className="font-mono text-[9px] uppercase tracking-wider text-text-muted group-aria-pressed:text-acid">
+          {recipe.category}
+        </span>
+      </span>
+      <span className="block text-[11px] leading-relaxed text-text-muted">
+        {recipe.description}
+      </span>
+    </button>
+  );
+}
+
+export default function StudioPage() {
+  const [editor, setEditor] = useState<StudioState>(INITIAL);
+  const [stage, setStage] = useState<StageSize>("desktop");
+  const [reduceMotion, setReduceMotion] = useState(false);
   const [replayKey, setReplayKey] = useState(0);
   const [copied, setCopied] = useState<"link" | "code" | null>(null);
+  const deferredClasses = useDeferredValue(editor.classes);
 
-  // Mirror editor state into the URL hash from the handler that changes it,
-  // rather than a reactive effect — this keeps the page shareable without an
-  // effect chain (a state-change effect feeding a second effect).
-  const writeHash = useCallback(
-    (next: { classes: string; tag: string; text: string }) => {
-      window.history.replaceState(null, "", "#" + encodeState(next));
-    },
-    [],
-  );
-
-  // Hydrate from the URL hash on first load; otherwise seed the hash from the
-  // default preset so "Copy link" works immediately.
-  useEffect(() => {
-    const decoded = decodeState(window.location.hash);
-    if (decoded && decoded.classes !== undefined) {
-      setEditor({
-        classes: decoded.classes,
-        tag: decoded.tag ?? "div",
-        text: decoded.text ?? "",
-      });
-    } else {
-      writeHash({
-        classes: PRESETS[0]!.classes,
-        tag: PRESETS[0]!.tag,
-        text: PRESETS[0]!.text,
-      });
-    }
-  }, [writeHash]);
-
-  const generated = useMemo(
-    () => generateMotionCode(tag, classes, { text: text || "Content" }),
-    [tag, classes, text],
-  );
-
-  const applyPreset = useCallback(
-    (preset: Preset) => {
-      setEditor({
-        classes: preset.classes,
-        tag: preset.tag,
-        text: preset.text,
-      });
-      setReplayKey((k) => k + 1);
-      writeHash({
-        classes: preset.classes,
-        tag: preset.tag,
-        text: preset.text,
+  const writeHash = useCallback((state: StudioState) => {
+    window.history.replaceState(null, "", `#${encodeState(state)}`);
+  }, []);
+  const updateEditor = useCallback(
+    (patch: Partial<StudioState>) => {
+      setEditor((current) => {
+        const next = { ...current, ...patch };
+        writeHash(next);
+        return next;
       });
     },
     [writeHash],
   );
 
+  useEffect(() => {
+    const decoded = decodeState(window.location.hash);
+    if (decoded) setEditor(decoded);
+    else writeHash(INITIAL);
+  }, [writeHash]);
+
+  const parsed = useMemo(
+    () => parseMotionClasses(deferredClasses),
+    [deferredClasses],
+  );
+  const generated = useMemo(
+    () =>
+      generateMotionCode(editor.tag, deferredClasses, {
+        text: editor.text || "Content",
+        target: editor.target,
+      }),
+    [deferredClasses, editor.tag, editor.target, editor.text],
+  );
+  const highlighted = useMemo(() => highlightCode(generated), [generated]);
+  const duration = numericToken(editor.classes, "animate-duration-", 300);
+  const delay = numericToken(editor.classes, "animate-delay-", 0);
+  const stiffness = numericToken(editor.classes, "animate-stiffness-", 300);
+  const damping = numericToken(editor.classes, "animate-damping-", 24);
+  const stageWidth = STAGES.find(({ id }) => id === stage)!.width;
+  const activeRecipe = MOTIONWIND_RECIPES.find((recipe) =>
+    editor.classes.startsWith(recipe.classes),
+  );
+  const selectedAdapter =
+    editor.target === "javascript" ? "vanilla" : editor.target;
+  const recipeSupportsTarget =
+    !activeRecipe ||
+    activeRecipe.adapters.includes(
+      selectedAdapter as "react" | "vue" | "vanilla" | "react-native",
+    );
+
+  const applyRecipe = useCallback(
+    (recipe: MotionwindRecipe) => {
+      updateEditor({
+        classes: `${recipe.classes} ${PREVIEW_SKIN}`,
+        text: recipe.name,
+      });
+      setReplayKey((key) => key + 1);
+    },
+    [updateEditor],
+  );
   const copy = useCallback(
     async (kind: "link" | "code") => {
-      const value = kind === "link" ? window.location.href : generated;
-      await navigator.clipboard.writeText(value);
+      await navigator.clipboard.writeText(
+        kind === "link" ? window.location.href : generated,
+      );
       setCopied(kind);
-      setTimeout(() => setCopied(null), 1500);
+      window.setTimeout(() => setCopied(null), 1400);
     },
     [generated],
   );
-
   const Preview = (
-    mw as Record<
+    mw as unknown as Record<
       string,
       ComponentType<{ className?: string; children?: ReactNode }>
     >
-  )[tag]!;
+  )[editor.tag]!;
 
   return (
     <main className="min-h-screen bg-surface text-white">
-      <header className="flex items-center justify-between border-b border-border-subtle px-6 py-4">
-        <Link href="/" className="text-sm font-semibold text-acid">
-          ← motionwind
-        </Link>
-        <h1 className="text-sm font-medium text-text-dim">Playground</h1>
-        <div className="flex gap-2">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border-subtle bg-surface/90 px-4 backdrop-blur-xl md:px-6">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/"
+            className="font-mono text-xs font-bold tracking-[-0.04em] text-acid"
+          >
+            motionwind/
+          </Link>
+          <span className="hidden h-4 w-px bg-white/10 sm:block" />
+          <div>
+            <h1 className="text-xs font-semibold">Motion Studio</h1>
+            <p className="hidden font-mono text-[8px] uppercase tracking-[0.2em] text-text-muted sm:block">
+              Classes in · production code out
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => copy("link")}
-            className="rounded-md border border-border-subtle px-3 py-1.5 text-xs text-text-dim transition hover:text-white"
+            className="rounded-md border border-border-subtle px-3 py-1.5 text-[11px] text-text-dim transition hover:border-white/15 hover:text-white"
           >
-            {copied === "link" ? "Copied!" : "Copy link"}
+            {copied === "link" ? "Link copied" : "Share"}
           </button>
           <button
             type="button"
             onClick={() => copy("code")}
-            className="rounded-md bg-acid px-3 py-1.5 text-xs font-semibold text-black transition hover:opacity-90"
+            className="rounded-md bg-acid px-3 py-1.5 text-[11px] font-bold text-black transition hover:bg-acid-dim"
           >
-            {copied === "code" ? "Copied!" : "Copy code"}
+            {copied === "code" ? "Copied" : "Copy code"}
           </button>
         </div>
       </header>
 
-      <div className="grid gap-px bg-border-subtle lg:grid-cols-[1fr_1.2fr_1fr]">
-        {/* Controls */}
-        <section className="bg-surface p-6">
-          <label
-            htmlFor="pg-classes"
-            className="mb-2 block text-xs font-medium uppercase tracking-wide text-text-muted"
-          >
-            Classes
-          </label>
-          <textarea
-            id="pg-classes"
-            value={classes}
-            onChange={(e) => {
-              const value = e.target.value;
-              setEditor((s) => ({ ...s, classes: value }));
-              writeHash({ ...editor, classes: value });
-            }}
-            spellCheck={false}
-            rows={8}
-            className="w-full resize-y rounded-lg border border-border-subtle bg-surface-raised p-3 font-mono text-sm text-acid outline-none focus:border-acid/40"
-          />
-
-          <div className="mt-4 flex items-center gap-4">
-            <div className="flex-1">
-              <label
-                htmlFor="pg-element"
-                className="mb-1 block text-xs font-medium uppercase tracking-wide text-text-muted"
-              >
-                Element
-              </label>
-              <select
-                id="pg-element"
-                value={tag}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setEditor((s) => ({ ...s, tag: value }));
-                  writeHash({ ...editor, tag: value });
-                }}
-                className="w-full rounded-lg border border-border-subtle bg-surface-raised p-2 text-sm outline-none focus:border-acid/40"
-              >
-                {TAGS.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
+      <div className="grid min-h-[calc(100vh-3.5rem)] xl:grid-cols-[220px_minmax(0,1fr)_320px]">
+        <aside className="border-b border-border-subtle bg-[#0c0c12] xl:border-b-0 xl:border-r">
+          <div className="border-b border-border-subtle px-4 py-3 font-mono text-[9px] uppercase tracking-[0.2em] text-text-muted">
+            Reviewed recipes
+          </div>
+          <div className="grid sm:grid-cols-2 xl:block">
+            {MOTIONWIND_RECIPES.map((recipe) => (
+              <RecipeButton
+                key={recipe.id}
+                recipe={recipe}
+                active={editor.classes.startsWith(recipe.classes)}
+                onClick={() => applyRecipe(recipe)}
+              />
+            ))}
+          </div>
+          <div className="m-4 rounded-lg border border-acid/10 bg-acid/[0.025] p-3">
+            <div className="mb-1 font-mono text-[9px] uppercase tracking-wider text-acid">
+              Registry contract
             </div>
-            <div className="flex-1">
-              <label
-                htmlFor="pg-text"
-                className="mb-1 block text-xs font-medium uppercase tracking-wide text-text-muted"
+            <p className="text-[10px] leading-relaxed text-text-muted">
+              Every recipe declares adapters, accessibility guidance, source,
+              version, and maintainer.
+            </p>
+          </div>
+        </aside>
+
+        <section className="min-w-0 bg-[#09090e]">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-subtle px-4 py-3 md:px-5">
+            <div
+              className="flex rounded-md border border-border-subtle bg-black/20 p-0.5"
+              aria-label="Preview size"
+            >
+              {STAGES.map((size) => (
+                <button
+                  key={size.id}
+                  type="button"
+                  aria-pressed={stage === size.id}
+                  onClick={() => setStage(size.id)}
+                  className="rounded px-2.5 py-1 font-mono text-[9px] text-text-muted aria-pressed:bg-white/[0.07] aria-pressed:text-white"
+                >
+                  {size.label}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                aria-pressed={reduceMotion}
+                onClick={() => setReduceMotion((value) => !value)}
+                className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-wider text-text-muted hover:text-white"
               >
-                Text
-              </label>
-              <input
-                id="pg-text"
-                value={text}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setEditor((s) => ({ ...s, text: value }));
-                  writeHash({ ...editor, text: value });
-                }}
-                className="w-full rounded-lg border border-border-subtle bg-surface-raised p-2 text-sm outline-none focus:border-acid/40"
+                <span
+                  className={`h-2 w-2 rounded-full ${reduceMotion ? "bg-amber-400" : "bg-acid"}`}
+                />
+                {reduceMotion ? "Reduced" : "Full motion"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setReplayKey((key) => key + 1)}
+                className="rounded-md border border-border-subtle px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-wider text-text-dim hover:text-acid"
+              >
+                ↻ Replay
+              </button>
+            </div>
+          </div>
+
+          <div className="studio-checker flex min-h-[430px] items-center justify-center overflow-auto p-5 md:p-10">
+            <div
+              className="relative flex min-h-[320px] max-w-full items-center justify-center overflow-hidden rounded-2xl border border-white/[0.06] bg-[#101018]/90 shadow-[0_30px_90px_#0008] transition-[width] duration-300"
+              style={{ width: stageWidth }}
+            >
+              <div className="absolute left-4 top-4 flex items-center gap-2 font-mono text-[8px] uppercase tracking-[0.18em] text-white/25">
+                <span className="h-1.5 w-1.5 rounded-full bg-acid/70" />
+                live viewport · {stageWidth}px
+              </div>
+              <MotionConfig reducedMotion={reduceMotion ? "always" : "never"}>
+                <Preview key={replayKey} className={editor.classes}>
+                  {editor.text}
+                </Preview>
+              </MotionConfig>
+            </div>
+          </div>
+
+          <Timeline duration={duration} delay={delay} replayKey={replayKey} />
+
+          <div className="grid border-t border-border-subtle lg:grid-cols-2">
+            <div className="border-b border-border-subtle p-4 lg:border-b-0 lg:border-r">
+              <ControlLabel htmlFor="studio-classes">
+                Motionwind classes
+              </ControlLabel>
+              <textarea
+                id="studio-classes"
+                value={editor.classes}
+                onChange={(event) =>
+                  updateEditor({ classes: event.target.value })
+                }
+                spellCheck={false}
+                rows={6}
+                className="w-full resize-y rounded-lg border border-border-subtle bg-black/25 p-3 font-mono text-[11px] leading-relaxed text-acid outline-none transition focus:border-acid/30"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3 p-4">
+              <div>
+                <ControlLabel htmlFor="studio-element">Element</ControlLabel>
+                <select
+                  id="studio-element"
+                  value={editor.tag}
+                  onChange={(event) =>
+                    updateEditor({ tag: event.target.value })
+                  }
+                  className="w-full rounded-lg border border-border-subtle bg-[#111119] p-2 text-xs outline-none focus:border-acid/30"
+                >
+                  {TAGS.map((tag) => (
+                    <option key={tag}>{tag}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <ControlLabel htmlFor="studio-text">Content</ControlLabel>
+                <input
+                  id="studio-text"
+                  value={editor.text}
+                  onChange={(event) =>
+                    updateEditor({ text: event.target.value })
+                  }
+                  className="w-full rounded-lg border border-border-subtle bg-[#111119] p-2 text-xs outline-none focus:border-acid/30"
+                />
+              </div>
+              <div className="col-span-2 flex flex-wrap gap-1.5 pt-1">
+                {parsed.diagnostics.map((diagnostic) => (
+                  <span
+                    key={`${diagnostic.code}-${diagnostic.token}`}
+                    className="rounded border border-amber-400/15 bg-amber-400/5 px-2 py-1 font-mono text-[9px] text-amber-300"
+                  >
+                    {diagnostic.message}
+                  </span>
+                ))}
+                {!recipeSupportsTarget ? (
+                  <span className="rounded border border-amber-400/15 bg-amber-400/5 px-2 py-1 font-mono text-[9px] text-amber-300">
+                    {activeRecipe!.name} is not reviewed for {editor.target}.
+                  </span>
+                ) : null}
+                {parsed.diagnostics.length === 0 && recipeSupportsTarget ? (
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-emerald-400">
+                    ✓ syntax valid
+                  </span>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside className="border-t border-border-subtle bg-[#0c0c12] xl:border-l xl:border-t-0">
+          <div className="border-b border-border-subtle p-4">
+            <div className="grid gap-5">
+              <RangeControl
+                id="duration"
+                label="Duration"
+                value={duration}
+                min={80}
+                max={1600}
+                step={20}
+                unit="ms"
+                onChange={(value) =>
+                  updateEditor({
+                    classes: replaceClass(
+                      editor.classes,
+                      /^animate-duration-/,
+                      `animate-duration-${value}`,
+                    ),
+                  })
+                }
+              />
+              <RangeControl
+                id="stiffness"
+                label="Stiffness"
+                value={stiffness}
+                min={40}
+                max={700}
+                step={10}
+                onChange={(value) =>
+                  updateEditor({
+                    classes: replaceClass(
+                      editor.classes,
+                      /^animate-stiffness-/,
+                      `animate-stiffness-${value}`,
+                    ),
+                  })
+                }
+              />
+              <RangeControl
+                id="damping"
+                label="Damping"
+                value={damping}
+                min={4}
+                max={60}
+                onChange={(value) =>
+                  updateEditor({
+                    classes: replaceClass(
+                      editor.classes,
+                      /^animate-damping-/,
+                      `animate-damping-${value}`,
+                    ),
+                  })
+                }
               />
             </div>
           </div>
 
-          <div className="mt-6">
-            <div className="mb-2 text-xs font-medium uppercase tracking-wide text-text-muted">
-              Presets
+          <div className="border-b border-border-subtle p-4">
+            <div className="mb-3 font-mono text-[9px] uppercase tracking-[0.2em] text-text-muted">
+              Export target
             </div>
-            <div className="flex flex-wrap gap-2">
-              {PRESETS.map((p) => (
+            <div className="grid grid-cols-2 gap-1.5">
+              {TARGETS.map((target) => (
                 <button
+                  key={target.id}
                   type="button"
-                  key={p.label}
-                  onClick={() => applyPreset(p)}
-                  className="rounded-full border border-border-subtle px-3 py-1.5 text-xs text-text-dim transition hover:border-acid/40 hover:text-white"
+                  aria-pressed={editor.target === target.id}
+                  onClick={() => updateEditor({ target: target.id })}
+                  className="rounded-md border border-border-subtle px-2 py-2 text-[10px] text-text-muted transition hover:text-white aria-pressed:border-acid/20 aria-pressed:bg-acid/[0.06] aria-pressed:text-acid"
                 >
-                  {p.label}
+                  {target.label}
                 </button>
               ))}
             </div>
           </div>
-        </section>
 
-        {/* Live preview */}
-        <section className="flex flex-col bg-surface">
-          <div className="flex items-center justify-between px-6 py-3">
-            <span className="text-xs font-medium uppercase tracking-wide text-text-muted">
-              Preview
-            </span>
-            <button
-              type="button"
-              onClick={() => setReplayKey((k) => k + 1)}
-              className="text-xs text-text-dim transition hover:text-acid"
-            >
-              ↻ Replay
-            </button>
+          <div className="p-4">
+            <div className="mb-3 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.2em] text-text-muted">
+              <span>Production output</span>
+              <span className="text-acid">{editor.target}</span>
+            </div>
+            <pre className="max-h-[430px] overflow-auto rounded-lg border border-border-subtle bg-black/30 p-3 font-mono text-[10px] leading-relaxed">
+              <code>{highlighted}</code>
+            </pre>
           </div>
-          <div
-            className="flex min-h-[60vh] flex-1 items-center justify-center overflow-auto bg-[radial-gradient(circle,#ffffff0d_1px,transparent_1px)] p-10 [background-size:16px_16px]"
-          >
-            <Preview key={replayKey} className={classes}>
-              {text}
-            </Preview>
-          </div>
-        </section>
-
-        {/* Generated code */}
-        <section className="bg-surface p-6">
-          <div className="mb-2 text-xs font-medium uppercase tracking-wide text-text-muted">
-            Compiles to
-          </div>
-          <pre className="overflow-auto rounded-lg border border-border-subtle bg-surface-raised p-4 font-mono text-xs leading-relaxed">
-            <code>{highlightCode(generated)}</code>
-          </pre>
-        </section>
+        </aside>
       </div>
+      <span className="sr-only" aria-live="polite">
+        {copied ? `${copied} copied` : ""}
+      </span>
     </main>
   );
 }

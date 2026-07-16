@@ -273,12 +273,26 @@ export default function Home() {
               <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
             </span>
             <p className="text-[11px] sm:text-xs text-text-dim tracking-wide">
-              <span className="text-white/70 font-medium">Hover & click</span> any component or section to see its motionwind code
-              <span className="hidden sm:inline text-text-muted"> — the code panel slides in from the right</span>
+              <span className="text-white/70 font-medium">Hover & click</span>{" "}
+              any component or section to see its motionwind code
+              <span className="hidden sm:inline text-text-muted">
+                {" "}
+                — the code panel slides in from the right
+              </span>
             </p>
             {/* Animated arrow icon */}
-            <svg className="w-4 h-4 text-acid/50 hidden sm:block animate-nudge-x" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+            <svg
+              className="w-4 h-4 text-acid/50 hidden sm:block animate-nudge-x"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+              />
             </svg>
           </div>
         </div>
@@ -291,149 +305,149 @@ export default function Home() {
         <div className="grid-bg absolute inset-0 pointer-events-none" />
 
         <div className="relative z-10 w-full max-w-4xl mx-auto">
-              <div className="flex flex-col items-center justify-center px-6 sm:px-10 py-12 sm:py-16 relative">
-                {/* Badge */}
-                <div className="animate-initial:opacity-0 animate-initial:y-12 animate-enter:opacity-100 animate-enter:y-0 animate-duration-600 animate-ease-out mb-6 sm:mb-8">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-acid/20 bg-acid/5 px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-medium tracking-wide text-acid uppercase">
-                    <span className="relative flex h-2 w-2">
-                      <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-75 animate-pulse-glow" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
-                    </span>
-                    v0.3 — Now in Public Beta
-                  </span>
-                </div>
+          <div className="flex flex-col items-center justify-center px-6 sm:px-10 py-12 sm:py-16 relative">
+            {/* Badge */}
+            <div className="animate-initial:opacity-0 animate-initial:y-12 animate-enter:opacity-100 animate-enter:y-0 animate-duration-600 animate-ease-out mb-6 sm:mb-8">
+              <span className="inline-flex items-center gap-2 rounded-full border border-acid/20 bg-acid/5 px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-medium tracking-wide text-acid uppercase">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-75 animate-pulse-glow" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
+                </span>
+                v0.3 — Now in Public Beta
+              </span>
+            </div>
 
-                {/* Headline */}
-                <h1 className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-700 animate-ease-out text-center max-w-3xl">
-                  <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.92]">
-                    Animations in
-                  </span>
-                  <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.92] text-acid mt-2 sm:mt-3 relative">
-                    class names.
-                    {/* Hand-drawn underline */}
-                    <svg
-                      className="absolute -bottom-2 left-0 w-full h-4 text-acid/40"
-                      viewBox="0 0 400 16"
-                      fill="none"
-                      preserveAspectRatio="none"
-                    >
-                      <path
-                        d="M2 10C60 6 140 4 200 8C260 12 340 6 398 10"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        fill="none"
-                      />
-                    </svg>
-                  </span>
-                </h1>
+            {/* Headline */}
+            <h1 className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-700 animate-ease-out text-center max-w-3xl">
+              <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.92]">
+                Animations in
+              </span>
+              <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.92] text-acid mt-2 sm:mt-3 relative">
+                class names.
+                {/* Hand-drawn underline */}
+                <svg
+                  className="absolute -bottom-2 left-0 w-full h-4 text-acid/40"
+                  viewBox="0 0 400 16"
+                  fill="none"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M2 10C60 6 140 4 200 8C260 12 340 6 398 10"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                </svg>
+              </span>
+            </h1>
 
-                {/* Subtitle */}
-                <p className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-700 animate-delay-200 animate-ease-out mt-6 sm:mt-8 text-base sm:text-lg text-text-dim max-w-lg text-center leading-relaxed">
-                  Write Motion animations as Tailwind-like utility classes.
-                  Transformed at build time. Zero runtime overhead. No imports
-                  needed.
-                </p>
+            {/* Subtitle */}
+            <p className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-700 animate-delay-200 animate-ease-out mt-6 sm:mt-8 text-base sm:text-lg text-text-dim max-w-lg text-center leading-relaxed">
+              Write Motion animations as Tailwind-like utility classes.
+              Transformed at build time. Zero runtime overhead. No imports
+              needed.
+            </p>
 
-                {/* CTA Buttons */}
-                <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-700 animate-delay-400 animate-ease-out flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10">
-                  <a
-                    href="https://www.motionwind.xyz/docs"
-                    className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 group inline-flex items-center gap-2 rounded-lg bg-acid px-5 sm:px-6 py-3 text-sm font-semibold text-gray-950 transition-shadow hover:shadow-[0_0_30px_#c8ff2e40] cursor-pointer"
-                  >
-                    Get Started
-                    <svg
-                      className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                      />
-                    </svg>
-                  </a>
-                  <a
-                    href="https://github.com/piyushzingade/motionwind"
-                    className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-5 sm:px-6 py-3 text-sm font-medium text-white/80 backdrop-blur-sm transition-colors hover:bg-white/10 hover:text-white"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                    </svg>
-                    GitHub
-                  </a>
-                </div>
+            {/* CTA Buttons */}
+            <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-700 animate-delay-400 animate-ease-out flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10">
+              <a
+                href="https://www.motionwind.xyz/docs"
+                className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 group inline-flex items-center gap-2 rounded-lg bg-acid px-5 sm:px-6 py-3 text-sm font-semibold text-gray-950 transition-shadow hover:shadow-[0_0_30px_#c8ff2e40] cursor-pointer"
+              >
+                Get Started
+                <svg
+                  className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </a>
+              <a
+                href="https://github.com/piyushzingade/motionwind"
+                className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-5 sm:px-6 py-3 text-sm font-medium text-white/80 backdrop-blur-sm transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                </svg>
+                GitHub
+              </a>
+            </div>
 
-                  {/* Hero Code Block */}
-                <div className="animate-initial:opacity-0 animate-initial:y-30 animate-enter:opacity-100 animate-enter:y-0 animate-duration-800 animate-delay-500 animate-ease-out mt-10 sm:mt-14 w-full max-w-xl">
-                  <div className="rounded-xl border border-white/[0.06] bg-surface-raised/80 backdrop-blur-xl shadow-2xl shadow-black/50 overflow-hidden">
-                    <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06]">
-                      <div className="flex gap-1.5">
-                        <div className="w-3 h-3 rounded-full bg-white/10" />
-                        <div className="w-3 h-3 rounded-full bg-white/10" />
-                        <div className="w-3 h-3 rounded-full bg-white/10" />
-                      </div>
-                      <span className="ml-3 text-xs text-text-muted font-[family-name:var(--font-geist-mono)]">
-                        App.tsx
-                      </span>
-                    </div>
-                    <pre className="p-5 text-sm leading-7 font-[family-name:var(--font-geist-mono)] overflow-x-auto">
-                      <code>
-                        <span className="text-white/25">
-                          {"// Just add classes. That's it."}
-                        </span>
-                        {"\n"}
-                        <span className="text-white/30">{"<"}</span>
-                        <span className="text-pink-400">{"button"}</span>
-                        {"\n"}
-                        {"  "}
-                        <span className="text-acid/80">{"className"}</span>
-                        <span className="text-white/30">{"="}</span>
-                        <span className="text-amber-300">{'"'}</span>
-                        {"\n"}
-                        {"    "}
-                        <span className="text-acid font-semibold">
-                          {"animate-hover:scale-110"}
-                        </span>
-                        {"\n"}
-                        {"    "}
-                        <span className="text-acid font-semibold">
-                          {"animate-tap:scale-95"}
-                        </span>
-                        {"\n"}
-                        {"    "}
-                        <span className="text-acid font-semibold">
-                          {"animate-spring"}
-                        </span>
-                        {"\n"}
-                        {"    "}
-                        <span className="text-white/30">
-                          {"rounded-xl bg-white px-6 py-3"}
-                        </span>
-                        {"\n"}
-                        {"  "}
-                        <span className="text-amber-300">{'"'}</span>
-                        {"\n"}
-                        <span className="text-white/30">{">"}</span>
-                        {"\n"}
-                        {"  Click me"}
-                        {"\n"}
-                        <span className="text-white/30">{"</"}</span>
-                        <span className="text-pink-400">{"button"}</span>
-                        <span className="text-white/30">{">"}</span>
-                      </code>
-                    </pre>
+            {/* Hero Code Block */}
+            <div className="animate-initial:opacity-0 animate-initial:y-30 animate-enter:opacity-100 animate-enter:y-0 animate-duration-800 animate-delay-500 animate-ease-out mt-10 sm:mt-14 w-full max-w-xl">
+              <div className="rounded-xl border border-white/[0.06] bg-surface-raised/80 backdrop-blur-xl shadow-2xl shadow-black/50 overflow-hidden">
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06]">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-white/10" />
+                    <div className="w-3 h-3 rounded-full bg-white/10" />
+                    <div className="w-3 h-3 rounded-full bg-white/10" />
                   </div>
-                  <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-16 bg-acid/10 blur-3xl rounded-full" />
+                  <span className="ml-3 text-xs text-text-muted font-[family-name:var(--font-geist-mono)]">
+                    App.tsx
+                  </span>
                 </div>
+                <pre className="p-5 text-sm leading-7 font-[family-name:var(--font-geist-mono)] overflow-x-auto">
+                  <code>
+                    <span className="text-white/25">
+                      {"// Just add classes. That's it."}
+                    </span>
+                    {"\n"}
+                    <span className="text-white/30">{"<"}</span>
+                    <span className="text-pink-400">{"button"}</span>
+                    {"\n"}
+                    {"  "}
+                    <span className="text-acid/80">{"className"}</span>
+                    <span className="text-white/30">{"="}</span>
+                    <span className="text-amber-300">{'"'}</span>
+                    {"\n"}
+                    {"    "}
+                    <span className="text-acid font-semibold">
+                      {"animate-hover:scale-110"}
+                    </span>
+                    {"\n"}
+                    {"    "}
+                    <span className="text-acid font-semibold">
+                      {"animate-tap:scale-95"}
+                    </span>
+                    {"\n"}
+                    {"    "}
+                    <span className="text-acid font-semibold">
+                      {"animate-spring"}
+                    </span>
+                    {"\n"}
+                    {"    "}
+                    <span className="text-white/30">
+                      {"rounded-xl bg-white px-6 py-3"}
+                    </span>
+                    {"\n"}
+                    {"  "}
+                    <span className="text-amber-300">{'"'}</span>
+                    {"\n"}
+                    <span className="text-white/30">{">"}</span>
+                    {"\n"}
+                    {"  Click me"}
+                    {"\n"}
+                    <span className="text-white/30">{"</"}</span>
+                    <span className="text-pink-400">{"button"}</span>
+                    <span className="text-white/30">{">"}</span>
+                  </code>
+                </pre>
               </div>
+              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-16 bg-acid/10 blur-3xl rounded-full" />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -452,7 +466,8 @@ export default function Home() {
               Feel the difference
             </h2>
             <p className="mt-4 text-text-dim text-base sm:text-lg max-w-xl mx-auto">
-              Every preview below is powered by motionwind classes. Interact to feel them live.
+              Every preview below is powered by motionwind classes. Interact to
+              feel them live.
             </p>
           </div>
 
@@ -472,9 +487,23 @@ export default function Home() {
                     <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-60 animate-pulse-glow" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
                   </span>
-                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">Search Bar Focus</span>
+                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">
+                    Search Bar Focus
+                  </span>
                 </div>
-                <svg className="w-4 h-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182" /></svg>
+                <svg
+                  className="w-4 h-4 text-text-muted"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182"
+                  />
+                </svg>
               </div>
               <div className="preview-stage">
                 <input
@@ -512,9 +541,23 @@ export default function Home() {
                     <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-60 animate-pulse-glow" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
                   </span>
-                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">All Gesture States</span>
+                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">
+                    All Gesture States
+                  </span>
                 </div>
-                <svg className="w-4 h-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182" /></svg>
+                <svg
+                  className="w-4 h-4 text-text-muted"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182"
+                  />
+                </svg>
               </div>
               <div className="preview-stage">
                 <div className="animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 px-8 py-4 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold select-none cursor-pointer shadow-[0_0_24px_rgba(200,255,46,0.06)]">
@@ -547,36 +590,93 @@ export default function Home() {
                     <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-60 animate-pulse-glow" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
                   </span>
-                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">All Gesture Prefixes</span>
+                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">
+                    All Gesture Prefixes
+                  </span>
                 </div>
-                <svg className="w-4 h-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182" /></svg>
+                <svg
+                  className="w-4 h-4 text-text-muted"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182"
+                  />
+                </svg>
               </div>
               <div className="px-5 sm:px-6 py-4 bg-surface/50 rounded-b-2xl">
                 <table className="w-full text-left">
                   <thead>
                     <tr className="border-b border-white/[0.08]">
-                      <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-text-muted w-24">Gesture</th>
-                      <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-text-muted w-44">Prefix</th>
-                      <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-text-muted">Use Case</th>
+                      <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-text-muted w-24">
+                        Gesture
+                      </th>
+                      <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-text-muted w-44">
+                        Prefix
+                      </th>
+                      <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-text-muted">
+                        Use Case
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="text-sm">
                     {[
-                      ["Hover", "animate-hover:", "Buttons, cards, links, any pointer interaction"],
-                      ["Tap", "animate-tap:", "Button press feedback, click effects"],
-                      ["Focus", "animate-focus:", "Form inputs, accessibility focus indicators"],
-                      ["Drag", "animate-drag:", "Draggable elements, sliders, sortable items"],
-                      ["InView", "animate-inview:", "Scroll-triggered reveals, lazy animations"],
-                      ["Initial", "animate-initial:", "Starting state for enter/inview animations"],
+                      [
+                        "Hover",
+                        "animate-hover:",
+                        "Buttons, cards, links, any pointer interaction",
+                      ],
+                      [
+                        "Tap",
+                        "animate-tap:",
+                        "Button press feedback, click effects",
+                      ],
+                      [
+                        "Focus",
+                        "animate-focus:",
+                        "Form inputs, accessibility focus indicators",
+                      ],
+                      [
+                        "Drag",
+                        "animate-drag:",
+                        "Draggable elements, sliders, sortable items",
+                      ],
+                      [
+                        "InView",
+                        "animate-inview:",
+                        "Scroll-triggered reveals, lazy animations",
+                      ],
+                      [
+                        "Initial",
+                        "animate-initial:",
+                        "Starting state for enter/inview animations",
+                      ],
                       ["Enter", "animate-enter:", "Target state on mount"],
-                      ["Exit", "animate-exit:", "Target state on unmount (requires AnimatePresence)"],
+                      [
+                        "Exit",
+                        "animate-exit:",
+                        "Target state on unmount (requires AnimatePresence)",
+                      ],
                     ].map(([gesture, prefix, useCase], i) => (
-                      <tr key={gesture} className={`border-b border-white/[0.04] ${i % 2 === 0 ? "bg-white/[0.02]" : ""}`}>
-                        <td className="py-3 text-white/80 font-medium text-xs">{gesture}</td>
-                        <td className="py-3">
-                          <code className="text-[11px] font-[family-name:var(--font-geist-mono)] text-acid bg-acid/10 px-2 py-1 rounded">{prefix}</code>
+                      <tr
+                        key={gesture}
+                        className={`border-b border-white/[0.04] ${i % 2 === 0 ? "bg-white/[0.02]" : ""}`}
+                      >
+                        <td className="py-3 text-white/80 font-medium text-xs">
+                          {gesture}
                         </td>
-                        <td className="py-3 text-xs text-text-muted">{useCase}</td>
+                        <td className="py-3">
+                          <code className="text-[11px] font-[family-name:var(--font-geist-mono)] text-acid bg-acid/10 px-2 py-1 rounded">
+                            {prefix}
+                          </code>
+                        </td>
+                        <td className="py-3 text-xs text-text-muted">
+                          {useCase}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -599,9 +699,23 @@ export default function Home() {
                     <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-60 animate-pulse-glow" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
                   </span>
-                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">Scroll Reveal (Fade Up)</span>
+                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">
+                    Scroll Reveal (Fade Up)
+                  </span>
                 </div>
-                <svg className="w-4 h-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182" /></svg>
+                <svg
+                  className="w-4 h-4 text-text-muted"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182"
+                  />
+                </svg>
               </div>
               <div className="preview-stage">
                 <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-once px-10 py-5 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold shadow-[0_0_24px_rgba(200,255,46,0.06)]">
@@ -638,9 +752,23 @@ export default function Home() {
                     <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-60 animate-pulse-glow" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
                   </span>
-                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">Drag Interaction</span>
+                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">
+                    Drag Interaction
+                  </span>
                 </div>
-                <svg className="w-4 h-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182" /></svg>
+                <svg
+                  className="w-4 h-4 text-text-muted"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182"
+                  />
+                </svg>
               </div>
               <div className="preview-stage">
                 <div
@@ -676,13 +804,39 @@ export default function Home() {
                     <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-60 animate-pulse-glow" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
                   </span>
-                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">Infinite Rotation</span>
+                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">
+                    Infinite Rotation
+                  </span>
                 </div>
-                <svg className="w-4 h-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182" /></svg>
+                <svg
+                  className="w-4 h-4 text-text-muted"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182"
+                  />
+                </svg>
               </div>
               <div className="preview-stage">
                 <div className="animate-initial:rotate-0 animate-enter:rotate-360 animate-duration-2000 animate-ease-linear animate-repeat-infinite w-16 h-16 rounded-xl bg-acid/15 border border-acid/25 flex items-center justify-center shadow-[0_0_24px_rgba(200,255,46,0.06)]">
-                  <svg className="w-6 h-6 text-acid" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182" /></svg>
+                  <svg
+                    className="w-6 h-6 text-acid"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182"
+                    />
+                  </svg>
                 </div>
               </div>
               <div className="preview-code">
@@ -711,9 +865,23 @@ export default function Home() {
                     <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-60 animate-pulse-glow" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
                   </span>
-                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">Spring Physics</span>
+                  <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">
+                    Spring Physics
+                  </span>
                 </div>
-                <svg className="w-4 h-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182" /></svg>
+                <svg
+                  className="w-4 h-4 text-text-muted"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182"
+                  />
+                </svg>
               </div>
               <div className="preview-stage">
                 <div className="animate-hover:rotate-12 animate-hover:scale-115 animate-tap:rotate-0 animate-tap:scale-85 animate-spring animate-stiffness-200 animate-damping-8 px-8 py-4 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold cursor-pointer select-none shadow-[0_0_24px_rgba(200,255,46,0.06)]">
@@ -767,7 +935,19 @@ export default function Home() {
           >
             {/* Click hint */}
             <div className="absolute -top-8 right-0 text-[10px] text-text-muted opacity-0 group-hover/code:opacity-100 transition-opacity flex items-center gap-1">
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
+                />
+              </svg>
               Click to see compiled output
             </div>
             {/* BEFORE */}
@@ -1024,7 +1204,19 @@ export default function Home() {
               Everything you need
             </h2>
             <p className="mt-2 text-[11px] text-text-muted opacity-0 group-hover/feat:opacity-100 transition-opacity flex items-center gap-1 justify-center">
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
+                />
+              </svg>
               Click to see code
             </p>
           </div>
@@ -1050,8 +1242,7 @@ export default function Home() {
                 icon: "M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z",
                 title: "Framework Ready",
                 desc: "First-class integrations for Next.js and Vite. One line to configure.",
-                icon2:
-                  "M15 12a3 3 0 11-6 0 3 3 0 016 0z",
+                icon2: "M15 12a3 3 0 11-6 0 3 3 0 016 0z",
               },
               {
                 icon: "M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.58-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z",
@@ -1132,7 +1323,19 @@ export default function Home() {
               One pattern, infinite motion
             </h2>
             <p className="mt-2 text-[11px] text-text-muted opacity-0 group-hover/syn:opacity-100 transition-opacity flex items-center gap-1 justify-center">
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
+                />
+              </svg>
               Click to see examples
             </p>
           </div>
@@ -1143,17 +1346,20 @@ export default function Home() {
                 <code className="text-base sm:text-lg md:text-2xl font-[family-name:var(--font-geist-mono)] flex flex-wrap items-center gap-1 justify-center">
                   <span className="text-text-muted">animate-</span>
                   <span className="text-acid bg-acid/10 px-2 py-0.5 rounded">
-                    {"{"}<span className="text-[10px] align-top">gesture</span>
+                    {"{"}
+                    <span className="text-[10px] align-top">gesture</span>
                     {"}"}
                   </span>
                   <span className="text-text-muted">:</span>
                   <span className="text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">
-                    {"{"}<span className="text-[10px] align-top">property</span>
+                    {"{"}
+                    <span className="text-[10px] align-top">property</span>
                     {"}"}
                   </span>
                   <span className="text-text-muted">-</span>
                   <span className="text-fuchsia-400 bg-fuchsia-400/10 px-2 py-0.5 rounded">
-                    {"{"}<span className="text-[10px] align-top">value</span>
+                    {"{"}
+                    <span className="text-[10px] align-top">value</span>
                     {"}"}
                   </span>
                 </code>
@@ -1222,7 +1428,14 @@ export default function Home() {
 
           {/* Framework configs */}
           <div className="animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-300 animate-ease-out animate-once mt-8 sm:mt-10 grid sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
-            <div role="button" tabIndex={0} aria-label="View the Next.js setup code" onClick={() => openCode("nextjs")} onKeyDown={onActivateKey(() => openCode("nextjs"))} className="rounded-xl border border-white/[0.08] bg-surface-raised overflow-hidden text-left cursor-pointer hover:border-acid/20 transition-colors">
+            <div
+              role="button"
+              tabIndex={0}
+              aria-label="View the Next.js setup code"
+              onClick={() => openCode("nextjs")}
+              onKeyDown={onActivateKey(() => openCode("nextjs"))}
+              className="rounded-xl border border-white/[0.08] bg-surface-raised overflow-hidden text-left cursor-pointer hover:border-acid/20 transition-colors"
+            >
               <div className="flex items-center gap-2.5 px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
                 <svg
                   className="w-4 h-4 text-white/70"
@@ -1252,7 +1465,14 @@ export default function Home() {
                 </code>
               </pre>
             </div>
-            <div role="button" tabIndex={0} aria-label="View the Vite setup code" onClick={() => openCode("vite")} onKeyDown={onActivateKey(() => openCode("vite"))} className="rounded-xl border border-white/[0.08] bg-surface-raised overflow-hidden text-left cursor-pointer hover:border-acid/20 transition-colors">
+            <div
+              role="button"
+              tabIndex={0}
+              aria-label="View the Vite setup code"
+              onClick={() => openCode("vite")}
+              onKeyDown={onActivateKey(() => openCode("vite"))}
+              className="rounded-xl border border-white/[0.08] bg-surface-raised overflow-hidden text-left cursor-pointer hover:border-acid/20 transition-colors"
+            >
               <div className="flex items-center gap-2.5 px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
                 <svg
                   className="w-4 h-4 text-white/70"
@@ -1317,7 +1537,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <span className="text-lg font-bold tracking-tight">motionwind</span>
-            <span className="text-xs text-text-muted">v0.3.0</span>
+            <span className="text-xs text-text-muted">v2.0.0</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-text-muted">
             <a
