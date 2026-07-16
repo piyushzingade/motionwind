@@ -1,14 +1,7 @@
-import {
-  Diagnostic,
-  DiagnosticSeverity,
-} from "vscode-languageserver/node.js";
+import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver/node.js";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import {
-  findClassNameRegions,
-  tokenizeClassValue,
-} from "./documentUtils.js";
-import { parseMotionClasses } from "../shared/parser.js";
-import { GESTURE_KEYS } from "../shared/constants.js";
+import { findClassNameRegions, tokenizeClassValue } from "./documentUtils.js";
+import { GESTURE_KEYS, parseMotionClasses } from "motionwind-core";
 
 /** Tailwind's built-in animate-* classes — don't flag these */
 const TAILWIND_ANIMATE_CLASSES = new Set([
@@ -30,7 +23,11 @@ export function computeDiagnostics(
   const regions = findClassNameRegions(document, classAttributes);
 
   for (const region of regions) {
-    const tokens = tokenizeClassValue(document, region.value, region.range.start);
+    const tokens = tokenizeClassValue(
+      document,
+      region.value,
+      region.range.start,
+    );
 
     for (const token of tokens) {
       if (!token.value.startsWith("animate-")) continue;
@@ -51,7 +48,7 @@ export function computeDiagnostics(
             diagnostics.push({
               severity: DiagnosticSeverity.Error,
               range: token.range,
-              message: `Unknown gesture prefix "${gesturePrefix}". Valid prefixes: hover, tap, focus, inview, drag, initial, enter, exit`,
+              message: `Unknown gesture prefix "${gesturePrefix}". Valid prefixes: ${[...GESTURE_KEYS].join(", ")}`,
               source: "motionwind",
             });
             continue;

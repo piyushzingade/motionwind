@@ -2,7 +2,8 @@
   "name": "motion-wind",
   "displayName": "Motionwind",
   "description": "IntelliSense for motionwind animation classes - autocomplete, hover docs, diagnostics, and color decorators",
-  "version": "0.1.0",
+  "version": "2.0.0",
+  "private": true,
   "publisher": "piyushzingade",
   "license": "MIT",
   "icon": "icon.png",
@@ -23,8 +24,18 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "categories": ["Programming Languages", "Linters", "Other"],
-  "keywords": ["motionwind", "motion", "framer-motion", "animation", "tailwind"],
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Other"
+  ],
+  "keywords": [
+    "motionwind",
+    "motion",
+    "framer-motion",
+    "animation",
+    "tailwind"
+  ],
   "activationEvents": [
     "onLanguage:typescriptreact",
     "onLanguage:javascriptreact",
@@ -49,8 +60,13 @@
         },
         "motionwind.classAttributes": {
           "type": "array",
-          "items": { "type": "string" },
-          "default": ["className", "class"],
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "className",
+            "class"
+          ],
           "description": "HTML/JSX attributes to scan for motionwind classes"
         }
       }
@@ -64,6 +80,7 @@
     "package": "bunx @vscode/vsce package --no-dependencies"
   },
   "dependencies": {
+    "motionwind-core": "^2.0.0",
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.12"

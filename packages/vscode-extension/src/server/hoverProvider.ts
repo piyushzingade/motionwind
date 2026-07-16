@@ -1,8 +1,7 @@
 import { Hover, HoverParams, MarkupKind } from "vscode-languageserver/node.js";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { getTokenAtPosition } from "./documentUtils.js";
-import { parseMotionClasses } from "../shared/parser.js";
-import type { ParsedResult } from "../shared/types.js";
+import { parseMotionClasses, type ParsedResult } from "motionwind-core";
 
 /**
  * Handle hover requests: parse the class under cursor and show compiled Motion output.
@@ -47,12 +46,16 @@ function renderMotionOutput(className: string, result: ParsedResult): string {
 
   // Transition
   if (Object.keys(result.transition).length > 0) {
-    lines.push(`  transition={${formatObject(result.transition as unknown as Record<string, unknown>)}}`);
+    lines.push(
+      `  transition={${formatObject(result.transition as unknown as Record<string, unknown>)}}`,
+    );
   }
 
   // Viewport
   if (Object.keys(result.viewport).length > 0) {
-    lines.push(`  viewport={${formatObject(result.viewport as unknown as Record<string, unknown>)}}`);
+    lines.push(
+      `  viewport={${formatObject(result.viewport as unknown as Record<string, unknown>)}}`,
+    );
   }
 
   // Drag
