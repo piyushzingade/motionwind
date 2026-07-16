@@ -20,6 +20,7 @@ describe("motionwind babel plugin", () => {
     expect(output).toContain('className="px-4 bg-blue-500"');
     expect(output).toContain("whileHover");
     expect(output).toContain("scale: 1.1");
+    expect(output).toContain('data-motionwind-motion=""');
     expect(output).toContain('import { motion } from "motion/react"');
     expect(output).toContain("use client");
   });
@@ -403,7 +404,8 @@ describe("motionwind babel plugin", () => {
   // --- Template literal support ---
 
   it("transforms template literal with static animate classes", () => {
-    const input = "<div className={`bg-blue-500 animate-hover:scale-110 ${cls}`}>Hello</div>";
+    const input =
+      "<div className={`bg-blue-500 animate-hover:scale-110 ${cls}`}>Hello</div>";
     const output = transform(input);
     expect(output).toContain("motion.div");
     expect(output).toContain("whileHover");
@@ -413,7 +415,8 @@ describe("motionwind babel plugin", () => {
   });
 
   it("transforms template literal with multiple animate classes", () => {
-    const input = "<div className={`animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-500 p-4 ${cls}`}>Hello</div>";
+    const input =
+      "<div className={`animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-500 p-4 ${cls}`}>Hello</div>";
     const output = transform(input);
     expect(output).toContain("motion.div");
     expect(output).toContain("initial");
@@ -423,14 +426,16 @@ describe("motionwind babel plugin", () => {
   });
 
   it("preserves non-animate classes in template literal", () => {
-    const input = "<div className={`p-4 text-white animate-hover:scale-110 ${cls}`}>Hello</div>";
+    const input =
+      "<div className={`p-4 text-white animate-hover:scale-110 ${cls}`}>Hello</div>";
     const output = transform(input);
     expect(output).toContain("p-4");
     expect(output).toContain("text-white");
   });
 
   it("transforms template literal with only static animate classes (no expressions)", () => {
-    const input = "<div className={`animate-hover:scale-110 bg-blue-500`}>Hello</div>";
+    const input =
+      "<div className={`animate-hover:scale-110 bg-blue-500`}>Hello</div>";
     const output = transform(input);
     expect(output).toContain("motion.div");
     expect(output).toContain("whileHover");

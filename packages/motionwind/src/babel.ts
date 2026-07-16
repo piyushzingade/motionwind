@@ -1,7 +1,7 @@
 import type { PluginObj, NodePath } from "@babel/core";
 import * as t from "@babel/types";
-import { parseMotionClasses } from "./parser.js";
-import type { AnimatableValues, TransitionConfig } from "./types.js";
+import { parseMotionClasses, type MotionwindConfig } from "motionwind-core";
+import type { AnimatableValues, TransitionConfig } from "motionwind-core";
 
 /**
  * Convert a plain JS value to a Babel AST node.
@@ -27,9 +27,7 @@ function valueToAst(
  * Convert an AnimatableValues record to a Babel ObjectExpression.
  * Handles string, number, and number[] (keyframe) values.
  */
-function objectToAst(
-  obj: AnimatableValues,
-): t.ObjectExpression {
+function objectToAst(obj: AnimatableValues): t.ObjectExpression {
   const properties = Object.entries(obj).map(([key, value]) =>
     t.objectProperty(t.identifier(key), valueToAst(value)),
   );
@@ -91,10 +89,7 @@ function transitionToAst(config: TransitionConfig): t.ObjectExpression {
   }
   if (config.bounce !== undefined) {
     properties.push(
-      t.objectProperty(
-        t.identifier("bounce"),
-        t.numericLiteral(config.bounce),
-      ),
+      t.objectProperty(t.identifier("bounce"), t.numericLiteral(config.bounce)),
     );
   }
   if (config.mass !== undefined) {
@@ -195,9 +190,10 @@ function transitionToAst(config: TransitionConfig): t.ObjectExpression {
  * Returns the static animate-* classes and a rebuilt dynamic expression
  * for the remaining non-animate parts.
  */
-function extractFromTemplateLiteral(
-  tmpl: t.TemplateLiteral,
-): { staticClasses: string; dynamicExpression: t.Expression } {
+function extractFromTemplateLiteral(tmpl: t.TemplateLiteral): {
+  staticClasses: string;
+  dynamicExpression: t.Expression;
+} {
   // Collect all static text parts from the template quasis
   const staticTokens: string[] = [];
   const nonAnimateTokens: string[] = [];
@@ -237,7 +233,9 @@ function extractFromTemplateLiteral(
     );
   }
 
-  const dynamicExpression = t.templateLiteral(newQuasis, [...tmpl.expressions] as t.Expression[]);
+  const dynamicExpression = t.templateLiteral(newQuasis, [
+    ...tmpl.expressions,
+  ] as t.Expression[]);
 
   return {
     staticClasses: staticTokens.join(" "),
@@ -250,7 +248,9 @@ function extractFromTemplateLiteral(
  */
 function emitBuildWarning(path: NodePath, message: string): void {
   const loc = path.node.loc;
-  const file = (path.hub as { file?: { opts?: { filename?: string } } })?.file?.opts?.filename ?? "unknown";
+  const file =
+    (path.hub as { file?: { opts?: { filename?: string } } })?.file?.opts
+      ?.filename ?? "unknown";
   const line = loc?.start.line ?? "?";
   const col = loc?.start.column ?? "?";
   console.warn(
@@ -266,6 +266,22 @@ function addMotionProps(
   node: t.JSXOpeningElement,
   parsed: ReturnType<typeof parseMotionClasses>,
 ): void {
+  if (
+    !node.attributes.some(
+      (attribute) =>
+        t.isJSXAttribute(attribute) &&
+        t.isJSXIdentifier(attribute.name) &&
+        attribute.name.name === "data-motionwind-motion",
+    )
+  ) {
+    node.attributes.push(
+      t.jsxAttribute(
+        t.jsxIdentifier("data-motionwind-motion"),
+        t.stringLiteral(""),
+      ),
+    );
+  }
+
   // Add gesture props — a variant state selector (string) takes precedence over
   // an object value for the same lifecycle prop (initial/animate/exit).
   for (const [gestureKey, values] of Object.entries(parsed.gestures)) {
@@ -335,9 +351,7 @@ function addMotionProps(
   // Add drag props
   if (parsed.dragConfig.drag !== undefined) {
     if (parsed.dragConfig.drag === true) {
-      node.attributes.push(
-        t.jsxAttribute(t.jsxIdentifier("drag"), null),
-      );
+      node.attributes.push(t.jsxAttribute(t.jsxIdentifier("drag"), null));
     } else {
       node.attributes.push(
         t.jsxAttribute(
@@ -376,9 +390,10 @@ function addMotionProps(
     );
   }
   if (parsed.dragConfig.dragConstraints !== undefined) {
-    const constraintProps = Object.entries(parsed.dragConfig.dragConstraints).map(
-      ([key, value]) =>
-        t.objectProperty(t.identifier(key), t.numericLiteral(value as number)),
+    const constraintProps = Object.entries(
+      parsed.dragConfig.dragConstraints,
+    ).map(([key, value]) =>
+      t.objectProperty(t.identifier(key), t.numericLiteral(value as number)),
     );
     node.attributes.push(
       t.jsxAttribute(
@@ -391,9 +406,7 @@ function addMotionProps(
   // Add layout props
   if (parsed.layoutConfig.layout !== undefined) {
     if (parsed.layoutConfig.layout === true) {
-      node.attributes.push(
-        t.jsxAttribute(t.jsxIdentifier("layout"), null),
-      );
+      node.attributes.push(t.jsxAttribute(t.jsxIdentifier("layout"), null));
     } else {
       node.attributes.push(
         t.jsxAttribute(
@@ -412,14 +425,10 @@ function addMotionProps(
     );
   }
   if (parsed.layoutConfig.layoutScroll === true) {
-    node.attributes.push(
-      t.jsxAttribute(t.jsxIdentifier("layoutScroll"), null),
-    );
+    node.attributes.push(t.jsxAttribute(t.jsxIdentifier("layoutScroll"), null));
   }
   if (parsed.layoutConfig.layoutRoot === true) {
-    node.attributes.push(
-      t.jsxAttribute(t.jsxIdentifier("layoutRoot"), null),
-    );
+    node.attributes.push(t.jsxAttribute(t.jsxIdentifier("layoutRoot"), null));
   }
 
   // Add variants object: variants={{ hidden: {...}, visible: {...} }}
@@ -465,7 +474,10 @@ function addMotionProps(
   }
 }
 
-export default function motionwindBabelPlugin(): PluginObj {
+export default function motionwindBabelPlugin(
+  _api?: unknown,
+  options: MotionwindConfig = {},
+): PluginObj {
   return {
     name: "motionwind",
     visitor: {
@@ -476,7 +488,10 @@ export default function motionwindBabelPlugin(): PluginObj {
             _motionwindNeedsCreate?: boolean;
             _motionwindNeedsMw?: boolean;
           };
-          if (!programNode._motionwindNeedsImport && !programNode._motionwindNeedsMw)
+          if (
+            !programNode._motionwindNeedsImport &&
+            !programNode._motionwindNeedsMw
+          )
             return;
 
           // Add "use client" directive if not present
@@ -586,7 +601,8 @@ export default function motionwindBabelPlugin(): PluginObj {
         ) {
           // Extract static parts from template literal
           const tmpl = classNameAttr.value.expression;
-          const { staticClasses, dynamicExpression } = extractFromTemplateLiteral(tmpl);
+          const { staticClasses, dynamicExpression } =
+            extractFromTemplateLiteral(tmpl);
           classNameValue = staticClasses;
           isDynamic = true;
           templateRemainder = dynamicExpression;
@@ -613,7 +629,7 @@ export default function motionwindBabelPlugin(): PluginObj {
           return;
         }
 
-        const parsed = parseMotionClasses(classNameValue);
+        const parsed = parseMotionClasses(classNameValue, options);
         if (!parsed.hasMotion) return;
 
         // Scroll-linked animations need React hooks + a ref, which can't be
@@ -640,11 +656,15 @@ export default function motionwindBabelPlugin(): PluginObj {
           }
           const scrollProgram = path.findParent((p) => p.isProgram());
           if (scrollProgram) {
-            (scrollProgram.node as t.Program & { _motionwindNeedsMw?: boolean })._motionwindNeedsMw =
-              true;
+            (
+              scrollProgram.node as t.Program & { _motionwindNeedsMw?: boolean }
+            )._motionwindNeedsMw = true;
           }
           const mwName = () =>
-            t.jsxMemberExpression(t.jsxIdentifier("mw"), t.jsxIdentifier(tagName));
+            t.jsxMemberExpression(
+              t.jsxIdentifier("mw"),
+              t.jsxIdentifier(tagName),
+            );
           node.name = mwName();
           const scrollParent = path.parent;
           if (
@@ -690,7 +710,9 @@ export default function motionwindBabelPlugin(): PluginObj {
           // Add the motion.create() declaration before the component's function
           const programBody = path.findParent((p) => p.isProgram());
           if (programBody) {
-            const pNode = programBody.node as t.Program & { _motionwindCreatedComponents?: Set<string> };
+            const pNode = programBody.node as t.Program & {
+              _motionwindCreatedComponents?: Set<string>;
+            };
             if (!pNode._motionwindCreatedComponents) {
               pNode._motionwindCreatedComponents = new Set();
             }
@@ -701,7 +723,10 @@ export default function motionwindBabelPlugin(): PluginObj {
                 t.variableDeclarator(
                   t.identifier(wrappedName),
                   t.callExpression(
-                    t.memberExpression(t.identifier("motion"), t.identifier("create")),
+                    t.memberExpression(
+                      t.identifier("motion"),
+                      t.identifier("create"),
+                    ),
                     [t.identifier(tagName)],
                   ),
                 ),
@@ -745,7 +770,10 @@ export default function motionwindBabelPlugin(): PluginObj {
             classNameAttr.value = t.jsxExpressionContainer(
               t.templateLiteral(
                 [
-                  t.templateElement({ raw: parsed.tailwindClasses + " ", cooked: parsed.tailwindClasses + " " }),
+                  t.templateElement({
+                    raw: parsed.tailwindClasses + " ",
+                    cooked: parsed.tailwindClasses + " ",
+                  }),
                   t.templateElement({ raw: "", cooked: "" }, true),
                 ],
                 [templateRemainder],

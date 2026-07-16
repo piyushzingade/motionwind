@@ -1,5 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { existsSync } from "node:fs";
+import type { MotionwindConfig } from "motionwind-core";
 
 export interface WebpackRule {
   test?: RegExp;
@@ -42,7 +43,10 @@ export interface NextConfig {
  * Wraps a Next.js config to add the motionwind Babel transform.
  * Works with both webpack and Turbopack (Next.js 15+).
  */
-export function withMotionwind(nextConfig: NextConfig = {}): NextConfig {
+export function withMotionwind(
+  nextConfig: NextConfig = {},
+  motionwindConfig: MotionwindConfig = {},
+): NextConfig {
   const originalWebpack = nextConfig.webpack;
 
   // Resolve the babel plugin path relative to this file (both live in dist/)
@@ -60,7 +64,7 @@ export function withMotionwind(nextConfig: NextConfig = {}): NextConfig {
   }
 
   const babelLoaderOptions = {
-    plugins: [babelPluginPath],
+    plugins: [[babelPluginPath, motionwindConfig]],
     parserOpts: {
       plugins: ["typescript", "jsx"],
     },
@@ -78,14 +82,16 @@ export function withMotionwind(nextConfig: NextConfig = {}): NextConfig {
       ...(existingRules["*.tsx"] ?? {}),
       loaders: [
         { loader: "babel-loader", options: babelLoaderOptions },
-        ...((existingRules["*.tsx"] as TurbopackRuleConfig | undefined)?.loaders ?? []),
+        ...((existingRules["*.tsx"] as TurbopackRuleConfig | undefined)
+          ?.loaders ?? []),
       ],
     },
     "*.jsx": {
       ...(existingRules["*.jsx"] ?? {}),
       loaders: [
         { loader: "babel-loader", options: babelLoaderOptions },
-        ...((existingRules["*.jsx"] as TurbopackRuleConfig | undefined)?.loaders ?? []),
+        ...((existingRules["*.jsx"] as TurbopackRuleConfig | undefined)
+          ?.loaders ?? []),
       ],
     },
   };

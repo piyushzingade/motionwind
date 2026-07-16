@@ -1,5 +1,6 @@
 import { transformSync } from "@babel/core";
 import motionwindBabelPlugin from "./babel.js";
+import type { MotionwindConfig } from "motionwind-core";
 
 interface VitePlugin {
   name: string;
@@ -14,7 +15,7 @@ interface VitePlugin {
  * Vite plugin that runs the motionwind Babel transform
  * on JSX/TSX files.
  */
-export function motionwind(): VitePlugin {
+export function motionwind(config: MotionwindConfig = {}): VitePlugin {
   return {
     name: "motionwind",
     enforce: "pre",
@@ -29,10 +30,11 @@ export function motionwind(): VitePlugin {
 
       try {
         const result = transformSync(code, {
-          plugins: [motionwindBabelPlugin, "@babel/plugin-syntax-jsx"],
-          parserOpts: isTsx
-            ? { plugins: ["typescript", "jsx"] }
-            : undefined,
+          plugins: [
+            [motionwindBabelPlugin, config],
+            "@babel/plugin-syntax-jsx",
+          ],
+          parserOpts: isTsx ? { plugins: ["typescript", "jsx"] } : undefined,
           filename: id,
           configFile: false,
           babelrc: false,
