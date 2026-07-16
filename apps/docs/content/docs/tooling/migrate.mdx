@@ -10,10 +10,10 @@ elements with `animate-*` classes — the reverse of the Babel transform.
 
 ```bash
 # Preview changes (dry run — nothing is written)
-npx create-motionwind migrate src
+npx create-motionwind@2 migrate src
 
 # Apply the changes
-npx create-motionwind migrate src --write
+npx create-motionwind@2 migrate src --write
 ```
 
 Pass files or directories (defaults to the current directory). `node_modules`, `dist`,
@@ -32,7 +32,7 @@ import { motion } from "motion/react";
   transition={{ type: "spring", stiffness: 400 }}
 >
   Click me
-</motion.button>
+</motion.button>;
 ```
 
 ```tsx
@@ -52,6 +52,6 @@ motion-only props (`variants`, `onAnimationComplete`, `custom`, …) are left un
 reported as skipped — so a migration never changes behavior.
 
 <Callout type="info">
-  The output is reformatted by Babel's code generator. Run your formatter (e.g. Prettier)
-  afterwards to tidy it up.
+  The output is reformatted by Babel's code generator. Run your formatter (e.g.
+  Prettier) afterwards to tidy it up.
 </Callout>

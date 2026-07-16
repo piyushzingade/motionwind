@@ -3,7 +3,11 @@ title: "Basic Property Animations"
 description: "Animate opacity, scale, rotation, translation, dimensions, border radius, colors, shadows, blur, clip path, position, spacing, typography, and more with simple Tailwind-like classes."
 ---
 
-Motionwind lets you animate any CSS-compatible property using the familiar `animate-{gesture}:{property}-{value}` syntax. Each class is transformed at build time into the corresponding Motion prop -- zero runtime parsing, full type safety.
+Motionwind covers the registered Motion property set with the familiar
+`animate-{gesture}:{property}-{value}` syntax. React and Vue compile eligible
+static tokens; runtime adapters map the same parsed values to their platform.
+Check [Compatibility](/docs/compatibility) before using CSS-specific values in
+vanilla or React Native code.
 
 This page covers the foundational animatable properties you will use most often.
 
@@ -22,7 +26,9 @@ The parser divides the number by 100, so `opacity-0` becomes `0` and `opacity-10
 </Demo>
 
 ```html
-<div className="animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-1000">
+<div
+  className="animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-1000"
+>
   I faded in
 </div>
 ```
@@ -54,18 +60,13 @@ The parser divides by 100, so `scale-110` becomes `1.1`.
 </Demo>
 
 ```html
-<button className="animate-hover:scale-110 animate-spring">
-  Hover me
-</button>
+<button className="animate-hover:scale-110 animate-spring">Hover me</button>
 ```
 
 **Compiles to:**
 
 ```jsx
-<motion.button
-  whileHover={{ scale: 1.1 }}
-  transition={{ type: "spring" }}
->
+<motion.button whileHover={{ scale: 1.1 }} transition={{ type: "spring" }}>
   Hover me
 </motion.button>
 ```
@@ -89,10 +90,7 @@ Rotate elements by a given number of degrees. Positive values rotate clockwise, 
 **Compiles to:**
 
 ```jsx
-<motion.div
-  whileHover={{ rotate: 45 }}
-  transition={{ type: "spring" }}
->
+<motion.div whileHover={{ rotate: 45 }} transition={{ type: "spring" }}>
   R
 </motion.div>
 ```
@@ -124,10 +122,7 @@ Slide elements horizontally. The value is in pixels. Positive moves right, negat
 **Compiles to:**
 
 ```jsx
-<motion.div
-  whileHover={{ x: 20 }}
-  transition={{ type: "spring" }}
->
+<motion.div whileHover={{ x: 20 }} transition={{ type: "spring" }}>
   Slide right
 </motion.div>
 ```
@@ -157,10 +152,7 @@ Slide elements vertically. Positive values move down, negative values move up.
 **Compiles to:**
 
 ```jsx
-<motion.div
-  whileHover={{ y: -20 }}
-  transition={{ type: "spring" }}
->
+<motion.div whileHover={{ y: -20 }} transition={{ type: "spring" }}>
   UP
 </motion.div>
 ```
@@ -192,10 +184,7 @@ Animate the width of an element. The value is in pixels by default.
 **Compiles to:**
 
 ```jsx
-<motion.div
-  whileHover={{ width: 200 }}
-  transition={{ type: "spring" }}
->
+<motion.div whileHover={{ width: 200 }} transition={{ type: "spring" }}>
   Expand
 </motion.div>
 ```
@@ -247,10 +236,7 @@ Animate the height of an element. The value is in pixels by default.
 **Compiles to:**
 
 ```jsx
-<motion.div
-  whileHover={{ height: 100 }}
-  transition={{ type: "spring" }}
->
+<motion.div whileHover={{ height: 100 }} transition={{ type: "spring" }}>
   Grow
 </motion.div>
 ```
@@ -302,10 +288,7 @@ Animate the border radius to morph between shapes. The value is in pixels.
 **Compiles to:**
 
 ```jsx
-<motion.div
-  whileHover={{ borderRadius: 40 }}
-  transition={{ type: "spring" }}
->
+<motion.div whileHover={{ borderRadius: 40 }} transition={{ type: "spring" }}>
   Hi
 </motion.div>
 ```
@@ -323,7 +306,9 @@ Motionwind provides shorthand classes for the most common color properties, as w
 Use the `bg-`, `text-`, and `border-` prefixes followed by a literal color value to animate `backgroundColor`, `color`, and `borderColor` respectively.
 
 ```html
-<button className="animate-hover:bg-#c8ff2e animate-hover:text-#000000 animate-duration-300">
+<button
+  className="animate-hover:bg-#c8ff2e animate-hover:text-#000000 animate-duration-300"
+>
   Hover for color
 </button>
 ```
@@ -341,11 +326,11 @@ Use the `bg-`, `text-`, and `border-` prefixes followed by a literal color value
 
 The supported shorthand mappings are:
 
-| Class | Motion Property |
-|---|---|
-| `bg-{color}` | `backgroundColor: color` |
-| `text-{color}` | `color: color` |
-| `border-{color}` | `borderColor: color` |
+| Class            | Motion Property          |
+| ---------------- | ------------------------ |
+| `bg-{color}`     | `backgroundColor: color` |
+| `text-{color}`   | `color: color`           |
+| `border-{color}` | `borderColor: color`     |
 
 ```html
 <!-- Background color -->
@@ -373,7 +358,9 @@ The value inside the brackets is passed through directly. If it parses as a numb
 </Demo>
 
 ```html
-<button className="animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-duration-300">
+<button
+  className="animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-duration-300"
+>
   Hover for color
 </button>
 ```
@@ -406,7 +393,9 @@ You can use any valid CSS property name and value with the arbitrary syntax:
 Animate box shadows using the bracket syntax `shadow-[value]`. Since shadow values contain spaces, use underscores (`_`) in place of spaces within the bracket value.
 
 ```html
-<div className="animate-hover:shadow-[0_20px_60px_rgba(200,255,46,0.3)] animate-duration-300">
+<div
+  className="animate-hover:shadow-[0_20px_60px_rgba(200,255,46,0.3)] animate-duration-300"
+>
   Glowing card
 </div>
 ```
@@ -427,9 +416,7 @@ Animate box shadows using the bracket syntax `shadow-[value]`. Since shadow valu
 You can also remove a shadow on hover by setting it to `none`:
 
 ```html
-<div className="animate-hover:shadow-[none]">
-  Remove shadow on hover
-</div>
+<div className="animate-hover:shadow-[none]">Remove shadow on hover</div>
 ```
 
 ---
@@ -458,7 +445,9 @@ Animate the backdrop blur filter on an element. The value is in pixels and maps 
 A common use is combining backdrop blur with a semi-transparent background for frosted-glass effects:
 
 ```html
-<div className="bg-[var(--color-surface-elevated)] animate-hover:backdrop-blur-20 animate-duration-500">
+<div
+  className="bg-[var(--color-surface-elevated)] animate-hover:backdrop-blur-20 animate-duration-500"
+>
   Frosted glass on hover
 </div>
 ```
@@ -470,7 +459,9 @@ A common use is combining backdrop blur with a semi-transparent background for f
 Animate the `clipPath` property using the bracket syntax `clip-[value]`. This is useful for reveal effects and creative shape transitions.
 
 ```html
-<div className="animate-initial:clip-[circle(0%)] animate-enter:clip-[circle(50%)] animate-duration-800">
+<div
+  className="animate-initial:clip-[circle(0%)] animate-enter:clip-[circle(50%)] animate-duration-800"
+>
   Reveal with clip path
 </div>
 ```
@@ -491,7 +482,9 @@ You can use any valid `clip-path` value inside the brackets:
 
 ```html
 <!-- Polygon -->
-<div className="animate-hover:clip-[polygon(50%_0%,100%_100%,0%_100%)]">...</div>
+<div className="animate-hover:clip-[polygon(50%_0%,100%_100%,0%_100%)]">
+  ...
+</div>
 
 <!-- Inset -->
 <div className="animate-hover:clip-[inset(10%)]">...</div>
@@ -504,7 +497,9 @@ You can use any valid `clip-path` value inside the brackets:
 Animate the CSS position offsets `top`, `left`, `right`, and `bottom`. Values are in pixels by default, and support unit suffixes (`pct`, `px`, `vh`, `vw`, `rem`, `em`) as well as the keyword `auto`.
 
 ```html
-<div className="relative animate-initial:top-100 animate-enter:top-0 animate-duration-500">
+<div
+  className="relative animate-initial:top-100 animate-enter:top-0 animate-duration-500"
+>
   Slides down from 100px to 0
 </div>
 ```
@@ -554,29 +549,24 @@ whileHover={{ bottom: "10vh" }}
 Animate `padding`, `margin`, and `gap`. Values are numeric by default, and support unit suffixes (`pct`, `px`, `rem`, `em`).
 
 ```html
-<div className="animate-hover:p-32 animate-spring">
-  Expand padding on hover
-</div>
+<div className="animate-hover:p-32 animate-spring">Expand padding on hover</div>
 ```
 
 **Compiles to:**
 
 ```jsx
-<motion.div
-  whileHover={{ padding: 32 }}
-  transition={{ type: "spring" }}
->
+<motion.div whileHover={{ padding: 32 }} transition={{ type: "spring" }}>
   Expand padding on hover
 </motion.div>
 ```
 
 The supported shorthand mappings are:
 
-| Class | Motion Property |
-|---|---|
-| `p-{n}` | `padding: n` |
-| `m-{n}` | `margin: n` |
-| `gap-{n}` | `gap: n` |
+| Class     | Motion Property |
+| --------- | --------------- |
+| `p-{n}`   | `padding: n`    |
+| `m-{n}`   | `margin: n`     |
+| `gap-{n}` | `gap: n`        |
 
 ```html
 <!-- Margin -->
@@ -608,14 +598,16 @@ whileHover={{ padding: "2rem" }}
 
 Animate font size, letter spacing, and line height. Values are numeric by default, and support unit suffixes (`pct`, `px`, `rem`, `em`).
 
-| Class | Motion Property |
-|---|---|
-| `text-size-{n}` | `fontSize: n` |
-| `tracking-{n}` | `letterSpacing: n` |
-| `leading-{n}` | `lineHeight: n` |
+| Class           | Motion Property    |
+| --------------- | ------------------ |
+| `text-size-{n}` | `fontSize: n`      |
+| `tracking-{n}`  | `letterSpacing: n` |
+| `leading-{n}`   | `lineHeight: n`    |
 
 ```html
-<div className="animate-hover:text-size-24 animate-hover:tracking-2 animate-duration-300">
+<div
+  className="animate-hover:text-size-24 animate-hover:tracking-2 animate-duration-300"
+>
   Larger text on hover
 </div>
 ```
@@ -658,10 +650,7 @@ Animate the border width of an element. The value is in pixels.
 **Compiles to:**
 
 ```jsx
-<motion.div
-  whileHover={{ borderWidth: 2 }}
-  transition={{ duration: 0.3 }}
->
+<motion.div whileHover={{ borderWidth: 2 }} transition={{ duration: 0.3 }}>
   Border appears on hover
 </motion.div>
 ```
@@ -669,7 +658,9 @@ Animate the border width of an element. The value is in pixels.
 This pairs well with the `border-{color}` shorthand:
 
 ```html
-<div className="animate-hover:border-w-2 animate-hover:border-#c8ff2e animate-duration-300">
+<div
+  className="animate-hover:border-w-2 animate-hover:border-#c8ff2e animate-duration-300"
+>
   Colored border on hover
 </div>
 ```
@@ -698,7 +689,9 @@ You can animate multiple properties on the same gesture by stacking classes. Eac
 </Demo>
 
 ```html
-<div className="animate-hover:scale-105 animate-hover:-y-4 animate-hover:rounded-20 animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-spring">
+<div
+  className="animate-hover:scale-105 animate-hover:-y-4 animate-hover:rounded-20 animate-hover:[backgroundColor=#c8ff2e] animate-hover:[color=#000000] animate-spring"
+>
   Everything at once
 </div>
 ```

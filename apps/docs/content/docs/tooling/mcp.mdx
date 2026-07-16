@@ -1,0 +1,21 @@
+---
+title: "MCP and AI tools"
+description: "Generate, validate, explain, migrate, and optimize Motionwind classes from the shared syntax registry."
+---
+
+`motionwind-mcp` exposes the same syntax definitions used by the parser and editor tools, so agents do not maintain a separate class list.
+
+```json
+{
+  "mcpServers": {
+    "motionwind": {
+      "command": "npx",
+      "args": ["-y", "motionwind-mcp@2"]
+    }
+  }
+}
+```
+
+The server provides tools to validate, explain, optimize, and generate Motionwind output for React, Vue, JavaScript, and React Native. It also exposes a machine-readable `motionwind://syntax` resource for discovery.
+
+Runtime adapters remain authoritative: generated output includes diagnostics when a requested feature is unsupported for the selected target.

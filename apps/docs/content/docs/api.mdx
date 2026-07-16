@@ -3,15 +3,15 @@ title: "API Reference"
 description: "Complete API reference for motionwind -- the parser, runtime components, and framework integrations."
 ---
 
-## `parseMotionClasses(className)`
+## `parseMotionClasses(className, config?)`
 
 The framework-agnostic core parser. It takes a className string, extracts all `animate-*` tokens, and returns a structured `ParsedResult` that maps directly to Motion props. Regular Tailwind/CSS classes pass through untouched.
 
 ```tsx
-import { parseMotionClasses } from "motionwind-react";
+import { parseMotionClasses } from "motionwind-core";
 
 const result = parseMotionClasses(
-  "bg-blue-500 p-4 animate-hover:scale-110 animate-hover:opacity-100 animate-duration-300"
+  "bg-blue-500 p-4 animate-hover:scale-110 animate-hover:opacity-100 animate-duration-300",
 );
 ```
 
@@ -27,11 +27,17 @@ The returned `result` for the example above:
   viewport: {},
   dragConfig: {},
   layoutConfig: {},
+  scroll: { axis: "y", container: false, values: {} },
+  variants: {},
+  variantState: {},
+  diagnostics: [],
   hasMotion: true
 }
 ```
 
-Results are memoized internally by input string, so calling `parseMotionClasses` with the same className is essentially free after the first call.
+Calls without custom configuration use a bounded input-string cache. Configured
+calls are parsed against the supplied tokens/plugins and are not stored in the
+global cache.
 
 ### `ParsedResult`
 
@@ -55,6 +61,16 @@ interface ParsedResult {
   /** Layout animation configuration */
   layoutConfig: LayoutConfig;
 
+  /** Scroll-linked output ranges */
+  scroll: ScrollConfig;
+
+  /** Named variants and selected lifecycle states */
+  variants: VariantMap;
+  variantState: VariantState;
+
+  /** Actionable parser and extension diagnostics */
+  diagnostics: MotionwindDiagnostic[];
+
   /** Whether any motion classes were found */
   hasMotion: boolean;
 }
@@ -66,20 +82,20 @@ The supported gesture keys that map to Motion props:
 
 ```tsx
 type GestureKey =
-  | "whileHover"    // animate-hover:*
-  | "whileTap"      // animate-tap:*
-  | "whileFocus"    // animate-focus:*
-  | "whileInView"   // animate-inview:*
-  | "whileDrag"     // animate-drag:*
-  | "initial"       // animate-initial:*
-  | "animate"       // animate-enter:*
-  | "exit";         // animate-exit:*
+  | "whileHover" // animate-hover:*
+  | "whileTap" // animate-tap:*
+  | "whileFocus" // animate-focus:*
+  | "whileInView" // animate-inview:*
+  | "whileDrag" // animate-drag:*
+  | "initial" // animate-initial:*
+  | "animate" // animate-enter:*
+  | "exit"; // animate-exit:*
 ```
 
 ### `AnimatableValues`
 
 ```tsx
-type AnimatableValues = Record<string, string | number | number[]>;
+type AnimatableValues = Record<string, string | number | (string | number)[]>;
 ```
 
 A dictionary of CSS/transform properties to their target values. For example, `{ scale: 1.1, opacity: 1 }`, `{ x: 20, rotate: 45 }`, or `{ scale: [1, 1.2, 1] }` for keyframe arrays.
@@ -89,23 +105,23 @@ A dictionary of CSS/transform properties to their target values. For example, `{
 ```tsx
 interface TransitionConfig {
   type?: "spring" | "tween" | "inertia";
-  duration?: number;          // in seconds (animate-duration-{ms} is converted)
-  delay?: number;             // in seconds (animate-delay-{ms} is converted)
-  ease?: string | number[];   // e.g. "easeIn", "easeOut", or [0.25, 0.1, 0.25, 1] for cubic-bezier
-  stiffness?: number;         // animate-stiffness-{n}
-  damping?: number;           // animate-damping-{n}
-  bounce?: number;            // animate-bounce-{n} divided by 100
-  mass?: number;              // animate-mass-{n} divided by 10
-  repeat?: number;            // animate-repeat-{n} or Infinity
-  repeatType?: "loop" | "reverse" | "mirror";  // animate-repeat-reverse | animate-repeat-mirror
-  repeatDelay?: number;       // animate-repeat-delay-{ms} divided by 1000
-  staggerChildren?: number;   // animate-stagger-{ms} divided by 1000
-  staggerDirection?: 1 | -1;  // animate-stagger-reverse -> -1
-  delayChildren?: number;     // animate-delay-children-{ms} divided by 1000
-  when?: "beforeChildren" | "afterChildren" | false;  // animate-when-before | animate-when-after
-  restSpeed?: number;         // animate-rest-speed-{n}
-  restDelta?: number;         // animate-rest-delta-{n}
-  times?: number[];           // animate-times-[...] for keyframe timing
+  duration?: number; // in seconds (animate-duration-{ms} is converted)
+  delay?: number; // in seconds (animate-delay-{ms} is converted)
+  ease?: string | number[]; // e.g. "easeIn", "easeOut", or [0.25, 0.1, 0.25, 1] for cubic-bezier
+  stiffness?: number; // animate-stiffness-{n}
+  damping?: number; // animate-damping-{n}
+  bounce?: number; // animate-bounce-{n} divided by 100
+  mass?: number; // animate-mass-{n} divided by 10
+  repeat?: number; // animate-repeat-{n} or Infinity
+  repeatType?: "loop" | "reverse" | "mirror"; // animate-repeat-reverse | animate-repeat-mirror
+  repeatDelay?: number; // animate-repeat-delay-{ms} divided by 1000
+  staggerChildren?: number; // animate-stagger-{ms} divided by 1000
+  staggerDirection?: 1 | -1; // animate-stagger-reverse -> -1
+  delayChildren?: number; // animate-delay-children-{ms} divided by 1000
+  when?: "beforeChildren" | "afterChildren" | false; // animate-when-before | animate-when-after
+  restSpeed?: number; // animate-rest-speed-{n}
+  restDelta?: number; // animate-rest-delta-{n}
+  times?: number[]; // animate-times-[...] for keyframe timing
 }
 ```
 
@@ -113,9 +129,9 @@ interface TransitionConfig {
 
 ```tsx
 interface ViewportConfig {
-  once?: boolean;                      // animate-once
-  amount?: "some" | "all" | number;   // animate-amount-all or animate-amount-{n} (n/100)
-  margin?: string;                     // animate-margin-{n} -> "{n}px"
+  once?: boolean; // animate-once
+  amount?: "some" | "all" | number; // animate-amount-all or animate-amount-{n} (n/100)
+  margin?: string; // animate-margin-{n} -> "{n}px"
 }
 ```
 
@@ -123,12 +139,17 @@ interface ViewportConfig {
 
 ```tsx
 interface DragConfig {
-  drag?: boolean | "x" | "y";   // animate-drag-both | animate-drag-x | animate-drag-y
-  dragElastic?: number;          // animate-drag-elastic-{n} divided by 100
-  dragSnapToOrigin?: boolean;    // animate-drag-snap
-  dragMomentum?: boolean;        // animate-drag-no-momentum -> false
-  dragDirectionLock?: boolean;   // animate-drag-lock
-  dragConstraints?: { top?: number; left?: number; right?: number; bottom?: number };  // animate-drag-constraint-{edge}-{n}
+  drag?: boolean | "x" | "y"; // animate-drag-both | animate-drag-x | animate-drag-y
+  dragElastic?: number; // animate-drag-elastic-{n} divided by 100
+  dragSnapToOrigin?: boolean; // animate-drag-snap
+  dragMomentum?: boolean; // animate-drag-no-momentum -> false
+  dragDirectionLock?: boolean; // animate-drag-lock
+  dragConstraints?: {
+    top?: number;
+    left?: number;
+    right?: number;
+    bottom?: number;
+  }; // animate-drag-constraint-{edge}-{n}
 }
 ```
 
@@ -136,10 +157,10 @@ interface DragConfig {
 
 ```tsx
 interface LayoutConfig {
-  layout?: boolean | "position" | "size" | "preserve-aspect";  // animate-layout | animate-layout-position | animate-layout-size | animate-layout-preserve
-  layoutId?: string;             // animate-layout-id-{name}
-  layoutScroll?: boolean;        // animate-layout-scroll
-  layoutRoot?: boolean;          // animate-layout-root
+  layout?: boolean | "position" | "size" | "preserve-aspect"; // animate-layout | animate-layout-position | animate-layout-size | animate-layout-preserve
+  layoutId?: string; // animate-layout-id-{name}
+  layoutScroll?: boolean; // animate-layout-scroll
+  layoutRoot?: boolean; // animate-layout-root
 }
 ```
 
@@ -167,7 +188,10 @@ The `mw` object works like `motion.*` from Motion, but instead of passing Motion
 
 ### Why `mw.*`?
 
-The build-time Babel transform only handles **static string literals** in `className`. If your className is dynamic (template literals, variables, ternaries), the Babel plugin cannot analyze it at build time. That is where `mw.*` comes in -- it calls `parseMotionClasses` at runtime and passes the result to the underlying `motion.*` component.
+The build-time transform handles static literals and statically discoverable
+`animate-*` tokens inside template literals. If the animation token or value is
+constructed entirely at runtime, use `mw.*`; it calls `parseMotionClasses` at
+runtime and passes the result to the underlying `motion.*` component.
 
 ### Usage
 
@@ -178,7 +202,9 @@ function AnimatedCard({ isActive }: { isActive: boolean }) {
   return (
     <mw.div
       className={`p-6 rounded-xl animate-hover:scale-105 animate-duration-200 ${
-        isActive ? "bg-blue-500 animate-enter:opacity-100" : "bg-gray-800 animate-enter:opacity-50"
+        isActive
+          ? "bg-blue-500 animate-enter:opacity-100"
+          : "bg-gray-800 animate-enter:opacity-50"
       }`}
     >
       Card content
@@ -204,7 +230,8 @@ function AnimatedCard({ isActive }: { isActive: boolean }) {
 
 - When `className` contains **no** `animate-*` classes, `mw.*` renders a plain HTML element (no Motion overhead).
 - When `className` contains `animate-*` classes, `mw.*` renders the corresponding `motion.*` component with the parsed props.
-- Results are cached by className string, so re-renders with the same className skip parsing.
+- Unconfigured results use the bounded className cache; configured runtime
+  components parse against their provider configuration.
 - `mw.*` components are marked `"use client"` and require a client-side React environment.
 - Refs are forwarded through to the underlying element.
 
@@ -218,21 +245,47 @@ type MotionwindProps<T extends HTMLTag> = React.ComponentPropsWithRef<T> & {
 
 Each `mw.*` component accepts the same props as the corresponding HTML element, plus an optional `className` that is parsed for motionwind classes.
 
+### `mw.create(Component)`
+
+Create a typed runtime wrapper for a design-system component. The component must forward its ref and `className` to the underlying element.
+
+```tsx
+const MotionButton = mw.create(Button);
+
+<MotionButton className="animate-tap:scale-95 animate-spring">
+  Save
+</MotionButton>;
+```
+
+Lowercase JSX elements continue to use the compile-time transform; `mw.create` is an explicit runtime bridge for custom components.
+
+### `MotionwindProvider`
+
+Provide project configuration to runtime `mw.*` and `mw.create` components while applying the selected reduced-motion policy through Motion:
+
+```tsx
+<MotionwindProvider config={motionwindConfig}>
+  <App />
+</MotionwindProvider>
+```
+
 ---
 
-## `withMotionwind(nextConfig)`
+## `withMotionwind(nextConfig, motionwindConfig)`
 
-A Next.js configuration wrapper that adds the motionwind Babel transform to your webpack pipeline.
+A Next.js configuration wrapper that adds the Motionwind pre-transform to both
+webpack and Turbopack.
 
 ```tsx
 // next.config.mjs
 import { withMotionwind } from "motionwind-react/next";
+import motionwindConfig from "./motionwind.config";
 
 const nextConfig = {
   // your existing Next.js config
 };
 
-export default withMotionwind(nextConfig);
+export default withMotionwind(nextConfig, motionwindConfig);
 ```
 
 ### What it does
@@ -240,7 +293,8 @@ export default withMotionwind(nextConfig);
 `withMotionwind` wraps your existing `next.config` and injects a webpack rule that runs `babel-loader` with the motionwind Babel plugin as a **pre-processing step** (before SWC). This means:
 
 1. All `.tsx` and `.jsx` files are scanned for `animate-*` class strings.
-2. Static `className` attributes on lowercase HTML elements are transformed at build time.
+2. Static animation tokens are transformed on host elements and supported
+   component identifiers.
 3. Elements with motionwind classes are rewritten to `motion.*` components with the correct props.
 4. A `"use client"` directive is automatically injected into any file that gets transformed.
 5. An `import { motion } from "motion/react"` is automatically added if not already present.
@@ -251,12 +305,15 @@ export default withMotionwind(nextConfig);
 interface NextConfig {
   webpack?: (
     config: WebpackConfig,
-    context: { isServer: boolean }
+    context: { isServer: boolean },
   ) => WebpackConfig;
   [key: string]: unknown;
 }
 
-function withMotionwind(nextConfig?: NextConfig): NextConfig;
+function withMotionwind(
+  nextConfig?: NextConfig,
+  motionwindConfig?: MotionwindConfig,
+): NextConfig;
 ```
 
 ### Preserving existing webpack config
@@ -286,10 +343,11 @@ A Vite plugin that runs the motionwind Babel transform during the build.
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { motionwind } from "motionwind-react/vite";
+import motionwindConfig from "./motionwind.config";
 
 export default defineConfig({
   plugins: [
-    motionwind(),  // Must come before the React plugin
+    motionwind(motionwindConfig), // Must come before the React plugin
     react(),
   ],
 });
@@ -313,11 +371,11 @@ interface VitePlugin {
   enforce?: "pre" | "post";
   transform?: (
     code: string,
-    id: string
+    id: string,
   ) => { code: string; map: unknown } | null;
 }
 
-function motionwind(): VitePlugin;
+function motionwind(config?: MotionwindConfig): VitePlugin;
 ```
 
 ### HMR support
@@ -343,8 +401,13 @@ The plugin exports both a default export and a named `motionwindBabelPlugin` exp
 
 The Babel plugin follows these rules:
 
-1. **Only static string `className` attributes are transformed.** Template literals, variables, and expressions are ignored (use `mw.*` for those).
-2. **Only lowercase HTML tags are transformed.** Custom components (`<MyComponent>`) and member expressions (`<motion.div>`) are skipped.
+1. **Static animation tokens are transformed.** This includes literals and
+   statically discoverable tokens inside template literals. Fully computed
+   animation tokens use `mw.*`.
+2. **Lowercase host tags are the primary path.** Simple uppercase component
+   identifiers use Motion's component bridge; `mw.create(Component)` is the
+   explicit typed API for design-system components. Member expressions are not
+   rewritten.
 3. **`"use client"` is auto-injected** into any file that gets a transform, ensuring compatibility with React Server Components.
 4. **`import { motion } from "motion/react"` is auto-added** if not already present in the file.
 

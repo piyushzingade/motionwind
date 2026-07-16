@@ -1,0 +1,30 @@
+---
+title: "CLI"
+description: "Initialize, diagnose, migrate, and add reviewed presets with create-motionwind."
+---
+
+Run the initializer from an existing project:
+
+```bash
+npx create-motionwind@2 init
+```
+
+It detects Next.js, React/Vite, Vue/Nuxt, vanilla JavaScript, and React Native/Expo; detects npm, pnpm, Yarn, or Bun; installs the published adapter; creates a typed config; and preserves configuration it cannot edit safely.
+
+Preview every operation first:
+
+```bash
+npx create-motionwind@2 init --dry-run
+npx create-motionwind@2 init --framework=vue --dry-run
+```
+
+Useful follow-up commands:
+
+```bash
+npx create-motionwind@2 doctor
+npx create-motionwind@2 migrate src --write
+npx create-motionwind@2 add button-press
+npx create-motionwind@2 add dialog-enter --dry-run
+```
+
+`doctor` reports framework, package-manager, dependency, configuration, and integration issues with a suggested fix. `migrate` converts supported Motion props into classes. `add` installs a reviewed registry preset into CLI-managed configuration.
