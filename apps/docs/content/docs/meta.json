@@ -2,8 +2,11 @@
   "title": "Motionwind",
   "pages": [
     "index",
+    "v2",
     "getting-started",
     "installation",
+    "compatibility",
+    "configuration",
     "syntax",
     "---Frameworks---",
     "...frameworks",
@@ -15,6 +18,8 @@
     "...tooling",
     "---Reference---",
     "api",
+    "extensions",
+    "community",
     "framework-setup"
   ]
 }

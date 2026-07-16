@@ -1,4 +1,4 @@
 {
   "title": "Tooling",
-  "pages": ["playground", "eslint", "prettier", "migrate"]
+  "pages": ["cli", "playground", "mcp", "eslint", "prettier", "migrate"]
 }
