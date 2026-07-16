@@ -14,7 +14,7 @@ const rules: Record<string, Rule.RuleModule> = {
 const plugin: ESLint.Plugin & {
   configs: Record<string, Linter.Config>;
 } = {
-  meta: { name: "eslint-plugin-motionwind", version: "0.1.0" },
+  meta: { name: "eslint-plugin-motionwind", version: "2.0.0" },
   rules,
   configs: {},
 };

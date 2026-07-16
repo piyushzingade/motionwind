@@ -1,5 +1,5 @@
 import type { Rule } from "eslint";
-import { analyzeClassName } from "motionwind-react/tooling";
+import { analyzeClassName } from "motionwind-core";
 import { staticClassName } from "../utils.js";
 
 const rule: Rule.RuleModule = {
