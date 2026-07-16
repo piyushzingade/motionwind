@@ -1,0 +1,27 @@
+{
+  "name": "motionwind-starter-expo",
+  "private": true,
+  "main": "expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios"
+  },
+  "dependencies": {
+    "@expo/metro-runtime": "^5.0.0",
+    "expo": "^53.0.0",
+    "motionwind-react-native": "^2.0.0",
+    "motionwind-core": "^2.0.0",
+    "nativewind": "^4.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-native": "^0.79.0",
+    "react-native-gesture-handler": "^2.24.0",
+    "react-native-reanimated": "^3.17.0",
+    "react-native-web": "^0.20.0"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "^13.2.5",
+    "typescript": "^5.9.2"
+  }
+}
