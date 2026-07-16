@@ -1,0 +1,23 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [
+    [
+      "motionwind-core",
+      "motionwind-react",
+      "motionwind-vue",
+      "motionwind-vanilla",
+      "motionwind-react-native",
+      "create-motionwind",
+      "eslint-plugin-motionwind",
+      "prettier-plugin-motionwind",
+      "motionwind-unplugin",
+      "motionwind-mcp"
+    ]
+  ],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}

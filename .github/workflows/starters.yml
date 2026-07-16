@@ -1,0 +1,29 @@
+name: Packed starter compatibility
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  starter:
+    name: ${{ matrix.starter }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        starter: [next, react-vite, vue-vite, nuxt, vanilla, expo]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: bun install --frozen-lockfile
+      - run: bunx playwright install --with-deps chromium
+      - run: bun run build
+      - run: bun scripts/test-starter.ts ${{ matrix.starter }} --browser
