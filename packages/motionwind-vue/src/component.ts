@@ -1,10 +1,19 @@
-import { defineComponent, h, type Component, type VNode } from "vue";
+import {
+  defineComponent,
+  h,
+  inject,
+  type Component,
+  type InjectionKey,
+  type VNode,
+} from "vue";
 import { motion } from "motion-v";
-import { parseMotionClasses } from "motionwind-core";
+import { parseMotionClasses, type MotionwindConfig } from "motionwind-core";
 import { buildMotionProps, stripInteractive } from "./props.js";
 
 // motion-v exposes a component per tag (motion.div, motion.button, …).
 const motionTags = motion as unknown as Record<string, Component>;
+export const motionwindConfigKey: InjectionKey<MotionwindConfig> =
+  Symbol("motionwind-config");
 
 function resolveMotionComponent(tag: string): Component {
   if (!motionTags || typeof motionTags !== "object") {
@@ -50,10 +59,11 @@ function renderMotion(
   tag: string,
   attrs: Record<string, unknown>,
   children: VNode[] | undefined,
+  config?: MotionwindConfig,
 ): VNode {
   const className = typeof attrs.class === "string" ? attrs.class : "";
   const { class: _class, ...restAttrs } = attrs;
-  const parsed = parseMotionClasses(className);
+  const parsed = parseMotionClasses(className, config);
 
   if (!parsed.hasMotion) {
     return h(tag, { class: className || undefined, ...restAttrs }, children);
@@ -66,7 +76,11 @@ function renderMotion(
 
   return h(
     resolveMotionComponent(tag),
-    { class: parsed.tailwindClasses || undefined, ...motionProps, ...restAttrs },
+    {
+      class: parsed.tailwindClasses || undefined,
+      ...motionProps,
+      ...restAttrs,
+    },
     children,
   );
 }
@@ -83,8 +97,14 @@ export const Motionwind = defineComponent({
     as: { type: String, default: "div" },
   },
   setup(props, { slots, attrs }) {
+    const config = inject(motionwindConfigKey, undefined);
     return () =>
-      renderMotion(props.as, attrs as Record<string, unknown>, slots.default?.());
+      renderMotion(
+        props.as,
+        attrs as Record<string, unknown>,
+        slots.default?.(),
+        config,
+      );
   },
 });
 
@@ -97,8 +117,14 @@ function createTagComponent(tag: string): Component {
     name: `mw.${tag}`,
     inheritAttrs: false,
     setup(_props, { slots, attrs }) {
+      const config = inject(motionwindConfigKey, undefined);
       return () =>
-        renderMotion(tag, attrs as Record<string, unknown>, slots.default?.());
+        renderMotion(
+          tag,
+          attrs as Record<string, unknown>,
+          slots.default?.(),
+          config,
+        );
     },
   });
   componentCache.set(tag, comp);
@@ -114,12 +140,9 @@ function createTagComponent(tag: string): Component {
  * h(mw.button, { class: "animate-hover:scale-110" }, () => "Click");
  * ```
  */
-export const mw = new Proxy(
-  {} as Record<string, Component>,
-  {
-    get(_target, tag: string) {
-      if (typeof tag !== "string") return undefined;
-      return createTagComponent(tag);
-    },
+export const mw = new Proxy({} as Record<string, Component>, {
+  get(_target, tag: string) {
+    if (typeof tag !== "string") return undefined;
+    return createTagComponent(tag);
   },
-);
+});

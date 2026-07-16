@@ -1,32 +1,51 @@
-# motionwind-vue
+# motionwind-vue v2
 
-Write Motion animations as Tailwind-like classes in **Vue 3** — powered by
-[Motion for Vue](https://motion.dev/docs/vue).
+Use the shared Motionwind utility language in Vue 3 and Nuxt through Motion for
+Vue.
 
 ```bash
-npm install motionwind-vue motion-v
+npm install motionwind-vue@2 motion-v @vueuse/core motionwind-core@2
 ```
 
-## Usage
+For Vue/Vite, configure the static template transform and install the runtime
+plugin with the same project config:
+
+```ts
+import vue from "@vitejs/plugin-vue";
+import { createMotionwindTransform } from "motionwind-vue/vite";
+
+vue({
+  template: {
+    compilerOptions: {
+      nodeTransforms: [createMotionwindTransform(config)],
+    },
+  },
+});
+```
+
+```ts
+import { MotionwindPlugin } from "motionwind-vue";
+
+createApp(App).use(MotionwindPlugin, config).mount("#app");
+```
+
+Static native elements can use plain classes. Dynamic classes and the tested
+Nuxt integration use the runtime component:
 
 ```vue
-<script setup>
-import { Motionwind } from "motionwind-vue";
-</script>
-
-<template>
-  <Motionwind as="button" class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
-    Click me
-  </Motionwind>
-</template>
+<Motionwind
+  as="button"
+  class="animate-hover:scale-110 animate-tap:scale-90 animate-spring"
+>
+  Save
+</Motionwind>
 ```
 
-- **`<Motionwind as="…" class="…">`** — parses the class string and renders the matching
-  `motion.*` component with mapped props. Non-motion classes pass through as `class`.
-- **`mw.div`, `mw.button`, …** — a component proxy for render-function/JSX usage.
-- **`useMotionwind(className)`** — composable returning `{ parsed, motionProps, tailwindClasses }`.
+Exports include `Motionwind`, `mw`, `useMotionwind`, `MotionwindPlugin`, adapter
+capabilities, and the shared parser/config helpers. Continuous
+`animate-scroll:*` is not implemented in the Vue adapter and reports a warning;
+use Motion for Vue's scroll composables directly.
 
-Same `animate-*` syntax as the React package (see the [docs](https://motionwind.xyz)).
+Compatibility: https://motionwind.xyz/docs/compatibility
 
-> Note: scroll-linked classes (`animate-scroll:*`) are not yet mapped in the Vue adapter —
-> gestures, transitions, drag, layout, and variants are fully supported.
+MIT

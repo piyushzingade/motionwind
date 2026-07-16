@@ -1,5 +1,5 @@
 import { NodeTypes, ElementTypes } from "@vue/compiler-core";
-import { parseMotionClasses } from "motionwind-core";
+import { parseMotionClasses, type MotionwindConfig } from "motionwind-core";
 
 /**
  * A Vue template `nodeTransform` (compile-time). It rewrites any native element
@@ -28,8 +28,11 @@ import { parseMotionClasses } from "motionwind-core";
  * Only static `class` attributes are transformed (like the React build step).
  * For dynamic `:class`, use `<Motionwind>` or `mw.*` directly.
  */
-export function motionwindTransform(node: any): void {
-  if (node.type !== NodeTypes.ELEMENT || node.tagType !== ElementTypes.ELEMENT) {
+function transformNode(node: any, config?: MotionwindConfig): void {
+  if (
+    node.type !== NodeTypes.ELEMENT ||
+    node.tagType !== ElementTypes.ELEMENT
+  ) {
     return;
   }
 
@@ -41,7 +44,7 @@ export function motionwindTransform(node: any): void {
       p.value.content.includes("animate-"),
   );
   if (!classProp) return;
-  if (!parseMotionClasses(classProp.value.content).hasMotion) return;
+  if (!parseMotionClasses(classProp.value.content, config).hasMotion) return;
 
   const originalTag: string = node.tag;
   node.tag = "Motionwind";
@@ -55,4 +58,12 @@ export function motionwindTransform(node: any): void {
     loc: node.loc,
     nameLoc: node.loc,
   });
+}
+
+export function createMotionwindTransform(config: MotionwindConfig = {}) {
+  return (node: any) => transformNode(node, config);
+}
+
+export function motionwindTransform(node: any): void {
+  transformNode(node);
 }
