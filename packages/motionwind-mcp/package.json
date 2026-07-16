@@ -1,0 +1,48 @@
+{
+  "name": "motionwind-mcp",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "MCP tools for generating, validating, explaining, and optimizing Motionwind classes.",
+  "license": "MIT",
+  "bin": {
+    "motionwind-mcp": "./dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "lint": "eslint --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "motionwind-core": "^2.0.0",
+    "motionwind-react": "^2.0.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.39.1",
+    "tsup": "^8.5.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
