@@ -1,5 +1,18 @@
 export { mw } from "./component.js";
-export { parseMotionClasses, clearParserCache } from "./parser.js";
+export { MotionwindProvider } from "./component.js";
+export { reactAdapter, REACT_CAPABILITIES } from "./adapter.js";
+export {
+  parseMotionClasses,
+  clearParserCache,
+  defineConfig,
+  definePreset,
+  defineMotionwindPlugin,
+  defineMotionwindAdapter,
+  unsupportedCapabilities,
+  MOTIONWIND_SYNTAX_REGISTRY,
+  MOTIONWIND_RECIPES,
+  BUILT_IN_PRESETS,
+} from "motionwind-core";
 
 export type {
   ParsedResult,
@@ -9,4 +22,9 @@ export type {
   ViewportConfig,
   DragConfig,
   LayoutConfig,
-} from "./types.js";
+  MotionwindConfig,
+  MotionwindPlugin,
+  MotionwindAdapter,
+  AdapterCapabilities,
+  MotionwindRecipe,
+} from "motionwind-core";
