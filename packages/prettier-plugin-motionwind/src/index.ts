@@ -1,7 +1,7 @@
 import type { Parser } from "prettier";
 import { parsers as babelParsers } from "prettier/plugins/babel";
 import { parsers as typescriptParsers } from "prettier/plugins/typescript";
-import { sortMotionClasses } from "motionwind-react/tooling";
+import { sortMotionClasses } from "motionwind-core";
 
 // AST keys that hold position/comment metadata or create cycles — skip them.
 const SKIP_KEYS = new Set([
@@ -29,7 +29,11 @@ function setSorted(node: any, original: string): void {
     const q = node.raw[0];
     node.raw = q + sorted + q;
   }
-  if (node.extra && typeof node.extra.raw === "string" && node.extra.raw.length >= 2) {
+  if (
+    node.extra &&
+    typeof node.extra.raw === "string" &&
+    node.extra.raw.length >= 2
+  ) {
     const q = node.extra.raw[0];
     node.extra.raw = q + sorted + q;
     node.extra.rawValue = sorted;

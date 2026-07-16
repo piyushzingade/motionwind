@@ -1,7 +1,8 @@
 {
   "name": "prettier-plugin-motionwind",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "type": "module",
+  "sideEffects": false,
   "description": "Prettier plugin that sorts motionwind animate-* classes into a canonical order.",
   "author": "piyush555",
   "license": "MIT",
@@ -14,7 +15,14 @@
     "url": "https://github.com/piyushzingade/motionwind/issues"
   },
   "homepage": "https://github.com/piyushzingade/motionwind#readme",
-  "keywords": ["prettier", "prettier-plugin", "motionwind", "motion", "animation", "tailwind"],
+  "keywords": [
+    "prettier",
+    "prettier-plugin",
+    "motionwind",
+    "motion",
+    "animation",
+    "tailwind"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -24,7 +32,9 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -37,7 +47,7 @@
     "prettier": "^3.0.0"
   },
   "dependencies": {
-    "motionwind-react": "workspace:*"
+    "motionwind-core": "^2.0.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
@@ -49,6 +59,7 @@
     "vitest": "^3.2.1"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }
