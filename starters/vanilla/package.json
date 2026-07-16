@@ -1,0 +1,17 @@
+{
+  "name": "motionwind-starter-vanilla",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "motion": "^12.12.1",
+    "motionwind-core": "^2.0.0",
+    "motionwind-vanilla": "^2.0.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0",
+    "typescript": "^5.9.2"
+  }
+}

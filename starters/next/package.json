@@ -1,0 +1,22 @@
+{
+  "name": "motionwind-starter-next",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "motion": "^12.12.1",
+    "motionwind-core": "^2.0.0",
+    "motionwind-react": "^2.0.0",
+    "next": "^16.2.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "@types/react": "^19.2.2",
+    "@types/node": "^22.0.0"
+  }
+}

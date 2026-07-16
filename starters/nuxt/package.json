@@ -1,0 +1,20 @@
+{
+  "name": "motionwind-starter-nuxt",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview"
+  },
+  "dependencies": {
+    "@vueuse/core": "^14.0.0",
+    "motion-v": "^1.7.1",
+    "motionwind-core": "^2.0.0",
+    "motionwind-vue": "^2.0.0",
+    "nuxt": "^4.0.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,45 @@
+<main style="min-height: 1800px; padding: 32px">
+  <button
+    data-testid="motionwind-e2e"
+    class="animate-hover:scale-105 animate-tap:scale-95 animate-focus:scale-102 animate-duration-80"
+  >
+    Motionwind + JavaScript
+  </button>
+
+  <div
+    data-testid="motionwind-scroll"
+    class="animate-scroll:scaleX-[0,1] animate-scroll-container"
+    style="
+      position: fixed;
+      inset: 0 0 auto;
+      height: 4px;
+      background: tomato;
+      transform-origin: left;
+    "
+  ></div>
+
+  <svg
+    width="40"
+    height="40"
+    viewBox="0 0 40 40"
+    aria-label="Motionwind SVG fixture"
+  >
+    <path
+      data-testid="motionwind-svg"
+      d="M4 20 L36 20"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="4"
+      class="animate-initial:path-length-0 animate-enter:path-length-1 animate-duration-80"
+    ></path>
+  </svg>
+
+  <div style="height: 1100px"></div>
+  <div
+    data-testid="motionwind-inview"
+    class="animate-initial:opacity-0 animate-inview:opacity-100 animate-once animate-amount-50 animate-duration-80"
+  >
+    In view
+  </div>
+</main>
+<script type="module" src="/src.ts"></script>

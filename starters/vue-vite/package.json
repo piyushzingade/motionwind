@@ -1,0 +1,20 @@
+{
+  "name": "motionwind-starter-vue-vite",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@vueuse/core": "^14.0.0",
+    "motion-v": "^1.7.1",
+    "motionwind-core": "^2.0.0",
+    "motionwind-vue": "^2.0.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "vite": "^6.0.0",
+    "typescript": "^5.9.2"
+  }
+}
