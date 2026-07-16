@@ -12,6 +12,7 @@ import {
   type SharedValue,
   type AnimatedStyle,
   runOnJS,
+  useReducedMotion,
 } from "react-native-reanimated";
 import type {
   NativeAnimatableStyle,
@@ -20,8 +21,12 @@ import type {
 } from "./types.js";
 import { parseMotionClasses } from "./parser.js";
 import { DEGREE_PROPERTIES } from "./constants.js";
-import { useVariantContext, type VariantContextValue } from "./variant-context.js";
+import {
+  useVariantContext,
+  type VariantContextValue,
+} from "./variant-context.js";
 import { useMotionScrollContext } from "./scroll-context.js";
+import { useMotionwindConfig } from "./config.js";
 
 /** Transform properties that go into the `transform` array */
 const TRANSFORM_KEYS = new Set([
@@ -104,13 +109,15 @@ function createAnimation(
   // This function is called outside worklet context — we build the animation config
   // and return the wrapped animation value.
 
-  const isSpring = config.type === "spring" || config.stiffness || config.damping;
+  const isSpring =
+    config.type === "spring" || config.stiffness || config.damping;
 
   let animation: number | string;
 
   if (isSpring) {
     const springConfig: Record<string, number> = {};
-    if (config.stiffness !== undefined) springConfig.stiffness = config.stiffness;
+    if (config.stiffness !== undefined)
+      springConfig.stiffness = config.stiffness;
     if (config.damping !== undefined) springConfig.damping = config.damping;
     if (config.mass !== undefined) springConfig.mass = config.mass;
     if (config.restDisplacementThreshold !== undefined)
@@ -182,7 +189,15 @@ function collectAnimatableKeys(parsed: ParsedResult): string[] {
  * ```
  */
 export function useMotionwind(className: string) {
-  const parsed = useMemo(() => parseMotionClasses(className), [className]);
+  const config = useMotionwindConfig();
+  const systemReducedMotion = useReducedMotion();
+  const reduceMotion =
+    config?.reducedMotion === "always" ||
+    (config?.reducedMotion !== "never" && systemReducedMotion);
+  const parsed = useMemo(
+    () => parseMotionClasses(className, config),
+    [className, config],
+  );
 
   const variantCtx = useVariantContext();
   const scrollCtx = useMotionScrollContext();
@@ -197,10 +212,7 @@ export function useMotionwind(className: string) {
     new Map(),
   );
 
-  const animatableKeys = useMemo(
-    () => collectAnimatableKeys(parsed),
-    [parsed],
-  );
+  const animatableKeys = useMemo(() => collectAnimatableKeys(parsed), [parsed]);
 
   // Initialize shared values for all animatable properties
   // We use a stable ref map to avoid recreating shared values
@@ -215,10 +227,10 @@ export function useMotionwind(className: string) {
       const source = initialVariantStyle ?? initialGesture;
       const defaultVal = DEFAULT_VALUES[key] ?? 0;
       const initialVal = source
-        ? ((source as Record<string, unknown>)[key] as
+        ? (((source as Record<string, unknown>)[key] as
             | number
             | string
-            | undefined) ?? defaultVal
+            | undefined) ?? defaultVal)
         : defaultVal;
 
       // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -226,6 +238,15 @@ export function useMotionwind(className: string) {
       sharedValues.current.set(key, sv);
     }
   }
+  // Capture shared values in a plain array. Reanimated Web cannot discover
+  // subscriptions hidden inside a Map stored on a React ref.
+  const animatedEntries = useMemo(
+    () =>
+      animatableKeys.map(
+        (key) => [key, sharedValues.current.get(key)!] as const,
+      ),
+    [animatableKeys],
+  );
 
   /**
    * Animate to a target gesture state.
@@ -237,14 +258,16 @@ export function useMotionwind(className: string) {
       for (const [key, targetValue] of Object.entries(gestureStyle)) {
         const sv = sharedValues.current.get(key);
         if (sv) {
-          sv.value = createAnimation(
-            targetValue as number | string,
-            parsed.transition,
-          );
+          sv.value = reduceMotion
+            ? (targetValue as number | string)
+            : createAnimation(
+                targetValue as number | string,
+                parsed.transition,
+              );
         }
       }
     },
-    [parsed.transition],
+    [parsed.transition, reduceMotion],
   );
 
   /**
@@ -266,9 +289,11 @@ export function useMotionwind(className: string) {
       const defaultVal = DEFAULT_VALUES[key] ?? 0;
       const target = baseVal ?? defaultVal;
 
-      sv.value = createAnimation(target, parsed.transition);
+      sv.value = reduceMotion
+        ? target
+        : createAnimation(target, parsed.transition);
     }
-  }, [parsed, animatableKeys]);
+  }, [parsed, animatableKeys, reduceMotion]);
 
   // Run entrance animation on mount
   useEffect(() => {
@@ -288,7 +313,13 @@ export function useMotionwind(className: string) {
   useEffect(() => {
     if (hasVariants && activeVariant) {
       const target = parsed.variants[activeVariant];
-      if (target) animateTo(target);
+      if (target) {
+        // Schedule after the animated style has subscribed to its shared
+        // values. This is required by Reanimated Web and is harmless on native.
+        const delay = parsed.transition.delay ?? 0;
+        const timer = setTimeout(() => animateTo(target), delay);
+        return () => clearTimeout(timer);
+      }
     }
   }, [hasVariants, activeVariant, parsed, animateTo, variantCtx.active]);
 
@@ -304,7 +335,7 @@ export function useMotionwind(className: string) {
     const style: Record<string, unknown> = {};
     const transforms: Record<string, number | string>[] = [];
 
-    for (const [key, sv] of sharedValues.current.entries()) {
+    for (const [key, sv] of animatedEntries) {
       if (TRANSFORM_KEYS.has(key)) {
         transforms.push({ [key]: sv.value });
       } else {
@@ -339,11 +370,20 @@ export function useMotionwind(className: string) {
     }
 
     return style;
-  });
+  }, [
+    animatedEntries,
+    hasScroll,
+    progressX,
+    progressY,
+    scrollAxis,
+    scrollValues,
+  ]);
 
   // Gesture handlers for tap, hover (pressIn/pressOut on RN)
   const handlers = useMemo(() => {
     const h: Record<string, () => void> = {};
+
+    if (reduceMotion) return h;
 
     if (parsed.gestures.whileTap) {
       h.onPressIn = () => animateTo(parsed.gestures.whileTap);
@@ -363,7 +403,7 @@ export function useMotionwind(className: string) {
     }
 
     return h;
-  }, [parsed.gestures, animateTo, resetToBase]);
+  }, [parsed.gestures, animateTo, resetToBase, reduceMotion]);
 
   // If this element selects a variant state, propagate it to descendants.
   const variantProvide: VariantContextValue | undefined =
