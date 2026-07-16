@@ -1,77 +1,60 @@
 ---
 title: "React Native"
-description: "Bring motionwind's Tailwind-like animation classes to React Native with Reanimated."
+description: "The tested capability contract for the beta Motionwind v2 React Native adapter."
 ---
 
-# React Native
+# React Native in v2
 
-motionwind for React Native lets you animate mobile apps using the same `animate-*` class syntax you already know from the web — powered by `react-native-reanimated` for 60fps native animations.
-
-<RNPreview title="Welcome Card — Staggered Entrance">
-  <div style={{width: '100%'}}>
-    <AnimBox animation="fadeSlideUp">
-      <div style={{background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 16, padding: '16px 20px'}}>
-        <AnimBox animation="fadeIn" delay={200}>
-          <div style={{color: '#f0f0f0', fontSize: 16, fontWeight: 700, marginBottom: 4}}>Welcome</div>
-        </AnimBox>
-        <AnimBox animation="fadeIn" delay={400}>
-          <div style={{color: '#8a8a9a', fontSize: 12}}>Animations feel native because they are.</div>
-        </AnimBox>
-      </div>
-    </AnimBox>
-  </div>
-</RNPreview>
-
-## Why motionwind on React Native?
-
-- **Same API** — Write `animate-hover:scale-110` on web and `animate-tap:scale-95` on mobile. One mental model, two platforms.
-- **Reanimated under the hood** — Animations run on the UI thread, not JavaScript. Zero dropped frames.
-- **NativeWind compatible** — Non-animation Tailwind classes pass through to NativeWind automatically.
-- **Runtime parsing** — No build-time Babel step needed. The `mw.*` component proxy parses classes at runtime with an LRU cache.
-
-## How it works
+`motionwind-react-native` is the beta adapter for Reanimated. It shares syntax,
+configuration, presets, plugins, and diagnostics with the stable web adapters,
+then maps the supported subset to native styles and event handlers.
 
 ```tsx
-import { mw } from "motionwind-react-native";
+import { defineConfig, MotionwindProvider, mw } from "motionwind-react-native";
 
-<mw.Pressable className="animate-tap:scale-95 animate-duration-150 bg-blue-500 p-4 rounded-xl">
-  <mw.Text className="text-white font-bold">Press me</mw.Text>
-</mw.Pressable>
+const config = defineConfig({
+  adapter: "react-native",
+  strict: true,
+  reducedMotion: "user",
+});
+
+export default function Card() {
+  return (
+    <MotionwindProvider config={config}>
+      <mw.Pressable className="animate-tap:scale-95 animate-spring">
+        <mw.Text>Press me</mw.Text>
+      </mw.Pressable>
+    </MotionwindProvider>
+  );
+}
 ```
 
-The `mw.Pressable` component:
+## Capability contract
 
-1. **Parses** the className string, separating `animate-*` tokens from regular classes
-2. **Creates** Reanimated shared values for each animated property (`scale`)
-3. **Maps** gestures to RN handlers (`animate-tap:` → `onPressIn` / `onPressOut`)
-4. **Passes** remaining classes (`bg-blue-500 p-4 rounded-xl`) to NativeWind via `className`
+| Capability              | v2 status  | Notes                                                                        |
+| ----------------------- | ---------- | ---------------------------------------------------------------------------- |
+| Initial and enter       | Beta       | Reanimated timing and spring transitions.                                    |
+| Tap                     | Beta       | Uses `onPressIn` and `onPressOut`; prefer `mw.Pressable`.                    |
+| Hover and focus         | Beta       | Work only when the rendered native component/platform emits those handlers.  |
+| Named variants          | Beta       | Includes parent-to-child active-state propagation.                           |
+| Scroll-linked values    | Beta       | Descendants consume normalized progress from `mw.ScrollView`.                |
+| Reduced motion          | Beta       | Provider policy and Reanimated's system preference are applied.              |
+| Drag                    | Direct API | Emits `unsupported-native-drag`; integrate Gesture Handler directly.         |
+| Layout transitions      | Direct API | Emits `unsupported-native-layout`; use Reanimated layout transitions.        |
+| In-view classes         | Direct API | Emits `unsupported-native-inview`; orchestrate visibility yourself.          |
+| SVG and web-only styles | Direct API | Emits `unsupported-native-property`; use native/SVG APIs.                    |
+| Exit orchestration      | Direct API | Exit data can be parsed, but unmount must be coordinated by the application. |
 
-<RNPreview title="Tap to Scale — Press Interaction">
-  <AnimBox animation="tapScale">
-    <div style={{background: '#3b82f6', padding: '12px 24px', borderRadius: 12, cursor: 'pointer', userSelect: 'none'}}>
-      <span style={{color: '#fff', fontSize: 13, fontWeight: 600}}>Press me</span>
-    </div>
-  </AnimBox>
-</RNPreview>
+Non-animation classes pass through to NativeWind when it is installed.
+Unsupported animation syntax returns parser diagnostics, and development
+warnings identify the required direct API.
 
-## Web vs. Native differences
+## Timing differences
 
-| Feature | Web (`motionwind-react`) | Native (`motionwind-react-native`) |
-|---|---|---|
-| Animation engine | `motion/react` (Framer Motion) | `react-native-reanimated` |
-| Styling | Tailwind CSS | NativeWind (optional) |
-| `whileHover` | Mouse hover | `onHoverIn/Out` (RN 0.71+) |
-| `whileTap` | Click/touch | `onPressIn/Out` |
-| CSS filters | `blur()`, `brightness()` | Not supported (dropped silently) |
-| CSS units | `vh`, `vw`, `rem`, `em` | Plain numbers (device-independent pixels) |
-| `x` / `y` translate | CSS translate | RN `translateX`/`translateY` (auto-mapped) |
-| Rotate values | Number (degrees) | String (`"45deg"`) (auto-formatted) |
-| Duration unit | Seconds (`0.3`) | Milliseconds (`300`) |
+The shared parser stores Motion durations in seconds. The native adapter
+converts them to Reanimated milliseconds. It also maps `x`/`y` to
+`translateX`/`translateY` and formats rotation values as degree strings.
 
-## Next steps
-
-- [Installation](/docs/react-native/installation) — Set up your project
-- [Components](/docs/react-native/components) — Learn about `mw.*` components
-- [Animations](/docs/react-native/animations) — Entrance, exit, and state animations
-- [Gestures](/docs/react-native/gestures) — Tap, hover, and focus interactions
-- [Hooks](/docs/react-native/hooks) — `useMotionwind` and `useInView` for custom control
+Continue with [Installation](/docs/react-native/installation),
+[Components](/docs/react-native/components), and the
+[API Reference](/docs/react-native/api-reference).

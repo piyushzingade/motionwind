@@ -1,238 +1,107 @@
 ---
 title: "API Reference"
-description: "Complete type definitions and exports for motionwind-react-native."
+description: "Public exports, parsed result, capabilities, and diagnostics for motionwind-react-native v2."
 ---
 
-# API Reference
+# React Native API reference
 
-Complete reference for all exports from `motionwind-react-native`.
-
-## Exports
+## Public exports
 
 ```tsx
 import {
-  // Component proxy
   mw,
-
-  // Hooks
+  MotionwindProvider,
+  useMotionwindConfig,
   useMotionwind,
   useInView,
-
-  // Parser
   parseMotionClasses,
   clearParserCache,
-
-  // Types
-  type ParsedResult,
-  type GestureKey,
-  type AnimatableValues,
-  type NativeAnimatableStyle,
-  type TransitionConfig,
-  type ViewportConfig,
-  type DragConfig,
+  reactNativeAdapter,
+  REACT_NATIVE_CAPABILITIES,
+  MotionwindVariantContext,
+  useVariantContext,
+  MotionwindScrollContext,
+  useMotionScrollContext,
+  defineConfig,
+  definePreset,
+  defineMotionwindPlugin,
+  MOTIONWIND_RECIPES,
 } from "motionwind-react-native";
 ```
 
-## Types
+The package also exports `MotionwindConfig`, `MotionwindDiagnostic`, and all
+native parsed-result types.
 
-### GestureKey
+## Provider
 
 ```tsx
-type GestureKey =
-  | "whileHover"
-  | "whileTap"
-  | "whileFocus"
-  | "whileInView"
-  | "initial"
-  | "animate"
-  | "exit";
+<MotionwindProvider config={config}>{children}</MotionwindProvider>
 ```
 
-### AnimatableValues
+The provider supplies tokens, presets, plugins, strictness, and reduced-motion
+policy to runtime parsing. With `reducedMotion: "always"`, or with the system
+preference under the default `"user"` policy, interactive handlers are omitted
+and target values are applied without animation.
 
-```tsx
-type AnimatableValues = Record<string, string | number | (string | number)[]>;
-```
+## `ParsedResult`
 
-### NativeAnimatableStyle
-
-All properties that can be animated on React Native:
-
-```tsx
-interface NativeAnimatableStyle {
-  // Transform
-  translateX?: number;
-  translateY?: number;
-  scale?: number;
-  scaleX?: number;
-  scaleY?: number;
-  rotate?: string;      // "45deg"
-  rotateX?: string;
-  rotateY?: string;
-  rotateZ?: string;
-  skewX?: string;       // "15deg"
-  skewY?: string;
-
-  // Layout
-  width?: number | string;
-  height?: number | string;
-  top?: number;
-  left?: number;
-  right?: number;
-  bottom?: number;
-  padding?: number;
-  margin?: number;
-  borderRadius?: number;
-  borderWidth?: number;
-  gap?: number;
-
-  // Visual
-  opacity?: number;
-  backgroundColor?: string;
-  color?: string;
-  borderColor?: string;
-
-  // Typography
-  fontSize?: number;
-  letterSpacing?: number;
-  lineHeight?: number;
-}
-```
-
-### TransitionConfig
-
-```tsx
-interface TransitionConfig {
-  type?: "spring" | "timing";
-  duration?: number;              // Milliseconds
-  delay?: number;                 // Milliseconds
-  easing?:
-    | "linear" | "easeIn" | "easeOut" | "easeInOut"
-    | "circIn" | "circOut" | "circInOut"
-    | "backIn" | "backOut" | "backInOut"
-    | number[];                   // Cubic-bezier [x1, y1, x2, y2]
-  stiffness?: number;
-  damping?: number;
-  mass?: number;
-  overshootClamping?: boolean;
-  restDisplacementThreshold?: number;
-  restSpeedThreshold?: number;
-  repeat?: number;                // -1 for infinite
-  repeatReverse?: boolean;
-  staggerChildren?: number;       // Milliseconds
-  staggerDirection?: 1 | -1;
-  delayChildren?: number;         // Milliseconds
-}
-```
-
-### ViewportConfig
-
-```tsx
-interface ViewportConfig {
-  once?: boolean;
-  amount?: "some" | "all" | number;  // 0–1
-  margin?: number;                    // Pixels
-}
-```
-
-### DragConfig
-
-```tsx
-interface DragConfig {
-  drag?: boolean | "x" | "y";
-  dragElastic?: number;               // 0–1
-  dragSnapToOrigin?: boolean;
-  dragMomentum?: boolean;
-  dragConstraints?: {
-    top?: number;
-    left?: number;
-    right?: number;
-    bottom?: number;
-  };
-}
-```
-
-### ParsedResult
-
-```tsx
+```ts
 interface ParsedResult {
   nativewindClasses: string;
   gestures: Partial<Record<GestureKey, NativeAnimatableStyle>>;
   transition: TransitionConfig;
   viewport: ViewportConfig;
   dragConfig: DragConfig;
+  scroll: ScrollConfig;
+  variants: VariantMap;
+  variantState: VariantState;
   hasMotion: boolean;
+  diagnostics: MotionwindDiagnostic[];
 }
 ```
 
-## Class reference
+`TransitionConfig` uses milliseconds and Reanimated easing names. `ScrollConfig`
+contains `{ axis, container, offset, values }`, with values mapped to native
+property names. Variants map names to `NativeAnimatableStyle`; `variantState`
+selects initial, active, and exit names.
 
-### Gesture prefixes
+`viewport` and `DragConfig` remain public compatibility types, but the v2
+component adapter does not orchestrate in-view or drag. Unsupported drag syntax
+returns an empty `dragConfig` plus a diagnostic.
 
-| Prefix | Maps to | RN Handler |
-|---|---|---|
-| `animate-initial:` | Starting state | Set on mount |
-| `animate-enter:` | Target state | Animated on mount |
-| `animate-exit:` | Exit state | On unmount |
-| `animate-tap:` | `whileTap` | `onPressIn/Out` |
-| `animate-hover:` | `whileHover` | `onHoverIn/Out` |
-| `animate-focus:` | `whileFocus` | `onFocus/Blur` |
-| `animate-inview:` | `whileInView` | `onLayout` detection |
+## Capabilities
 
-### Transition classes
-
-| Class | Description |
-|---|---|
-| `animate-duration-{ms}` | Animation duration in milliseconds |
-| `animate-delay-{ms}` | Delay before animation starts |
-| `animate-ease-out` | Ease-out cubic curve |
-| `animate-ease-in` | Ease-in cubic curve |
-| `animate-ease-in-out` | Ease-in-out cubic curve |
-| `animate-ease-linear` | Linear (constant speed) |
-| `animate-ease-circ-out` | Circular ease-out |
-| `animate-ease-circ-in` | Circular ease-in |
-| `animate-ease-circ-in-out` | Circular ease-in-out |
-| `animate-ease-back-out` | Back ease-out (overshoot) |
-| `animate-ease-back-in` | Back ease-in |
-| `animate-ease-back-in-out` | Back ease-in-out |
-| `animate-ease-[x1,y1,x2,y2]` | Custom cubic-bezier |
-| `animate-spring` | Use spring physics |
-| `animate-stiffness-{n}` | Spring stiffness |
-| `animate-damping-{n}` | Spring damping |
-| `animate-mass-{n}` | Spring mass (÷10) |
-| `animate-repeat-{n}` | Repeat N times |
-| `animate-repeat-infinite` | Loop forever |
-| `animate-repeat-reverse` | Reverse on repeat |
-| `animate-stagger-{ms}` | Stagger children delay |
-| `animate-stagger-reverse` | Stagger from last child |
-| `animate-delay-children-{ms}` | Delay before first child |
-| `animate-once` | Animate only once (viewport) |
-| `animate-amount-{n}` | Viewport visibility % |
-| `animate-amount-all` | Require full visibility |
-| `animate-margin-{n}` | Viewport detection offset |
-
-### Drag classes
-
-| Class | Description |
-|---|---|
-| `animate-drag-x` | Enable horizontal drag |
-| `animate-drag-y` | Enable vertical drag |
-| `animate-drag-both` | Enable both directions |
-| `animate-drag-elastic-{n}` | Elasticity 0–100 |
-| `animate-drag-snap` | Snap back to origin on release |
-| `animate-drag-no-momentum` | Stop immediately on release |
-| `animate-drag-constraint-t-{n}` | Max drag up (pixels) |
-| `animate-drag-constraint-b-{n}` | Max drag down |
-| `animate-drag-constraint-l-{n}` | Max drag left |
-| `animate-drag-constraint-r-{n}` | Max drag right |
-
-## Peer dependencies
-
-```json
-{
-  "react": "^18.0.0 || ^19.0.0",
-  "react-native": ">=0.72.0",
-  "react-native-reanimated": "^3.0.0 || ^4.0.0",
-  "nativewind": "^4.0.0 (optional)"
-}
+```ts
+const REACT_NATIVE_CAPABILITIES = {
+  gestures: true,
+  scroll: true,
+  layout: false,
+  drag: false,
+  variants: true,
+  svg: false,
+  "reduced-motion": true,
+} as const;
 ```
+
+`gestures: true` describes the supported native handler subset; it does not
+promote in-view orchestration or drag. Use `diagnostics` for a class-level
+decision.
+
+## Native diagnostic codes
+
+| Code                          | Meaning                                                             | Required action                                             |
+| ----------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `unsupported-native-inview`   | `animate-inview:*` is not consumed.                                 | Measure/observe visibility and orchestrate directly.        |
+| `unsupported-native-drag`     | Drag classes have no native recognizer.                             | Use Gesture Handler and Reanimated.                         |
+| `unsupported-native-layout`   | Layout projection classes are not consumed.                         | Use Reanimated layout transitions.                          |
+| `unsupported-native-property` | The class targets CSS, SVG, perspective, or another web-only value. | Use a native component/API with an explicit implementation. |
+
+Shared parser diagnostics can also appear for unknown classes, invalid values,
+missing presets, or extension compatibility.
+
+## Subpath exports
+
+Advanced integrations may import `motionwind-react-native/parser`, `/config`,
+or `/adapter`. The package also exposes `/babel` for compatibility with tooling;
+applications should configure Reanimated using the installation guide rather
+than treating that subpath as a replacement for Reanimated's plugin.

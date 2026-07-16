@@ -1,100 +1,54 @@
 ---
 title: "Hooks"
-description: "useMotionwind and useInView hooks for custom animation control."
+description: "Use useMotionwind and the limited useInView helper for custom native orchestration."
 ---
 
 # Hooks
 
-For cases where the `mw.*` component proxy isn't flexible enough, motionwind-react-native exports hooks that give you direct control.
+## `useMotionwind(className)`
 
-## useMotionwind
-
-Parses a motionwind className string and returns Reanimated animated styles, gesture handlers, and animation controls.
-
-<RNPreview title="useMotionwind Hook">
-  <AnimBox animation="fadeSlideUp">
-    <div className="rn-anim-tapScale" style={{background: 'rgba(200,255,46,0.1)', border: '1px solid rgba(200,255,46,0.2)', borderRadius: 14, padding: '16px 20px', cursor: 'pointer'}}>
-      <span style={{color: '#c8ff2e', fontSize: 13, fontWeight: 700}}>Custom Hook Card</span>
-      <div style={{color: '#8a8a9a', fontSize: 10, marginTop: 4}}>Fade in + tap to scale</div>
-    </div>
-  </AnimBox>
-</RNPreview>
-
-### Return value
+The hook parses with provider configuration and returns:
 
 ```tsx
 const {
-  animatedStyle,  // Pass to Animated.View's style prop
-  handlers,       // Gesture handlers (onPressIn, etc.)
-  parsed,         // Raw parsed result
-  animateTo,      // Animate to a target state
-  resetToBase,    // Reset to "enter" state
+  animatedStyle,
+  handlers,
+  parsed,
+  animateTo,
+  resetToBase,
+  variantProvide,
 } = useMotionwind(className);
 ```
 
-### Manual animation control
-
-Use `animateTo` and `resetToBase` for custom logic:
-
-<RNPreview title="Manual Control — Toggle">
-  <AnimBox animation="spring">
-    <div className="rn-anim-tapScale" style={{background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: 14, padding: '16px 20px', cursor: 'pointer', textAlign: 'center'}}>
-      <span style={{color: '#a78bfa', fontSize: 13, fontWeight: 700}}>Tap to toggle</span>
-      <div style={{color: '#8a8a9a', fontSize: 10, marginTop: 4}}>animateTo ↔ resetToBase</div>
-    </div>
-  </AnimBox>
-</RNPreview>
-
-## useInView
-
-Detects when a component enters the viewport area.
-
-### Signature
+- `animatedStyle` is passed to an Animated component.
+- `handlers` contains supported press, hover, and focus callbacks.
+- `parsed` includes diagnostics and adapted native data.
+- `animateTo(style)` runs a supported native target.
+- `resetToBase()` returns to the enter/default target.
+- `variantProvide` supports custom variant propagation.
 
 ```tsx
-function useInView(config: ViewportConfig): {
-  isInView: boolean;
-  onLayout: (event: LayoutChangeEvent) => void;
-  viewRef: React.RefObject<any>;
-};
+const motion = useMotionwind(
+  "animate-enter:opacity-100 animate-tap:scale-95 animate-duration-150",
+);
+
+<Animated.View
+  style={[baseStyle, motion.animatedStyle]}
+  {...motion.handlers}
+/>;
 ```
 
-### Configuration
+## `useInView(config)`
 
-```tsx
-const { isInView, onLayout } = useInView({
-  once: true,      // Only trigger once
-  amount: 0.5,     // 50% must be visible
-  margin: 50,      // 50px offset
-});
-```
+This helper returns `{ isInView, onLayout, viewRef }`. It compares the layout
+event's local Y coordinates with the current window height. It does not observe
+subsequent parent scrolling and does not implement the `amount` threshold.
 
-## parseMotionClasses
+Treat it as a simple layout helper, not parity with web IntersectionObserver.
+For scroll-aware visibility, use the owner ScrollView's measurement or viewability
+API and call `animateTo` explicitly.
 
-The raw parser function — useful for debugging or custom integrations.
+## Parser cache
 
-<RNPreview title="Parser Output">
-  <div style={{width: '100%'}}>
-    <AnimBox animation="fadeIn">
-      <div style={{fontFamily: 'monospace', fontSize: 10, lineHeight: '18px', color: '#8a8a9a'}}>
-        <div><span style={{color: '#c8ff2e'}}>nativewindClasses:</span> "bg-blue-500 p-4"</div>
-        <div><span style={{color: '#c8ff2e'}}>gestures.whileTap:</span> {"{ scale: 0.95 }"}</div>
-        <div><span style={{color: '#c8ff2e'}}>transition:</span> {"{ type: \"spring\", duration: 200 }"}</div>
-        <div><span style={{color: '#c8ff2e'}}>hasMotion:</span> true</div>
-      </div>
-    </AnimBox>
-  </div>
-</RNPreview>
-
-### clearParserCache
-
-The parser uses an LRU cache (max 1000 entries):
-
-```tsx
-import { clearParserCache } from "motionwind-react-native";
-clearParserCache();
-```
-
-## Next steps
-
-- [API Reference](/docs/react-native/api-reference) — Complete type definitions
+`parseMotionClasses` uses a bounded cache when no custom config is passed.
+`clearParserCache()` is available for tests and long-lived development tooling.

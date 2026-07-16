@@ -1,57 +1,24 @@
 ---
-title: "LLMs.txt"
-description: "LLM-friendly reference for motionwind-react-native — copy the complete API docs and paste into any LLM."
+title: "LLM Reference"
+description: "Give agents an accurate, versioned React Native v2 capability reference."
 ---
 
-# LLMs.txt — React Native
+# LLM reference
 
-The `llms-native.txt` file contains the entire `motionwind-react-native` documentation — installation, API, all animation classes, hooks, gestures, drag, and common patterns — in a single markdown file. Paste it into ChatGPT, Claude, or any LLM so it can write motionwind React Native code for you.
+The published [`llms-native.txt`](/llms-native.txt) is generated-maintained as a
+single-context reference for `motionwind-react-native@2`. It includes the exact
+component map, configuration/provider setup, parsed-result shape, supported
+gestures and scroll values, diagnostic codes, and direct API fallbacks.
 
-<CopyLlmsButton src="/llms-native.txt" />
+When using it in an agent prompt, require these rules:
 
-## What's included
+1. Target `motionwind-react-native@2` and include Reanimated's build setup.
+2. Use `mw.Pressable` for press behavior and only documented component names.
+3. Never generate drag, layout, in-view, SVG, or web-only animation classes as
+   if the native adapter implements them.
+4. Read `ParsedResult.diagnostics` in generators and migration tools.
+5. Use direct Gesture Handler/Reanimated APIs for capability gaps.
 
-- Installation and setup for Expo and bare React Native
-- Complete `mw.*` component reference
-- `useMotionwind` and `useInView` hooks API
-- All gesture prefixes with RN handler mappings
-- Every animatable property (transforms, visual, layout, typography)
-- Transition, viewport, and drag configuration
-- Spring physics and easing functions
-- 6 common patterns (mount animation, tap, spring, pulse, scroll reveal, drag)
-- Web vs. Native differences table
-- Troubleshooting guide
-
-## How to use
-
-1. Click **Copy to clipboard** above.
-2. Paste it into your LLM conversation as context.
-3. Ask it to build React Native components using motionwind classes — it will know the full syntax.
-
-## Quick preview
-
-Here's a taste of what the LLM will be able to generate:
-
-```tsx
-import { mw } from "motionwind-react-native";
-
-// Staggered entrance animation
-<mw.View className="animate-stagger-100">
-  <mw.View className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500">
-    <mw.Text>First item</mw.Text>
-  </mw.View>
-  <mw.View className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-500">
-    <mw.Text>Second item</mw.Text>
-  </mw.View>
-</mw.View>
-
-// Spring tap button
-<mw.Pressable className="animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 bg-blue-500 p-4 rounded-xl">
-  <mw.Text className="text-white font-bold text-center">Press me</mw.Text>
-</mw.Pressable>
-
-// Draggable card
-<mw.View className="animate-drag-both animate-drag-elastic-50 animate-drag-snap bg-gray-800 p-6 rounded-2xl">
-  <mw.Text className="text-white">Drag me around</mw.Text>
-</mw.View>
-```
+For interactive agent integrations, the shared
+[Motionwind MCP server](/docs/tooling/mcp) is preferable because it reads the
+same definition registry and adapter capabilities as the parser.
