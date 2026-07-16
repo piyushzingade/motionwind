@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Motionwind — Motion animations as Tailwind classes",
+  title: "Motionwind v2 — one Motion utility language across frameworks",
   description:
-    "Write Motion animations as Tailwind-like utility classes. Build-time Babel transform, zero runtime overhead, no imports needed. Hover, tap, scroll, drag — all as class names.",
+    "Documentation for Motionwind v2 across React, Vue, JavaScript, and React Native, including configuration, adapter capabilities, and tested compatibility.",
   alternates: {
     canonical: "https://www.motionwind.xyz",
   },
@@ -15,7 +15,7 @@ export default function DocsHome() {
     <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-[var(--color-bg)]">
       <div className="mb-8">
         <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
-          Documentation
+          Documentation · v2.0.0
         </span>
       </div>
 
@@ -26,8 +26,8 @@ export default function DocsHome() {
         docs
       </h2>
       <p className="text-[0.9375rem] text-[var(--color-fg-muted)] mb-10 max-w-md mx-auto leading-relaxed">
-        Write Motion animations as Tailwind-like classes. Zero imports, zero
-        boilerplate, zero runtime overhead.
+        One tested animate-* language for React, Vue, JavaScript, and React
+        Native, with compile-time transforms and explicit runtime adapters.
       </p>
 
       {/* Dashed divider */}
@@ -56,7 +56,19 @@ export default function DocsHome() {
           className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-[var(--color-accent-fg)] no-underline transition-all hover:bg-[var(--color-accent-hover)]"
         >
           Get Started
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+            />
+          </svg>
         </Link>
         <a
           href="https://web.motionwind.xyz/"
@@ -65,7 +77,19 @@ export default function DocsHome() {
           className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-accent)] bg-[var(--color-accent)]/[0.06] px-6 py-3 text-sm font-semibold text-[var(--color-accent)] no-underline transition-colors hover:bg-[var(--color-accent)]/[0.12]"
         >
           Live Example
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+            />
+          </svg>
         </a>
       </div>
     </div>

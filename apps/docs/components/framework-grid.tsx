@@ -35,12 +35,17 @@ const ArrowIcon = (
 const FRAMEWORKS: Framework[] = [
   {
     name: "React",
-    tagline: "Vite & Next.js — a build-time Babel transform, zero runtime.",
+    tagline: "Vite & Next.js — compile static tokens with no runtime parser.",
     href: "/docs/frameworks/react",
-    install: "npm i motionwind-react",
+    install: "npm i motionwind-react@2 motion motionwind-core@2",
     featured: true,
     icon: (
-      <svg viewBox="-11.5 -10.23 23 20.46" width="20" height="20" aria-hidden="true">
+      <svg
+        viewBox="-11.5 -10.23 23 20.46"
+        width="20"
+        height="20"
+        aria-hidden="true"
+      >
         <circle r="2" fill="currentColor" />
         <g stroke="currentColor" strokeWidth="1" fill="none">
           <ellipse rx="11" ry="4.2" />
@@ -52,11 +57,16 @@ const FRAMEWORKS: Framework[] = [
   },
   {
     name: "React Native",
-    tagline: "Expo — runtime mw.* components powered by Reanimated.",
+    tagline: "Expo beta — runtime mw.* components powered by Reanimated.",
     href: "/docs/frameworks/react-native",
-    install: "npm i motionwind-react-native",
+    install: "npm i motionwind-react-native@2 motionwind-core@2",
     icon: (
-      <svg viewBox="-11.5 -10.23 23 20.46" width="20" height="20" aria-hidden="true">
+      <svg
+        viewBox="-11.5 -10.23 23 20.46"
+        width="20"
+        height="20"
+        aria-hidden="true"
+      >
         <circle r="2" fill="currentColor" />
         <g stroke="currentColor" strokeWidth="1" fill="none" opacity="0.85">
           <ellipse rx="11" ry="4.2" />
@@ -70,10 +80,19 @@ const FRAMEWORKS: Framework[] = [
     name: "Vue 3",
     tagline: "A build-time template transform → Motion for Vue.",
     href: "/docs/frameworks/vue",
-    install: "npm i motionwind-vue motion-v",
+    install: "npm i motionwind-vue@2 motion-v motionwind-core@2",
     icon: (
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-        <path d="M2 3.5h4.2L12 13.2 17.8 3.5H22L12 20.5 2 3.5z" opacity="0.55" />
+      <svg
+        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          d="M2 3.5h4.2L12 13.2 17.8 3.5H22L12 20.5 2 3.5z"
+          opacity="0.55"
+        />
         <path d="M6.2 3.5h3.3L12 7.8l2.5-4.3h3.3L12 13.4 6.2 3.5z" />
       </svg>
     ),
@@ -82,9 +101,19 @@ const FRAMEWORKS: Framework[] = [
     name: "Vanilla / CDN",
     tagline: "A runtime DOM scan → Motion. No build step, drop in a script.",
     href: "/docs/frameworks/vanilla",
-    install: "npm i motionwind-vanilla motion",
+    install: "npm i motionwind-vanilla@2 motion motionwind-core@2",
     icon: (
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
         <circle cx="12" cy="12" r="10" />
         <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
       </svg>

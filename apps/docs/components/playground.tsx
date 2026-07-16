@@ -25,7 +25,7 @@ export function Playground({
   );
 
   const El = (
-    mw as Record<
+    mw as unknown as Record<
       string,
       ComponentType<{ className?: string; children?: ReactNode }>
     >

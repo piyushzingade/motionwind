@@ -1,6 +1,15 @@
-import { defineDocs, defineConfig } from "fumadocs-mdx/config";
+import {
+  defineDocs,
+  defineConfig,
+  frontmatterSchema,
+  metaSchema,
+  type DocsCollection,
+} from "fumadocs-mdx/config";
 
-export const docs = defineDocs({
+export const docs: DocsCollection<
+  typeof frontmatterSchema,
+  typeof metaSchema
+> = defineDocs({
   dir: "content/docs",
 });
 

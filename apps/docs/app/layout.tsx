@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Instrument_Serif,
-  Inter,
-  JetBrains_Mono,
-} from "next/font/google";
+import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -31,11 +27,12 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Motionwind — Motion animations as Tailwind classes",
+    default:
+      "Motionwind v2 — Motion utility classes for every official adapter",
     template: "%s | Motionwind",
   },
   description:
-    "Write Motion animations as Tailwind-like utility classes. Build-time Babel transform, zero runtime overhead, no imports needed. Hover, tap, scroll, drag — all as class names.",
+    "A shared Motion utility language for React, Vue, JavaScript, and React Native, with compile-time transforms, explicit runtime adapters, presets, plugins, and strict diagnostics.",
   metadataBase: new URL("https://www.motionwind.xyz"),
   keywords: [
     "motionwind",
@@ -45,10 +42,13 @@ export const metadata: Metadata = {
     "tailwind css",
     "animation",
     "react animation",
+    "vue animation",
+    "react native animation",
+    "javascript animation",
     "css animation",
     "utility classes",
     "babel plugin",
-    "zero runtime",
+    "compile time animation",
     "next.js animation",
     "vite animation",
     "spring physics",
@@ -64,24 +64,24 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Motionwind",
     url: "https://www.motionwind.xyz",
-    title: "Motionwind — Motion animations as Tailwind classes",
+    title: "Motionwind v2 — Motion utility classes across frameworks",
     description:
-      "Write Motion animations as Tailwind-like classes. Zero imports, zero boilerplate, zero runtime overhead. Supports hover, tap, scroll, drag, and spring physics.",
+      "One tested animate-* language for React, Vue, JavaScript, and React Native, backed by a shared parser and explicit adapter capabilities.",
     locale: "en_US",
     images: [
       {
         url: "https://www.motionwind.xyz/og-docs.png",
         width: 1200,
         height: 630,
-        alt: "Motionwind — Motion animations as Tailwind classes",
+        alt: "Motionwind v2 — Motion utility classes across frameworks",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Motionwind — Motion animations as Tailwind classes",
+    title: "Motionwind v2 — Motion utility classes across frameworks",
     description:
-      "Write Motion animations as Tailwind-like classes. Zero imports, zero boilerplate, zero runtime overhead.",
+      "One tested animate-* language for React, Vue, JavaScript, and React Native.",
     images: ["https://www.motionwind.xyz/og-docs.png"],
   },
   robots: {
@@ -119,7 +119,7 @@ export default function RootLayout({
               applicationCategory: "DeveloperApplication",
               operatingSystem: "Any",
               description:
-                "Write Motion animations as Tailwind-like utility classes. Build-time Babel transform with zero runtime overhead.",
+                "A shared Motion utility language for React, Vue, JavaScript, and React Native with compile-time transforms and explicit runtime adapters.",
               url: "https://www.motionwind.xyz",
               offers: {
                 "@type": "Offer",
