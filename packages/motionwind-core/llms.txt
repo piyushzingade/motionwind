@@ -1,56 +1,77 @@
-# motionwind-core
+# motionwind-core v2.0.0 — machine reference
 
-Framework-agnostic core for motionwind. Parses Tailwind-like `animate-*` classes into a
-structured `ParsedResult`. Zero dependencies. This is the shared engine behind the React, React
-Native, Vue, and Vanilla adapters — you usually depend on an adapter, not this directly.
+motionwind-core is the only Motionwind syntax/parser/type/config/registry
+implementation. Framework adapters consume its Motion-first ParsedResult.
 
-## Install
+Install: npm install motionwind-core@2
 
-```bash
-npm install motionwind-core
-```
+Primary exports:
+- parseMotionClasses(className, config?) and clearParserCache()
+- classifyMotionToken(), analyzeClassName(), sortMotionClasses()
+- defineConfig(), definePreset(), defineMotionwindPlugin()
+- defineMotionwindAdapter(), unsupportedCapabilities()
+- MOTIONWIND_SYNTAX_REGISTRY, getSyntaxDefinitions()
+- MOTIONWIND_RECIPES and BUILT_IN_PRESETS
+- ParsedResult, MotionwindConfig, MotionwindDiagnostic, AdapterCapabilities types
 
-## API
-
+Configuration:
 ```ts
-import { parseMotionClasses, classifyMotionToken } from "motionwind-core";
-
-const parsed = parseMotionClasses("px-4 animate-hover:scale-110 animate-spring");
-// parsed.tailwindClasses -> "px-4"
-// parsed.gestures        -> { whileHover: { scale: 1.1 } }
-// parsed.transition      -> { type: "spring" }
-// parsed.hasMotion       -> true
-
-classifyMotionToken("animate-hover:scale-110"); // "gesture"
-classifyMotionToken("animate-spring");          // "transition"
-classifyMotionToken("px-4");                     // "tailwind"
+const config = defineConfig({
+  adapter: "react",
+  strict: true,
+  reducedMotion: "user", // user | always | never
+  tokens: {
+    durations: { fast: 160 },
+    easings: { product: [0.22, 1, 0.36, 1] },
+    springs: { responsive: { stiffness: 420, damping: 28 } },
+  },
+  presets: {
+    pop: "animate-initial:scale-95 animate-enter:scale-100 animate-spring-responsive",
+  },
+  plugins: [],
+});
 ```
 
-### ParsedResult shape
-
+ParsedResult:
 ```ts
 interface ParsedResult {
-  tailwindClasses: string;                              // non-motion classes, passed through
-  gestures: Partial<Record<GestureKey, AnimatableValues>>; // whileHover, whileTap, whileFocus,
-                                                        // whileInView, whileDrag, initial, animate, exit
-  transition: TransitionConfig;                         // duration, delay, ease, type, stiffness, ...
-  viewport: ViewportConfig;                             // once, amount, margin
-  dragConfig: DragConfig;                               // drag, dragElastic, dragConstraints, ...
-  layoutConfig: LayoutConfig;                           // layout, layoutId, layoutScroll, layoutRoot
-  scroll: ScrollConfig;                                 // { axis, container, offset, values }
-  variants: Record<string, AnimatableValues>;           // named variant targets
+  tailwindClasses: string;
+  gestures: Partial<Record<GestureKey, AnimatableValues>>;
+  transition: TransitionConfig;
+  viewport: ViewportConfig;
+  dragConfig: DragConfig;
+  layoutConfig: LayoutConfig;
+  scroll: ScrollConfig;
+  variants: Record<string, AnimatableValues>;
   variantState: { initial?: string; animate?: string; exit?: string };
+  diagnostics: MotionwindDiagnostic[];
   hasMotion: boolean;
 }
 ```
 
-## Class syntax (summary)
+Syntax summary:
+- gesture: animate-{hover|tap|focus|inview|drag|initial|enter|exit}:{property}-{value}
+- transition: animate-duration-300, animate-delay-100, animate-ease-out,
+  animate-spring, animate-stiffness-400, animate-damping-24
+- viewport: animate-once, animate-amount-50, animate-margin-100
+- scroll: animate-scroll:y-[0,-200], animate-scroll:scaleX-[0,1],
+  animate-scroll-axis-x, animate-scroll-container
+- drag: animate-drag-x, animate-drag-y, animate-drag-both and drag options
+- layout: animate-layout, animate-layout-position, animate-layout-id-card
+- variants: animate-variant-hidden:opacity-0, animate-from-hidden,
+  animate-to-visible, animate-exit-hidden
+- presets: animate-preset-button-press or animate-preset-{configured-name}
+- token values: animate-duration-fast, animate-ease-product,
+  animate-spring-responsive
 
-- Gesture: `animate-{hover|tap|focus|inview|drag|initial|enter|exit}:{prop}-{value}` e.g. `animate-hover:scale-110`
-- Props: `scale`, `scale-x/y`, `rotate`, `x`, `y`, `opacity`, `blur`, `grayscale`, `sepia`, `invert`, `hue-rotate`, `w`, `h`, `rounded`, colors (`bg-#hex`), etc. Negative: prefix `-`. Arbitrary: `[key=value]`.
-- Transition: `animate-duration-300` (ms), `animate-delay-500`, `animate-ease-in-out`, `animate-spring`, `animate-stiffness-400`, `animate-damping-20`, `animate-repeat-infinite`.
-- Viewport: `animate-once`, `animate-amount-50`, `animate-margin-100`.
-- Scroll-linked: `animate-scroll:y-[0,-200]`, `animate-scroll:scaleX-[0,1]`, `animate-scroll-axis-x`, `animate-scroll-container`.
-- Variants: `animate-variant-{name}:{prop}-{value}` + `animate-from-{name}` / `animate-to-{name}` / `animate-exit-{name}`.
+Common properties include scale, scale-x/y, rotate, rotate-x/y, skew-x/y, x,
+y, opacity, colors, width/height, radius, spacing, typography, filters, clip
+path, shadows, and SVG path values. Read MOTIONWIND_SYNTAX_REGISTRY rather than
+maintaining a duplicate property list.
 
-Values are memoized (LRU). The parser has no framework/runtime code — it only produces data.
+AdapterCapabilities keys are gestures, scroll, layout, drag, variants, svg,
+and reduced-motion. An adapter must report gaps; it must not silently accept an
+unsupported capability.
+
+Plugins can contribute presets, syntax definitions, token transforms, and
+diagnostics. Their optional core field declares a compatible core range.

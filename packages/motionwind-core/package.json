@@ -1,7 +1,8 @@
 {
   "name": "motionwind-core",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "type": "module",
+  "sideEffects": false,
   "description": "Framework-agnostic core for motionwind — parses animate-* classes into structured motion props. Zero dependencies.",
   "author": "piyush555",
   "license": "MIT",
@@ -14,7 +15,13 @@
     "url": "https://github.com/piyushzingade/motionwind/issues"
   },
   "homepage": "https://github.com/piyushzingade/motionwind#readme",
-  "keywords": ["motionwind", "motion", "animation", "tailwind", "parser"],
+  "keywords": [
+    "motionwind",
+    "motion",
+    "animation",
+    "tailwind",
+    "parser"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -23,6 +30,22 @@
     "./parser": {
       "import": "./dist/parser.js",
       "require": "./dist/parser.cjs"
+    },
+    "./config": {
+      "import": "./dist/config.js",
+      "require": "./dist/config.cjs"
+    },
+    "./registry": {
+      "import": "./dist/registry.js",
+      "require": "./dist/registry.cjs"
+    },
+    "./adapter": {
+      "import": "./dist/adapter.js",
+      "require": "./dist/adapter.cjs"
+    },
+    "./recipes": {
+      "import": "./dist/recipes.js",
+      "require": "./dist/recipes.cjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -30,10 +53,27 @@
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
-      "parser": ["./dist/parser.d.ts"]
+      "parser": [
+        "./dist/parser.d.ts"
+      ],
+      "config": [
+        "./dist/config.d.ts"
+      ],
+      "registry": [
+        "./dist/registry.d.ts"
+      ],
+      "adapter": [
+        "./dist/adapter.d.ts"
+      ],
+      "recipes": [
+        "./dist/recipes.d.ts"
+      ]
     }
   },
-  "files": ["dist", "llms.txt"],
+  "files": [
+    "dist",
+    "llms.txt"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -51,6 +91,7 @@
     "vitest": "^3.2.1"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }
