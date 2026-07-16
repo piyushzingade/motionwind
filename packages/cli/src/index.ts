@@ -1,57 +1,37 @@
-import { execSync } from "child_process";
-import fs from "fs";
-import path from "path";
+import { runDoctor } from "./doctor.js";
+import { runInit } from "./init.js";
 import { runMigrate } from "./migrate/index.js";
+import { runAddPreset } from "./preset.js";
 
-const RESET = "\x1b[0m";
-const BOLD = "\x1b[1m";
-const GREEN = "\x1b[32m";
-const RED = "\x1b[31m";
-const CYAN = "\x1b[36m";
+function help(): void {
+  console.log(`
+create-motionwind
 
-type PackageManager = "npm" | "yarn" | "pnpm" | "bun";
-
-function detectPackageManager(cwd: string): PackageManager {
-  if (fs.existsSync(path.join(cwd, "bun.lock")) || fs.existsSync(path.join(cwd, "bun.lockb")))
-    return "bun";
-  if (fs.existsSync(path.join(cwd, "pnpm-lock.yaml"))) return "pnpm";
-  if (fs.existsSync(path.join(cwd, "yarn.lock"))) return "yarn";
-  return "npm";
+Commands:
+  init [--framework=<name>] [--dry-run]  Install and configure an adapter
+  doctor                                 Validate the current project
+  migrate [path] [--write]               Convert Motion props to classes
+  add <preset> [--dry-run]                Add a reviewed preset to config
+  help                                   Show this message
+`);
 }
 
-function install(pm: PackageManager, cwd: string): void {
-  const cmds: Record<PackageManager, string> = {
-    npm: "npm install motionwind",
-    yarn: "yarn add motionwind",
-    pnpm: "pnpm add motionwind",
-    bun: "bun add motionwind",
-  };
-  execSync(cmds[pm], { cwd, stdio: "inherit" });
-}
+const [, , rawCommand, ...args] = process.argv;
+const command = rawCommand ?? "init";
 
-function runInstall(): void {
-  const cwd = process.cwd();
-  const pm = detectPackageManager(cwd);
-
-  console.log(`\n${BOLD}motionwind${RESET}\n`);
-  console.log(`${CYAN}→${RESET} Detected package manager: ${BOLD}${pm}${RESET}`);
-  console.log(`${CYAN}→${RESET} Installing motionwind...\n`);
-
-  try {
-    install(pm, cwd);
-    console.log(`\n${GREEN}${BOLD}✓${RESET} motionwind installed successfully.\n`);
-  } catch {
-    console.error(`\n${RED}${BOLD}✗${RESET} Failed to install. Run manually: ${BOLD}${pm} ${pm === "npm" ? "install" : "add"} motionwind${RESET}\n`);
-    process.exit(1);
-  }
-}
-
-// --- Main ---
-
-const [, , command, ...rest] = process.argv;
-
-if (command === "migrate") {
-  runMigrate(rest);
-} else {
-  runInstall();
+try {
+  if (command === "init") runInit(args);
+  else if (command === "doctor") runDoctor();
+  else if (command === "migrate") runMigrate(args);
+  else if (command === "add") runAddPreset(args);
+  else if (command === "help" || command === "--help" || command === "-h")
+    help();
+  else
+    throw new Error(
+      `Unknown command "${command}". Run create-motionwind help.`,
+    );
+} catch (error) {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`\n✗ ${message}\n`);
+  process.exitCode = 1;
 }
