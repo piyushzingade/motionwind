@@ -1,0 +1,52 @@
+[
+  {
+    "id": "button-gesture",
+    "classes": "animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-420 animate-damping-24",
+    "targets": ["react", "vue", "javascript", "react-native"]
+  },
+  {
+    "id": "enter-exit",
+    "classes": "animate-initial:opacity-0 animate-enter:opacity-100 animate-exit:opacity-0 animate-duration-240 animate-ease-out",
+    "targets": ["react", "vue", "javascript", "react-native"]
+  },
+  {
+    "id": "focus-keyboard",
+    "classes": "animate-focus:scale-105 animate-duration-120",
+    "targets": ["react", "vue", "javascript", "react-native"]
+  },
+  {
+    "id": "in-view",
+    "classes": "animate-initial:y-20 animate-inview:y-0 animate-once animate-amount-50",
+    "targets": ["react", "vue", "javascript"]
+  },
+  {
+    "id": "scroll-linked",
+    "classes": "animate-scroll:scaleX-[0,1] animate-scroll-container",
+    "targets": ["react", "javascript"]
+  },
+  {
+    "id": "layout",
+    "classes": "animate-layout-position animate-spring animate-stiffness-360",
+    "targets": ["react", "vue"]
+  },
+  {
+    "id": "drag",
+    "classes": "animate-drag-y animate-drag-snap animate-drag:scale-103",
+    "targets": ["react", "vue"]
+  },
+  {
+    "id": "variants",
+    "classes": "animate-variant-hidden:opacity-0 animate-variant-visible:opacity-100 animate-from-hidden animate-to-visible",
+    "targets": ["react", "vue", "react-native"]
+  },
+  {
+    "id": "svg",
+    "classes": "animate-initial:path-length-0 animate-enter:path-length-1 animate-duration-900",
+    "targets": ["react", "vue", "javascript"]
+  },
+  {
+    "id": "preset",
+    "classes": "animate-preset-button-press",
+    "targets": ["react", "vue", "javascript", "react-native"]
+  }
+]

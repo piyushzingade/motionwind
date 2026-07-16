@@ -1,0 +1,140 @@
+{
+  "version": "2.0.0",
+  "statuses": ["pass", "beta", "warning", "unsupported", "not-applicable"],
+  "frameworks": {
+    "next": {
+      "adapter": "react",
+      "tier": "stable",
+      "browserScenarios": [
+        "variant",
+        "layout",
+        "drag",
+        "inview",
+        "scroll",
+        "svg"
+      ],
+      "features": {
+        "gestures": "pass",
+        "scroll": "pass",
+        "layout": "pass",
+        "drag": "pass",
+        "variants": "pass",
+        "svg": "pass",
+        "reduced-motion": "pass",
+        "compile-time": "pass",
+        "dynamic-classes": "pass",
+        "keyboard-focus": "pass",
+        "in-view": "pass",
+        "ssr-hydration": "pass",
+        "unsupported-warnings": "pass"
+      }
+    },
+    "react-vite": {
+      "adapter": "react",
+      "tier": "stable",
+      "browserScenarios": [
+        "variant",
+        "layout",
+        "drag",
+        "inview",
+        "scroll",
+        "svg"
+      ],
+      "features": {
+        "gestures": "pass",
+        "scroll": "pass",
+        "layout": "pass",
+        "drag": "pass",
+        "variants": "pass",
+        "svg": "pass",
+        "reduced-motion": "pass",
+        "compile-time": "pass",
+        "dynamic-classes": "pass",
+        "keyboard-focus": "pass",
+        "in-view": "pass",
+        "ssr-hydration": "not-applicable",
+        "unsupported-warnings": "pass"
+      }
+    },
+    "vue-vite": {
+      "adapter": "vue",
+      "tier": "stable",
+      "browserScenarios": ["variant", "layout", "drag", "inview", "svg"],
+      "features": {
+        "gestures": "pass",
+        "scroll": "warning",
+        "layout": "pass",
+        "drag": "pass",
+        "variants": "pass",
+        "svg": "pass",
+        "reduced-motion": "pass",
+        "compile-time": "pass",
+        "dynamic-classes": "pass",
+        "keyboard-focus": "pass",
+        "in-view": "pass",
+        "ssr-hydration": "not-applicable",
+        "unsupported-warnings": "pass"
+      }
+    },
+    "nuxt": {
+      "adapter": "vue",
+      "tier": "stable",
+      "browserScenarios": ["variant", "layout", "drag", "inview", "svg"],
+      "features": {
+        "gestures": "pass",
+        "scroll": "warning",
+        "layout": "pass",
+        "drag": "pass",
+        "variants": "pass",
+        "svg": "pass",
+        "reduced-motion": "pass",
+        "compile-time": "warning",
+        "dynamic-classes": "pass",
+        "keyboard-focus": "pass",
+        "in-view": "pass",
+        "ssr-hydration": "pass",
+        "unsupported-warnings": "pass"
+      }
+    },
+    "vanilla": {
+      "adapter": "vanilla",
+      "tier": "stable",
+      "browserScenarios": ["inview", "scroll", "svg"],
+      "features": {
+        "gestures": "pass",
+        "scroll": "pass",
+        "layout": "unsupported",
+        "drag": "unsupported",
+        "variants": "unsupported",
+        "svg": "pass",
+        "reduced-motion": "pass",
+        "compile-time": "not-applicable",
+        "dynamic-classes": "pass",
+        "keyboard-focus": "pass",
+        "in-view": "pass",
+        "ssr-hydration": "not-applicable",
+        "unsupported-warnings": "pass"
+      }
+    },
+    "expo": {
+      "adapter": "react-native",
+      "tier": "beta",
+      "browserScenarios": ["variant"],
+      "features": {
+        "gestures": "beta",
+        "scroll": "beta",
+        "layout": "warning",
+        "drag": "warning",
+        "variants": "beta",
+        "svg": "warning",
+        "reduced-motion": "pass",
+        "compile-time": "not-applicable",
+        "dynamic-classes": "beta",
+        "keyboard-focus": "beta",
+        "in-view": "warning",
+        "ssr-hydration": "not-applicable",
+        "unsupported-warnings": "pass"
+      }
+    }
+  }
+}
