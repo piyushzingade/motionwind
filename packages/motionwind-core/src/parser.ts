@@ -10,18 +10,155 @@ import type {
   VariantMap,
   VariantState,
 } from "./types.js";
-import {
-  GESTURE_MAP,
-  GESTURE_KEYS,
-  EASING_MAP,
-} from "./constants.js";
+import { GESTURE_MAP, GESTURE_KEYS, EASING_MAP } from "./constants.js";
+import type {
+  MotionwindConfig,
+  MotionwindDiagnostic,
+  MotionwindResultPatch,
+} from "./config.js";
+import { BUILT_IN_PRESETS } from "./recipes.js";
 
 const CACHE_MAX = 1000;
 const cache = new Map<string, ParsedResult>();
 
+function presetClasses(value: string | readonly string[]): string[] {
+  return (typeof value === "string" ? value.split(/\s+/) : [...value]).filter(
+    Boolean,
+  );
+}
+
+function availablePresets(
+  config?: MotionwindConfig,
+): Record<string, string | readonly string[]> {
+  const pluginPresets = Object.assign(
+    {},
+    ...(config?.plugins ?? []).map((plugin) => plugin.presets ?? {}),
+  );
+  return { ...BUILT_IN_PRESETS, ...pluginPresets, ...(config?.presets ?? {}) };
+}
+
+function expandConfiguredTokens(
+  className: string,
+  config: MotionwindConfig | undefined,
+  diagnostics: MotionwindDiagnostic[],
+): string[] {
+  const presets = availablePresets(config);
+  const output: string[] = [];
+
+  const expand = (token: string, stack: string[]) => {
+    if (!token.startsWith("animate-preset-")) {
+      const durationName = token.startsWith("animate-duration-")
+        ? token.slice("animate-duration-".length)
+        : "";
+      const duration = durationName
+        ? config?.tokens?.durations?.[durationName]
+        : undefined;
+      if (duration !== undefined) {
+        output.push(`animate-duration-${duration}`);
+        return;
+      }
+
+      const easingName = token.startsWith("animate-ease-")
+        ? token.slice("animate-ease-".length)
+        : "";
+      const easing = easingName
+        ? config?.tokens?.easings?.[easingName]
+        : undefined;
+      if (Array.isArray(easing)) {
+        output.push(`animate-ease-[${easing.join(",")}]`);
+        return;
+      }
+
+      const springName = token.startsWith("animate-spring-")
+        ? token.slice("animate-spring-".length)
+        : "";
+      const spring = springName
+        ? config?.tokens?.springs?.[springName]
+        : undefined;
+      if (spring) {
+        output.push("animate-spring");
+        if (spring.stiffness !== undefined)
+          output.push(`animate-stiffness-${spring.stiffness}`);
+        if (spring.damping !== undefined)
+          output.push(`animate-damping-${spring.damping}`);
+        if (spring.bounce !== undefined)
+          output.push(`animate-bounce-${spring.bounce}`);
+        if (spring.mass !== undefined)
+          output.push(`animate-mass-${spring.mass}`);
+        return;
+      }
+
+      output.push(token);
+      return;
+    }
+
+    const name = token.slice("animate-preset-".length);
+    const preset = presets[name];
+    if (!preset) {
+      diagnostics.push({
+        code: "unknown-preset",
+        message: `Unknown motionwind preset "${name}".`,
+        severity: config?.strict ? "error" : "warning",
+        token,
+      });
+      output.push(token);
+      return;
+    }
+    if (stack.includes(name) || stack.length >= 8) {
+      diagnostics.push({
+        code: "circular-preset",
+        message: `Circular motionwind preset expansion: ${[...stack, name].join(" → ")}.`,
+        severity: "error",
+        token,
+      });
+      return;
+    }
+    for (const expanded of presetClasses(preset))
+      expand(expanded, [...stack, name]);
+  };
+
+  for (const token of className.split(/\s+/).filter(Boolean)) expand(token, []);
+  return output;
+}
+
+function mergePatch(
+  patch: MotionwindResultPatch,
+  gestures: Partial<Record<GestureKey, AnimatableValues>>,
+  transition: TransitionConfig,
+  viewport: ViewportConfig,
+  dragConfig: DragConfig,
+  layoutConfig: LayoutConfig,
+  scroll: ScrollConfig,
+  variants: VariantMap,
+  variantState: VariantState,
+): void {
+  for (const [key, values] of Object.entries(patch.gestures ?? {})) {
+    gestures[key as GestureKey] = {
+      ...(gestures[key as GestureKey] ?? {}),
+      ...(values ?? {}),
+    };
+  }
+  Object.assign(transition, patch.transition);
+  Object.assign(viewport, patch.viewport);
+  Object.assign(dragConfig, patch.dragConfig);
+  Object.assign(layoutConfig, patch.layoutConfig);
+  if (patch.scroll) {
+    Object.assign(scroll, patch.scroll);
+    if (patch.scroll.values)
+      scroll.values = { ...scroll.values, ...patch.scroll.values };
+  }
+  for (const [name, values] of Object.entries(patch.variants ?? {})) {
+    variants[name] = { ...(variants[name] ?? {}), ...values };
+  }
+  Object.assign(variantState, patch.variantState);
+}
+
 /** Tailwind CSS built-in animate-* classes to exclude from warnings */
 const TAILWIND_ANIMATE_CLASSES = new Set([
-  "animate-spin", "animate-ping", "animate-pulse", "animate-bounce",
+  "animate-spin",
+  "animate-ping",
+  "animate-pulse",
+  "animate-bounce",
   "animate-none",
 ]);
 
@@ -78,16 +215,49 @@ function parseNumericWithUnit(
 
 /** Allowed properties for arbitrary value syntax [key=value] */
 const ARBITRARY_VALUE_ALLOWLIST = new Set([
-  "x", "y", "z", "scale", "scaleX", "scaleY", "scaleZ",
-  "rotate", "rotateX", "rotateY", "rotateZ",
-  "skew", "skewX", "skewY",
-  "originX", "originY", "originZ", "perspective",
-  "opacity", "filter", "backdropFilter", "clipPath",
-  "width", "height", "top", "left", "right", "bottom",
-  "padding", "margin", "gap", "borderRadius", "borderWidth",
-  "fontSize", "letterSpacing", "lineHeight",
-  "backgroundColor", "color", "borderColor", "boxShadow",
-  "pathLength", "pathOffset", "pathSpacing",
+  "x",
+  "y",
+  "z",
+  "scale",
+  "scaleX",
+  "scaleY",
+  "scaleZ",
+  "rotate",
+  "rotateX",
+  "rotateY",
+  "rotateZ",
+  "skew",
+  "skewX",
+  "skewY",
+  "originX",
+  "originY",
+  "originZ",
+  "perspective",
+  "opacity",
+  "filter",
+  "backdropFilter",
+  "clipPath",
+  "width",
+  "height",
+  "top",
+  "left",
+  "right",
+  "bottom",
+  "padding",
+  "margin",
+  "gap",
+  "borderRadius",
+  "borderWidth",
+  "fontSize",
+  "letterSpacing",
+  "lineHeight",
+  "backgroundColor",
+  "color",
+  "borderColor",
+  "boxShadow",
+  "pathLength",
+  "pathOffset",
+  "pathSpacing",
 ]);
 
 /**
@@ -132,12 +302,24 @@ function parsePropertyValue(
         return acc;
       }, []);
       if (rawValues.length > 0) {
-        const scaleProps = new Set(["scale", "scaleX", "scaleY", "scaleZ", "opacity", "brightness", "contrast", "saturate"]);
+        const scaleProps = new Set([
+          "scale",
+          "scaleX",
+          "scaleY",
+          "scaleZ",
+          "opacity",
+          "brightness",
+          "contrast",
+          "saturate",
+        ]);
         const parsed: (string | number)[] = [];
         let valid = true;
         for (const rv of rawValues) {
           const unitVal = parseNumericWithUnit(rv, 1);
-          if (unitVal === null) { valid = false; break; }
+          if (unitVal === null) {
+            valid = false;
+            break;
+          }
           if (typeof unitVal === "number" && scaleProps.has(propKey)) {
             parsed.push(unitVal / 100);
           } else {
@@ -262,63 +444,96 @@ function parsePropertyValue(
   // blur-{n} — clamped to 0 minimum (negative blur is invalid CSS)
   if (str.startsWith("blur-")) {
     const n = Number(str.slice(5));
-    if (!isNaN(n)) return { key: "filter", value: `blur(${Math.max(0, n * sign)}px)` };
+    if (!isNaN(n))
+      return { key: "filter", value: `blur(${Math.max(0, n * sign)}px)` };
   }
 
   // brightness-{n} — clamped to 0 minimum
   if (str.startsWith("brightness-")) {
     const n = Number(str.slice(11));
-    if (!isNaN(n)) return { key: "filter", value: `brightness(${Math.max(0, (n / 100) * sign)})` };
+    if (!isNaN(n))
+      return {
+        key: "filter",
+        value: `brightness(${Math.max(0, (n / 100) * sign)})`,
+      };
   }
 
   // contrast-{n} — clamped to 0 minimum
   if (str.startsWith("contrast-")) {
     const n = Number(str.slice(9));
-    if (!isNaN(n)) return { key: "filter", value: `contrast(${Math.max(0, (n / 100) * sign)})` };
+    if (!isNaN(n))
+      return {
+        key: "filter",
+        value: `contrast(${Math.max(0, (n / 100) * sign)})`,
+      };
   }
 
   // saturate-{n} — clamped to 0 minimum
   if (str.startsWith("saturate-")) {
     const n = Number(str.slice(9));
-    if (!isNaN(n)) return { key: "filter", value: `saturate(${Math.max(0, (n / 100) * sign)})` };
+    if (!isNaN(n))
+      return {
+        key: "filter",
+        value: `saturate(${Math.max(0, (n / 100) * sign)})`,
+      };
   }
 
   // grayscale-{n} — 0-100 → 0-1, clamped to 0 minimum
   if (str.startsWith("grayscale-")) {
     const n = Number(str.slice(10));
-    if (!isNaN(n)) return { key: "filter", value: `grayscale(${Math.max(0, (n / 100) * sign)})` };
+    if (!isNaN(n))
+      return {
+        key: "filter",
+        value: `grayscale(${Math.max(0, (n / 100) * sign)})`,
+      };
   }
 
   // sepia-{n} — 0-100 → 0-1, clamped to 0 minimum
   if (str.startsWith("sepia-")) {
     const n = Number(str.slice(6));
-    if (!isNaN(n)) return { key: "filter", value: `sepia(${Math.max(0, (n / 100) * sign)})` };
+    if (!isNaN(n))
+      return {
+        key: "filter",
+        value: `sepia(${Math.max(0, (n / 100) * sign)})`,
+      };
   }
 
   // invert-{n} — 0-100 → 0-1, clamped to 0 minimum
   if (str.startsWith("invert-")) {
     const n = Number(str.slice(7));
-    if (!isNaN(n)) return { key: "filter", value: `invert(${Math.max(0, (n / 100) * sign)})` };
+    if (!isNaN(n))
+      return {
+        key: "filter",
+        value: `invert(${Math.max(0, (n / 100) * sign)})`,
+      };
   }
 
   // hue-rotate-{n} — degrees, supports negative values
   if (str.startsWith("hue-rotate-")) {
     const n = Number(str.slice(11));
-    if (!isNaN(n)) return { key: "filter", value: `hue-rotate(${n * sign}deg)` };
+    if (!isNaN(n))
+      return { key: "filter", value: `hue-rotate(${n * sign}deg)` };
   }
 
   // drop-shadow: drop-shadow-[value] — underscores become spaces (Tailwind convention)
   if (str.startsWith("drop-shadow-")) {
     const val = str.slice(12);
     if (val.startsWith("[") && val.endsWith("]")) {
-      return { key: "filter", value: `drop-shadow(${val.slice(1, -1).replace(/_/g, " ")})` };
+      return {
+        key: "filter",
+        value: `drop-shadow(${val.slice(1, -1).replace(/_/g, " ")})`,
+      };
     }
   }
 
   // backdrop-blur-{n} — clamped to 0 minimum
   if (str.startsWith("backdrop-blur-")) {
     const n = Number(str.slice(14));
-    if (!isNaN(n)) return { key: "backdropFilter", value: `blur(${Math.max(0, n * sign)}px)` };
+    if (!isNaN(n))
+      return {
+        key: "backdropFilter",
+        value: `blur(${Math.max(0, n * sign)}px)`,
+      };
   }
 
   // clip-path: clip-[value]
@@ -546,9 +761,7 @@ function parseScrollValue(
   if (!m) return null;
   const key = normalizeScrollProp(m[1]!);
   if (!key) return null;
-  const parts = m[2]!
-    .split(",")
-    .map((v) => Number(v.trim()));
+  const parts = m[2]!.split(",").map((v) => Number(v.trim()));
   if (parts.length < 2 || parts.some((n) => isNaN(n))) return null;
   return { key, value: parts };
 }
@@ -644,19 +857,28 @@ function classifyToken(
   // duration
   if (rest.startsWith("duration-")) {
     const ms = Number(rest.slice(9));
-    if (!isNaN(ms)) { transition.duration = ms / 1000; return true; }
+    if (!isNaN(ms)) {
+      transition.duration = ms / 1000;
+      return true;
+    }
   }
 
   // delay-children (must come before delay)
   if (rest.startsWith("delay-children-")) {
     const ms = Number(rest.slice(15));
-    if (!isNaN(ms)) { transition.delayChildren = ms / 1000; return true; }
+    if (!isNaN(ms)) {
+      transition.delayChildren = ms / 1000;
+      return true;
+    }
   }
 
   // delay
   if (rest.startsWith("delay-")) {
     const ms = Number(rest.slice(6));
-    if (!isNaN(ms)) { transition.delay = ms / 1000; return true; }
+    if (!isNaN(ms)) {
+      transition.delay = ms / 1000;
+      return true;
+    }
   }
 
   // ease-[n,n,n,n] — custom cubic-bezier
@@ -687,76 +909,124 @@ function classifyToken(
   }
 
   // spring
-  if (rest === "spring") { transition.type = "spring"; return true; }
+  if (rest === "spring") {
+    transition.type = "spring";
+    return true;
+  }
 
   // stiffness
   if (rest.startsWith("stiffness-")) {
     const n = Number(rest.slice(10));
-    if (!isNaN(n)) { transition.stiffness = n; return true; }
+    if (!isNaN(n)) {
+      transition.stiffness = n;
+      return true;
+    }
   }
 
   // damping
   if (rest.startsWith("damping-")) {
     const n = Number(rest.slice(8));
-    if (!isNaN(n)) { transition.damping = n; return true; }
+    if (!isNaN(n)) {
+      transition.damping = n;
+      return true;
+    }
   }
 
   // bounce
   if (rest.startsWith("bounce-")) {
     const n = Number(rest.slice(7));
-    if (!isNaN(n)) { transition.bounce = n / 100; return true; }
+    if (!isNaN(n)) {
+      transition.bounce = n / 100;
+      return true;
+    }
   }
 
   // mass
   if (rest.startsWith("mass-")) {
     const n = Number(rest.slice(5));
-    if (!isNaN(n)) { transition.mass = n / 10; return true; }
+    if (!isNaN(n)) {
+      transition.mass = n / 10;
+      return true;
+    }
   }
 
   // repeat-infinite
-  if (rest === "repeat-infinite") { transition.repeat = Infinity; return true; }
+  if (rest === "repeat-infinite") {
+    transition.repeat = Infinity;
+    return true;
+  }
 
   // repeat-reverse
-  if (rest === "repeat-reverse") { transition.repeatType = "reverse"; return true; }
+  if (rest === "repeat-reverse") {
+    transition.repeatType = "reverse";
+    return true;
+  }
 
   // repeat-mirror
-  if (rest === "repeat-mirror") { transition.repeatType = "mirror"; return true; }
+  if (rest === "repeat-mirror") {
+    transition.repeatType = "mirror";
+    return true;
+  }
 
   // repeat-delay-{ms}
   if (rest.startsWith("repeat-delay-")) {
     const ms = Number(rest.slice(13));
-    if (!isNaN(ms)) { transition.repeatDelay = ms / 1000; return true; }
+    if (!isNaN(ms)) {
+      transition.repeatDelay = ms / 1000;
+      return true;
+    }
   }
 
   // repeat-{n}
   if (rest.startsWith("repeat-")) {
     const n = Number(rest.slice(7));
-    if (!isNaN(n)) { transition.repeat = n; return true; }
+    if (!isNaN(n)) {
+      transition.repeat = n;
+      return true;
+    }
   }
 
   // stagger-reverse
-  if (rest === "stagger-reverse") { transition.staggerDirection = -1; return true; }
+  if (rest === "stagger-reverse") {
+    transition.staggerDirection = -1;
+    return true;
+  }
 
   // stagger-{ms}
   if (rest.startsWith("stagger-")) {
     const ms = Number(rest.slice(8));
-    if (!isNaN(ms)) { transition.staggerChildren = ms / 1000; return true; }
+    if (!isNaN(ms)) {
+      transition.staggerChildren = ms / 1000;
+      return true;
+    }
   }
 
   // when-before / when-after
-  if (rest === "when-before") { transition.when = "beforeChildren"; return true; }
-  if (rest === "when-after") { transition.when = "afterChildren"; return true; }
+  if (rest === "when-before") {
+    transition.when = "beforeChildren";
+    return true;
+  }
+  if (rest === "when-after") {
+    transition.when = "afterChildren";
+    return true;
+  }
 
   // rest-speed-{n} (0.01 increments via hundredths)
   if (rest.startsWith("rest-speed-")) {
     const n = Number(rest.slice(11));
-    if (!isNaN(n)) { transition.restSpeed = n; return true; }
+    if (!isNaN(n)) {
+      transition.restSpeed = n;
+      return true;
+    }
   }
 
   // rest-delta-{n}
   if (rest.startsWith("rest-delta-")) {
     const n = Number(rest.slice(11));
-    if (!isNaN(n)) { transition.restDelta = n; return true; }
+    if (!isNaN(n)) {
+      transition.restDelta = n;
+      return true;
+    }
   }
 
   // times-[0,0.5,1]
@@ -771,25 +1041,46 @@ function classifyToken(
 
   // --- Viewport config tokens ---
 
-  if (rest === "once") { viewport.once = true; return true; }
+  if (rest === "once") {
+    viewport.once = true;
+    return true;
+  }
 
-  if (rest === "amount-all") { viewport.amount = "all"; return true; }
+  if (rest === "amount-all") {
+    viewport.amount = "all";
+    return true;
+  }
 
   if (rest.startsWith("amount-")) {
     const n = Number(rest.slice(7));
-    if (!isNaN(n)) { viewport.amount = n / 100; return true; }
+    if (!isNaN(n)) {
+      viewport.amount = n / 100;
+      return true;
+    }
   }
 
   if (rest.startsWith("margin-")) {
     const n = Number(rest.slice(7));
-    if (!isNaN(n)) { viewport.margin = `${n}px`; return true; }
+    if (!isNaN(n)) {
+      viewport.margin = `${n}px`;
+      return true;
+    }
   }
 
   // --- Scroll-linked config tokens ---
 
-  if (rest === "scroll-axis-x") { scroll.axis = "x"; return true; }
-  if (rest === "scroll-axis-y") { scroll.axis = "y"; return true; }
-  if (rest === "scroll-container") { scroll.container = true; return true; }
+  if (rest === "scroll-axis-x") {
+    scroll.axis = "x";
+    return true;
+  }
+  if (rest === "scroll-axis-y") {
+    scroll.axis = "y";
+    return true;
+  }
+  if (rest === "scroll-container") {
+    scroll.container = true;
+    return true;
+  }
 
   // scroll-offset-[start_end,end_start] — underscores become spaces
   if (rest.startsWith("scroll-offset-[") && rest.endsWith("]")) {
@@ -805,36 +1096,71 @@ function classifyToken(
   // animate-from-{name} → initial, animate-to-{name} → animate, animate-exit-{name} → exit
   if (rest.startsWith("from-")) {
     const name = rest.slice(5);
-    if (name && !/\s/.test(name)) { variantState.initial = name; return true; }
+    if (name && !/\s/.test(name)) {
+      variantState.initial = name;
+      return true;
+    }
   }
   if (rest.startsWith("to-")) {
     const name = rest.slice(3);
-    if (name && !/\s/.test(name)) { variantState.animate = name; return true; }
+    if (name && !/\s/.test(name)) {
+      variantState.animate = name;
+      return true;
+    }
   }
   if (rest.startsWith("exit-")) {
     const name = rest.slice(5);
-    if (name && !/\s/.test(name)) { variantState.exit = name; return true; }
+    if (name && !/\s/.test(name)) {
+      variantState.exit = name;
+      return true;
+    }
   }
 
   // --- Drag config tokens ---
 
-  if (rest === "drag-x") { dragConfig.drag = "x"; return true; }
-  if (rest === "drag-y") { dragConfig.drag = "y"; return true; }
-  if (rest === "drag-both") { dragConfig.drag = true; return true; }
+  if (rest === "drag-x") {
+    dragConfig.drag = "x";
+    return true;
+  }
+  if (rest === "drag-y") {
+    dragConfig.drag = "y";
+    return true;
+  }
+  if (rest === "drag-both") {
+    dragConfig.drag = true;
+    return true;
+  }
 
   if (rest.startsWith("drag-elastic-")) {
     const n = Number(rest.slice(13));
-    if (!isNaN(n)) { dragConfig.dragElastic = n / 100; return true; }
+    if (!isNaN(n)) {
+      dragConfig.dragElastic = n / 100;
+      return true;
+    }
   }
 
-  if (rest === "drag-snap") { dragConfig.dragSnapToOrigin = true; return true; }
-  if (rest === "drag-no-momentum") { dragConfig.dragMomentum = false; return true; }
-  if (rest === "drag-lock") { dragConfig.dragDirectionLock = true; return true; }
+  if (rest === "drag-snap") {
+    dragConfig.dragSnapToOrigin = true;
+    return true;
+  }
+  if (rest === "drag-no-momentum") {
+    dragConfig.dragMomentum = false;
+    return true;
+  }
+  if (rest === "drag-lock") {
+    dragConfig.dragDirectionLock = true;
+    return true;
+  }
 
   // drag-constraint-{side}-{n}
   if (rest.startsWith("drag-constraint-")) {
     const sub = rest.slice(16);
-    const sides: Record<string, string> = { "t-": "top", "l-": "left", "r-": "right", "b-": "bottom" };
+    const sides: Record<string, string> = {
+      "t-": "top",
+      "l-": "left",
+      "r-": "right",
+      "b-": "bottom",
+    };
     for (const [prefix, side] of Object.entries(sides)) {
       if (sub.startsWith(prefix)) {
         const n = Number(sub.slice(2));
@@ -849,12 +1175,30 @@ function classifyToken(
 
   // --- Layout config tokens ---
 
-  if (rest === "layout") { layoutConfig.layout = true; return true; }
-  if (rest === "layout-position") { layoutConfig.layout = "position"; return true; }
-  if (rest === "layout-size") { layoutConfig.layout = "size"; return true; }
-  if (rest === "layout-preserve") { layoutConfig.layout = "preserve-aspect"; return true; }
-  if (rest === "layout-scroll") { layoutConfig.layoutScroll = true; return true; }
-  if (rest === "layout-root") { layoutConfig.layoutRoot = true; return true; }
+  if (rest === "layout") {
+    layoutConfig.layout = true;
+    return true;
+  }
+  if (rest === "layout-position") {
+    layoutConfig.layout = "position";
+    return true;
+  }
+  if (rest === "layout-size") {
+    layoutConfig.layout = "size";
+    return true;
+  }
+  if (rest === "layout-preserve") {
+    layoutConfig.layout = "preserve-aspect";
+    return true;
+  }
+  if (rest === "layout-scroll") {
+    layoutConfig.layoutScroll = true;
+    return true;
+  }
+  if (rest === "layout-root") {
+    layoutConfig.layoutRoot = true;
+    return true;
+  }
 
   if (rest.startsWith("layout-id-")) {
     const id = rest.slice(10);
@@ -874,11 +1218,15 @@ function classifyToken(
  *
  * Results are memoized by input string.
  */
-export function parseMotionClasses(className: string): ParsedResult {
-  const cached = cache.get(className);
+export function parseMotionClasses(
+  className: string,
+  config?: MotionwindConfig,
+): ParsedResult {
+  const cached = config ? undefined : cache.get(className);
   if (cached) return cached;
 
-  const tokens = className.split(/\s+/).filter(Boolean);
+  const diagnostics: MotionwindDiagnostic[] = [];
+  const tokens = expandConfiguredTokens(className, config, diagnostics);
   const tailwind: string[] = [];
   const gestures: Partial<Record<GestureKey, AnimatableValues>> = {};
   const transition: TransitionConfig = {};
@@ -890,7 +1238,7 @@ export function parseMotionClasses(className: string): ParsedResult {
   const variantState: VariantState = {};
 
   for (const token of tokens) {
-    const consumed = classifyToken(
+    let consumed = classifyToken(
       token,
       gestures,
       transition,
@@ -901,7 +1249,52 @@ export function parseMotionClasses(className: string): ParsedResult {
       variants,
       variantState,
     );
+
     if (!consumed) {
+      const easingName = token.startsWith("animate-ease-")
+        ? token.slice("animate-ease-".length)
+        : "";
+      const easing = easingName
+        ? config?.tokens?.easings?.[easingName]
+        : undefined;
+      if (typeof easing === "string") {
+        transition.ease = easing;
+        consumed = true;
+      }
+    }
+
+    if (!consumed) {
+      for (const plugin of config?.plugins ?? []) {
+        const patch = plugin.transformToken?.(token, { config: config! });
+        if (!patch) continue;
+        mergePatch(
+          patch,
+          gestures,
+          transition,
+          viewport,
+          dragConfig,
+          layoutConfig,
+          scroll,
+          variants,
+          variantState,
+        );
+        consumed = true;
+        break;
+      }
+    }
+
+    if (!consumed) {
+      if (
+        token.startsWith("animate-") &&
+        !TAILWIND_ANIMATE_CLASSES.has(token)
+      ) {
+        diagnostics.push({
+          code: "unknown-class",
+          message: `Unrecognized motionwind class "${token}".`,
+          severity: config?.strict ? "error" : "warning",
+          token,
+        });
+      }
       if (
         process.env.NODE_ENV !== "production" &&
         token.startsWith("animate-") &&
@@ -937,9 +1330,21 @@ export function parseMotionClasses(className: string): ParsedResult {
     variants,
     variantState,
     hasMotion,
+    diagnostics,
   };
 
-  cacheSet(className, result);
+  for (const plugin of config?.plugins ?? []) {
+    const pluginDiagnostics =
+      plugin.diagnose?.(className, result, { config: config! }) ?? [];
+    diagnostics.push(
+      ...pluginDiagnostics.map((diagnostic) => ({
+        ...diagnostic,
+        plugin: plugin.name,
+      })),
+    );
+  }
+
+  if (!config) cacheSet(className, result);
   return result;
 }
 
@@ -979,9 +1384,27 @@ function freshAccumulators() {
  * classes are "tailwind"; `animate-*` classes that don't match any pattern are
  * "unknown". Reuses the real `classifyToken` so it never drifts from parsing.
  */
-export function classifyMotionToken(token: string): MotionTokenCategory {
+export function classifyMotionToken(
+  token: string,
+  config?: MotionwindConfig,
+): MotionTokenCategory {
   if (!token.startsWith("animate-")) return "tailwind";
   if (TAILWIND_ANIMATE_CLASSES.has(token)) return "tailwind";
+  if (config || token.startsWith("animate-preset-")) {
+    const parsed = parseMotionClasses(token, config);
+    if (!parsed.hasMotion) return "unknown";
+    if (
+      Object.keys(parsed.variantState).length ||
+      Object.keys(parsed.variants).length
+    )
+      return "variant";
+    if (Object.keys(parsed.gestures).length) return "gesture";
+    if (Object.keys(parsed.viewport).length) return "viewport";
+    if (Object.keys(parsed.scroll.values).length) return "scroll";
+    if (Object.keys(parsed.dragConfig).length) return "drag";
+    if (Object.keys(parsed.layoutConfig).length) return "layout";
+    return "transition";
+  }
   const a = freshAccumulators();
   const consumed = classifyToken(
     token,
