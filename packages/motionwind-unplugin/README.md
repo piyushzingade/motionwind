@@ -22,4 +22,3 @@ and accepts `{ config, include }`. Babel and the focused React Vite/Next entry
 points remain supported.
 
 MIT
-

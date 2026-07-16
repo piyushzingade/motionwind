@@ -42,4 +42,3 @@ Extension entry points:
 - `analyzeClassName()` and `sortMotionClasses()` power diagnostics and formatting.
 
 MIT
-

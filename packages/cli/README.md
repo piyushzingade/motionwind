@@ -21,4 +21,3 @@ classes. `add` installs a reviewed preset into CLI-managed configuration or
 prints a safe manual snippet for user-managed configuration.
 
 MIT
-

@@ -25,4 +25,3 @@ The `motionwind://syntax` resource exposes the machine-readable definition
 registry used by the parser and developer tools.
 
 MIT
-
