@@ -1,8 +1,9 @@
 {
   "name": "motionwind-react-native",
-  "version": "0.1.2",
+  "version": "2.0.0",
   "description": "Motionwind for React Native — animate with Tailwind-like classes using Reanimated",
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -21,6 +22,16 @@
       "types": "./dist/babel.d.ts",
       "import": "./dist/babel.js",
       "require": "./dist/babel.cjs"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.js",
+      "require": "./dist/config.cjs"
+    },
+    "./adapter": {
+      "types": "./dist/adapter.d.ts",
+      "import": "./dist/adapter.js",
+      "require": "./dist/adapter.cjs"
     }
   },
   "files": [
@@ -44,6 +55,9 @@
     "nativewind": {
       "optional": true
     }
+  },
+  "dependencies": {
+    "motionwind-core": "^2.0.0"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
@@ -71,6 +85,7 @@
     "directory": "packages/motionwind-react-native"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }
