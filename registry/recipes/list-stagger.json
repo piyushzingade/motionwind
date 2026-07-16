@@ -1,0 +1,14 @@
+{
+  "id": "list-stagger",
+  "name": "List stagger",
+  "description": "A restrained stagger for newly revealed collections.",
+  "category": "entrance",
+  "classes": "animate-stagger-55 animate-delay-children-40 animate-when-before",
+  "accessibility": "Keep the list readable before and after animation; avoid repeated autoplay.",
+  "adapters": ["react", "vue"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/list-stagger.json"
+}

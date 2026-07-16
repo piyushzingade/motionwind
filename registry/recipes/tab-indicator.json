@@ -1,0 +1,14 @@
+{
+  "id": "tab-indicator",
+  "name": "Tab indicator",
+  "description": "A shared-layout spring for an active tab indicator.",
+  "category": "layout",
+  "classes": "animate-layout-id-active-tab animate-spring animate-stiffness-440 animate-damping-34",
+  "accessibility": "Pair with tablist semantics, roving focus, and an independent selected-state cue.",
+  "adapters": ["react", "vue"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/tab-indicator.json"
+}

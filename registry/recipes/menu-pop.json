@@ -1,0 +1,14 @@
+{
+  "id": "menu-pop",
+  "name": "Menu pop",
+  "description": "A fast scale-and-fade entrance for contextual menus.",
+  "category": "entrance",
+  "classes": "animate-initial:opacity-0 animate-initial:scale-95 animate-enter:opacity-100 animate-enter:scale-100 animate-duration-160 animate-ease-out",
+  "accessibility": "Move focus into the menu, return it on close, and preserve arrow-key navigation.",
+  "adapters": ["react", "vue", "vanilla", "react-native"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/menu-pop.json"
+}

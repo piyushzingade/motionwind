@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://motionwind.dev/registry/schema.json",
+  "title": "Motionwind recipe manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "description",
+    "category",
+    "classes",
+    "accessibility",
+    "adapters",
+    "maintainer",
+    "version",
+    "compatibleCore",
+    "bundleImpact",
+    "source"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "name": { "type": "string", "minLength": 3 },
+    "description": { "type": "string", "minLength": 12 },
+    "category": {
+      "enum": ["interaction", "entrance", "layout", "loading", "scroll"]
+    },
+    "classes": { "type": "string", "pattern": "(^| )animate-" },
+    "accessibility": { "type": "string", "minLength": 20 },
+    "adapters": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["react", "vue", "vanilla", "react-native"] }
+    },
+    "maintainer": { "type": "string", "minLength": 3 },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "compatibleCore": { "type": "string", "minLength": 1 },
+    "bundleImpact": { "type": "string", "minLength": 5 },
+    "source": { "type": "string", "format": "uri" }
+  }
+}

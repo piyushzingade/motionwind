@@ -1,0 +1,14 @@
+{
+  "id": "page-reveal",
+  "name": "Page reveal",
+  "description": "A single-run opacity and vertical reveal for page sections.",
+  "category": "scroll",
+  "classes": "animate-initial:opacity-0 animate-initial:y-24 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-480 animate-ease-out",
+  "accessibility": "Content remains in document order and visible when reduced motion is requested.",
+  "adapters": ["react", "vue", "vanilla"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/page-reveal.json"
+}

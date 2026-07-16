@@ -1,0 +1,14 @@
+{
+  "id": "button-press",
+  "name": "Button press",
+  "description": "A compact spring response for primary actions.",
+  "category": "interaction",
+  "classes": "animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-420 animate-damping-24",
+  "accessibility": "Preserves keyboard focus and does not communicate state through motion alone.",
+  "adapters": ["react", "vue", "vanilla", "react-native"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/button-press.json"
+}

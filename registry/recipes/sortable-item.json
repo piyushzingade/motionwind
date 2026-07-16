@@ -1,0 +1,14 @@
+{
+  "id": "sortable-item",
+  "name": "Sortable item",
+  "description": "Layout animation and vertical drag feedback for reorderable lists.",
+  "category": "interaction",
+  "classes": "animate-layout-position animate-drag-y animate-drag-snap animate-drag:scale-103 animate-spring animate-stiffness-360 animate-damping-28",
+  "accessibility": "Provide keyboard reordering controls and announce the new item position.",
+  "adapters": ["react", "vue"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/sortable-item.json"
+}

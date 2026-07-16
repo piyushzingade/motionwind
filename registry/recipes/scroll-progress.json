@@ -1,0 +1,14 @@
+{
+  "id": "scroll-progress",
+  "name": "Scroll progress",
+  "description": "Map page scroll progress to a horizontal scale indicator.",
+  "category": "scroll",
+  "classes": "animate-scroll:scaleX-[0,1] animate-scroll-container",
+  "accessibility": "Treat the indicator as supplemental; expose document progress in text when it matters.",
+  "adapters": ["react", "vanilla"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/scroll-progress.json"
+}

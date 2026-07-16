@@ -1,0 +1,14 @@
+{
+  "id": "accordion-reveal",
+  "name": "Accordion reveal",
+  "description": "A layout-aware reveal for expandable disclosure content.",
+  "category": "layout",
+  "classes": "animate-layout-size animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-220 animate-ease-out",
+  "accessibility": "Use a native button with aria-expanded and keep content reachable without animation.",
+  "adapters": ["react", "vue"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/accordion-reveal.json"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "loading-orbit",
+  "name": "Loading orbit",
+  "description": "A continuous linear rotation for non-blocking progress indicators.",
+  "category": "loading",
+  "classes": "animate-enter:rotate-360 animate-repeat-infinite animate-duration-900 animate-ease-linear",
+  "accessibility": "Add an accessible status label and stop the loop when loading completes.",
+  "adapters": ["react", "vue", "vanilla", "react-native"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/loading-orbit.json"
+}
