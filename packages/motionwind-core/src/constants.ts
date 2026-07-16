@@ -1,34 +1,4 @@
-import type { GestureKey } from "./types.js";
-
-/** Maps class prefix to Motion gesture prop */
-export const GESTURE_MAP: Record<string, GestureKey> = {
-  hover: "whileHover",
-  tap: "whileTap",
-  focus: "whileFocus",
-  inview: "whileInView",
-  drag: "whileDrag",
-  initial: "initial",
-  enter: "animate",
-  exit: "exit",
-};
-
-/** Set of known gesture keys for fast lookup */
-export const GESTURE_KEYS = new Set(Object.keys(GESTURE_MAP));
-
-/** Maps easing class suffixes to Motion easing values */
-export const EASING_MAP: Record<string, string> = {
-  "ease-in": "easeIn",
-  "ease-out": "easeOut",
-  "ease-in-out": "easeInOut",
-  "ease-linear": "linear",
-  "ease-circ-in": "circIn",
-  "ease-circ-out": "circOut",
-  "ease-circ-in-out": "circInOut",
-  "ease-back-in": "backIn",
-  "ease-back-out": "backOut",
-  "ease-back-in-out": "backInOut",
-  "ease-anticipate": "anticipate",
-};
+export { GESTURE_MAP, GESTURE_KEYS, EASING_MAP } from "./registry.js";
 
 /** Known transition config keywords (after `animate-` prefix) */
 export const TRANSITION_KEYWORDS = new Set([
@@ -67,7 +37,12 @@ export const TRANSITION_KEYWORDS = new Set([
 ]);
 
 /** Known viewport config keywords */
-export const VIEWPORT_KEYWORDS = new Set(["once", "amount-all", "amount", "margin"]);
+export const VIEWPORT_KEYWORDS = new Set([
+  "once",
+  "amount-all",
+  "amount",
+  "margin",
+]);
 
 /** Known drag config keywords */
 export const DRAG_KEYWORDS = new Set([
