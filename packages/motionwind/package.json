@@ -1,7 +1,8 @@
 {
   "name": "motionwind-react",
-  "version": "0.3.1",
+  "version": "2.0.0",
   "type": "module",
+  "sideEffects": false,
   "private": false,
   "description": "Write Motion animations as Tailwind-like classes. Babel plugin transforms them at build time.",
   "author": "piyush555",
@@ -39,6 +40,10 @@
     "./tooling": {
       "import": "./dist/tooling.js",
       "require": "./dist/tooling.cjs"
+    },
+    "./adapter": {
+      "import": "./dist/adapter.js",
+      "require": "./dist/adapter.cjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -46,14 +51,29 @@
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
-      "babel": ["./dist/babel.d.ts"],
-      "next": ["./dist/next.d.ts"],
-      "vite": ["./dist/vite.d.ts"],
-      "parser": ["./dist/parser.d.ts"],
-      "tooling": ["./dist/tooling.d.ts"]
+      "babel": [
+        "./dist/babel.d.ts"
+      ],
+      "next": [
+        "./dist/next.d.ts"
+      ],
+      "vite": [
+        "./dist/vite.d.ts"
+      ],
+      "parser": [
+        "./dist/parser.d.ts"
+      ],
+      "tooling": [
+        "./dist/tooling.d.ts"
+      ],
+      "adapter": [
+        "./dist/adapter.d.ts"
+      ]
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -67,11 +87,16 @@
     "motion": "^11.0.0 || ^12.0.0"
   },
   "dependencies": {
+    "motionwind-core": "^2.0.0",
     "@babel/core": "^7.26.0",
     "@babel/parser": "^7.26.0",
     "@babel/plugin-syntax-jsx": "^7.28.6",
     "@babel/types": "^7.26.0",
     "babel-loader": "^9.2.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "devDependencies": {
     "@babel/preset-react": "^7.28.5",

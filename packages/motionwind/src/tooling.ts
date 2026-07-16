@@ -5,12 +5,13 @@ export {
   parseMotionClasses,
   classifyMotionToken,
   type MotionTokenCategory,
-} from "./parser.js";
-export {
   analyzeClassName,
   sortMotionClasses,
+  MOTIONWIND_SYNTAX_REGISTRY,
+  MOTIONWIND_RECIPES,
   type ClassNameAnalysis,
   type DuplicateProp,
-} from "./analysis.js";
+  type SyntaxDefinition,
+} from "motionwind-core";
 export { generateMotionCode, type GenerateOptions } from "./codegen.js";
-export type { ParsedResult } from "./types.js";
+export type { ParsedResult } from "motionwind-core";
