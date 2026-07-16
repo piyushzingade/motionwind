@@ -1,7 +1,8 @@
 {
   "name": "motionwind-vanilla",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "type": "module",
+  "sideEffects": false,
   "description": "Write Motion animations as Tailwind-like classes in plain HTML/JS — scans the DOM and wires animations via the vanilla Motion API.",
   "author": "piyush555",
   "license": "MIT",
@@ -14,19 +15,40 @@
     "url": "https://github.com/piyushzingade/motionwind/issues"
   },
   "homepage": "https://github.com/piyushzingade/motionwind#readme",
-  "keywords": ["motion", "animation", "tailwind", "vanilla", "cdn", "motionwind"],
+  "keywords": [
+    "motion",
+    "animation",
+    "tailwind",
+    "vanilla",
+    "cdn",
+    "motionwind"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./adapter": {
+      "import": "./dist/adapter.js",
+      "require": "./dist/adapter.cjs"
     }
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "adapter": [
+        "./dist/adapter.d.ts"
+      ]
+    }
+  },
   "unpkg": "./dist/cdn/motionwind.global.js",
   "jsdelivr": "./dist/cdn/motionwind.global.js",
-  "files": ["dist", "llms.txt"],
+  "files": [
+    "dist",
+    "llms.txt"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -39,7 +61,7 @@
     "motion": "^11.0.0 || ^12.0.0"
   },
   "dependencies": {
-    "motionwind-core": "workspace:*"
+    "motionwind-core": "^2.0.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
@@ -51,6 +73,7 @@
     "vitest": "^3.2.1"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }

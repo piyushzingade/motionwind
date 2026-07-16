@@ -1,4 +1,8 @@
-import type { AnimatableValues, ParsedResult, TransitionConfig } from "motionwind-core";
+import type {
+  AnimatableValues,
+  ParsedResult,
+  TransitionConfig,
+} from "motionwind-core";
 
 /** Resting values used to animate back after a gesture ends. */
 const RESET_DEFAULTS: Record<string, number | string> = {
@@ -83,4 +87,17 @@ export function subset(
     if (values[k] !== undefined) out[k] = values[k]!;
   }
   return out;
+}
+
+/** Merge concurrent gesture states using Motion's interaction priority. */
+export function interactiveValues(
+  parsed: ParsedResult,
+  state: { focused: boolean; hovered: boolean; pressed: boolean },
+): AnimatableValues {
+  return {
+    ...baseValues(parsed),
+    ...(state.focused ? parsed.gestures.whileFocus : undefined),
+    ...(state.hovered ? parsed.gestures.whileHover : undefined),
+    ...(state.pressed ? parsed.gestures.whileTap : undefined),
+  };
 }

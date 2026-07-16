@@ -1,6 +1,11 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { parseMotionClasses, clearParserCache } from "motionwind-core";
-import { toAnimateOptions, baseValues, subset } from "../src/map.js";
+import {
+  toAnimateOptions,
+  baseValues,
+  interactiveValues,
+  subset,
+} from "../src/map.js";
 
 beforeEach(() => clearParserCache());
 
@@ -40,9 +45,7 @@ describe("baseValues", () => {
   });
 
   it("uses initial when there's no enter value", () => {
-    const parsed = parseMotionClasses(
-      "animate-initial:x-0 animate-hover:x-20",
-    );
+    const parsed = parseMotionClasses("animate-initial:x-0 animate-hover:x-20");
     expect(baseValues(parsed).x).toBe(0);
   });
 });
@@ -52,5 +55,27 @@ describe("subset", () => {
     expect(subset({ scale: 1, opacity: 1, x: 0 }, { scale: 1.1 })).toEqual({
       scale: 1,
     });
+  });
+});
+
+describe("interactiveValues", () => {
+  it("resolves concurrent gesture values as press over hover over focus", () => {
+    const parsed = parseMotionClasses(
+      "animate-focus:scale-102 animate-hover:scale-105 animate-tap:scale-95",
+    );
+    expect(
+      interactiveValues(parsed, {
+        focused: true,
+        hovered: true,
+        pressed: true,
+      }).scale,
+    ).toBe(0.95);
+    expect(
+      interactiveValues(parsed, {
+        focused: true,
+        hovered: true,
+        pressed: false,
+      }).scale,
+    ).toBe(1.05);
   });
 });

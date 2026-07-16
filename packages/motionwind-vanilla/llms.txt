@@ -1,53 +1,38 @@
-# motionwind-vanilla
+# motionwind-vanilla v2.0.0 — machine reference
 
-Write Motion animations as Tailwind-like `animate-*` classes in plain HTML/JS — no framework. It
-scans the DOM and wires animations with the [Motion](https://motion.dev) vanilla API. Same class
-syntax as the rest of motionwind.
+Stable browser DOM adapter backed by Motion and motionwind-core.
 
-## Install (npm)
-
-```bash
-npm install motionwind-vanilla motion
-```
+Install:
+npm install motionwind-vanilla@2 motion motionwind-core@2
 
 ```js
 import { motionwind } from "motionwind-vanilla";
-const stop = motionwind();          // scans document, returns a cleanup fn
-```
 
-### Options
-
-```ts
-motionwind({
-  root,                  // ParentNode to scan (default: document)
-  selector,              // default: '[class*="animate-"]'
-  respectReducedMotion,  // default: true — honor prefers-reduced-motion
-  observe,               // default: false — MutationObserver wires elements added later (SPA/HTMX)
+const stop = motionwind({
+  root: document,
+  selector: '[class*="animate-"]',
+  observe: true,
+  respectReducedMotion: true,
+  config,
 });
 ```
 
-## Install (CDN, zero build)
+The return value removes listeners/observers. The self-contained CDN bundle at
+https://unpkg.com/motionwind-vanilla@2 initializes automatically.
 
-Self-contained bundle (Motion included), auto-initializes on load:
+Supported: initial/enter, hover, press/tap, focus, in-view, continuous scroll,
+SVG path values, reduced motion, HTML/SVG class attributes, and observed DOM
+insertions.
 
-```html
-<script src="https://unpkg.com/motionwind-vanilla"></script>
-<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">Click me</button>
-<!-- window.motionwind.motionwind(opts) to re-scan with options -->
-```
+Reduced motion jumps to the resting/visible state and does not wire interactive
+or scroll behavior. Interaction priority is press, then hover, then focus, then
+the base state.
 
-## Behavior
+Not supported: drag, layout projection, exit orchestration, and variant
+propagation. These require a component runtime and produce capability warnings.
 
-- **Supported:** initial/enter, hover, tap, focus, in-view, and scroll-linked (`animate-scroll:*`).
-- **Idempotent:** wiring strips the `animate-*` classes, so re-running never double-wires.
-- **Reduced motion:** with `prefers-reduced-motion`, elements jump to their final/visible state
-  with no animation and gestures/scroll are skipped.
-- **Dynamic DOM:** pass `{ observe: true }` to animate elements added after init.
-- **Not supported (need a component runtime):** drag, layout, exit, and variant *propagation* —
-  use `motionwind-react` or `motionwind-vue` for those.
+The adapter strips recognized animate-* tokens after wiring while preserving
+ordinary classes. Re-scanning is idempotent.
 
-## Class syntax (summary)
-
-`animate-{hover|tap|focus|inview|initial|enter}:{prop}-{value}`, transitions like
-`animate-duration-300 animate-spring animate-ease-in-out`, viewport `animate-once animate-amount-50`,
-scroll `animate-scroll:y-[0,-200] animate-scroll-container`. See motionwind-core for the full grammar.
+Use motionwind-core's registry and parser diagnostics; do not maintain a second
+syntax list.

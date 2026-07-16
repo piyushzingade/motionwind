@@ -1,31 +1,39 @@
-# motionwind-vanilla
+# motionwind-vanilla v2
 
-Write Motion animations as Tailwind-like classes in **plain HTML/JS** — no framework. It scans
-the DOM for `animate-*` classes and wires them up with the [Motion](https://motion.dev) vanilla API.
-
-## npm
+Use Motionwind classes in plain browser HTML and JavaScript through Motion's DOM
+runtime.
 
 ```bash
-npm install motionwind-vanilla motion
+npm install motionwind-vanilla@2 motion motionwind-core@2
 ```
 
 ```js
 import { motionwind } from "motionwind-vanilla";
-const stop = motionwind(); // scans document, returns a cleanup fn
+import config from "./motionwind.config";
+
+const stop = motionwind({
+  config,
+  observe: true,
+  respectReducedMotion: true,
+});
 ```
 
-## CDN (zero build)
+The cleanup function removes listeners and observers. Options also include a
+custom `root` and `selector`.
 
 ```html
-<script src="https://unpkg.com/motionwind-vanilla"></script>
-<!-- auto-initializes on load; window.motionwind() to re-scan -->
-
-<button class="animate-hover:scale-110 animate-tap:scale-90 animate-spring">Click me</button>
+<script src="https://unpkg.com/motionwind-vanilla@2"></script>
+<button
+  class="animate-hover:scale-110 animate-tap:scale-90 animate-focus:scale-105"
+>
+  Save
+</button>
 ```
 
-## Supported
+V2 supports initial/enter, hover, tap, focus, in-view, scroll-linked values,
+SVG paths, and reduced motion. Drag, layout projection, exit orchestration, and
+variant propagation require a component runtime and produce adapter warnings.
 
-initial/enter, hover, tap, focus, in-view, and scroll-linked (`animate-scroll:*`) — using the same
-`animate-*` syntax as the rest of motionwind.
+Compatibility: https://motionwind.xyz/docs/compatibility
 
-> Drag, layout, exit, and variant *propagation* are React/Vue-only (they need a component runtime).
+MIT

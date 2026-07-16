@@ -1,6 +1,19 @@
 import { animate, hover, press, inView, scroll } from "motion";
-import { parseMotionClasses, type ParsedResult } from "motionwind-core";
-import { toAnimateOptions, baseValues, subset } from "./map.js";
+import {
+  parseMotionClasses,
+  unsupportedCapabilities,
+  type MotionwindConfig,
+  type ParsedResult,
+} from "motionwind-core";
+import {
+  toAnimateOptions,
+  baseValues,
+  interactiveValues,
+  subset,
+} from "./map.js";
+import { VANILLA_CAPABILITIES } from "./adapter.js";
+
+export { vanillaAdapter, VANILLA_CAPABILITIES } from "./adapter.js";
 
 export interface MotionwindOptions {
   /** Where to scan for motion elements. Defaults to `document`. */
@@ -11,6 +24,8 @@ export interface MotionwindOptions {
   respectReducedMotion?: boolean;
   /** Watch the DOM and wire elements added after init (SPA/HTMX). Default false. */
   observe?: boolean;
+  /** Project tokens, presets, plugins, and strictness. */
+  config?: MotionwindConfig;
 }
 
 const anim = animate as any;
@@ -25,18 +40,32 @@ function prefersReducedMotion(): boolean {
 
 /** Wire a single element's gestures/enter/scroll animations. Returns cleanup. */
 function wireElement(
-  el: HTMLElement,
+  el: Element,
   parsed: ParsedResult,
   reduce: boolean,
 ): () => void {
   const opts = toAnimateOptions(parsed.transition);
   const base = baseValues(parsed);
   const cleanups: Array<() => void> = [];
+  const whileHover = parsed.gestures.whileHover;
+  const whileTap = parsed.gestures.whileTap;
+  const whileFocus = parsed.gestures.whileFocus;
+  let hovered = false;
+  let pressed = false;
+  let focused = false;
+  const updateInteractive = () => {
+    const target = interactiveValues(parsed, { focused, hovered, pressed });
+    if (Object.keys(target).length > 0) anim(el, target, opts);
+  };
 
   // Strip animate-* classes; keep the passthrough (Tailwind/util) classes. This
   // also makes re-scans idempotent — a wired element no longer matches the
   // `animate-*` selector.
-  el.className = parsed.tailwindClasses;
+  if (parsed.tailwindClasses) {
+    el.setAttribute("class", parsed.tailwindClasses);
+  } else {
+    el.removeAttribute("class");
+  }
 
   // Reduced motion: jump straight to the final resting/visible state with no
   // animation, and skip all interactive + scroll wiring.
@@ -50,36 +79,48 @@ function wireElement(
   }
 
   // Initial state (applied instantly), then enter animation.
-  if (parsed.gestures.initial) anim(el, parsed.gestures.initial, { duration: 0 });
+  if (parsed.gestures.initial)
+    anim(el, parsed.gestures.initial, { duration: 0 });
   if (parsed.gestures.animate) anim(el, parsed.gestures.animate, opts);
 
   // Hover
-  const whileHover = parsed.gestures.whileHover;
   if (whileHover) {
     cleanups.push(
       hover(el, () => {
-        anim(el, whileHover, opts);
-        return () => anim(el, subset(base, whileHover), opts);
+        hovered = true;
+        updateInteractive();
+        return () => {
+          hovered = false;
+          updateInteractive();
+        };
       }),
     );
   }
 
   // Tap / press
-  const whileTap = parsed.gestures.whileTap;
   if (whileTap) {
     cleanups.push(
       press(el, () => {
-        anim(el, whileTap, opts);
-        return () => anim(el, subset(base, whileTap), opts);
+        pressed = true;
+        updateInteractive();
+        return () => {
+          pressed = false;
+          updateInteractive();
+        };
       }),
     );
   }
 
   // Focus
-  const whileFocus = parsed.gestures.whileFocus;
   if (whileFocus) {
-    const onFocus = () => anim(el, whileFocus, opts);
-    const onBlur = () => anim(el, subset(base, whileFocus), opts);
+    const onFocus = () => {
+      focused = true;
+      updateInteractive();
+    };
+    const onBlur = () => {
+      focused = false;
+      updateInteractive();
+    };
     el.addEventListener("focus", onFocus);
     el.addEventListener("blur", onBlur);
     cleanups.push(() => {
@@ -92,8 +133,10 @@ function wireElement(
   const whileInView = parsed.gestures.whileInView;
   if (whileInView) {
     const viewportOpts: Record<string, unknown> = {};
-    if (parsed.viewport.amount !== undefined) viewportOpts.amount = parsed.viewport.amount;
-    if (parsed.viewport.margin !== undefined) viewportOpts.margin = parsed.viewport.margin;
+    if (parsed.viewport.amount !== undefined)
+      viewportOpts.amount = parsed.viewport.amount;
+    if (parsed.viewport.margin !== undefined)
+      viewportOpts.margin = parsed.viewport.margin;
     cleanups.push(
       inView(
         el,
@@ -114,7 +157,10 @@ function wireElement(
     const scrollOpts: any = parsed.scroll.container
       ? { axis: parsed.scroll.axis }
       : { target: el, axis: parsed.scroll.axis, offset: parsed.scroll.offset };
-    const stop = scroll(anim(el, parsed.scroll.values, { ease: "linear" }), scrollOpts);
+    const stop = scroll(
+      anim(el, parsed.scroll.values, { ease: "linear" }),
+      scrollOpts,
+    );
     if (typeof stop === "function") cleanups.push(stop);
   }
 
@@ -137,16 +183,30 @@ function wireElement(
  * ```
  */
 export function motionwind(options: MotionwindOptions = {}): () => void {
-  const root = options.root ?? (typeof document !== "undefined" ? document : null);
+  const root =
+    options.root ?? (typeof document !== "undefined" ? document : null);
   if (!root) return () => {};
 
   const selector = options.selector ?? '[class*="animate-"]';
-  const reduce = (options.respectReducedMotion ?? true) && prefersReducedMotion();
+  const reduce =
+    (options.respectReducedMotion ?? true) && prefersReducedMotion();
   const cleanups: Array<() => void> = [];
 
-  const wire = (el: HTMLElement) => {
+  const wire = (el: Element) => {
     try {
-      const parsed = parseMotionClasses(el.className);
+      // SVGElement.className is SVGAnimatedString rather than a string, so the
+      // attribute is the portable source for both HTML and SVG elements.
+      const parsed = parseMotionClasses(
+        el.getAttribute("class") ?? "",
+        options.config,
+      );
+      const unsupported = unsupportedCapabilities(parsed, VANILLA_CAPABILITIES);
+      if (unsupported.length && typeof console !== "undefined") {
+        console.warn(
+          `[motionwind-vanilla] Unsupported capabilities: ${unsupported.join(", ")}.`,
+          el,
+        );
+      }
       if (parsed.hasMotion) cleanups.push(wireElement(el, parsed, reduce));
     } catch (err) {
       // A single malformed element/class must never break the whole page.
@@ -160,7 +220,7 @@ export function motionwind(options: MotionwindOptions = {}): () => void {
     }
   };
 
-  root.querySelectorAll<HTMLElement>(selector).forEach(wire);
+  root.querySelectorAll<Element>(selector).forEach(wire);
 
   if (options.observe && typeof MutationObserver !== "undefined") {
     const target =
@@ -168,9 +228,9 @@ export function motionwind(options: MotionwindOptions = {}): () => void {
     const observer = new MutationObserver((mutations) => {
       for (const m of mutations) {
         m.addedNodes.forEach((node) => {
-          if (!(node instanceof HTMLElement)) return;
+          if (!(node instanceof Element)) return;
           if (node.matches(selector)) wire(node);
-          node.querySelectorAll<HTMLElement>(selector).forEach(wire);
+          node.querySelectorAll<Element>(selector).forEach(wire);
         });
       }
     });
@@ -181,5 +241,11 @@ export function motionwind(options: MotionwindOptions = {}): () => void {
   return () => cleanups.forEach((fn) => fn());
 }
 
-export { parseMotionClasses } from "motionwind-core";
-export type { ParsedResult } from "motionwind-core";
+export {
+  parseMotionClasses,
+  defineConfig,
+  definePreset,
+  defineMotionwindPlugin,
+  MOTIONWIND_RECIPES,
+} from "motionwind-core";
+export type { ParsedResult, MotionwindConfig } from "motionwind-core";
