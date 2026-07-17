@@ -14,6 +14,8 @@ concurrency: release
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -25,8 +27,13 @@ jobs:
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
+      - name: Upgrade npm for trusted publishing
+        if: env.NPM_TOKEN == '' && vars.NPM_TRUSTED_PUBLISHING == 'true'
+        run: npm install --global npm@^11.5.1
       - run: bun install --frozen-lockfile
-      - uses: changesets/action@v1
+      - name: Create release pull request or publish packages
+        if: env.NPM_TOKEN != '' || vars.NPM_TRUSTED_PUBLISHING == 'true'
+        uses: changesets/action@v1
         with:
           version: bun run version-packages
           publish: bun run release
@@ -34,5 +41,16 @@ jobs:
           commit: "chore: release motionwind packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ env.NPM_TOKEN }}
+      - name: Create release pull request without publishing
+        if: env.NPM_TOKEN == '' && vars.NPM_TRUSTED_PUBLISHING != 'true'
+        uses: changesets/action@v1
+        with:
+          version: bun run version-packages
+          title: "chore: release motionwind packages"
+          commit: "chore: release motionwind packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Explain disabled npm publishing
+        if: env.NPM_TOKEN == '' && vars.NPM_TRUSTED_PUBLISHING != 'true'
+        run: echo "::warning::npm publishing is disabled. Add the NPM_TOKEN secret for the initial release, or configure every package as a trusted publisher and set the NPM_TRUSTED_PUBLISHING repository variable to true."
