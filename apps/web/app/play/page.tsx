@@ -130,6 +130,7 @@ function RangeControl({
       </ControlLabel>
       <input
         id={id}
+        aria-label={label}
         className="studio-range"
         type="range"
         min={min}
@@ -416,6 +417,7 @@ export default function StudioPage() {
               </ControlLabel>
               <textarea
                 id="studio-classes"
+                aria-label="Motionwind classes"
                 value={editor.classes}
                 onChange={(event) =>
                   updateEditor({ classes: event.target.value })
@@ -430,6 +432,7 @@ export default function StudioPage() {
                 <ControlLabel htmlFor="studio-element">Element</ControlLabel>
                 <select
                   id="studio-element"
+                  aria-label="Element"
                   value={editor.tag}
                   onChange={(event) =>
                     updateEditor({ tag: event.target.value })
@@ -445,6 +448,7 @@ export default function StudioPage() {
                 <ControlLabel htmlFor="studio-text">Content</ControlLabel>
                 <input
                   id="studio-text"
+                  aria-label="Content"
                   value={editor.text}
                   onChange={(event) =>
                     updateEditor({ text: event.target.value })
