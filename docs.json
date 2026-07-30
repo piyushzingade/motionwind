@@ -1,0 +1,119 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Motionwind",
+  "description": "A shared Motion utility language for React, Vue, JavaScript, and React Native — animate-* classes that compile to Motion at build time.",
+  "colors": {
+    "primary": "#6366f1",
+    "light": "#818cf8",
+    "dark": "#4338ca"
+  },
+  "favicon": "/favicon.ico",
+  "logo": {
+    "light": "/logo.svg",
+    "dark": "/logo.svg"
+  },
+  "topbarLinks": [
+    {
+      "name": "Playground",
+      "url": "https://web.motionwind.xyz/play"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "GitHub",
+    "url": "https://github.com/piyushzingade/motionwind"
+  },
+  "tabs": [
+    {
+      "name": "Documentation",
+      "url": "docs"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "docs/index",
+        "docs/v2",
+        "docs/getting-started",
+        "docs/installation",
+        "docs/compatibility",
+        "docs/configuration",
+        "docs/syntax"
+      ]
+    },
+    {
+      "group": "Frameworks",
+      "pages": [
+        "docs/frameworks/index",
+        "docs/frameworks/react",
+        "docs/frameworks/vue",
+        "docs/frameworks/vanilla",
+        "docs/frameworks/react-native"
+      ]
+    },
+    {
+      "group": "Animations",
+      "pages": [
+        "docs/animations/basic-properties",
+        "docs/animations/transforms",
+        "docs/animations/gestures",
+        "docs/animations/scroll",
+        "docs/animations/scroll-linked",
+        "docs/animations/enter-exit",
+        "docs/animations/physics",
+        "docs/animations/keyframes",
+        "docs/animations/layout",
+        "docs/animations/variants",
+        "docs/animations/filters",
+        "docs/animations/svg",
+        "docs/animations/drag",
+        "docs/animations/advanced-effects"
+      ]
+    },
+    {
+      "group": "React Native",
+      "pages": [
+        "docs/react-native/index",
+        "docs/react-native/installation",
+        "docs/react-native/components",
+        "docs/react-native/animations",
+        "docs/react-native/gestures",
+        "docs/react-native/springs-and-easing",
+        "docs/react-native/scroll-animations",
+        "docs/react-native/drag",
+        "docs/react-native/hooks",
+        "docs/react-native/api-reference",
+        "docs/react-native/llms-txt"
+      ]
+    },
+    {
+      "group": "Tooling",
+      "pages": [
+        "docs/tooling/cli",
+        "docs/tooling/playground",
+        "docs/tooling/mcp",
+        "docs/tooling/eslint",
+        "docs/tooling/prettier",
+        "docs/tooling/migrate"
+      ]
+    },
+    {
+      "group": "Reference",
+      "pages": [
+        "docs/api",
+        "docs/extensions",
+        "docs/community",
+        "docs/framework-setup"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/piyushzingade/motionwind"
+  },
+  "metadata": {
+    "og:image": "https://www.motionwind.xyz/og-docs.png",
+    "twitter:image": "https://www.motionwind.xyz/og-docs.png",
+    "twitter:card": "summary_large_image"
+  }
+}
