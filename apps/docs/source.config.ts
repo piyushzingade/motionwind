@@ -10,7 +10,7 @@ export const docs: DocsCollection<
   typeof frontmatterSchema,
   typeof metaSchema
 > = defineDocs({
-  dir: "content/docs",
+  dir: "../../docs",
 });
 
 export default defineConfig({

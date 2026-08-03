@@ -4,7 +4,7 @@ import {
   defineConfig
 } from "fumadocs-mdx/config";
 var docs = defineDocs({
-  dir: "content/docs"
+  dir: "../../docs"
 });
 var source_config_default = defineConfig({
   mdxOptions: {

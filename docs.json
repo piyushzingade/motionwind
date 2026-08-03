@@ -13,15 +13,17 @@
     "light": "/logo.svg",
     "dark": "/logo.svg"
   },
-  "topbarLinks": [
-    {
-      "name": "Playground",
-      "url": "https://web.motionwind.xyz/play"
+  "navbar": {
+    "links": [
+      {
+        "label": "Playground",
+        "href": "https://web.motionwind.xyz/play"
+      }
+    ],
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/piyushzingade/motionwind"
     }
-  ],
-  "topbarCtaButton": {
-    "name": "GitHub",
-    "url": "https://github.com/piyushzingade/motionwind"
   },
   "navigation": {
     "tabs": [
@@ -109,12 +111,16 @@
       }
     ]
   },
-  "footerSocials": {
-    "github": "https://github.com/piyushzingade/motionwind"
+  "footer": {
+    "socials": {
+      "github": "https://github.com/piyushzingade/motionwind"
+    }
   },
-  "metadata": {
-    "og:image": "https://www.motionwind.xyz/og-docs.png",
-    "twitter:image": "https://www.motionwind.xyz/og-docs.png",
-    "twitter:card": "summary_large_image"
+  "seo": {
+    "metatags": {
+      "og:image": "https://www.motionwind.xyz/og-docs.png",
+      "twitter:image": "https://www.motionwind.xyz/og-docs.png",
+      "twitter:card": "summary_large_image"
+    }
   }
 }

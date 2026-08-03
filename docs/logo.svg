@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Three wind bars with progressive offset -->
+  <polygon points="123,182  403,182  396,218  116,218" fill="#c8ff2e"/>
+  <polygon points="181,238  401,238  394,274  174,274" fill="#c8ff2e" opacity="0.78"/>
+  <polygon points="239,294  399,294  392,330  232,330" fill="#c8ff2e" opacity="0.59"/>
+  <!-- Arrow accent -->
+  <polygon points="415,188 439,200 415,212" fill="#c8ff2e"/>
+</svg>
