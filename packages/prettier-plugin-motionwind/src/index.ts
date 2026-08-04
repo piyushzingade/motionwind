@@ -62,6 +62,24 @@ function walk(node: any, seen: WeakSet<object>): void {
     sortAttributeValue(node.value);
   }
 
+  // Template literal with no expressions — the full class string lives in
+  // quasis[0].value.raw.  Sort it the same way as a regular string literal.
+  if (
+    node.type === "TemplateLiteral" &&
+    (!node.expressions || node.expressions.length === 0) &&
+    Array.isArray(node.quasis) &&
+    node.quasis.length === 1
+  ) {
+    const raw: string = node.quasis[0].value.raw;
+    if (raw.includes("animate-")) {
+      const sorted = sortMotionClasses(raw);
+      if (sorted !== raw) {
+        node.quasis[0].value.raw = sorted;
+        node.quasis[0].value.cooked = sorted;
+      }
+    }
+  }
+
   for (const key in node) {
     if (SKIP_KEYS.has(key)) continue;
     const child = node[key];
