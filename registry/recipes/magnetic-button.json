@@ -1,0 +1,14 @@
+{
+  "id": "magnetic-button",
+  "name": "Magnetic button",
+  "description": "A subtle spring scale that draws attention on hover without moving the element.",
+  "category": "interaction",
+  "classes": "animate-hover:scale-103 animate-spring animate-stiffness-280 animate-damping-22",
+  "accessibility": "Do not use scale change as the only indicator of an interactive element.",
+  "adapters": ["react", "vue", "vanilla"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/magnetic-button.json"
+}

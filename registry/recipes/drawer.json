@@ -1,0 +1,14 @@
+{
+  "id": "drawer",
+  "name": "Drawer",
+  "description": "A side panel that slides in from the edge and returns on exit.",
+  "category": "entrance",
+  "classes": "animate-initial:x-100pct animate-enter:x-0 animate-exit:x-100pct animate-duration-320 animate-ease-out",
+  "accessibility": "Trap focus inside the drawer, return focus on close, and support Escape to dismiss.",
+  "adapters": ["react", "vue", "vanilla", "react-native"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/drawer.json"
+}

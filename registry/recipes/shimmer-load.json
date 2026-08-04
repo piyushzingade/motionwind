@@ -1,0 +1,14 @@
+{
+  "id": "shimmer-load",
+  "name": "Shimmer load",
+  "description": "A left-to-right gradient shimmer applied to a loading overlay.",
+  "category": "loading",
+  "classes": "animate-initial:-x-100pct animate-enter:x-100pct animate-repeat-infinite animate-duration-1200 animate-ease-in-out",
+  "accessibility": "Place the shimmer on a decorative overlay; expose loading status through accessible text.",
+  "adapters": ["react", "vue", "vanilla"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/shimmer-load.json"
+}

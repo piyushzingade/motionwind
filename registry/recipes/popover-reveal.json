@@ -1,0 +1,14 @@
+{
+  "id": "popover-reveal",
+  "name": "Popover reveal",
+  "description": "A short downward fade-in for anchored popovers and dropdowns.",
+  "category": "entrance",
+  "classes": "animate-initial:opacity-0 animate-initial:y--8 animate-enter:opacity-100 animate-enter:y-0 animate-duration-180 animate-ease-out",
+  "accessibility": "Move focus into the popover on open and return it to the trigger on close.",
+  "adapters": ["react", "vue", "vanilla", "react-native"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/popover-reveal.json"
+}

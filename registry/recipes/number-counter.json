@@ -1,0 +1,14 @@
+{
+  "id": "number-counter",
+  "name": "Number counter",
+  "description": "A fade and rise entrance for statistic values triggered when they scroll into view.",
+  "category": "scroll",
+  "classes": "animate-initial:opacity-0 animate-initial:y-12 animate-inview:opacity-100 animate-inview:y-0 animate-once animate-duration-400 animate-ease-out",
+  "accessibility": "Present the final value in document order and avoid conveying meaning through counting motion.",
+  "adapters": ["react", "vue", "vanilla"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/number-counter.json"
+}

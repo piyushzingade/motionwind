@@ -1,0 +1,14 @@
+{
+  "id": "parallax-scroll",
+  "name": "Parallax scroll",
+  "description": "Map scroll progress to a Y translation so a layer moves at a different speed.",
+  "category": "scroll",
+  "classes": "animate-scroll:y-[-50,50] animate-scroll-container",
+  "accessibility": "Respect prefers-reduced-motion; parallax depth cues must not convey meaning exclusively.",
+  "adapters": ["react", "vanilla"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/parallax-scroll.json"
+}

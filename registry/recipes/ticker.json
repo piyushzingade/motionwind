@@ -1,0 +1,14 @@
+{
+  "id": "ticker",
+  "name": "Ticker",
+  "description": "A stock- or news-style ticker where items enter from the right and exit to the left.",
+  "category": "entrance",
+  "classes": "animate-initial:x-100pct animate-enter:x-0 animate-exit:-x-100pct animate-duration-500 animate-ease-out animate-stagger-150",
+  "accessibility": "Provide a way to pause the ticker and make all content available in a static list.",
+  "adapters": ["react", "vue", "vanilla"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/ticker.json"
+}

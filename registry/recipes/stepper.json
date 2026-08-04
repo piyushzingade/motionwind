@@ -1,0 +1,14 @@
+{
+  "id": "stepper",
+  "name": "Stepper",
+  "description": "Sequential staggered entrances for step-indicator items.",
+  "category": "entrance",
+  "classes": "animate-initial:opacity-0 animate-initial:scale-80 animate-enter:opacity-100 animate-enter:scale-100 animate-stagger-80 animate-delay-children-100 animate-duration-200 animate-ease-back-out",
+  "accessibility": "Announce the current step and total steps; keep step content readable without animation.",
+  "adapters": ["react", "vue", "vanilla", "react-native"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/stepper.json"
+}

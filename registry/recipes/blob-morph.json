@@ -1,0 +1,14 @@
+{
+  "id": "blob-morph",
+  "name": "Blob morph",
+  "description": "An organic border-radius keyframe loop for fluid decorative shapes.",
+  "category": "loading",
+  "classes": "animate-enter:rounded-[0,30,60,30,0] animate-repeat-infinite animate-duration-3000 animate-ease-in-out animate-repeat-reverse",
+  "accessibility": "Use only for decorative elements; apply aria-hidden to prevent interference with screen readers.",
+  "adapters": ["react", "vue", "vanilla"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/blob-morph.json"
+}

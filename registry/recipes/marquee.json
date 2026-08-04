@@ -1,0 +1,14 @@
+{
+  "id": "marquee",
+  "name": "Marquee",
+  "description": "A continuously looping horizontal scroll for text or image strips.",
+  "category": "entrance",
+  "classes": "animate-initial:x-100pct animate-enter:-x-100pct animate-repeat-infinite animate-ease-linear animate-duration-4000",
+  "accessibility": "Pause the marquee on focus or hover; do not convey critical information through motion alone.",
+  "adapters": ["react", "vue", "vanilla"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/marquee.json"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "card-hover",
+  "name": "Card hover",
+  "description": "A spring lift and upward nudge for interactive cards on hover.",
+  "category": "interaction",
+  "classes": "animate-hover:scale-103 animate-hover:y--4 animate-spring animate-stiffness-380 animate-damping-26",
+  "accessibility": "Ensure focus styles are visible and the hover state is not the only interactive cue.",
+  "adapters": ["react", "vue", "vanilla"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/card-hover.json"
+}

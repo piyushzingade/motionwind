@@ -1,0 +1,14 @@
+{
+  "id": "flip-card",
+  "name": "Flip card",
+  "description": "A 3-D card that rotates 180 degrees around the Y axis on hover.",
+  "category": "interaction",
+  "classes": "animate-hover:rotate-y-180 animate-duration-480 animate-ease-in-out",
+  "accessibility": "Pair with a separate back face and keep both sides keyboard-accessible.",
+  "adapters": ["react", "vue", "vanilla"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/flip-card.json"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "drag-reorder",
+  "name": "Drag reorder",
+  "description": "Vertical drag with layout animation for reorderable list items.",
+  "category": "interaction",
+  "classes": "animate-drag-y animate-layout-position animate-drag:scale-102 animate-spring animate-stiffness-320 animate-damping-30",
+  "accessibility": "Provide keyboard controls for reordering and announce the new position after a drop.",
+  "adapters": ["react", "vue"],
+  "maintainer": "motionwind/core",
+  "version": "1.0.0",
+  "compatibleCore": ">=2.0.0 <3",
+  "bundleImpact": "Preset only; no runtime code added.",
+  "source": "https://github.com/piyushzingade/motionwind/tree/main/registry/recipes/drag-reorder.json"
+}
