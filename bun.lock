@@ -338,23 +338,6 @@
       "name": "@repo/typescript-config",
       "version": "0.0.0",
     },
-    "packages/ui": {
-      "name": "@repo/ui",
-      "version": "0.0.0",
-      "dependencies": {
-        "react": "^19.2.0",
-        "react-dom": "^19.2.0",
-      },
-      "devDependencies": {
-        "@repo/eslint-config": "*",
-        "@repo/typescript-config": "*",
-        "@types/node": "^22.15.3",
-        "@types/react": "19.2.2",
-        "@types/react-dom": "19.2.2",
-        "eslint": "^9.39.1",
-        "typescript": "5.9.2",
-      },
-    },
     "packages/vscode-extension": {
       "name": "motion-wind",
       "version": "2.0.0",
@@ -1056,8 +1039,6 @@
     "@repo/eslint-config": ["@repo/eslint-config@workspace:packages/eslint-config"],
 
     "@repo/typescript-config": ["@repo/typescript-config@workspace:packages/typescript-config"],
-
-    "@repo/ui": ["@repo/ui@workspace:packages/ui"],
 
     "@rollup/rollup-android-arm-eabi": ["@rollup/rollup-android-arm-eabi@4.59.0", "", { "os": "android", "cpu": "arm" }, "sha512-upnNBkA6ZH2VKGcBj9Fyl9IGNPULcjXRlg0LLeaioQWueH30p6IXtJEbKAgvyv+mJaMxSm1l6xwDXYjpEMiLMg=="],
 
