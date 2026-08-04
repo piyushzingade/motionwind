@@ -4,6 +4,7 @@ import {
   unsupportedCapabilities,
   type MotionwindConfig,
   type ParsedResult,
+  type AnimatableValues,
 } from "motionwind-core";
 import {
   toAnimateOptions,
@@ -38,6 +39,34 @@ function prefersReducedMotion(): boolean {
   );
 }
 
+/**
+ * Resolve the initial/animate/exit gesture values for an element, preferring
+ * named-variant values from `parsed.variants` when `parsed.variantState`
+ * references them, and falling back to the inline gesture values otherwise.
+ */
+function resolveGestures(parsed: ParsedResult): {
+  initial?: AnimatableValues;
+  animate?: AnimatableValues;
+  exit?: AnimatableValues;
+} {
+  const { variants, variantState, gestures } = parsed;
+  const hasVariants = Object.keys(variants).length > 0;
+  return {
+    initial:
+      (hasVariants && variantState.initial
+        ? variants[variantState.initial]
+        : undefined) ?? gestures.initial,
+    animate:
+      (hasVariants && variantState.animate
+        ? variants[variantState.animate]
+        : undefined) ?? gestures.animate,
+    exit:
+      (hasVariants && variantState.exit
+        ? variants[variantState.exit]
+        : undefined) ?? gestures.exit,
+  };
+}
+
 /** Wire a single element's gestures/enter/scroll animations. Returns cleanup. */
 function wireElement(
   el: Element,
@@ -47,6 +76,7 @@ function wireElement(
   const opts = toAnimateOptions(parsed.transition);
   const base = baseValues(parsed);
   const cleanups: Array<() => void> = [];
+  const resolved = resolveGestures(parsed);
   const whileHover = parsed.gestures.whileHover;
   const whileTap = parsed.gestures.whileTap;
   const whileFocus = parsed.gestures.whileFocus;
@@ -71,7 +101,7 @@ function wireElement(
   // animation, and skip all interactive + scroll wiring.
   if (reduce) {
     const rest = {
-      ...(parsed.gestures.animate ?? {}),
+      ...(resolved.animate ?? {}),
       ...(parsed.gestures.whileInView ?? {}),
     };
     if (Object.keys(rest).length > 0) anim(el, rest, { duration: 0 });
@@ -79,9 +109,28 @@ function wireElement(
   }
 
   // Initial state (applied instantly), then enter animation.
-  if (parsed.gestures.initial)
-    anim(el, parsed.gestures.initial, { duration: 0 });
-  if (parsed.gestures.animate) anim(el, parsed.gestures.animate, opts);
+  // Use resolved values so that named variants are applied correctly.
+  if (resolved.initial) anim(el, resolved.initial, { duration: 0 });
+  if (resolved.animate) anim(el, resolved.animate, opts);
+
+  // Exit animation: when a consumer dispatches a custom "motionwind:remove"
+  // event on the element, we play the exit keyframes and remove it afterwards.
+  const exitValues = resolved.exit;
+  if (exitValues && Object.keys(exitValues).length > 0) {
+    const handleRemove = () => {
+      anim(el, exitValues, {
+        ...opts,
+        onComplete: () => el.remove(),
+      });
+    };
+    el.addEventListener("motionwind:remove", handleRemove as EventListener);
+    cleanups.push(() =>
+      el.removeEventListener(
+        "motionwind:remove",
+        handleRemove as EventListener,
+      ),
+    );
+  }
 
   // Hover
   if (whileHover) {
@@ -171,10 +220,12 @@ function wireElement(
  * Scan the DOM for elements with `animate-*` classes and wire up their
  * animations using the vanilla Motion API. Returns a cleanup function.
  *
- * Supports: initial/enter, hover, tap, focus, in-view, and scroll-linked.
+ * Supports: initial/enter, hover, tap, focus, in-view, scroll-linked, named
+ * variants (resolved at wire-up time), and exit animations (triggered by
+ * dispatching a `"motionwind:remove"` custom event on the element).
  * Honors `prefers-reduced-motion`, is idempotent across re-runs, and can watch
  * for dynamically-added elements via `{ observe: true }`.
- * (drag, layout, exit, and variant propagation are React/Vue-only.)
+ * (drag and layout are React/Vue-only.)
  *
  * @example
  * ```js

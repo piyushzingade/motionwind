@@ -1,6 +1,7 @@
 export { mw } from "./component.js";
 export { MotionwindProvider } from "./component.js";
 export { reactAdapter, REACT_CAPABILITIES } from "./adapter.js";
+export { AnimatePresence as MotionwindPresence } from "motion/react";
 export {
   parseMotionClasses,
   clearParserCache,

@@ -5,7 +5,7 @@ export const VANILLA_CAPABILITIES = {
   scroll: true,
   layout: false,
   drag: false,
-  variants: false,
+  variants: true,
   svg: true,
   "reduced-motion": true,
 } as const;
