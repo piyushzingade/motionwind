@@ -9,7 +9,8 @@ export type SyntaxCategory =
   | "drag"
   | "layout"
   | "variant"
-  | "preset";
+  | "preset"
+  | "modifier";
 
 export type Platform = "react" | "vue" | "vanilla" | "react-native";
 
@@ -51,6 +52,31 @@ export const GESTURE_DEFINITIONS = [
   gesture("enter", "animate", "Animate to a state when an element enters."),
   gesture("exit", "exit", "Animate to a state when an element exits."),
 ] as const satisfies readonly SyntaxDefinition[];
+
+/**
+ * Modifier prefixes that wrap an inner class token and control conditional
+ * application based on the user's motion preference media query.
+ */
+export const MODIFIER_DEFINITIONS: readonly SyntaxDefinition[] = [
+  {
+    id: "modifier.motion-reduce",
+    category: "modifier",
+    label: "motion-reduce:",
+    snippet: "motion-reduce:",
+    description:
+      "Apply the wrapped class only when `prefers-reduced-motion: reduce` is active.",
+    platforms: WEB,
+  },
+  {
+    id: "modifier.motion-safe",
+    category: "modifier",
+    label: "motion-safe:",
+    snippet: "motion-safe:",
+    description:
+      "Apply the wrapped class only when `prefers-reduced-motion: no-preference` is active.",
+    platforms: WEB,
+  },
+];
 
 const property = (
   label: string,
@@ -100,6 +126,17 @@ export const PROPERTY_DEFINITIONS = [
   property("x-", "x-${1:20}", "x", "Translate on the x axis."),
   property("y-", "y-${1:20}", "y", "Translate on the y axis."),
   property("z-", "z-${1:20}", "z", "Translate on the z axis.", WEB),
+  // z-{0,10,20,30,40,50,auto} maps to zIndex (Tailwind-standard values)
+  {
+    id: "property.z-zIndex",
+    category: "property",
+    label: "z-",
+    snippet: "z-${1|0,10,20,30,40,50,auto|}",
+    motionKey: "zIndex",
+    description:
+      "Animate z-index (Tailwind values: 0, 10, 20, 30, 40, 50, auto). Non-standard values translate on the z axis instead.",
+    platforms: WEB,
+  },
   property("skew-x-", "skew-x-${1:12}", "skewX", "Skew on the x axis."),
   property("skew-y-", "skew-y-${1:12}", "skewY", "Skew on the y axis."),
   property(
@@ -168,6 +205,30 @@ export const PROPERTY_DEFINITIONS = [
     "borderRadius",
     "Animate border radius.",
   ),
+  property(
+    "rounded-tl-",
+    "rounded-tl-${1:12}",
+    "borderTopLeftRadius",
+    "Animate top-left border radius.",
+  ),
+  property(
+    "rounded-tr-",
+    "rounded-tr-${1:12}",
+    "borderTopRightRadius",
+    "Animate top-right border radius.",
+  ),
+  property(
+    "rounded-bl-",
+    "rounded-bl-${1:12}",
+    "borderBottomLeftRadius",
+    "Animate bottom-left border radius.",
+  ),
+  property(
+    "rounded-br-",
+    "rounded-br-${1:12}",
+    "borderBottomRightRadius",
+    "Animate bottom-right border radius.",
+  ),
   property("top-", "top-${1:0}", "top", "Animate top position."),
   property("left-", "left-${1:0}", "left", "Animate left position."),
   property("right-", "right-${1:0}", "right", "Animate right position."),
@@ -207,6 +268,13 @@ export const PROPERTY_DEFINITIONS = [
     "path-length-${1:1}",
     "pathLength",
     "Animate SVG path length.",
+    WEB,
+  ),
+  property(
+    "text-shadow-[",
+    "text-shadow-[${1:value}]",
+    "textShadow",
+    "Animate text shadow (arbitrary value; underscores become spaces).",
     WEB,
   ),
   property(
@@ -365,6 +433,7 @@ export const CONFIG_DEFINITIONS = [
 
 export const MOTIONWIND_SYNTAX_REGISTRY: readonly SyntaxDefinition[] = [
   ...GESTURE_DEFINITIONS,
+  ...MODIFIER_DEFINITIONS,
   ...PROPERTY_DEFINITIONS,
   ...CONFIG_DEFINITIONS,
 ];

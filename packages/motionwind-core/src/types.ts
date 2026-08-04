@@ -103,6 +103,13 @@ export interface ParsedResult {
   variantState: VariantState;
   /** Whether any motion classes were found */
   hasMotion: boolean;
+  /**
+   * Reduced motion policy from `motion-reduce:` / `motion-safe:` class
+   * prefixes. `"reduce"` means apply only when `prefers-reduced-motion:
+   * reduce`; `"safe"` means apply only when `prefers-reduced-motion:
+   * no-preference`.
+   */
+  reducedMotionPolicy?: "reduce" | "safe";
   /** Non-fatal parser and plugin diagnostics. */
   diagnostics: import("./config.js").MotionwindDiagnostic[];
 }

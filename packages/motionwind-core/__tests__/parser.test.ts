@@ -582,9 +582,16 @@ describe("parseMotionClasses", () => {
   });
 
   describe("z-axis", () => {
-    it("parses z value", () => {
+    it("parses z-translate for non-zIndex values", () => {
+      // Values not in the zIndex list (0, 10, 20, 30, 40, 50) fall through to z-translate.
+      const result = parseMotionClasses("animate-hover:z-15");
+      expect(result.gestures.whileHover).toEqual({ z: 15 });
+    });
+
+    it("parses z-50 as zIndex (Tailwind standard value)", () => {
+      // Tailwind-standard values (0, 10, 20, 30, 40, 50, auto) map to zIndex.
       const result = parseMotionClasses("animate-hover:z-50");
-      expect(result.gestures.whileHover).toEqual({ z: 50 });
+      expect(result.gestures.whileHover).toEqual({ zIndex: 50 });
     });
 
     it("parses negative z value", () => {

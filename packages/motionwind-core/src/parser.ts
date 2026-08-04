@@ -247,6 +247,10 @@ const ARBITRARY_VALUE_ALLOWLIST = new Set([
   "margin",
   "gap",
   "borderRadius",
+  "borderTopLeftRadius",
+  "borderTopRightRadius",
+  "borderBottomLeftRadius",
+  "borderBottomRightRadius",
   "borderWidth",
   "fontSize",
   "letterSpacing",
@@ -255,6 +259,8 @@ const ARBITRARY_VALUE_ALLOWLIST = new Set([
   "color",
   "borderColor",
   "boxShadow",
+  "textShadow",
+  "zIndex",
   "pathLength",
   "pathOffset",
   "pathSpacing",
@@ -428,6 +434,17 @@ function parsePropertyValue(
     if (val !== null) return { key: "y", value: val };
   }
 
+  // z-{n} → zIndex for Tailwind-standard values (0, 10, 20, 30, 40, 50, auto).
+  // Any other numeric value falls through to the z-translate handler below.
+  if (str.startsWith("z-")) {
+    const suffix = str.slice(2);
+    if (suffix === "auto") return { key: "zIndex", value: "auto" };
+    const zn = Number(suffix);
+    if (!isNaN(zn) && [0, 10, 20, 30, 40, 50].includes(zn))
+      return { key: "zIndex", value: zn };
+  }
+
+  // z-{n} → z-translate (arbitrary values with optional unit)
   if (str.startsWith("z-")) {
     const val = parseNumericWithUnit(str.slice(2), sign);
     if (val !== null) return { key: "z", value: val };
@@ -545,6 +562,24 @@ function parsePropertyValue(
   }
 
   // --- Dimensions with unit support ---
+
+  // Per-corner border radius (must come before generic rounded- check)
+  if (str.startsWith("rounded-tl-")) {
+    const n = Number(str.slice(11));
+    if (!isNaN(n)) return { key: "borderTopLeftRadius", value: n * sign };
+  }
+  if (str.startsWith("rounded-tr-")) {
+    const n = Number(str.slice(11));
+    if (!isNaN(n)) return { key: "borderTopRightRadius", value: n * sign };
+  }
+  if (str.startsWith("rounded-bl-")) {
+    const n = Number(str.slice(11));
+    if (!isNaN(n)) return { key: "borderBottomLeftRadius", value: n * sign };
+  }
+  if (str.startsWith("rounded-br-")) {
+    const n = Number(str.slice(11));
+    if (!isNaN(n)) return { key: "borderBottomRightRadius", value: n * sign };
+  }
 
   // rounded-{n}
   if (str.startsWith("rounded-")) {
@@ -665,6 +700,17 @@ function parsePropertyValue(
     return null;
   }
 
+  // text-shadow: text-shadow-[value] — underscores become spaces
+  if (str.startsWith("text-shadow-")) {
+    const val = str.slice(12);
+    if (val.startsWith("[") && val.endsWith("]")) {
+      return {
+        key: "textShadow",
+        value: val.slice(1, -1).replace(/_/g, " "),
+      };
+    }
+  }
+
   if (str.startsWith("text-")) {
     const color = str.slice(5);
     if (isValidColor(color)) {
@@ -723,6 +769,10 @@ function normalizePropertyName(name: string): string | null {
     w: "width",
     h: "height",
     rounded: "borderRadius",
+    "rounded-tl": "borderTopLeftRadius",
+    "rounded-tr": "borderTopRightRadius",
+    "rounded-bl": "borderBottomLeftRadius",
+    "rounded-br": "borderBottomRightRadius",
     "origin-x": "originX",
     "origin-y": "originY",
     "origin-z": "originZ",
@@ -1236,10 +1286,24 @@ export function parseMotionClasses(
   const scroll: ScrollConfig = { axis: "y", container: false, values: {} };
   const variants: VariantMap = {};
   const variantState: VariantState = {};
+  let reducedMotionPolicy: "reduce" | "safe" | undefined = undefined;
 
   for (const token of tokens) {
+    // Detect and strip motion-reduce:/motion-safe: prefixes.
+    // The inner token is processed normally; the prefix sets reducedMotionPolicy.
+    let innerToken = token;
+    if (token.startsWith("motion-reduce:")) {
+      reducedMotionPolicy = "reduce";
+      innerToken = token.slice("motion-reduce:".length);
+    } else if (token.startsWith("motion-safe:")) {
+      reducedMotionPolicy = "safe";
+      innerToken = token.slice("motion-safe:".length);
+    }
+    // Skip empty inner tokens (e.g. a bare "motion-reduce:" with nothing after)
+    if (!innerToken) continue;
+
     let consumed = classifyToken(
-      token,
+      innerToken,
       gestures,
       transition,
       viewport,
@@ -1251,8 +1315,8 @@ export function parseMotionClasses(
     );
 
     if (!consumed) {
-      const easingName = token.startsWith("animate-ease-")
-        ? token.slice("animate-ease-".length)
+      const easingName = innerToken.startsWith("animate-ease-")
+        ? innerToken.slice("animate-ease-".length)
         : "";
       const easing = easingName
         ? config?.tokens?.easings?.[easingName]
@@ -1265,7 +1329,7 @@ export function parseMotionClasses(
 
     if (!consumed) {
       for (const plugin of config?.plugins ?? []) {
-        const patch = plugin.transformToken?.(token, { config: config! });
+        const patch = plugin.transformToken?.(innerToken, { config: config! });
         if (!patch) continue;
         mergePatch(
           patch,
@@ -1285,27 +1349,27 @@ export function parseMotionClasses(
 
     if (!consumed) {
       if (
-        token.startsWith("animate-") &&
-        !TAILWIND_ANIMATE_CLASSES.has(token)
+        innerToken.startsWith("animate-") &&
+        !TAILWIND_ANIMATE_CLASSES.has(innerToken)
       ) {
         diagnostics.push({
           code: "unknown-class",
-          message: `Unrecognized motionwind class "${token}".`,
+          message: `Unrecognized motionwind class "${innerToken}".`,
           severity: config?.strict ? "error" : "warning",
-          token,
+          token: innerToken,
         });
       }
       if (
         process.env.NODE_ENV !== "production" &&
-        token.startsWith("animate-") &&
-        !TAILWIND_ANIMATE_CLASSES.has(token)
+        innerToken.startsWith("animate-") &&
+        !TAILWIND_ANIMATE_CLASSES.has(innerToken)
       ) {
         console.warn(
-          `[motionwind] Unrecognized class "${token}". ` +
+          `[motionwind] Unrecognized class "${innerToken}". ` +
             `It starts with "animate-" but doesn't match any known pattern.`,
         );
       }
-      tailwind.push(token);
+      tailwind.push(innerToken);
     }
   }
 
@@ -1330,6 +1394,7 @@ export function parseMotionClasses(
     variants,
     variantState,
     hasMotion,
+    ...(reducedMotionPolicy !== undefined && { reducedMotionPolicy }),
     diagnostics,
   };
 
@@ -1388,6 +1453,13 @@ export function classifyMotionToken(
   token: string,
   config?: MotionwindConfig,
 ): MotionTokenCategory {
+  // Strip motion-reduce:/motion-safe: wrapper prefixes and classify the inner token.
+  if (token.startsWith("motion-reduce:") || token.startsWith("motion-safe:")) {
+    const inner = token.startsWith("motion-reduce:")
+      ? token.slice("motion-reduce:".length)
+      : token.slice("motion-safe:".length);
+    return inner ? classifyMotionToken(inner, config) : "tailwind";
+  }
   if (!token.startsWith("animate-")) return "tailwind";
   if (TAILWIND_ANIMATE_CLASSES.has(token)) return "tailwind";
   if (config || token.startsWith("animate-preset-")) {
