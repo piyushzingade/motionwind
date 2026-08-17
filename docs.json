@@ -33,8 +33,6 @@
           {
             "group": "Getting Started",
             "pages": [
-              "docs/index",
-              "docs/v2",
               "docs/getting-started",
               "docs/installation",
               "docs/compatibility",
