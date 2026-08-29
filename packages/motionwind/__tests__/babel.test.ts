@@ -253,7 +253,7 @@ describe("motionwind babel plugin", () => {
   it("transforms z-axis values", () => {
     const input = `<div className="animate-hover:z-50">Z</div>`;
     const output = transform(input);
-    expect(output).toContain("z: 50");
+    expect(output).toContain("zIndex: 50");
   });
 
   it("transforms complex animation with multiple new features", () => {

@@ -50,7 +50,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} font-[family-name:var(--font-geist-sans)] bg-surface text-foreground theme-fade antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} font-[family-name:var(--font-geist-sans)] bg-surface text-foreground theme-fade antialiased`}
+      >
         <Providers>
           {children}
           <div className="progressive-blur" aria-hidden="true">

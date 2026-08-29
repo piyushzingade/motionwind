@@ -24,6 +24,7 @@ ruleTester.run("no-unknown-classes", noUnknownClasses, {
   invalid: [
     {
       code: `const a = <div className="px-4 animate-nope-1" />;`,
+      output: `const a = <div className="px-4" />;`,
       errors: [{ messageId: "unknown" }],
     },
   ],

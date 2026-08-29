@@ -378,7 +378,11 @@ export default function Home() {
                     fill="none"
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ delay: 1.1, duration: 0.9, ease: "easeInOut" }}
+                    transition={{
+                      delay: 1.1,
+                      duration: 0.9,
+                      ease: "easeInOut",
+                    }}
                   />
                 </svg>
               </span>
@@ -1004,9 +1008,7 @@ export default function Home() {
               </div>
               <pre className="p-4 sm:p-5 text-[12px] sm:text-[13px] leading-7 font-[family-name:var(--font-geist-mono)] overflow-x-auto">
                 <code>
-                  <span className="code-comment">
-                    {"// No imports needed"}
-                  </span>
+                  <span className="code-comment">{"// No imports needed"}</span>
                   {"\n"}
                   <span className="code-dim">{"<"}</span>
                   <span className="syntax-tag">{"div"}</span>
@@ -1498,9 +1500,7 @@ export default function Home() {
                   <span className="text-acid/70">import</span>{" "}
                   <span className="code-fg">withMotionwind</span>{" "}
                   <span className="text-acid/70">from</span>{" "}
-                  <span className="syntax-string">
-                    {'"motionwind/next"'}
-                  </span>
+                  <span className="syntax-string">{'"motionwind/next"'}</span>
                   {"\n"}
                   <span className="text-acid/70">export default</span>{" "}
                   <span className="code-fg">withMotionwind</span>(config)
@@ -1535,9 +1535,7 @@ export default function Home() {
                   <span className="text-acid/70">import</span>{" "}
                   <span className="code-fg">motionwind</span>{" "}
                   <span className="text-acid/70">from</span>{" "}
-                  <span className="syntax-string">
-                    {'"motionwind/vite"'}
-                  </span>
+                  <span className="syntax-string">{'"motionwind/vite"'}</span>
                   {"\n"}
                   <span className="text-acid/70">plugins:</span> [
                   <span className="code-fg">motionwind</span>(),{" "}

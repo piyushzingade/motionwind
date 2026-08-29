@@ -612,7 +612,7 @@ describe("React / Next.js integration", () => {
     it("3D transform with z-axis", () => {
       const input = `<div className="animate-hover:z-50 animate-hover:rotate-x-15 animate-hover:scale-105 animate-spring">3d</div>`;
       const output = transform(input);
-      expect(output).toContain("z: 50");
+      expect(output).toContain("zIndex: 50");
       expect(output).toContain("rotateX: 15");
       expect(output).toContain("scale: 1.05");
     });
