@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useSpring, useMotionValue, motion } from "motion/react";
 import { Typewriter } from "../components/typewriter";
+import { ThemeToggle } from "../components/theme-toggle";
 import { highlightCode } from "../lib/highlight";
 
 /**
@@ -241,6 +243,24 @@ export default function Home() {
   const [codeOpen, setCodeOpen] = useState(false);
   const [activeCode, setActiveCode] = useState<CodeKey>("hover");
 
+  // Hero mouse-follow glow (spring-smoothed, composite-only)
+  const glowX = useMotionValue(-1000);
+  const glowY = useMotionValue(-1000);
+  const springX = useSpring(glowX, { stiffness: 60, damping: 20, mass: 0.6 });
+  const springY = useSpring(glowY, { stiffness: 60, damping: 20, mass: 0.6 });
+  const heroGlow = useRef<HTMLDivElement>(null);
+  const onHeroMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      glowX.set(e.clientX);
+      glowY.set(e.clientY);
+    },
+    [glowX, glowY],
+  );
+  const onHeroMouseLeave = useCallback(() => {
+    glowX.set(-1000);
+    glowY.set(-1000);
+  }, [glowX, glowY]);
+
   const openCode = useCallback((key: CodeKey) => {
     setActiveCode(key);
     setCodeOpen(true);
@@ -261,7 +281,7 @@ export default function Home() {
        *  INTERACTIVE HINT BANNER — tells users to click for code
        * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <div className="animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-800 animate-delay-1200 animate-ease-out sticky top-0 z-30 w-full">
-        <div className="relative overflow-hidden border-b border-white/[0.06] bg-surface/80 backdrop-blur-xl">
+        <div className="relative overflow-hidden border-b border-border-subtle bg-surface/80 backdrop-blur-xl">
           {/* Animated shimmer line */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute inset-0 animate-glow-line bg-gradient-to-r from-transparent via-acid/[0.07] to-transparent" />
@@ -273,7 +293,7 @@ export default function Home() {
               <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
             </span>
             <p className="text-[11px] sm:text-xs text-text-dim tracking-wide">
-              <span className="text-white/70 font-medium">Hover & click</span>{" "}
+              <span className="text-foreground font-medium">Hover & click</span>{" "}
               any component or section to see its motionwind code
               <span className="hidden sm:inline text-text-muted">
                 {" "}
@@ -282,7 +302,7 @@ export default function Home() {
             </p>
             {/* Animated arrow icon */}
             <svg
-              className="w-4 h-4 text-acid/50 hidden sm:block animate-nudge-x"
+              className="w-4 h-4 text-acid/60 hidden sm:block animate-nudge-x"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -294,6 +314,10 @@ export default function Home() {
                 d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
               />
             </svg>
+            {/* Theme toggle */}
+            <span className="ml-1 hidden sm:block">
+              <ThemeToggle />
+            </span>
           </div>
         </div>
       </div>
@@ -301,14 +325,29 @@ export default function Home() {
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
        *  HERO
        * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 overflow-hidden glow-top">
+      <section
+        onMouseMove={onHeroMouseMove}
+        onMouseLeave={onHeroMouseLeave}
+        className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 overflow-hidden glow-top"
+      >
         <div className="grid-bg absolute inset-0 pointer-events-none" />
+        {/* Ambient drifting gradient */}
+        <div className="hero-gradient" aria-hidden="true" />
+        {/* Mouse-follow glow */}
+        <motion.div
+          ref={heroGlow}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 hidden md:block"
+          style={{ x: springX, y: springY }}
+        >
+          <div className="hero-glow" />
+        </motion.div>
 
         <div className="relative z-10 w-full max-w-4xl mx-auto">
           <div className="flex flex-col items-center justify-center px-6 sm:px-10 py-12 sm:py-16 relative">
             {/* Badge */}
             <div className="animate-initial:opacity-0 animate-initial:y-12 animate-enter:opacity-100 animate-enter:y-0 animate-duration-600 animate-ease-out mb-6 sm:mb-8">
-              <span className="inline-flex items-center gap-2 rounded-full border border-acid/20 bg-acid/5 px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-medium tracking-wide text-acid uppercase">
+              <span className="inline-flex items-center gap-2 rounded-full border border-acid/25 bg-acid-soft px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-medium tracking-wide text-acid uppercase">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-75 animate-pulse-glow" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
@@ -324,19 +363,22 @@ export default function Home() {
               </span>
               <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.92] text-acid mt-2 sm:mt-3 relative">
                 class names.
-                {/* Hand-drawn underline */}
+                {/* Hand-drawn underline — draws on */}
                 <svg
-                  className="absolute -bottom-2 left-0 w-full h-4 text-acid/40"
+                  className="absolute -bottom-2 left-0 w-full h-4 text-acid/50"
                   viewBox="0 0 400 16"
                   fill="none"
                   preserveAspectRatio="none"
                 >
-                  <path
+                  <motion.path
                     d="M2 10C60 6 140 4 200 8C260 12 340 6 398 10"
                     stroke="currentColor"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                     fill="none"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ delay: 1.1, duration: 0.9, ease: "easeInOut" }}
                   />
                 </svg>
               </span>
@@ -353,7 +395,7 @@ export default function Home() {
             <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-700 animate-delay-400 animate-ease-out flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10">
               <a
                 href="https://www.motionwind.xyz/docs"
-                className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 group inline-flex items-center gap-2 rounded-lg bg-acid px-5 sm:px-6 py-3 text-sm font-semibold text-gray-950 transition-shadow hover:shadow-[0_0_30px_#c8ff2e40] cursor-pointer"
+                className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 group inline-flex items-center gap-2 rounded-lg bg-acid px-5 sm:px-6 py-3 text-sm font-semibold text-gray-950 transition-shadow hover:shadow-[0_0_30px_var(--acid-glow)] cursor-pointer"
               >
                 Get Started
                 <svg
@@ -372,7 +414,7 @@ export default function Home() {
               </a>
               <a
                 href="https://github.com/piyushzingade/motionwind"
-                className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-5 sm:px-6 py-3 text-sm font-medium text-white/80 backdrop-blur-sm transition-colors hover:bg-white/10 hover:text-white"
+                className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 inline-flex items-center gap-2 rounded-lg border border-border-strong bg-surface-raised/60 px-5 sm:px-6 py-3 text-sm font-medium text-text-dim backdrop-blur-sm transition-colors hover:bg-surface-overlay hover:text-foreground"
               >
                 <svg
                   className="w-4 h-4"
@@ -387,12 +429,12 @@ export default function Home() {
 
             {/* Hero Code Block */}
             <div className="animate-initial:opacity-0 animate-initial:y-30 animate-enter:opacity-100 animate-enter:y-0 animate-duration-800 animate-delay-500 animate-ease-out mt-10 sm:mt-14 w-full max-w-xl">
-              <div className="rounded-xl border border-white/[0.06] bg-surface-raised/80 backdrop-blur-xl shadow-2xl shadow-black/50 overflow-hidden">
-                <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06]">
+              <div className="rounded-xl border border-border-subtle bg-surface-raised/80 backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden">
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-border-subtle">
                   <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-white/10" />
-                    <div className="w-3 h-3 rounded-full bg-white/10" />
-                    <div className="w-3 h-3 rounded-full bg-white/10" />
+                    <div className="w-3 h-3 rounded-full bg-[#ff5f57]/80" />
+                    <div className="w-3 h-3 rounded-full bg-[#febc2e]/80" />
+                    <div className="w-3 h-3 rounded-full bg-[#28c840]/80" />
                   </div>
                   <span className="ml-3 text-xs text-text-muted font-[family-name:var(--font-geist-mono)]">
                     App.tsx
@@ -400,17 +442,17 @@ export default function Home() {
                 </div>
                 <pre className="p-5 text-sm leading-7 font-[family-name:var(--font-geist-mono)] overflow-x-auto">
                   <code>
-                    <span className="text-white/25">
+                    <span className="code-comment">
                       {"// Just add classes. That's it."}
                     </span>
                     {"\n"}
-                    <span className="text-white/30">{"<"}</span>
-                    <span className="text-pink-400">{"button"}</span>
+                    <span className="code-dim">{"<"}</span>
+                    <span className="syntax-tag">{"button"}</span>
                     {"\n"}
                     {"  "}
                     <span className="text-acid/80">{"className"}</span>
-                    <span className="text-white/30">{"="}</span>
-                    <span className="text-amber-300">{'"'}</span>
+                    <span className="code-dim">{"="}</span>
+                    <span className="syntax-string">{'"'}</span>
                     {"\n"}
                     {"    "}
                     <span className="text-acid font-semibold">
@@ -428,20 +470,20 @@ export default function Home() {
                     </span>
                     {"\n"}
                     {"    "}
-                    <span className="text-white/30">
+                    <span className="code-dim">
                       {"rounded-xl bg-white px-6 py-3"}
                     </span>
                     {"\n"}
                     {"  "}
-                    <span className="text-amber-300">{'"'}</span>
+                    <span className="syntax-string">{'"'}</span>
                     {"\n"}
-                    <span className="text-white/30">{">"}</span>
+                    <span className="code-dim">{">"}</span>
                     {"\n"}
                     {"  Click me"}
                     {"\n"}
-                    <span className="text-white/30">{"</"}</span>
-                    <span className="text-pink-400">{"button"}</span>
-                    <span className="text-white/30">{">"}</span>
+                    <span className="code-dim">{"</"}</span>
+                    <span className="syntax-tag">{"button"}</span>
+                    <span className="code-dim">{">"}</span>
                   </code>
                 </pre>
               </div>
@@ -510,7 +552,7 @@ export default function Home() {
                   type="text"
                   placeholder="Search..."
                   onClick={(e) => e.stopPropagation()}
-                  className="animate-focus:scale-105 animate-focus:y--2 animate-spring animate-stiffness-300 animate-damping-20 w-full max-w-md rounded-xl bg-white/[0.06] border border-white/[0.1] px-5 py-3 text-sm text-white/90 placeholder:text-white/30 outline-none focus:border-acid/40 focus:ring-2 focus:ring-acid/20 focus:shadow-[0_0_20px_rgba(199,255,45,0.1)] transition-[border-color,box-shadow]"
+                  className="animate-focus:scale-105 animate-focus:y--2 animate-spring animate-stiffness-300 animate-damping-20 w-full max-w-md rounded-xl bg-surface-inset border border-border-strong px-5 py-3 text-sm text-foreground placeholder:text-text-muted outline-none focus:border-acid/50 focus:ring-2 focus:ring-acid/20 focus:shadow-[0_0_20px_var(--acid-glow)] transition-[border-color,box-shadow]"
                 />
               </div>
               <div className="preview-code">
@@ -560,7 +602,7 @@ export default function Home() {
                 </svg>
               </div>
               <div className="preview-stage">
-                <div className="animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 px-8 py-4 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold select-none cursor-pointer shadow-[0_0_24px_rgba(200,255,46,0.06)]">
+                <div className="animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 px-8 py-4 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold select-none cursor-pointer shadow-[0_0_24px_var(--acid-glow)]">
                   Hover me, or tap me
                 </div>
               </div>
@@ -611,7 +653,7 @@ export default function Home() {
               <div className="px-5 sm:px-6 py-4 bg-surface/50 rounded-b-2xl">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-white/[0.08]">
+                    <tr className="border-b border-border-subtle">
                       <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-text-muted w-24">
                         Gesture
                       </th>
@@ -664,13 +706,13 @@ export default function Home() {
                     ].map(([gesture, prefix, useCase], i) => (
                       <tr
                         key={gesture}
-                        className={`border-b border-white/[0.04] ${i % 2 === 0 ? "bg-white/[0.02]" : ""}`}
+                        className={`border-b border-border-subtle ${i % 2 === 0 ? "bg-surface-inset/50" : ""}`}
                       >
-                        <td className="py-3 text-white/80 font-medium text-xs">
+                        <td className="py-3 text-foreground font-medium text-xs">
                           {gesture}
                         </td>
                         <td className="py-3">
-                          <code className="text-[11px] font-[family-name:var(--font-geist-mono)] text-acid bg-acid/10 px-2 py-1 rounded">
+                          <code className="text-[11px] font-[family-name:var(--font-geist-mono)] text-acid bg-acid-soft px-2 py-1 rounded">
                             {prefix}
                           </code>
                         </td>
@@ -718,7 +760,7 @@ export default function Home() {
                 </svg>
               </div>
               <div className="preview-stage">
-                <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-once px-10 py-5 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold shadow-[0_0_24px_rgba(200,255,46,0.06)]">
+                <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-once px-10 py-5 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold shadow-[0_0_24px_var(--acid-glow)]">
                   I appear on scroll
                 </div>
               </div>
@@ -773,7 +815,7 @@ export default function Home() {
               <div className="preview-stage">
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="animate-drag-both animate-drag-elastic-30 animate-drag-snap animate-hover:scale-105 animate-spring px-8 py-4 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold cursor-grab active:cursor-grabbing select-none shadow-[0_0_24px_rgba(200,255,46,0.06)]"
+                  className="animate-drag-both animate-drag-elastic-30 animate-drag-snap animate-hover:scale-105 animate-spring px-8 py-4 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold cursor-grab active:cursor-grabbing select-none shadow-[0_0_24px_var(--acid-glow)]"
                 >
                   Drag me around
                 </div>
@@ -823,7 +865,7 @@ export default function Home() {
                 </svg>
               </div>
               <div className="preview-stage">
-                <div className="animate-initial:rotate-0 animate-enter:rotate-360 animate-duration-2000 animate-ease-linear animate-repeat-infinite w-16 h-16 rounded-xl bg-acid/15 border border-acid/25 flex items-center justify-center shadow-[0_0_24px_rgba(200,255,46,0.06)]">
+                <div className="animate-initial:rotate-0 animate-enter:rotate-360 animate-duration-2000 animate-ease-linear animate-repeat-infinite w-16 h-16 rounded-xl bg-acid/15 border border-acid/25 flex items-center justify-center shadow-[0_0_24px_var(--acid-glow)]">
                   <svg
                     className="w-6 h-6 text-acid"
                     fill="none"
@@ -884,7 +926,7 @@ export default function Home() {
                 </svg>
               </div>
               <div className="preview-stage">
-                <div className="animate-hover:rotate-12 animate-hover:scale-115 animate-tap:rotate-0 animate-tap:scale-85 animate-spring animate-stiffness-200 animate-damping-8 px-8 py-4 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold cursor-pointer select-none shadow-[0_0_24px_rgba(200,255,46,0.06)]">
+                <div className="animate-hover:rotate-12 animate-hover:scale-115 animate-tap:rotate-0 animate-tap:scale-85 animate-spring animate-stiffness-200 animate-damping-8 px-8 py-4 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold cursor-pointer select-none shadow-[0_0_24px_var(--acid-glow)]">
                   Hover for springy bounce
                 </div>
               </div>
@@ -951,8 +993,8 @@ export default function Home() {
               Click to see compiled output
             </div>
             {/* BEFORE */}
-            <div className="rounded-xl border border-white/[0.06] bg-surface-raised overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
+            <div className="rounded-xl border border-border-subtle bg-surface-raised overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
                 <span className="text-xs font-medium text-acid">
                   What you write
                 </span>
@@ -962,17 +1004,17 @@ export default function Home() {
               </div>
               <pre className="p-4 sm:p-5 text-[12px] sm:text-[13px] leading-7 font-[family-name:var(--font-geist-mono)] overflow-x-auto">
                 <code>
-                  <span className="text-white/25">
+                  <span className="code-comment">
                     {"// No imports needed"}
                   </span>
                   {"\n"}
-                  <span className="text-white/30">{"<"}</span>
-                  <span className="text-pink-400">{"div"}</span>
+                  <span className="code-dim">{"<"}</span>
+                  <span className="syntax-tag">{"div"}</span>
                   {"\n"}
                   {"  "}
                   <span className="text-acid/80">{"className"}</span>
-                  <span className="text-white/30">{"="}</span>
-                  <span className="text-amber-300">{'"'}</span>
+                  <span className="code-dim">{"="}</span>
+                  <span className="syntax-string">{'"'}</span>
                   {"\n"}
                   {"    "}
                   <span className="text-acid">
@@ -997,18 +1039,18 @@ export default function Home() {
                   <span className="text-acid">{"animate-once"}</span>
                   {"\n"}
                   {"    "}
-                  <span className="text-white/30">{"p-4 rounded-lg"}</span>
+                  <span className="code-dim">{"p-4 rounded-lg"}</span>
                   {"\n"}
                   {"  "}
-                  <span className="text-amber-300">{'"'}</span>
+                  <span className="syntax-string">{'"'}</span>
                   {"\n"}
-                  <span className="text-white/30">{">"}</span>
+                  <span className="code-dim">{">"}</span>
                   {"\n"}
                   {"  Hello world"}
                   {"\n"}
-                  <span className="text-white/30">{"</"}</span>
-                  <span className="text-pink-400">{"div"}</span>
-                  <span className="text-white/30">{">"}</span>
+                  <span className="code-dim">{"</"}</span>
+                  <span className="syntax-tag">{"div"}</span>
+                  <span className="code-dim">{">"}</span>
                 </code>
               </pre>
             </div>
@@ -1055,8 +1097,8 @@ export default function Home() {
             </div>
 
             {/* AFTER */}
-            <div className="rounded-xl border border-white/[0.06] bg-surface-raised overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
+            <div className="rounded-xl border border-border-subtle bg-surface-raised overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
                 <span className="text-xs font-medium text-text-dim">
                   What gets compiled
                 </span>
@@ -1066,64 +1108,64 @@ export default function Home() {
               </div>
               <pre className="p-4 sm:p-5 text-[12px] sm:text-[13px] leading-7 font-[family-name:var(--font-geist-mono)] overflow-x-auto">
                 <code>
-                  <span className="text-white/25">
+                  <span className="code-comment">
                     {"// Auto-injected by Babel"}
                   </span>
                   {"\n"}
                   <span className="text-acid/80">{"import"}</span>
                   {" { "}
-                  <span className="text-white">{"motion"}</span>
+                  <span className="code-fg">{"motion"}</span>
                   {" } "}
                   <span className="text-acid/80">{"from"}</span>{" "}
-                  <span className="text-amber-300">{'"motion/react"'}</span>
+                  <span className="syntax-string">{'"motion/react"'}</span>
                   {"\n\n"}
-                  <span className="text-white/30">{"<"}</span>
-                  <span className="text-purple-400">{"motion.div"}</span>
+                  <span className="code-dim">{"<"}</span>
+                  <span className="syntax-component">{"motion.div"}</span>
                   {"\n"}
                   {"  "}
                   <span className="text-acid/80">{"className"}</span>
-                  <span className="text-white/30">{"="}</span>
-                  <span className="text-amber-300">{'"p-4 rounded-lg"'}</span>
+                  <span className="code-dim">{"="}</span>
+                  <span className="syntax-string">{'"p-4 rounded-lg"'}</span>
                   {"\n"}
                   {"  "}
                   <span className="text-acid/80">{"initial"}</span>
-                  <span className="text-white/30">{"={"}</span>
+                  <span className="code-dim">{"={"}</span>
                   {"{ "}
-                  <span className="text-white">{"opacity: 0, y: 20"}</span>
+                  <span className="code-fg">{"opacity: 0, y: 20"}</span>
                   {" }"}
-                  <span className="text-white/30">{"}"}</span>
+                  <span className="code-dim">{"}"}</span>
                   {"\n"}
                   {"  "}
                   <span className="text-acid/80">{"whileInView"}</span>
-                  <span className="text-white/30">{"={"}</span>
+                  <span className="code-dim">{"={"}</span>
                   {"{ "}
-                  <span className="text-white">{"opacity: 1, y: 0"}</span>
+                  <span className="code-fg">{"opacity: 1, y: 0"}</span>
                   {" }"}
-                  <span className="text-white/30">{"}"}</span>
+                  <span className="code-dim">{"}"}</span>
                   {"\n"}
                   {"  "}
                   <span className="text-acid/80">{"transition"}</span>
-                  <span className="text-white/30">{"={"}</span>
+                  <span className="code-dim">{"={"}</span>
                   {"{ "}
-                  <span className="text-white">{"duration: 0.5"}</span>
+                  <span className="code-fg">{"duration: 0.5"}</span>
                   {" }"}
-                  <span className="text-white/30">{"}"}</span>
+                  <span className="code-dim">{"}"}</span>
                   {"\n"}
                   {"  "}
                   <span className="text-acid/80">{"viewport"}</span>
-                  <span className="text-white/30">{"={"}</span>
+                  <span className="code-dim">{"={"}</span>
                   {"{ "}
-                  <span className="text-white">{"once: true"}</span>
+                  <span className="code-fg">{"once: true"}</span>
                   {" }"}
-                  <span className="text-white/30">{"}"}</span>
+                  <span className="code-dim">{"}"}</span>
                   {"\n"}
-                  <span className="text-white/30">{">"}</span>
+                  <span className="code-dim">{">"}</span>
                   {"\n"}
                   {"  Hello world"}
                   {"\n"}
-                  <span className="text-white/30">{"</"}</span>
-                  <span className="text-purple-400">{"motion.div"}</span>
-                  <span className="text-white/30">{">"}</span>
+                  <span className="code-dim">{"</"}</span>
+                  <span className="syntax-component">{"motion.div"}</span>
+                  <span className="code-dim">{">"}</span>
                 </code>
               </pre>
             </div>
@@ -1156,7 +1198,7 @@ export default function Home() {
             ].map((step, i) => (
               <div
                 key={step.num}
-                className={`animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 ${step.delay} animate-ease-out animate-once relative rounded-xl border border-white/[0.06] bg-surface-raised p-5 sm:p-6`}
+                className={`animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 ${step.delay} animate-ease-out animate-once relative rounded-xl border border-border-subtle bg-surface-raised p-5 sm:p-6`}
               >
                 {/* Connector line between cards (desktop only) */}
                 {i < 2 && (
@@ -1171,7 +1213,7 @@ export default function Home() {
                 <p className="text-xs text-text-muted leading-relaxed mb-3">
                   {step.desc}
                 </p>
-                <div className="rounded-md bg-white/[0.03] border border-white/[0.04] px-3 py-2">
+                <div className="rounded-md bg-surface-inset border border-border-subtle px-3 py-2">
                   <code className="text-[10px] font-[family-name:var(--font-geist-mono)] text-acid/70">
                     {step.code}
                   </code>
@@ -1267,7 +1309,7 @@ export default function Home() {
             ].map((f, i) => (
               <div
                 key={f.title}
-                className={`animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 ${i > 0 ? `animate-delay-${Math.min(i, 4) * 100}` : ""} animate-ease-out animate-once animate-hover:y--2 group rounded-2xl border border-white/[0.06] bg-surface-raised p-5 sm:p-6 transition-colors hover:border-acid/10`}
+                className={`animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 ${i > 0 ? `animate-delay-${Math.min(i, 4) * 100}` : ""} animate-ease-out animate-once animate-hover:y--2 group rounded-2xl border border-border-subtle bg-surface-raised p-5 sm:p-6 transition-colors hover:border-acid/10`}
               >
                 <div className="w-10 h-10 rounded-xl bg-acid/10 flex items-center justify-center mb-4">
                   <svg
@@ -1340,8 +1382,8 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once rounded-2xl border border-white/[0.06] bg-surface-raised overflow-hidden">
-            <div className="p-6 sm:p-8 border-b border-white/[0.06]">
+          <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once rounded-2xl border border-border-subtle bg-surface-raised overflow-hidden">
+            <div className="p-6 sm:p-8 border-b border-border-subtle">
               <div className="flex items-center justify-center">
                 <code className="text-base sm:text-lg md:text-2xl font-[family-name:var(--font-geist-mono)] flex flex-wrap items-center gap-1 justify-center">
                   <span className="text-text-muted">animate-</span>
@@ -1380,7 +1422,7 @@ export default function Home() {
                 ].map(([prefix, prop]) => (
                   <div
                     key={prefix}
-                    className="rounded-lg bg-surface/50 border border-white/[0.04] p-3 text-center"
+                    className="rounded-lg bg-surface/50 border border-border-subtle p-3 text-center"
                   >
                     <code className="text-xs font-[family-name:var(--font-geist-mono)] text-acid">
                       {prefix}
@@ -1416,11 +1458,11 @@ export default function Home() {
           </div>
 
           <div className="animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-200 animate-ease-out animate-once mt-10 sm:mt-12">
-            <div className="inline-flex items-center gap-4 rounded-xl border border-white/[0.08] bg-surface-raised/80 backdrop-blur-sm px-6 sm:px-8 py-4 shadow-lg shadow-black/20">
+            <div className="inline-flex items-center gap-4 rounded-xl border border-border-strong bg-surface-raised/80 backdrop-blur-sm px-6 sm:px-8 py-4 shadow-lg shadow-black/20">
               <span className="text-acid/80 font-[family-name:var(--font-geist-mono)] text-sm select-none">
                 $
               </span>
-              <code className="text-sm sm:text-[15px] font-[family-name:var(--font-geist-mono)] text-white/90 tracking-tight">
+              <code className="text-sm sm:text-[15px] font-[family-name:var(--font-geist-mono)] text-foreground tracking-tight">
                 <Typewriter text="npm i motionwind-react" />
               </code>
             </div>
@@ -1434,34 +1476,34 @@ export default function Home() {
               aria-label="View the Next.js setup code"
               onClick={() => openCode("nextjs")}
               onKeyDown={onActivateKey(() => openCode("nextjs"))}
-              className="rounded-xl border border-white/[0.08] bg-surface-raised overflow-hidden text-left cursor-pointer hover:border-acid/20 transition-colors"
+              className="rounded-xl border border-border-strong bg-surface-raised overflow-hidden text-left cursor-pointer hover:border-acid/20 transition-colors"
             >
-              <div className="flex items-center gap-2.5 px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
+              <div className="flex items-center gap-2.5 px-4 py-3 border-b border-border-subtle bg-surface-inset/40">
                 <svg
-                  className="w-4 h-4 text-white/70"
+                  className="w-4 h-4 text-text-dim"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
                   <path d="M11.572 0c-.176 0-.31.001-.358.007a19.76 19.76 0 0 1-.364.033C7.443.346 4.25 2.185 2.228 5.012a11.875 11.875 0 0 0-2.119 5.243c-.096.659-.108.854-.108 1.747s.012 1.089.108 1.748c.652 4.506 3.86 8.292 8.209 9.695.779.25 1.6.422 2.534.525.363.04 1.935.04 2.299 0 1.611-.178 2.977-.577 4.323-1.264.207-.106.247-.134.219-.158-.02-.013-.9-1.193-1.955-2.62l-1.919-2.592-2.404-3.558a338.739 338.739 0 0 0-2.422-3.556c-.009-.002-.018 1.579-.023 3.51-.007 3.38-.01 3.515-.052 3.595a.426.426 0 0 1-.206.214c-.075.037-.14.044-.495.044H7.81l-.108-.068a.438.438 0 0 1-.157-.171l-.05-.106.006-4.703.007-4.705.072-.092a.645.645 0 0 1 .174-.143c.096-.047.134-.051.54-.051.478 0 .558.018.682.154.035.038 1.337 1.999 2.895 4.361a10760.433 10760.433 0 0 0 4.735 7.17l1.9 2.879.096-.063a12.317 12.317 0 0 0 2.466-2.163 11.944 11.944 0 0 0 2.824-6.134c.096-.66.108-.854.108-1.748 0-.893-.012-1.088-.108-1.747-.652-4.506-3.86-8.292-8.208-9.695a12.597 12.597 0 0 0-2.499-.523A33.119 33.119 0 0 0 11.572 0zm4.069 7.217c.347 0 .408.005.486.047a.473.473 0 0 1 .237.277c.018.06.023 1.365.018 4.304l-.006 4.218-.744-1.14-.746-1.14v-3.066c0-1.982.01-3.097.023-3.15a.478.478 0 0 1 .233-.296c.096-.05.13-.054.5-.054z" />
                 </svg>
-                <span className="text-xs font-semibold text-white/90">
+                <span className="text-xs font-semibold text-foreground">
                   Next.js
                 </span>
                 <span className="ml-auto text-[10px] text-text-muted font-[family-name:var(--font-geist-mono)]">
                   next.config.js
                 </span>
               </div>
-              <pre className="px-4 py-4 text-[12px] leading-6 font-[family-name:var(--font-geist-mono)] text-white/60">
+              <pre className="px-4 py-4 text-[12px] leading-6 font-[family-name:var(--font-geist-mono)] code-dim">
                 <code>
                   <span className="text-acid/70">import</span>{" "}
-                  <span className="text-white/80">withMotionwind</span>{" "}
+                  <span className="code-fg">withMotionwind</span>{" "}
                   <span className="text-acid/70">from</span>{" "}
-                  <span className="text-amber-400/70">
+                  <span className="syntax-string">
                     {'"motionwind/next"'}
                   </span>
                   {"\n"}
                   <span className="text-acid/70">export default</span>{" "}
-                  <span className="text-white/80">withMotionwind</span>(config)
+                  <span className="code-fg">withMotionwind</span>(config)
                 </code>
               </pre>
             </div>
@@ -1471,35 +1513,35 @@ export default function Home() {
               aria-label="View the Vite setup code"
               onClick={() => openCode("vite")}
               onKeyDown={onActivateKey(() => openCode("vite"))}
-              className="rounded-xl border border-white/[0.08] bg-surface-raised overflow-hidden text-left cursor-pointer hover:border-acid/20 transition-colors"
+              className="rounded-xl border border-border-strong bg-surface-raised overflow-hidden text-left cursor-pointer hover:border-acid/20 transition-colors"
             >
-              <div className="flex items-center gap-2.5 px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
+              <div className="flex items-center gap-2.5 px-4 py-3 border-b border-border-subtle bg-surface-inset/40">
                 <svg
-                  className="w-4 h-4 text-white/70"
+                  className="w-4 h-4 text-text-dim"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
                   <path d="M12 0L1.608 6v12L12 24l10.392-6V6L12 0zm-1.073 1.445h.001a1.8 1.8 0 0 1 2.138 0l7.534 4.35a1.794 1.794 0 0 1 .9 1.554v8.706c0 .641-.34 1.234-.9 1.554l-7.534 4.35a1.8 1.8 0 0 1-2.139 0l-7.534-4.35a1.794 1.794 0 0 1-.9-1.554V7.35c0-.642.34-1.234.9-1.554l7.534-4.35z" />
                 </svg>
-                <span className="text-xs font-semibold text-white/90">
+                <span className="text-xs font-semibold text-foreground">
                   Vite
                 </span>
                 <span className="ml-auto text-[10px] text-text-muted font-[family-name:var(--font-geist-mono)]">
                   vite.config.ts
                 </span>
               </div>
-              <pre className="px-4 py-4 text-[12px] leading-6 font-[family-name:var(--font-geist-mono)] text-white/60">
+              <pre className="px-4 py-4 text-[12px] leading-6 font-[family-name:var(--font-geist-mono)] code-dim">
                 <code>
                   <span className="text-acid/70">import</span>{" "}
-                  <span className="text-white/80">motionwind</span>{" "}
+                  <span className="code-fg">motionwind</span>{" "}
                   <span className="text-acid/70">from</span>{" "}
-                  <span className="text-amber-400/70">
+                  <span className="syntax-string">
                     {'"motionwind/vite"'}
                   </span>
                   {"\n"}
                   <span className="text-acid/70">plugins:</span> [
-                  <span className="text-white/80">motionwind</span>(),{" "}
-                  <span className="text-white/80">react</span>()]
+                  <span className="code-fg">motionwind</span>(),{" "}
+                  <span className="code-fg">react</span>()]
                 </code>
               </pre>
             </div>
@@ -1509,7 +1551,7 @@ export default function Home() {
           <div className="animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-400 animate-ease-out animate-once mt-12 sm:mt-14 flex gap-4 justify-center">
             <a
               href="https://www.motionwind.xyz/docs/getting-started"
-              className="animate-hover:scale-105 animate-tap:scale-95 animate-spring group inline-flex items-center gap-2.5 rounded-xl bg-acid px-6 sm:px-8 py-3.5 text-sm font-semibold text-gray-950 transition-shadow hover:shadow-[0_0_30px_#c8ff2e40]"
+              className="animate-hover:scale-105 animate-tap:scale-95 animate-spring group inline-flex items-center gap-2.5 rounded-xl bg-acid px-6 sm:px-8 py-3.5 text-sm font-semibold text-gray-950 transition-shadow hover:shadow-[0_0_30px_var(--acid-glow)]"
             >
               Read the Docs
               <svg
@@ -1533,7 +1575,7 @@ export default function Home() {
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
        *  FOOTER
        * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <footer className="border-t border-white/[0.06] py-10 sm:py-12 px-4 sm:px-6">
+      <footer className="border-t border-border-subtle py-10 sm:py-12 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <span className="text-lg font-bold tracking-tight">motionwind</span>
@@ -1542,19 +1584,19 @@ export default function Home() {
           <div className="flex items-center gap-6 text-sm text-text-muted">
             <a
               href="https://www.motionwind.xyz/docs/getting-started"
-              className="hover:text-white transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               Docs
             </a>
             <a
               href="https://github.com/piyushzingade/motionwind"
-              className="hover:text-white transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               GitHub
             </a>
             <a
               href="https://www.npmjs.com/package/motionwind-react"
-              className="hover:text-white transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               npm
             </a>
@@ -1574,7 +1616,7 @@ export default function Home() {
         <button
           type="button"
           aria-label="Close code panel"
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm cursor-pointer"
           onClick={() => setCodeOpen(false)}
         />
       )}
@@ -1584,7 +1626,7 @@ export default function Home() {
         className={`
           fixed top-0 right-0 z-50 h-full
           w-full sm:w-[480px] md:w-[520px]
-          bg-[#0a0a12] border-l border-white/[0.08]
+          bg-surface-raised border-l border-border-strong
           shadow-[-20px_0_60px_rgba(0,0,0,0.5)]
           transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]
           ${codeOpen ? "translate-x-0" : "translate-x-full"}
@@ -1592,7 +1634,7 @@ export default function Home() {
         `}
       >
         {/* Drawer header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle">
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
@@ -1607,7 +1649,7 @@ export default function Home() {
             type="button"
             aria-label="Close code panel"
             onClick={() => setCodeOpen(false)}
-            className="w-7 h-7 rounded-md flex items-center justify-center text-text-muted hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="w-7 h-7 rounded-md flex items-center justify-center text-text-muted hover:text-foreground hover:bg-surface-inset transition-colors cursor-pointer"
           >
             <svg
               className="w-4 h-4"
@@ -1626,7 +1668,7 @@ export default function Home() {
         </div>
 
         {/* Code tabs — scrollable horizontally */}
-        <div className="flex gap-0 px-3 pt-2 border-b border-white/[0.04] overflow-x-auto scrollbar-none">
+        <div className="flex gap-0 px-3 pt-2 border-b border-border-subtle overflow-x-auto scrollbar-none">
           {(Object.keys(CODE_EXAMPLES) as CodeKey[]).map((key) => (
             <button
               type="button"
@@ -1635,7 +1677,7 @@ export default function Home() {
               className={`px-3 py-2.5 text-[10px] font-medium tracking-wide uppercase whitespace-nowrap transition-colors rounded-t-md cursor-pointer ${
                 activeCode === key
                   ? "text-acid bg-acid/5 border-b-2 border-acid"
-                  : "text-text-muted hover:text-white/60"
+                  : "text-text-muted hover:code-dim"
               }`}
             >
               {CODE_EXAMPLES[key].title}
@@ -1651,7 +1693,7 @@ export default function Home() {
         </div>
 
         {/* Drawer footer */}
-        <div className="px-5 py-4 border-t border-white/[0.04] flex items-center justify-between">
+        <div className="px-5 py-4 border-t border-border-subtle flex items-center justify-between">
           <div className="text-[11px] text-text-muted flex items-center gap-2">
             <svg
               className="w-3.5 h-3.5 text-acid/50"

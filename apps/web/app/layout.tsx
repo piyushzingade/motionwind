@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -49,16 +50,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} font-[family-name:var(--font-geist-sans)] bg-gray-950 text-white antialiased`}>
-        {children}
-        <div className="progressive-blur" aria-hidden="true">
-          <div className="blur-layer blur-1" />
-          <div className="blur-layer blur-2" />
-          <div className="blur-layer blur-3" />
-          <div className="blur-layer blur-4" />
-          <div className="blur-layer blur-5" />
-          <div className="blur-layer blur-6" />
-        </div>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-[family-name:var(--font-geist-sans)] bg-surface text-foreground theme-fade antialiased`}>
+        <Providers>
+          {children}
+          <div className="progressive-blur" aria-hidden="true">
+            <div className="blur-layer blur-1" />
+            <div className="blur-layer blur-2" />
+            <div className="blur-layer blur-3" />
+            <div className="blur-layer blur-4" />
+            <div className="blur-layer blur-5" />
+            <div className="blur-layer blur-6" />
+          </div>
+        </Providers>
         <Analytics />
       </body>
     </html>

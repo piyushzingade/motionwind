@@ -20,7 +20,7 @@ export function highlightCode(code: string): ReactNode[] {
     if (line.trimStart().startsWith("//")) {
       out.push(
         <span key={lineKey}>
-          <span className="text-white/25">{line}</span>
+          <span className="code-comment">{line}</span>
           {"\n"}
         </span>,
       );
@@ -52,12 +52,12 @@ export function highlightCode(code: string): ReactNode[] {
       const tagMatch = remaining.match(/^(<\/?)([\w.]+)/);
       if (tagMatch) {
         result.push(
-          <span key={pos} className="text-white/30">
+          <span key={pos} className="code-dim">
             {tagMatch[1]}
           </span>,
         );
         result.push(
-          <span key={pos + tagMatch[1]!.length} className="text-pink-400">
+          <span key={pos + tagMatch[1]!.length} className="syntax-tag">
             {tagMatch[2]}
           </span>,
         );
@@ -71,7 +71,7 @@ export function highlightCode(code: string): ReactNode[] {
       if (closeMatch) {
         const len = closeMatch[1]!.length;
         result.push(
-          <span key={pos} className="text-white/30">
+          <span key={pos} className="code-dim">
             {closeMatch[1]}
           </span>,
         );
@@ -84,7 +84,7 @@ export function highlightCode(code: string): ReactNode[] {
       const strMatch = remaining.match(/^"([^"]*)"/);
       if (strMatch) {
         result.push(
-          <span key={pos} className="text-amber-300">
+          <span key={pos} className="syntax-string">
             {`"${strMatch[1]}"`}
           </span>,
         );
@@ -98,7 +98,7 @@ export function highlightCode(code: string): ReactNode[] {
       if (tmplMatch) {
         const len = tmplMatch[1]!.length;
         result.push(
-          <span key={pos} className="text-amber-300">
+          <span key={pos} className="syntax-string">
             {tmplMatch[1]}
           </span>,
         );
@@ -127,7 +127,7 @@ export function highlightCode(code: string): ReactNode[] {
       const punctMatch = remaining.match(/^([{}()=:;,?])/);
       if (punctMatch) {
         result.push(
-          <span key={pos} className="text-white/30">
+          <span key={pos} className="code-dim">
             {punctMatch[1]}
           </span>,
         );
@@ -143,7 +143,7 @@ export function highlightCode(code: string): ReactNode[] {
       if (twMatch) {
         const len = twMatch[1]!.length;
         result.push(
-          <span key={pos} className="text-white/30">
+          <span key={pos} className="code-dim">
             {twMatch[1]}
           </span>,
         );
@@ -154,7 +154,7 @@ export function highlightCode(code: string): ReactNode[] {
 
       // Default character
       result.push(
-        <span key={pos} className="text-white/60">
+        <span key={pos} className="code-fg">
           {remaining[0]}
         </span>,
       );
