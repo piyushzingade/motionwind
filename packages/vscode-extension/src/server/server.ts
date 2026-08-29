@@ -14,7 +14,10 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { handleCompletion } from "./completionProvider.js";
 import { handleHover } from "./hoverProvider.js";
 import { computeDiagnostics } from "./diagnosticProvider.js";
-import { handleDocumentColors, handleColorPresentation } from "./colorProvider.js";
+import {
+  handleDocumentColors,
+  handleColorPresentation,
+} from "./colorProvider.js";
 
 // Create connection using IPC
 const connection = createConnection(ProposedFeatures.all);
@@ -52,11 +55,15 @@ connection.onInitialize((): InitializeResult => {
 });
 
 connection.onInitialized(() => {
-  connection.client.register(DidChangeConfigurationNotification.type, undefined);
+  connection.client.register(
+    DidChangeConfigurationNotification.type,
+    undefined,
+  );
 });
 
 connection.onDidChangeConfiguration((change) => {
-  const settings = (change.settings?.motionwind ?? {}) as Partial<MotionwindSettings>;
+  const settings = (change.settings?.motionwind ??
+    {}) as Partial<MotionwindSettings>;
   globalSettings = { ...defaultSettings, ...settings };
 
   // Revalidate all open documents
@@ -101,7 +108,10 @@ function validateDocument(document: TextDocument): void {
     return;
   }
 
-  const diagnostics = computeDiagnostics(document, globalSettings.classAttributes);
+  const diagnostics = computeDiagnostics(
+    document,
+    globalSettings.classAttributes,
+  );
   connection.sendDiagnostics({ uri: document.uri, diagnostics });
 }
 

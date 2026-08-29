@@ -15,7 +15,16 @@ import { useTheme } from "../theme";
 /** Lucide Sun icon as inline SVG */
 function SunIcon({ size = 20, color = "#f59e0b" }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+    <Svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={2.2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <Circle cx="12" cy="12" r="4" />
       <Line x1="12" y1="2" x2="12" y2="4" />
       <Line x1="12" y1="20" x2="12" y2="22" />
@@ -32,7 +41,16 @@ function SunIcon({ size = 20, color = "#f59e0b" }) {
 /** Lucide Moon icon as inline SVG */
 function MoonIcon({ size = 20, color = "#e2e8f0" }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+    <Svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={2.2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <Path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
     </Svg>
   );
@@ -68,10 +86,7 @@ export function ThemeToggle() {
       [0, 1],
       ["#e4e4e0", "#1e1e2a"],
     ),
-    transform: [
-      { scale: scale.value },
-      { rotate: `${rotate.value}deg` },
-    ],
+    transform: [{ scale: scale.value }, { rotate: `${rotate.value}deg` }],
   }));
 
   const sunStyle = useAnimatedStyle(() => ({

@@ -23,10 +23,19 @@ function ClassSyntaxExample({
   const { colors } = useTheme();
   return (
     <View style={styles.example}>
-      <View style={[styles.codeBlock, { backgroundColor: colors.codeBg, borderColor: colors.border }]}>
-        <Text style={[styles.codeText, { color: colors.accent }]}>{classString}</Text>
+      <View
+        style={[
+          styles.codeBlock,
+          { backgroundColor: colors.codeBg, borderColor: colors.border },
+        ]}
+      >
+        <Text style={[styles.codeText, { color: colors.accent }]}>
+          {classString}
+        </Text>
       </View>
-      <Text style={[styles.description, { color: colors.fgMuted }]}>{description}</Text>
+      <Text style={[styles.description, { color: colors.fgMuted }]}>
+        {description}
+      </Text>
       <View style={styles.preview}>{children}</View>
     </View>
   );
@@ -40,9 +49,17 @@ function FadeUpBox() {
       <Animated.View
         key={key}
         entering={FadeInDown.duration(500).springify().damping(12)}
-        style={[styles.demoBox, { backgroundColor: `${colors.accent}30`, borderColor: `${colors.accent}40` }]}
+        style={[
+          styles.demoBox,
+          {
+            backgroundColor: `${colors.accent}30`,
+            borderColor: `${colors.accent}40`,
+          },
+        ]}
       >
-        <Text style={[styles.demoBoxText, { color: colors.fg }]}>Tap to replay</Text>
+        <Text style={[styles.demoBoxText, { color: colors.fg }]}>
+          Tap to replay
+        </Text>
       </Animated.View>
     </Pressable>
   );
@@ -68,8 +85,19 @@ function TapScaleBox() {
 
   return (
     <GestureDetector gesture={gesture}>
-      <Animated.View style={[styles.demoBox, { backgroundColor: `${colors.accent}30`, borderColor: `${colors.accent}40` }, style]}>
-        <Text style={[styles.demoBoxText, { color: colors.fg }]}>Press & hold</Text>
+      <Animated.View
+        style={[
+          styles.demoBox,
+          {
+            backgroundColor: `${colors.accent}30`,
+            borderColor: `${colors.accent}40`,
+          },
+          style,
+        ]}
+      >
+        <Text style={[styles.demoBoxText, { color: colors.fg }]}>
+          Press & hold
+        </Text>
       </Animated.View>
     </GestureDetector>
   );
@@ -84,20 +112,36 @@ function SpringBox() {
   const rotate = useSharedValue(0);
 
   const style = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }, { rotate: `${rotate.value}deg` }],
+    transform: [
+      { translateY: translateY.value },
+      { rotate: `${rotate.value}deg` },
+    ],
   }));
 
   const toggle = () => {
     toggled.current = !toggled.current;
     const next = toggled.current;
-    translateY.value = withSpring(next ? -30 : 0, { stiffness: 400, damping: 10 });
+    translateY.value = withSpring(next ? -30 : 0, {
+      stiffness: 400,
+      damping: 10,
+    });
     rotate.value = withSpring(next ? 180 : 0, { stiffness: 400, damping: 10 });
   };
 
   return (
     <Pressable onPress={toggle}>
-      <Animated.View style={[styles.springDemoBox, { backgroundColor: colors.accent }, style]}>
-        <Text style={[styles.demoBoxText, { color: colors.accentFg, fontSize: 18 }]}>↑</Text>
+      <Animated.View
+        style={[
+          styles.springDemoBox,
+          { backgroundColor: colors.accent },
+          style,
+        ]}
+      >
+        <Text
+          style={[styles.demoBoxText, { color: colors.accentFg, fontSize: 18 }]}
+        >
+          ↑
+        </Text>
       </Animated.View>
     </Pressable>
   );
@@ -105,7 +149,10 @@ function SpringBox() {
 
 export function MotionwindDemo() {
   return (
-    <DemoCard title="Motionwind Class Syntax" subtitle="Same API on web and native">
+    <DemoCard
+      title="Motionwind Class Syntax"
+      subtitle="Same API on web and native"
+    >
       <ClassSyntaxExample
         classString='className="animate-enter:opacity-0 animate-enter:y-20 animate-duration-500"'
         description="Fade in + slide up on mount"

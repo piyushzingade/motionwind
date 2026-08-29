@@ -24,9 +24,7 @@ describe("prettier-plugin-motionwind", () => {
       `const a = <div className="animate-spring animate-hover:scale-110" />;\n`,
       "typescript",
     );
-    expect(out).toContain(
-      'className="animate-hover:scale-110 animate-spring"',
-    );
+    expect(out).toContain('className="animate-hover:scale-110 animate-spring"');
   });
 
   it("puts variant defs before gestures", async () => {
@@ -39,7 +37,9 @@ describe("prettier-plugin-motionwind", () => {
   });
 
   it("leaves classNames without animate-* untouched", async () => {
-    const out = await format(`const a = <div className="px-4 bg-blue-500" />;\n`);
+    const out = await format(
+      `const a = <div className="px-4 bg-blue-500" />;\n`,
+    );
     expect(out).toContain('className="px-4 bg-blue-500"');
   });
 });

@@ -31,12 +31,22 @@ export function TransformShowcase() {
     radiusVal.value = withSpring(next ? 30 : 12, spring);
   };
 
-  const scaleStyle = useAnimatedStyle(() => ({ transform: [{ scale: scaleVal.value }] }));
-  const rotateStyle = useAnimatedStyle(() => ({ transform: [{ rotate: `${rotateVal.value}deg` }] }));
-  const skewStyle = useAnimatedStyle(() => ({ transform: [{ skewX: `${skewVal.value}deg` }] }));
-  const translateStyle = useAnimatedStyle(() => ({ transform: [{ translateX: translateXVal.value }] }));
+  const scaleStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scaleVal.value }],
+  }));
+  const rotateStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotateVal.value}deg` }],
+  }));
+  const skewStyle = useAnimatedStyle(() => ({
+    transform: [{ skewX: `${skewVal.value}deg` }],
+  }));
+  const translateStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateXVal.value }],
+  }));
   const opacityStyle = useAnimatedStyle(() => ({ opacity: opacityVal.value }));
-  const radiusStyle = useAnimatedStyle(() => ({ borderRadius: radiusVal.value }));
+  const radiusStyle = useAnimatedStyle(() => ({
+    borderRadius: radiusVal.value,
+  }));
 
   const boxes = [
     { label: "Scale", color: colors.accent, style: scaleStyle },
@@ -48,9 +58,18 @@ export function TransformShowcase() {
   ];
 
   return (
-    <DemoCard title="Transform Properties" subtitle="scale, rotate, skew, translate, opacity, borderRadius">
+    <DemoCard
+      title="Transform Properties"
+      subtitle="scale, rotate, skew, translate, opacity, borderRadius"
+    >
       <Pressable
-        style={[styles.toggleBtn, { backgroundColor: `${colors.accent}20`, borderColor: `${colors.accent}40` }]}
+        style={[
+          styles.toggleBtn,
+          {
+            backgroundColor: `${colors.accent}20`,
+            borderColor: `${colors.accent}40`,
+          },
+        ]}
         onPress={toggle}
       >
         <Text style={[styles.toggleText, { color: colors.accent }]}>
@@ -60,7 +79,13 @@ export function TransformShowcase() {
       <View style={styles.transformGrid}>
         {boxes.map((b) => (
           <View key={b.label} style={styles.transformItem}>
-            <Animated.View style={[styles.transformBox, { backgroundColor: b.color }, b.style]}>
+            <Animated.View
+              style={[
+                styles.transformBox,
+                { backgroundColor: b.color },
+                b.style,
+              ]}
+            >
               <Text style={styles.transformText}>{b.label}</Text>
             </Animated.View>
           </View>
@@ -71,9 +96,25 @@ export function TransformShowcase() {
 }
 
 const styles = StyleSheet.create({
-  transformGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12, justifyContent: "center" },
-  transformItem: { width: 80, height: 80, alignItems: "center", justifyContent: "center" },
-  transformBox: { width: 64, height: 64, borderRadius: 12, alignItems: "center", justifyContent: "center" },
+  transformGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+    justifyContent: "center",
+  },
+  transformItem: {
+    width: 80,
+    height: 80,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  transformBox: {
+    width: 64,
+    height: 64,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   transformText: { color: "#fff", fontSize: 10, fontWeight: "600" },
   toggleBtn: {
     paddingHorizontal: 20,

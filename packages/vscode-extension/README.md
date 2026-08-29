@@ -23,9 +23,7 @@ animate-hover:scale-110
 Shows:
 
 ```jsx
-<motion.div
-  whileHover={{ scale: 1.1 }}
-/>
+<motion.div whileHover={{ scale: 1.1 }} />
 ```
 
 ### Diagnostics
@@ -46,10 +44,10 @@ Color swatches for hex color classes like `animate-hover:bg-#ff0000`, `animate-h
 
 ## Settings
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `motionwind.enable` | `true` | Enable/disable the extension |
-| `motionwind.validate` | `true` | Enable/disable diagnostics |
+| Setting                      | Default                  | Description                               |
+| ---------------------------- | ------------------------ | ----------------------------------------- |
+| `motionwind.enable`          | `true`                   | Enable/disable the extension              |
+| `motionwind.validate`        | `true`                   | Enable/disable diagnostics                |
 | `motionwind.classAttributes` | `["className", "class"]` | Attributes to scan for motionwind classes |
 
 ## What is motionwind?
@@ -57,14 +55,18 @@ Color swatches for hex color classes like `animate-hover:bg-#ff0000`, `animate-h
 Motionwind transforms Tailwind-like animation classes into Motion (Framer Motion) component props at build time:
 
 ```jsx
-{/* Write this */}
-<div className="animate-hover:scale-110 animate-duration-300 animate-ease-out" />
+{
+  /* Write this */
+}
+<div className="animate-hover:scale-110 animate-duration-300 animate-ease-out" />;
 
-{/* Compiles to */}
+{
+  /* Compiles to */
+}
 <motion.div
   whileHover={{ scale: 1.1 }}
   transition={{ duration: 0.3, ease: "easeOut" }}
-/>
+/>;
 ```
 
 Learn more at [github.com/piyushzingade/motionwind](https://github.com/piyushzingade/motionwind).

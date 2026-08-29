@@ -40,19 +40,48 @@ export function EntranceAnimations() {
       subtitle="animate-enter:opacity-0 animate-enter:y-20"
     >
       <Pressable
-        style={[styles.replayBtn, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        style={[
+          styles.replayBtn,
+          { backgroundColor: colors.surface, borderColor: colors.border },
+        ]}
         onPress={() => setKey((k) => k + 1)}
       >
-        <Text style={[styles.replayText, { color: colors.fgMuted }]}>Replay</Text>
+        <Text style={[styles.replayText, { color: colors.fgMuted }]}>
+          Replay
+        </Text>
       </Pressable>
 
       <View style={styles.grid} key={key}>
-        <AnimatedBox label="Fade In" entering={FadeIn.duration(600)} color={colors.accent} />
-        <AnimatedBox label="Fade Up" entering={FadeInUp.duration(600).delay(100)} color="#8b5cf6" />
-        <AnimatedBox label="Fade Down" entering={FadeInDown.duration(600).delay(200)} color="#a78bfa" />
-        <AnimatedBox label="Slide Left" entering={FadeInLeft.duration(600).delay(300)} color="#c084fc" />
-        <AnimatedBox label="Zoom In" entering={ZoomIn.duration(500).delay(400)} color="#e879f9" />
-        <AnimatedBox label="Bounce" entering={BounceIn.duration(700).delay(500)} color="#f472b6" />
+        <AnimatedBox
+          label="Fade In"
+          entering={FadeIn.duration(600)}
+          color={colors.accent}
+        />
+        <AnimatedBox
+          label="Fade Up"
+          entering={FadeInUp.duration(600).delay(100)}
+          color="#8b5cf6"
+        />
+        <AnimatedBox
+          label="Fade Down"
+          entering={FadeInDown.duration(600).delay(200)}
+          color="#a78bfa"
+        />
+        <AnimatedBox
+          label="Slide Left"
+          entering={FadeInLeft.duration(600).delay(300)}
+          color="#c084fc"
+        />
+        <AnimatedBox
+          label="Zoom In"
+          entering={ZoomIn.duration(500).delay(400)}
+          color="#e879f9"
+        />
+        <AnimatedBox
+          label="Bounce"
+          entering={BounceIn.duration(700).delay(500)}
+          color="#f472b6"
+        />
       </View>
     </DemoCard>
   );

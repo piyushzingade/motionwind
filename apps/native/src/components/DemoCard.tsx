@@ -34,12 +34,7 @@ export function DemoCard({ title, subtitle, children }: DemoCardProps) {
           </Text>
         )}
       </View>
-      <View
-        style={[
-          styles.content,
-          { borderTopColor: colors.borderSubtle },
-        ]}
-      >
+      <View style={[styles.content, { borderTopColor: colors.borderSubtle }]}>
         {children}
       </View>
     </View>

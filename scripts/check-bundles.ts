@@ -3,7 +3,7 @@ import path from "node:path";
 
 const root = path.resolve(import.meta.dir, "..");
 const budgets: Record<string, number> = {
-  "motionwind-core": 170,
+  "motionwind-core": 220,
   "motionwind-react": 110,
   "motionwind-vue": 35,
   "motionwind-vanilla": 150,

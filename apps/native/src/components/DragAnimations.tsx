@@ -24,7 +24,9 @@ function DraggableBox({
   const translateY = useSharedValue(0);
   const scale = useSharedValue(1);
   const pan = Gesture.Pan()
-    .onStart(() => { scale.value = withSpring(1.1, { damping: 15 }); })
+    .onStart(() => {
+      scale.value = withSpring(1.1, { damping: 15 });
+    })
     .onUpdate((e) => {
       if (axis !== "y") translateX.value = e.translationX;
       if (axis !== "x") translateY.value = e.translationY;
@@ -46,7 +48,9 @@ function DraggableBox({
 
   return (
     <GestureDetector gesture={pan}>
-      <Animated.View style={[styles.dragBox, { backgroundColor: color }, animatedStyle]}>
+      <Animated.View
+        style={[styles.dragBox, { backgroundColor: color }, animatedStyle]}
+      >
         <Text style={styles.dragText}>{label}</Text>
       </Animated.View>
     </GestureDetector>
@@ -71,14 +75,25 @@ function ElasticDrag() {
       borderRadius.value = withSpring(30, { damping: 8 });
     });
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }, { translateY: translateY.value }],
+    transform: [
+      { translateX: translateX.value },
+      { translateY: translateY.value },
+    ],
     borderRadius: borderRadius.value,
   }));
 
   return (
     <GestureDetector gesture={pan}>
-      <Animated.View style={[styles.dragBox, { backgroundColor: colors.accent }, animatedStyle]}>
-        <Text style={[styles.dragText, { color: colors.accentFg }]}>Elastic</Text>
+      <Animated.View
+        style={[
+          styles.dragBox,
+          { backgroundColor: colors.accent },
+          animatedStyle,
+        ]}
+      >
+        <Text style={[styles.dragText, { color: colors.accentFg }]}>
+          Elastic
+        </Text>
       </Animated.View>
     </GestureDetector>
   );
@@ -86,7 +101,10 @@ function ElasticDrag() {
 
 export function DragAnimations() {
   return (
-    <DemoCard title="Drag Interactions" subtitle="animate-drag-both animate-drag-snap">
+    <DemoCard
+      title="Drag Interactions"
+      subtitle="animate-drag-both animate-drag-snap"
+    >
       <View style={styles.dragArea}>
         <DraggableBox label="Free Drag" color="#6366f1" />
         <DraggableBox label="Snap Back" color="#0ea5e9" snapBack />
@@ -113,5 +131,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  dragText: { color: "#fff", fontSize: 10, fontWeight: "600", textAlign: "center" },
+  dragText: {
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "600",
+    textAlign: "center",
+  },
 });

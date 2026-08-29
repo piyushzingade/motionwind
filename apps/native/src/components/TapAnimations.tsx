@@ -25,7 +25,9 @@ function ScaleButton({ label, color }: { label: string; color: string }) {
 
   return (
     <GestureDetector gesture={gesture}>
-      <Animated.View style={[styles.tapBox, { backgroundColor: color }, animatedStyle]}>
+      <Animated.View
+        style={[styles.tapBox, { backgroundColor: color }, animatedStyle]}
+      >
         <Text style={styles.tapText}>{label}</Text>
       </Animated.View>
     </GestureDetector>
@@ -51,8 +53,16 @@ function RotateButton() {
 
   return (
     <GestureDetector gesture={gesture}>
-      <Animated.View style={[styles.tapBox, { backgroundColor: colors.accent }, animatedStyle]}>
-        <Text style={[styles.tapText, { color: colors.accentFg }]}>Rotate + Scale</Text>
+      <Animated.View
+        style={[
+          styles.tapBox,
+          { backgroundColor: colors.accent },
+          animatedStyle,
+        ]}
+      >
+        <Text style={[styles.tapText, { color: colors.accentFg }]}>
+          Rotate + Scale
+        </Text>
       </Animated.View>
     </GestureDetector>
   );
@@ -77,7 +87,9 @@ function OpacityPulse() {
 
   return (
     <GestureDetector gesture={gesture}>
-      <Animated.View style={[styles.tapBox, { backgroundColor: "#ef4444" }, animatedStyle]}>
+      <Animated.View
+        style={[styles.tapBox, { backgroundColor: "#ef4444" }, animatedStyle]}
+      >
         <Text style={styles.tapText}>Opacity Pulse</Text>
       </Animated.View>
     </GestureDetector>
@@ -87,7 +99,10 @@ function OpacityPulse() {
 export function TapAnimations() {
   const { colors } = useTheme();
   return (
-    <DemoCard title="Tap / Press Animations" subtitle="animate-tap:scale-95 animate-spring">
+    <DemoCard
+      title="Tap / Press Animations"
+      subtitle="animate-tap:scale-95 animate-spring"
+    >
       <View style={styles.row}>
         <ScaleButton label="Scale Down" color="#0ea5e9" />
         <ScaleButton label="Bounce" color="#14b8a6" />

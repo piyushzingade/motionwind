@@ -1,5 +1,10 @@
 import type { Rule } from "eslint";
-import { getClassNameAttr, getTagName, isDynamicClassName, staticClassName } from "../utils.js";
+import {
+  getClassNameAttr,
+  getTagName,
+  isDynamicClassName,
+  staticClassName,
+} from "../utils.js";
 
 const rule: Rule.RuleModule = {
   meta: {

@@ -42,7 +42,9 @@ describe("buildMotionProps (vue)", () => {
   });
 
   it("maps drag config", () => {
-    const parsed = parseMotionClasses("animate-drag-both animate-drag-elastic-50");
+    const parsed = parseMotionClasses(
+      "animate-drag-both animate-drag-elastic-50",
+    );
     const props = buildMotionProps(parsed);
     expect(props.drag).toBe(true);
     expect(props.dragElastic).toBe(0.5);

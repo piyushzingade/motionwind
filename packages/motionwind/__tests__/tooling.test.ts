@@ -16,7 +16,9 @@ describe("classifyMotionToken", () => {
     expect(classifyMotionToken("animate-layout")).toBe("layout");
     expect(classifyMotionToken("animate-scroll:y-[0,-200]")).toBe("scroll");
     expect(classifyMotionToken("animate-scroll-container")).toBe("scroll");
-    expect(classifyMotionToken("animate-variant-hidden:opacity-0")).toBe("variant");
+    expect(classifyMotionToken("animate-variant-hidden:opacity-0")).toBe(
+      "variant",
+    );
     expect(classifyMotionToken("animate-to-visible")).toBe("variant");
     expect(classifyMotionToken("animate-bogus-99")).toBe("unknown");
   });
@@ -24,7 +26,9 @@ describe("classifyMotionToken", () => {
 
 describe("analyzeClassName", () => {
   it("reports unknown animate-* classes", () => {
-    const { unknown } = analyzeClassName("px-4 animate-hover:scale-110 animate-nope-1");
+    const { unknown } = analyzeClassName(
+      "px-4 animate-hover:scale-110 animate-nope-1",
+    );
     expect(unknown).toEqual(["animate-nope-1"]);
   });
 
@@ -60,9 +64,9 @@ describe("sortMotionClasses", () => {
   });
 
   it("is stable within a category", () => {
-    expect(sortMotionClasses("animate-hover:scale-110 animate-tap:scale-90")).toBe(
-      "animate-hover:scale-110 animate-tap:scale-90",
-    );
+    expect(
+      sortMotionClasses("animate-hover:scale-110 animate-tap:scale-90"),
+    ).toBe("animate-hover:scale-110 animate-tap:scale-90");
   });
 });
 

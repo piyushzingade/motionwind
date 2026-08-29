@@ -175,7 +175,10 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
 
         const container = getScrollContainer();
         if (container) {
-          const elTop = el.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop;
+          const elTop =
+            el.getBoundingClientRect().top -
+            container.getBoundingClientRect().top +
+            container.scrollTop;
           container.scrollTo({ top: elTop - 80, behavior: "smooth" });
         }
         setActiveId(id);
@@ -196,7 +199,9 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
   useEffect(() => {
     if (activeIndex < 0) return;
     const el = itemEls.current[activeIndex];
-    const sidebar = navRef.current?.closest(".toc-sidebar") as HTMLElement | null;
+    const sidebar = navRef.current?.closest(
+      ".toc-sidebar",
+    ) as HTMLElement | null;
     if (!el || !sidebar) return;
 
     const sidebarRect = sidebar.getBoundingClientRect();
@@ -210,7 +215,10 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
     if (elTop < buffer) {
       sidebar.scrollBy({ top: elTop - buffer, behavior: "smooth" });
     } else if (elBottom > sidebarRect.height - buffer) {
-      sidebar.scrollBy({ top: elBottom - sidebarRect.height + buffer, behavior: "smooth" });
+      sidebar.scrollBy({
+        top: elBottom - sidebarRect.height + buffer,
+        behavior: "smooth",
+      });
     }
   }, [activeIndex]);
 
@@ -238,7 +246,9 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
       const filledLen = totalLen * tocProgress;
       const pt = accentRef.current.getPointAtLength(filledLen);
       // Get a point slightly before to compute direction
-      const ptPrev = accentRef.current.getPointAtLength(Math.max(0, filledLen - 4));
+      const ptPrev = accentRef.current.getPointAtLength(
+        Math.max(0, filledLen - 4),
+      );
       const dx = pt.x - ptPrev.x;
       const dy = pt.y - ptPrev.y;
       // Angle of the path tangent at this point (in degrees)
@@ -258,9 +268,7 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
     <nav ref={navRef} className="toc" aria-label="Table of contents">
       <div className="toc-header">
         <span className="toc-header-label">On this page</span>
-        <span className="toc-header-pct">
-          {Math.round(scrollPct * 100)}%
-        </span>
+        <span className="toc-header-pct">{Math.round(scrollPct * 100)}%</span>
       </div>
 
       <div className="toc-body">
@@ -291,15 +299,41 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
                 x2="0"
                 y2={scrollDir === "down" ? String(listH) : "0"}
               >
-                <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.05" />
-                <stop offset="40%" stopColor="var(--color-accent)" stopOpacity="0.3" />
-                <stop offset="75%" stopColor="var(--color-accent)" stopOpacity="0.7" />
-                <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="1" />
+                <stop
+                  offset="0%"
+                  stopColor="var(--color-accent)"
+                  stopOpacity="0.05"
+                />
+                <stop
+                  offset="40%"
+                  stopColor="var(--color-accent)"
+                  stopOpacity="0.3"
+                />
+                <stop
+                  offset="75%"
+                  stopColor="var(--color-accent)"
+                  stopOpacity="0.7"
+                />
+                <stop
+                  offset="100%"
+                  stopColor="var(--color-accent)"
+                  stopOpacity="1"
+                />
               </linearGradient>
 
               {/* Stronger glow for the orb */}
-              <filter id="toc-orb-bloom" x="-100%" y="-100%" width="300%" height="300%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+              <filter
+                id="toc-orb-bloom"
+                x="-100%"
+                y="-100%"
+                width="300%"
+                height="300%"
+              >
+                <feGaussianBlur
+                  in="SourceGraphic"
+                  stdDeviation="4"
+                  result="blur"
+                />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="blur" />

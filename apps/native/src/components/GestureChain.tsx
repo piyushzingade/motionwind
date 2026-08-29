@@ -103,19 +103,25 @@ function ParallaxCard() {
     <View style={styles.parallaxWrap}>
       {/* Shadow layer */}
       <Animated.View
-        style={[
-          styles.cardShadow,
-          { backgroundColor: colors.fg },
-          shadowStyle,
-        ]}
+        style={[styles.cardShadow, { backgroundColor: colors.fg }, shadowStyle]}
       />
 
       {/* Follower dots */}
       <Animated.View
-        style={[styles.follower, styles.follower1, { backgroundColor: colors.accent }, f1Style]}
+        style={[
+          styles.follower,
+          styles.follower1,
+          { backgroundColor: colors.accent },
+          f1Style,
+        ]}
       />
       <Animated.View
-        style={[styles.follower, styles.follower2, { backgroundColor: colors.accent }, f2Style]}
+        style={[
+          styles.follower,
+          styles.follower2,
+          { backgroundColor: colors.accent },
+          f2Style,
+        ]}
       />
 
       {/* Main card */}
@@ -130,21 +136,45 @@ function ParallaxCard() {
             cardStyle,
           ]}
         >
-          <View style={[styles.cardAccent, { backgroundColor: colors.accent }]} />
+          <View
+            style={[styles.cardAccent, { backgroundColor: colors.accent }]}
+          />
           <Text style={[styles.cardTitle, { color: colors.fg }]}>
             Drag me around
           </Text>
           <Text style={[styles.cardBody, { color: colors.fgMuted }]}>
-            3D perspective tilt + parallax shadow + trailing followers with spring physics
+            3D perspective tilt + parallax shadow + trailing followers with
+            spring physics
           </Text>
 
           {/* Inner floating elements */}
           <View style={styles.cardInner}>
-            <View style={[styles.innerDot, { backgroundColor: `${colors.accent}30` }]}>
-              <View style={[styles.innerDotCore, { backgroundColor: colors.accent }]} />
+            <View
+              style={[
+                styles.innerDot,
+                { backgroundColor: `${colors.accent}30` },
+              ]}
+            >
+              <View
+                style={[
+                  styles.innerDotCore,
+                  { backgroundColor: colors.accent },
+                ]}
+              />
             </View>
-            <View style={[styles.innerBar, { backgroundColor: `${colors.accent}20` }]} />
-            <View style={[styles.innerBar, styles.innerBarShort, { backgroundColor: `${colors.accent}15` }]} />
+            <View
+              style={[
+                styles.innerBar,
+                { backgroundColor: `${colors.accent}20` },
+              ]}
+            />
+            <View
+              style={[
+                styles.innerBar,
+                styles.innerBarShort,
+                { backgroundColor: `${colors.accent}15` },
+              ]}
+            />
           </View>
         </Animated.View>
       </GestureDetector>

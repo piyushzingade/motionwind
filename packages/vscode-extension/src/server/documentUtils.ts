@@ -1,4 +1,8 @@
-import { TextDocument, Position, Range } from "vscode-languageserver-textdocument";
+import {
+  TextDocument,
+  Position,
+  Range,
+} from "vscode-languageserver-textdocument";
 
 export interface ClassToken {
   value: string;
@@ -55,7 +59,10 @@ export function findClassNameRegions(
     }
 
     // Match attr={`...`} (template literal)
-    const templatePattern = new RegExp(`${attr}\\s*=\\s*\\{\\s*\`([^\`]*)\``, "g");
+    const templatePattern = new RegExp(
+      `${attr}\\s*=\\s*\\{\\s*\`([^\`]*)\``,
+      "g",
+    );
     while ((match = templatePattern.exec(text)) !== null) {
       const valueStart = match.index + match[0].indexOf("`") + 1;
       const value = match[1]!;
@@ -124,7 +131,11 @@ export function getTokenAtPosition(
 
     if (offset < regionStartOffset || offset > regionEndOffset) continue;
 
-    const tokens = tokenizeClassValue(document, region.value, region.range.start);
+    const tokens = tokenizeClassValue(
+      document,
+      region.value,
+      region.range.start,
+    );
     for (const token of tokens) {
       const tokenStart = document.offsetAt(token.range.start);
       const tokenEnd = document.offsetAt(token.range.end);
@@ -145,7 +156,9 @@ export function getCursorContext(
   document: TextDocument,
   position: Position,
   classAttributes?: string[],
-): { prefix: string; region: ClassNameRegion; inRegion: true } | { inRegion: false } {
+):
+  | { prefix: string; region: ClassNameRegion; inRegion: true }
+  | { inRegion: false } {
   const regions = findClassNameRegions(document, classAttributes);
   const offset = document.offsetAt(position);
 
@@ -163,7 +176,10 @@ export function getCursorContext(
 
     // Find the start of the current token (last whitespace boundary)
     const lastSpace = textBeforeCursor.lastIndexOf(" ");
-    const prefix = lastSpace === -1 ? textBeforeCursor : textBeforeCursor.slice(lastSpace + 1);
+    const prefix =
+      lastSpace === -1
+        ? textBeforeCursor
+        : textBeforeCursor.slice(lastSpace + 1);
 
     return { prefix, region, inRegion: true };
   }

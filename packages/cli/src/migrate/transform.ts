@@ -18,8 +18,10 @@ function resolveDefault<T>(mod: unknown): T {
   }
   return m as T;
 }
-const traverse = resolveDefault<typeof import("@babel/traverse").default>(babelTraverse);
-const generate = resolveDefault<typeof import("@babel/generator").default>(babelGenerate);
+const traverse =
+  resolveDefault<typeof import("@babel/traverse").default>(babelTraverse);
+const generate =
+  resolveDefault<typeof import("@babel/generator").default>(babelGenerate);
 
 const GESTURE_ATTRS = new Set([
   "whileHover",
@@ -39,7 +41,12 @@ const DRAG_ATTRS = new Set([
   "dragDirectionLock",
   "dragConstraints",
 ]);
-const LAYOUT_ATTRS = new Set(["layout", "layoutId", "layoutScroll", "layoutRoot"]);
+const LAYOUT_ATTRS = new Set([
+  "layout",
+  "layoutId",
+  "layoutScroll",
+  "layoutRoot",
+]);
 
 // Motion-only props we can't express as classes — their presence blocks conversion.
 const UNSUPPORTED = new Set([
@@ -71,9 +78,16 @@ export interface MigrateResult {
 }
 
 /** Extract a literal JS value from an expression node, or { ok: false }. */
-function literal(node: t.Node | null | undefined): { ok: boolean; value?: unknown } {
+function literal(node: t.Node | null | undefined): {
+  ok: boolean;
+  value?: unknown;
+} {
   if (!node) return { ok: true, value: true }; // bare attribute → true
-  if (t.isStringLiteral(node) || t.isNumericLiteral(node) || t.isBooleanLiteral(node))
+  if (
+    t.isStringLiteral(node) ||
+    t.isNumericLiteral(node) ||
+    t.isBooleanLiteral(node)
+  )
     return { ok: true, value: node.value };
   if (t.isNullLiteral(node)) return { ok: true, value: null };
   if (t.isIdentifier(node) && node.name === "Infinity")
@@ -116,7 +130,8 @@ function literal(node: t.Node | null | undefined): { ok: boolean; value?: unknow
 /** The literal value behind a JSX attribute (unwrapping expression containers). */
 function attrValue(attr: t.JSXAttribute): { ok: boolean; value?: unknown } {
   if (attr.value === null) return { ok: true, value: true };
-  if (t.isStringLiteral(attr.value)) return { ok: true, value: attr.value.value };
+  if (t.isStringLiteral(attr.value))
+    return { ok: true, value: attr.value.value };
   if (t.isJSXExpressionContainer(attr.value)) {
     if (t.isJSXEmptyExpression(attr.value.expression)) return { ok: false };
     return literal(attr.value.expression);
@@ -133,7 +148,9 @@ function dragTokens(name: string, value: unknown): string[] | null {
       if (value === "y") return ["animate-drag-y"];
       return null;
     case "dragElastic":
-      return typeof value === "number" ? [`animate-drag-elastic-${r(value * 100)}`] : null;
+      return typeof value === "number"
+        ? [`animate-drag-elastic-${r(value * 100)}`]
+        : null;
     case "dragSnapToOrigin":
       return value === true ? ["animate-drag-snap"] : null;
     case "dragMomentum":
@@ -142,7 +159,12 @@ function dragTokens(name: string, value: unknown): string[] | null {
       return value === true ? ["animate-drag-lock"] : null;
     case "dragConstraints": {
       if (typeof value !== "object" || value === null) return null;
-      const sides: Record<string, string> = { top: "t", left: "l", right: "r", bottom: "b" };
+      const sides: Record<string, string> = {
+        top: "t",
+        left: "l",
+        right: "r",
+        bottom: "b",
+      };
       const out: string[] = [];
       for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
         if (!sides[k] || typeof v !== "number") return null;
@@ -237,7 +259,10 @@ export function migrateSource(code: string): MigrateResult {
             convertible = false;
             break;
           }
-          const g = serializeGesture(attrName, v.value as Record<string, unknown>);
+          const g = serializeGesture(
+            attrName,
+            v.value as Record<string, unknown>,
+          );
           if (!g) {
             convertible = false;
             break;
@@ -315,7 +340,10 @@ export function migrateSource(code: string): MigrateResult {
           classNameAttr.value = t.stringLiteral(merged);
         } else {
           opening.attributes.unshift(
-            t.jsxAttribute(t.jsxIdentifier("className"), t.stringLiteral(merged)),
+            t.jsxAttribute(
+              t.jsxIdentifier("className"),
+              t.stringLiteral(merged),
+            ),
           );
         }
       }

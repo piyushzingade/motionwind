@@ -84,13 +84,8 @@ function assignRef(ref: React.Ref<unknown> | undefined, node: unknown): void {
  */
 const MotionScrollView = forwardRef<any, MotionwindNativeProps>(
   function MotionScrollView(props, ref) {
-    const {
-      children,
-      horizontal,
-      onLayout,
-      onContentSizeChange,
-      ...rest
-    } = props;
+    const { children, horizontal, onLayout, onContentSizeChange, ...rest } =
+      props;
 
     const aref = useAnimatedRef();
     // aref attaches to the Animated.ScrollView below; the cast satisfies
@@ -233,20 +228,17 @@ type MwProxy = {
  * </mw.Pressable>
  * ```
  */
-export const mw = new Proxy(
-  {} as MwProxy,
-  {
-    get(target, prop: string) {
-      if (typeof prop !== "string") return undefined;
-      if (!target[prop]) {
-        // mw.ScrollView provides scroll progress to descendants for
-        // animate-scroll:* classes, in addition to normal class support.
-        (target as Record<string, any>)[prop] =
-          prop === "ScrollView"
-            ? MotionScrollView
-            : createMotionwindNativeComponent(prop);
-      }
-      return target[prop];
-    },
+export const mw = new Proxy({} as MwProxy, {
+  get(target, prop: string) {
+    if (typeof prop !== "string") return undefined;
+    if (!target[prop]) {
+      // mw.ScrollView provides scroll progress to descendants for
+      // animate-scroll:* classes, in addition to normal class support.
+      (target as Record<string, any>)[prop] =
+        prop === "ScrollView"
+          ? MotionScrollView
+          : createMotionwindNativeComponent(prop);
+    }
+    return target[prop];
   },
-);
+});

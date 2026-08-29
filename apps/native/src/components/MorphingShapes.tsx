@@ -20,10 +20,10 @@ import { useTheme } from "../theme";
  */
 
 const SHAPES = [
-  { radius: 8, rotation: 0, scale: 1, color: 0 },       // Square
-  { radius: 50, rotation: 0, scale: 0.85, color: 1 },    // Circle
-  { radius: 8, rotation: 45, scale: 1.1, color: 2 },     // Diamond
-  { radius: 24, rotation: 0, scale: 0.9, color: 3 },     // Squircle
+  { radius: 8, rotation: 0, scale: 1, color: 0 }, // Square
+  { radius: 50, rotation: 0, scale: 0.85, color: 1 }, // Circle
+  { radius: 8, rotation: 45, scale: 1.1, color: 2 }, // Diamond
+  { radius: 24, rotation: 0, scale: 0.9, color: 3 }, // Squircle
 ];
 
 function MorphShape({ index, trigger }: { index: number; trigger: number }) {
@@ -48,10 +48,7 @@ function MorphShape({ index, trigger }: { index: number; trigger: number }) {
       index * 80,
       withSpring(shape.rotation + trigger * 90, spring),
     );
-    scale.value = withDelay(
-      index * 80,
-      withSpring(shape.scale, spring),
-    );
+    scale.value = withDelay(index * 80, withSpring(shape.scale, spring));
     colorProgress.value = withDelay(
       index * 80,
       withTiming(trigger % SHAPES.length, {
@@ -67,14 +64,19 @@ function MorphShape({ index, trigger }: { index: number; trigger: number }) {
         withTiming(0, { duration: 400 }),
       ),
     );
-  }, [trigger, index, borderRadius, rotation, scale, colorProgress, glowOpacity]);
+  }, [
+    trigger,
+    index,
+    borderRadius,
+    rotation,
+    scale,
+    colorProgress,
+    glowOpacity,
+  ]);
 
   const shapeStyle = useAnimatedStyle(() => ({
     borderRadius: borderRadius.value,
-    transform: [
-      { rotate: `${rotation.value}deg` },
-      { scale: scale.value },
-    ],
+    transform: [{ rotate: `${rotation.value}deg` }, { scale: scale.value }],
     backgroundColor: interpolateColor(
       colorProgress.value,
       [0, 1, 2, 3],
@@ -111,11 +113,16 @@ export function MorphingShapes() {
       subtitle="Multi-property spring orchestration with staggered delay"
     >
       <Pressable
-        style={[styles.morphBtn, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        style={[
+          styles.morphBtn,
+          { backgroundColor: colors.surface, borderColor: colors.border },
+        ]}
         onPress={() => setTrigger((t) => t + 1)}
       >
         <Text style={[styles.morphBtnText, { color: colors.accent }]}>
-          Morph → {SHAPES[(trigger + 1) % 4] && ["Circle", "Diamond", "Squircle", "Square"][(trigger) % 4]}
+          Morph →{" "}
+          {SHAPES[(trigger + 1) % 4] &&
+            ["Circle", "Diamond", "Squircle", "Square"][trigger % 4]}
         </Text>
       </Pressable>
 

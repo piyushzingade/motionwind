@@ -54,8 +54,12 @@ export function StaggeredGridDemo() {
             className="rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border)] p-4"
           >
             <span className="text-lg">{card.icon}</span>
-            <p className="text-[var(--color-accent)] font-semibold text-xs mt-2">{card.title}</p>
-            <p className="text-[var(--color-fg-muted)] text-[10px] mt-0.5">{card.desc}</p>
+            <p className="text-[var(--color-accent)] font-semibold text-xs mt-2">
+              {card.title}
+            </p>
+            <p className="text-[var(--color-fg-muted)] text-[10px] mt-0.5">
+              {card.desc}
+            </p>
           </motion.div>
         ))}
       </motion.div>
@@ -113,11 +117,22 @@ export function MultiStateDemo() {
         animate={state}
         transition={{ type: "spring", stiffness: 300, damping: 22 }}
         className={`rounded-2xl bg-[var(--color-surface-elevated)] border p-6 w-48 text-center ${
-          state === "active" ? "border-[var(--color-accent)]" : "border-[var(--color-border)]"
+          state === "active"
+            ? "border-[var(--color-accent)]"
+            : "border-[var(--color-border)]"
         }`}
       >
         <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center bg-[var(--color-accent)]/10">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="stroke-[var(--color-accent)]" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            className="stroke-[var(--color-accent)]"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M12 2L2 7l10 5 10-5-10-5z" />
             <path d="M2 17l10 5 10-5" />
             <path d="M2 12l10 5 10-5" />
@@ -126,7 +141,9 @@ export function MultiStateDemo() {
         <p className="text-sm font-semibold text-[var(--color-fg)]">
           {state.charAt(0).toUpperCase() + state.slice(1)}
         </p>
-        <p className="text-[10px] text-[var(--color-fg-muted)] mt-1">State: {state}</p>
+        <p className="text-[10px] text-[var(--color-fg-muted)] mt-1">
+          State: {state}
+        </p>
       </motion.div>
     </div>
   );
@@ -134,7 +151,10 @@ export function MultiStateDemo() {
 
 /* ── 3. Collapsible Sidebar ── */
 const sidebarNav = {
-  collapsed: { width: 56, transition: { staggerChildren: 0.04, staggerDirection: -1 } },
+  collapsed: {
+    width: 56,
+    transition: { staggerChildren: 0.04, staggerDirection: -1 },
+  },
   expanded: { width: 200, transition: { staggerChildren: 0.04 } },
 };
 const sidebarLabel = {
@@ -143,10 +163,19 @@ const sidebarLabel = {
 };
 
 const NAV_ITEMS = [
-  { label: "Home", path: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1" },
+  {
+    label: "Home",
+    path: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1",
+  },
   { label: "Search", path: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" },
-  { label: "Inbox", path: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
-  { label: "Settings", path: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
+  {
+    label: "Inbox",
+    path: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
+  },
+  {
+    label: "Settings",
+    path: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z",
+  },
 ];
 
 export function CollapsibleSidebarDemo() {
@@ -166,7 +195,16 @@ export function CollapsibleSidebarDemo() {
             whileHover={{ backgroundColor: "rgba(128,128,128,0.06)" }}
           >
             <div className="w-7 h-7 rounded-lg bg-[var(--color-accent)]/8 flex items-center justify-center flex-shrink-0">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="stroke-[var(--color-accent)]" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                className="stroke-[var(--color-accent)]"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d={item.path} />
               </svg>
             </div>
@@ -179,10 +217,7 @@ export function CollapsibleSidebarDemo() {
           </motion.div>
         ))}
       </motion.nav>
-      <button
-        onClick={() => setOpen(!open)}
-        className="demo-btn mt-2"
-      >
+      <button onClick={() => setOpen(!open)} className="demo-btn mt-2">
         {open ? "Collapse" : "Expand"}
       </button>
     </div>
@@ -228,7 +263,11 @@ export function NotificationStackDemo() {
       <button onClick={add} className="demo-btn-primary mb-3">
         Add Notification
       </button>
-      <motion.div variants={notifContainer} animate="visible" className="space-y-2">
+      <motion.div
+        variants={notifContainer}
+        animate="visible"
+        className="space-y-2"
+      >
         <AnimatePresence mode="popLayout">
           {notifs.map((n) => (
             <motion.div
@@ -242,14 +281,20 @@ export function NotificationStackDemo() {
               className="flex items-center gap-3 rounded-lg bg-[var(--color-surface-elevated)] border border-[var(--color-border)] px-4 py-2.5 cursor-pointer"
             >
               <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] flex-shrink-0" />
-              <span className="text-xs font-medium text-[var(--color-fg)] flex-1">{n.msg}</span>
-              <span className="text-[10px] text-[var(--color-fg-muted)]">✕</span>
+              <span className="text-xs font-medium text-[var(--color-fg)] flex-1">
+                {n.msg}
+              </span>
+              <span className="text-[10px] text-[var(--color-fg-muted)]">
+                ✕
+              </span>
             </motion.div>
           ))}
         </AnimatePresence>
       </motion.div>
       {notifs.length === 0 && (
-        <p className="text-[10px] text-[var(--color-fg-muted)] text-center mt-4">No notifications</p>
+        <p className="text-[10px] text-[var(--color-fg-muted)] text-center mt-4">
+          No notifications
+        </p>
       )}
     </div>
   );
@@ -292,26 +337,40 @@ export function OrchestratedFormDemo() {
         className="space-y-3 rounded-2xl bg-[var(--color-surface-elevated)] border border-[var(--color-border)] p-5"
       >
         <motion.div variants={formField}>
-          <label className="text-[10px] text-[var(--color-fg-muted)] uppercase tracking-wider font-medium block mb-1.5">Name</label>
+          <label className="text-[10px] text-[var(--color-fg-muted)] uppercase tracking-wider font-medium block mb-1.5">
+            Name
+          </label>
           <div className="h-9 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] px-3 flex items-center">
-            <span className="text-xs text-[var(--color-fg-muted)]">Enter your name</span>
+            <span className="text-xs text-[var(--color-fg-muted)]">
+              Enter your name
+            </span>
           </div>
         </motion.div>
         <motion.div variants={formField}>
-          <label className="text-[10px] text-[var(--color-fg-muted)] uppercase tracking-wider font-medium block mb-1.5">Email</label>
+          <label className="text-[10px] text-[var(--color-fg-muted)] uppercase tracking-wider font-medium block mb-1.5">
+            Email
+          </label>
           <div className="h-9 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] px-3 flex items-center">
-            <span className="text-xs text-[var(--color-fg-muted)]">you@example.com</span>
+            <span className="text-xs text-[var(--color-fg-muted)]">
+              you@example.com
+            </span>
           </div>
         </motion.div>
         <motion.div variants={formField}>
-          <label className="text-[10px] text-[var(--color-fg-muted)] uppercase tracking-wider font-medium block mb-1.5">Message</label>
+          <label className="text-[10px] text-[var(--color-fg-muted)] uppercase tracking-wider font-medium block mb-1.5">
+            Message
+          </label>
           <div className="h-16 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] px-3 pt-2">
-            <span className="text-xs text-[var(--color-fg-muted)]">Write something...</span>
+            <span className="text-xs text-[var(--color-fg-muted)]">
+              Write something...
+            </span>
           </div>
         </motion.div>
         <motion.div variants={formField}>
           <div className="h-9 rounded-lg bg-[var(--color-accent)] flex items-center justify-center cursor-pointer">
-            <span className="text-xs font-bold text-[var(--color-accent-fg)] uppercase tracking-wider">Submit</span>
+            <span className="text-xs font-bold text-[var(--color-accent-fg)] uppercase tracking-wider">
+              Submit
+            </span>
           </div>
         </motion.div>
       </motion.div>

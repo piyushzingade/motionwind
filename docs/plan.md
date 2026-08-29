@@ -1,3 +1,8 @@
+---
+title: "Motionwind Growth Plan"
+description: "Draft engineering backlog behind the roadmap themes — adapter parity, new syntax, ecosystem, and tooling quality."
+---
+
 # Motionwind growth plan
 
 > **Status:** Draft · **Scope:** Adapter parity, new syntax, ecosystem, tooling, quality
@@ -11,15 +16,15 @@ This plan is the engineering backlog behind the roadmap themes — **Adoption an
 
 The "write once, run everywhere" promise currently breaks on missing features. `animate-exit:` classes parse in every adapter, but **no adapter unmounts a component** — exit orchestration is the single biggest gap.
 
-| Feature | Vue | Vanilla | React Native |
-| --- | --- | --- | --- |
-| Scroll-linked | ❌ warns (`props.ts:8-9`) | ✅ | ⚠️ ScrollView-only |
-| Drag | ✅ | ❌ | ❌ |
-| Layout | ✅ | ❌ | ❌ |
-| Exit / AnimatePresence | props only | ignored | parsed but dead |
-| In-view | ✅ | ✅ | ❌ diagnostic |
-| SVG | ✅ | ✅ | ❌ |
-| Babel build-time | static only | n/a | **stub** (`babel.ts:19-31`) |
+| Feature                | Vue                       | Vanilla | React Native                |
+| ---------------------- | ------------------------- | ------- | --------------------------- |
+| Scroll-linked          | ❌ warns (`props.ts:8-9`) | ✅      | ⚠️ ScrollView-only          |
+| Drag                   | ✅                        | ❌      | ❌                          |
+| Layout                 | ✅                        | ❌      | ❌                          |
+| Exit / AnimatePresence | props only                | ignored | parsed but dead             |
+| In-view                | ✅                        | ✅      | ❌ diagnostic               |
+| SVG                    | ✅                        | ✅      | ❌                          |
+| Babel build-time       | static only               | n/a     | **stub** (`babel.ts:19-31`) |
 
 **1.1 Exit / AnimatePresence orchestration (all adapters)**
 

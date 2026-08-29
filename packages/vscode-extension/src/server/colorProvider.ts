@@ -6,17 +6,17 @@ import {
   DocumentColorParams,
 } from "vscode-languageserver/node.js";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import {
-  findClassNameRegions,
-  tokenizeClassValue,
-} from "./documentUtils.js";
+import { findClassNameRegions, tokenizeClassValue } from "./documentUtils.js";
 
 /** Parse a hex color string to RGBA Color (0-1 range) */
 function hexToColor(hex: string): Color | null {
   // Remove # prefix
   const h = hex.startsWith("#") ? hex.slice(1) : hex;
 
-  let r: number, g: number, b: number, a = 1;
+  let r: number,
+    g: number,
+    b: number,
+    a = 1;
 
   if (h.length === 3) {
     r = parseInt(h[0]! + h[0], 16) / 255;
@@ -42,12 +42,20 @@ function hexToColor(hex: string): Color | null {
 
 /** Convert Color (0-1 range) back to hex string */
 function colorToHex(color: Color): string {
-  const r = Math.round(color.red * 255).toString(16).padStart(2, "0");
-  const g = Math.round(color.green * 255).toString(16).padStart(2, "0");
-  const b = Math.round(color.blue * 255).toString(16).padStart(2, "0");
+  const r = Math.round(color.red * 255)
+    .toString(16)
+    .padStart(2, "0");
+  const g = Math.round(color.green * 255)
+    .toString(16)
+    .padStart(2, "0");
+  const b = Math.round(color.blue * 255)
+    .toString(16)
+    .padStart(2, "0");
 
   if (color.alpha < 1) {
-    const a = Math.round(color.alpha * 255).toString(16).padStart(2, "0");
+    const a = Math.round(color.alpha * 255)
+      .toString(16)
+      .padStart(2, "0");
     return `#${r}${g}${b}${a}`;
   }
 
@@ -76,7 +84,11 @@ export function handleDocumentColors(
   const regions = findClassNameRegions(document, classAttributes);
 
   for (const region of regions) {
-    const tokens = tokenizeClassValue(document, region.value, region.range.start);
+    const tokens = tokenizeClassValue(
+      document,
+      region.value,
+      region.range.start,
+    );
 
     for (const token of tokens) {
       if (!token.value.startsWith("animate-")) continue;
@@ -123,7 +135,12 @@ export function handleColorPresentation(
       for (const [colorPrefix, classPrefix] of Object.entries(PREFIX_MAP)) {
         if (propValue.startsWith(colorPrefix)) {
           const newClass = `animate-${gesturePrefix}:${classPrefix}${hex}`;
-          return [{ label: hex, textEdit: { range: params.range, newText: newClass } }];
+          return [
+            {
+              label: hex,
+              textEdit: { range: params.range, newText: newClass },
+            },
+          ];
         }
       }
     }

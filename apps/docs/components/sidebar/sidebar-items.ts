@@ -79,8 +79,14 @@ export const RN_SIDEBAR: SidebarConfig = {
       items: [
         { title: "Animations", url: "/docs/react-native/animations" },
         { title: "Gestures", url: "/docs/react-native/gestures" },
-        { title: "Springs & Easing", url: "/docs/react-native/springs-and-easing" },
-        { title: "Scroll Animations", url: "/docs/react-native/scroll-animations" },
+        {
+          title: "Springs & Easing",
+          url: "/docs/react-native/springs-and-easing",
+        },
+        {
+          title: "Scroll Animations",
+          url: "/docs/react-native/scroll-animations",
+        },
         { title: "Drag", url: "/docs/react-native/drag" },
       ],
     },

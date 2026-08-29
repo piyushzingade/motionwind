@@ -31,7 +31,10 @@ function SpringBall({
 
   const toggle = () => {
     active.current = !active.current;
-    translateY.value = withSpring(active.current ? -40 : 0, { damping, stiffness });
+    translateY.value = withSpring(active.current ? -40 : 0, {
+      damping,
+      stiffness,
+    });
   };
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -40,7 +43,9 @@ function SpringBall({
 
   return (
     <Pressable onPress={toggle} style={styles.springItem}>
-      <Animated.View style={[styles.ball, { backgroundColor: color }, animatedStyle]} />
+      <Animated.View
+        style={[styles.ball, { backgroundColor: color }, animatedStyle]}
+      />
       <Text style={[styles.springLabel, { color: colors.fg }]}>{label}</Text>
       <Text style={[styles.springParams, { color: colors.fgMuted }]}>
         d:{damping} s:{stiffness}
@@ -65,23 +70,61 @@ function BouncyLoader() {
       false,
     );
     dot1.value = anim;
-    const t2 = setTimeout(() => { dot2.value = withRepeat(withSequence(withTiming(-12, { duration: 300, easing: Easing.out(Easing.cubic) }), withTiming(0, { duration: 300, easing: Easing.in(Easing.cubic) })), -1, false); }, 100);
-    const t3 = setTimeout(() => { dot3.value = withRepeat(withSequence(withTiming(-12, { duration: 300, easing: Easing.out(Easing.cubic) }), withTiming(0, { duration: 300, easing: Easing.in(Easing.cubic) })), -1, false); }, 200);
+    const t2 = setTimeout(() => {
+      dot2.value = withRepeat(
+        withSequence(
+          withTiming(-12, { duration: 300, easing: Easing.out(Easing.cubic) }),
+          withTiming(0, { duration: 300, easing: Easing.in(Easing.cubic) }),
+        ),
+        -1,
+        false,
+      );
+    }, 100);
+    const t3 = setTimeout(() => {
+      dot3.value = withRepeat(
+        withSequence(
+          withTiming(-12, { duration: 300, easing: Easing.out(Easing.cubic) }),
+          withTiming(0, { duration: 300, easing: Easing.in(Easing.cubic) }),
+        ),
+        -1,
+        false,
+      );
+    }, 200);
     return () => {
       clearTimeout(t2);
       clearTimeout(t3);
     };
   }, [dot1, dot2, dot3]);
 
-  const s1 = useAnimatedStyle(() => ({ transform: [{ translateY: dot1.value }] }));
-  const s2 = useAnimatedStyle(() => ({ transform: [{ translateY: dot2.value }] }));
-  const s3 = useAnimatedStyle(() => ({ transform: [{ translateY: dot3.value }] }));
+  const s1 = useAnimatedStyle(() => ({
+    transform: [{ translateY: dot1.value }],
+  }));
+  const s2 = useAnimatedStyle(() => ({
+    transform: [{ translateY: dot2.value }],
+  }));
+  const s3 = useAnimatedStyle(() => ({
+    transform: [{ translateY: dot3.value }],
+  }));
 
   return (
     <View style={styles.dotsRow}>
-      <Animated.View style={[styles.dot, { backgroundColor: colors.accent }, s1]} />
-      <Animated.View style={[styles.dot, { backgroundColor: colors.accent, opacity: 0.7 }, s2]} />
-      <Animated.View style={[styles.dot, { backgroundColor: colors.accent, opacity: 0.4 }, s3]} />
+      <Animated.View
+        style={[styles.dot, { backgroundColor: colors.accent }, s1]}
+      />
+      <Animated.View
+        style={[
+          styles.dot,
+          { backgroundColor: colors.accent, opacity: 0.7 },
+          s2,
+        ]}
+      />
+      <Animated.View
+        style={[
+          styles.dot,
+          { backgroundColor: colors.accent, opacity: 0.4 },
+          s3,
+        ]}
+      />
     </View>
   );
 }
@@ -89,15 +132,35 @@ function BouncyLoader() {
 export function SpringAnimations() {
   const { colors } = useTheme();
   return (
-    <DemoCard title="Spring Physics" subtitle="animate-spring animate-stiffness-400 animate-damping-10">
+    <DemoCard
+      title="Spring Physics"
+      subtitle="animate-spring animate-stiffness-400 animate-damping-10"
+    >
       <View style={styles.springs}>
-        <SpringBall label="Snappy" damping={20} stiffness={500} color={colors.accent} />
-        <SpringBall label="Bouncy" damping={6} stiffness={300} color="#f59e0b" />
+        <SpringBall
+          label="Snappy"
+          damping={20}
+          stiffness={500}
+          color={colors.accent}
+        />
+        <SpringBall
+          label="Bouncy"
+          damping={6}
+          stiffness={300}
+          color="#f59e0b"
+        />
         <SpringBall label="Loose" damping={4} stiffness={100} color="#ef4444" />
-        <SpringBall label="Stiff" damping={30} stiffness={800} color="#0ea5e9" />
+        <SpringBall
+          label="Stiff"
+          damping={30}
+          stiffness={800}
+          color="#0ea5e9"
+        />
       </View>
       <View style={styles.loaderSection}>
-        <Text style={[styles.loaderLabel, { color: colors.fgMuted }]}>Staggered Loader</Text>
+        <Text style={[styles.loaderLabel, { color: colors.fgMuted }]}>
+          Staggered Loader
+        </Text>
         <BouncyLoader />
       </View>
     </DemoCard>

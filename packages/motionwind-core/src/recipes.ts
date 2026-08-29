@@ -227,7 +227,8 @@ export const MOTIONWIND_RECIPES: readonly MotionwindRecipe[] = [
   {
     id: "drawer",
     name: "Drawer",
-    description: "A side panel that slides in from the edge and returns on exit.",
+    description:
+      "A side panel that slides in from the edge and returns on exit.",
     category: "entrance",
     classes:
       "animate-initial:x-100pct animate-enter:x-0 animate-exit:x-100pct animate-duration-320 animate-ease-out",
@@ -267,7 +268,8 @@ export const MOTIONWIND_RECIPES: readonly MotionwindRecipe[] = [
   {
     id: "shimmer-load",
     name: "Shimmer load",
-    description: "A left-to-right gradient shimmer applied to a loading overlay.",
+    description:
+      "A left-to-right gradient shimmer applied to a loading overlay.",
     category: "loading",
     classes:
       "animate-initial:-x-100pct animate-enter:x-100pct animate-repeat-infinite animate-duration-1200 animate-ease-in-out",
@@ -280,7 +282,8 @@ export const MOTIONWIND_RECIPES: readonly MotionwindRecipe[] = [
   {
     id: "card-hover",
     name: "Card hover",
-    description: "A spring lift and upward nudge for interactive cards on hover.",
+    description:
+      "A spring lift and upward nudge for interactive cards on hover.",
     category: "interaction",
     classes:
       "animate-hover:scale-103 animate-hover:y--4 animate-spring animate-stiffness-380 animate-damping-26",
@@ -363,7 +366,8 @@ export const MOTIONWIND_RECIPES: readonly MotionwindRecipe[] = [
   {
     id: "popover-reveal",
     name: "Popover reveal",
-    description: "A short downward fade-in for anchored popovers and dropdowns.",
+    description:
+      "A short downward fade-in for anchored popovers and dropdowns.",
     category: "entrance",
     classes:
       "animate-initial:opacity-0 animate-initial:y--8 animate-enter:opacity-100 animate-enter:y-0 animate-duration-180 animate-ease-out",

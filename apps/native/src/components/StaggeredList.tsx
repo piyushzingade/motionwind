@@ -35,29 +35,50 @@ export function StaggeredList() {
   };
 
   return (
-    <DemoCard title="Staggered List" subtitle="animate-stagger-100 animate-delay-children-200">
+    <DemoCard
+      title="Staggered List"
+      subtitle="animate-stagger-100 animate-delay-children-200"
+    >
       <Pressable
-        style={[styles.resetBtn, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        style={[
+          styles.resetBtn,
+          { backgroundColor: colors.surface, borderColor: colors.border },
+        ]}
         onPress={resetItems}
       >
-        <Text style={[styles.resetText, { color: colors.fgMuted }]}>Reset List</Text>
+        <Text style={[styles.resetText, { color: colors.fgMuted }]}>
+          Reset List
+        </Text>
       </Pressable>
       <View style={styles.list} key={key}>
         {items.map((item, index) => (
           <Animated.View
             key={item.id}
-            entering={FadeInRight.delay(index * 80).duration(400).springify().damping(14)}
+            entering={FadeInRight.delay(index * 80)
+              .duration(400)
+              .springify()
+              .damping(14)}
             exiting={FadeOutLeft.duration(300)}
             layout={LinearTransition.springify().damping(14)}
-            style={[styles.listItem, { backgroundColor: colors.surface, borderColor: colors.borderSubtle }]}
+            style={[
+              styles.listItem,
+              {
+                backgroundColor: colors.surface,
+                borderColor: colors.borderSubtle,
+              },
+            ]}
           >
             <Text style={styles.icon}>{item.icon}</Text>
-            <Text style={[styles.itemText, { color: colors.fg }]}>{item.title}</Text>
+            <Text style={[styles.itemText, { color: colors.fg }]}>
+              {item.title}
+            </Text>
             <Pressable
               onPress={() => removeItem(item.id)}
               style={[styles.removeBtn, { backgroundColor: colors.border }]}
             >
-              <Text style={[styles.removeText, { color: colors.fgMuted }]}>×</Text>
+              <Text style={[styles.removeText, { color: colors.fgMuted }]}>
+                ×
+              </Text>
             </Pressable>
           </Animated.View>
         ))}

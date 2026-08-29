@@ -6,12 +6,10 @@ import {
   type DocsCollection,
 } from "fumadocs-mdx/config";
 
-export const docs: DocsCollection<
-  typeof frontmatterSchema,
-  typeof metaSchema
-> = defineDocs({
-  dir: "../../docs",
-});
+export const docs: DocsCollection<typeof frontmatterSchema, typeof metaSchema> =
+  defineDocs({
+    dir: "../../docs",
+  });
 
 export default defineConfig({
   mdxOptions: {

@@ -35,31 +35,34 @@ export function handleCompletion(
 
     // Return property completions in a single pass (filter + map combined),
     // adjusting insertText to include the full class.
-    const items: CompletionItem[] = propertyCompletions.reduce<CompletionItem[]>(
-      (acc, item) => {
-        const label = item.label as string;
-        if (label.startsWith(propertyPrefix) || propertyPrefix === "") {
-          acc.push({
-            ...item,
-            label: `${label}`,
-            insertText: item.insertText
-              ? `animate-${gesturePrefix}:${item.insertText}`
-              : undefined,
-            filterText: `animate-${gesturePrefix}:${label}`,
-            sortText: String(acc.length).padStart(3, "0"),
-            textEdit: undefined,
-          });
-        }
-        return acc;
-      },
-      [],
-    );
+    const items: CompletionItem[] = propertyCompletions.reduce<
+      CompletionItem[]
+    >((acc, item) => {
+      const label = item.label as string;
+      if (label.startsWith(propertyPrefix) || propertyPrefix === "") {
+        acc.push({
+          ...item,
+          label: `${label}`,
+          insertText: item.insertText
+            ? `animate-${gesturePrefix}:${item.insertText}`
+            : undefined,
+          filterText: `animate-${gesturePrefix}:${label}`,
+          sortText: String(acc.length).padStart(3, "0"),
+          textEdit: undefined,
+        });
+      }
+      return acc;
+    }, []);
 
     return CompletionList.create(items, false);
   }
 
   // Mode 1: Typing "animate-" or partial — offer gestures + config
-  if (prefix === "" || prefix.startsWith("animate-") || "animate-".startsWith(prefix)) {
+  if (
+    prefix === "" ||
+    prefix.startsWith("animate-") ||
+    "animate-".startsWith(prefix)
+  ) {
     const items: CompletionItem[] = [];
 
     // Add gesture completions

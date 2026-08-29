@@ -21,7 +21,7 @@ export function Typewriter({
 
     // Check for reduced motion preference
     const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
+      "(prefers-reduced-motion: reduce)",
     ).matches;
     if (prefersReduced) {
       setCount(text.length);
@@ -36,7 +36,7 @@ export function Typewriter({
           setTimeout(() => setStarted(true), startDelay);
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
     obs.observe(el);
     return () => obs.disconnect();

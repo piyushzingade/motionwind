@@ -32,7 +32,5 @@ async function getStarCount(): Promise<number | null> {
 
 export default async function Layout({ children }: { children: ReactNode }) {
   const starCount = await getStarCount();
-  return (
-    <DocsLayoutClient starCount={starCount}>{children}</DocsLayoutClient>
-  );
+  return <DocsLayoutClient starCount={starCount}>{children}</DocsLayoutClient>;
 }

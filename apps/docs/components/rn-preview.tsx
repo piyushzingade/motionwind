@@ -71,7 +71,16 @@ export function RNPreview({
             </span>
           </span>
           <span className="inline-flex items-center gap-1 ml-2 px-1.5 py-0.5 rounded bg-[var(--color-fg-muted)]/[0.08] text-[9px] font-[family-name:var(--font-mono)] text-[var(--color-fg-muted)]/60 uppercase tracking-wider">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <rect width="14" height="20" x="5" y="2" rx="2" ry="2" />
               <path d="M12 18h.01" />
             </svg>
@@ -81,11 +90,20 @@ export function RNPreview({
         <button
           type="button"
           onClick={handleReplay}
-          className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-fg-muted)] transition-colors duration-150 hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/[0.06] active:scale-95"
+          className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-[var(--color-fg-muted)] transition-colors duration-150 hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/[0.06] active:scale-95"
           aria-label="Replay animation"
           title="Replay animation"
         >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
             <path d="M21 3v5h-5" />
           </svg>
@@ -93,7 +111,10 @@ export function RNPreview({
       </div>
 
       {/* Preview area — mounts children only when in viewport */}
-      <div ref={containerRef} className="flex items-center justify-center px-6 py-8 demo-container">
+      <div
+        ref={containerRef}
+        className="flex items-center justify-center px-6 py-8 demo-container"
+      >
         <div
           className={`relative w-[240px] rounded-[28px] border-[3px] overflow-hidden transition-all duration-300 ${
             siteIsDark
@@ -109,10 +130,20 @@ export function RNPreview({
           >
             <span className="text-[8px] font-semibold">9:41</span>
             <div className="flex items-center gap-1">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
                 <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.24 4.24 0 0 0-6 0zm-4-4l2 2a7.07 7.07 0 0 1 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
               </svg>
-              <svg width="12" height="10" viewBox="0 0 24 24" fill="currentColor">
+              <svg
+                width="12"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
                 <rect x="1" y="6" width="4" height="12" rx="1" opacity=".3" />
                 <rect x="7" y="4" width="4" height="14" rx="1" opacity=".5" />
                 <rect x="13" y="2" width="4" height="16" rx="1" opacity=".7" />

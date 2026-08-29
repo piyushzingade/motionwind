@@ -188,17 +188,17 @@ npm run test   # or yarn test / pnpm test / bun run test
 
 ### Where to Contribute
 
-| Area | Path | What to Do |
-|---|---|---|
-| New animation property | `packages/motionwind/src/parser.ts` | Add parsing logic for new CSS/motion properties |
-| New gesture type | `packages/motionwind/src/constants.ts` | Add to `GESTURE_MAP`, update parser + types |
-| Babel transform bugs | `packages/motionwind/src/babel.ts` | Fix edge cases in JSX transformation |
-| Next.js integration | `packages/motionwind/src/next.ts` | Improve webpack config injection |
-| Vite integration | `packages/motionwind/src/vite.ts` | Improve Vite plugin behavior |
-| CLI improvements | `packages/cli/src/index.ts` | Framework detection, install/config injection, `migrate` codemod |
-| Documentation | `apps/docs/` | Write guides, improve API docs (MDX) |
-| Demo site | `apps/web/` | Add animation showcases |
-| Tests | `packages/motionwind/__tests__/` | Add parser, babel, component, or integration tests |
+| Area                   | Path                                   | What to Do                                                       |
+| ---------------------- | -------------------------------------- | ---------------------------------------------------------------- |
+| New animation property | `packages/motionwind/src/parser.ts`    | Add parsing logic for new CSS/motion properties                  |
+| New gesture type       | `packages/motionwind/src/constants.ts` | Add to `GESTURE_MAP`, update parser + types                      |
+| Babel transform bugs   | `packages/motionwind/src/babel.ts`     | Fix edge cases in JSX transformation                             |
+| Next.js integration    | `packages/motionwind/src/next.ts`      | Improve webpack config injection                                 |
+| Vite integration       | `packages/motionwind/src/vite.ts`      | Improve Vite plugin behavior                                     |
+| CLI improvements       | `packages/cli/src/index.ts`            | Framework detection, install/config injection, `migrate` codemod |
+| Documentation          | `apps/docs/`                           | Write guides, improve API docs (MDX)                             |
+| Demo site              | `apps/web/`                            | Add animation showcases                                          |
+| Tests                  | `packages/motionwind/__tests__/`       | Add parser, babel, component, or integration tests               |
 
 ### Workflow
 

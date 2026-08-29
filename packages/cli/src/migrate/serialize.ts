@@ -148,7 +148,9 @@ export function serializeGesture(
 }
 
 /** Serialize a transition object → class tokens, or null if unrepresentable. */
-export function serializeTransition(t: Record<string, unknown>): string[] | null {
+export function serializeTransition(
+  t: Record<string, unknown>,
+): string[] | null {
   const out: string[] = [];
   for (const [key, value] of Object.entries(t)) {
     switch (key) {
@@ -183,7 +185,9 @@ export function serializeTransition(t: Record<string, unknown>): string[] | null
         break;
       case "repeat":
         out.push(
-          value === Infinity ? "animate-repeat-infinite" : `animate-repeat-${value}`,
+          value === Infinity
+            ? "animate-repeat-infinite"
+            : `animate-repeat-${value}`,
         );
         break;
       case "repeatType":
@@ -219,7 +223,8 @@ export function serializeViewport(v: Record<string, unknown>): string[] | null {
   const out: string[] = [];
   for (const [key, value] of Object.entries(v)) {
     if (key === "once" && value === true) out.push("animate-once");
-    else if (key === "amount" && value === "all") out.push("animate-amount-all");
+    else if (key === "amount" && value === "all")
+      out.push("animate-amount-all");
     else if (key === "amount" && typeof value === "number")
       out.push(`animate-amount-${round(value * 100)}`);
     else if (key === "margin" && typeof value === "string") {

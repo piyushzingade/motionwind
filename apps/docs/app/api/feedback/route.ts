@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
     if (!apiKey) {
       return NextResponse.json(
         { error: "Email service not configured" },
-        { status: 503 }
+        { status: 503 },
       );
     }
 
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     if (!type || !message) {
       return NextResponse.json(
         { error: "Type and message are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json(
       { error: "Failed to send feedback" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

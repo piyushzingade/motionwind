@@ -35,11 +35,7 @@ try {
   else if (command === "add") runAddPreset(args);
   else if (command === "help" || command === "--help" || command === "-h")
     help();
-  else if (
-    command === "version" ||
-    command === "--version" ||
-    command === "-v"
-  )
+  else if (command === "version" || command === "--version" || command === "-v")
     printVersion();
   else
     throw new Error(

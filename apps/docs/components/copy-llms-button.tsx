@@ -23,7 +23,7 @@ export function CopyLlmsButton({ src = "/llms.txt" }: { src?: string }) {
       <button
         type="button"
         onClick={handleCopy}
-        className={`inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-medium transition-colors duration-200 ${
+        className={`inline-flex cursor-pointer items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-medium transition-colors duration-200 ${
           copied
             ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-accent-fg)]"
             : "border-[var(--color-border)] bg-[var(--color-surface-elevated)] text-[var(--color-fg)] hover:border-[var(--color-accent)]/40"
@@ -31,14 +31,32 @@ export function CopyLlmsButton({ src = "/llms.txt" }: { src?: string }) {
       >
         {copied ? (
           <>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <polyline points="3.5 8.5 6.5 11.5 12.5 5.5" />
             </svg>
             Copied!
           </>
         ) : (
           <>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
               <path d="M3.5 10.5h-1a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v1" />
             </svg>
@@ -52,7 +70,16 @@ export function CopyLlmsButton({ src = "/llms.txt" }: { src?: string }) {
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1.5 text-sm text-[var(--color-fg-muted)] transition-colors duration-200 hover:text-[var(--color-fg)]"
       >
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M12 8.5v4a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 2 12.5v-7A1.5 1.5 0 0 1 3.5 4H8" />
           <path d="M10 2h4v4" />
           <path d="M7 9L14 2" />

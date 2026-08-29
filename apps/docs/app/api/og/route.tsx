@@ -113,10 +113,7 @@ export async function GET(req: NextRequest) {
             height={40}
             style={{ marginBottom: 32 }}
           >
-            <polygon
-              points="123,182 403,182 396,218 116,218"
-              fill="#c8ff2e"
-            />
+            <polygon points="123,182 403,182 396,218 116,218" fill="#c8ff2e" />
             <polygon
               points="181,238 401,238 394,274 174,274"
               fill="#c8ff2e"
@@ -252,14 +249,70 @@ export async function GET(req: NextRequest) {
           height="630"
           style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
         >
-          <line x1="24" y1="24" x2="34" y2="24" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
-          <line x1="24" y1="24" x2="24" y2="34" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
-          <line x1="1166" y1="24" x2="1176" y2="24" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
-          <line x1="1176" y1="24" x2="1176" y2="34" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
-          <line x1="24" y1="606" x2="34" y2="606" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
-          <line x1="24" y1="596" x2="24" y2="606" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
-          <line x1="1166" y1="606" x2="1176" y2="606" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
-          <line x1="1176" y1="596" x2="1176" y2="606" stroke="rgba(200,255,46,0.15)" strokeWidth="1" />
+          <line
+            x1="24"
+            y1="24"
+            x2="34"
+            y2="24"
+            stroke="rgba(200,255,46,0.15)"
+            strokeWidth="1"
+          />
+          <line
+            x1="24"
+            y1="24"
+            x2="24"
+            y2="34"
+            stroke="rgba(200,255,46,0.15)"
+            strokeWidth="1"
+          />
+          <line
+            x1="1166"
+            y1="24"
+            x2="1176"
+            y2="24"
+            stroke="rgba(200,255,46,0.15)"
+            strokeWidth="1"
+          />
+          <line
+            x1="1176"
+            y1="24"
+            x2="1176"
+            y2="34"
+            stroke="rgba(200,255,46,0.15)"
+            strokeWidth="1"
+          />
+          <line
+            x1="24"
+            y1="606"
+            x2="34"
+            y2="606"
+            stroke="rgba(200,255,46,0.15)"
+            strokeWidth="1"
+          />
+          <line
+            x1="24"
+            y1="596"
+            x2="24"
+            y2="606"
+            stroke="rgba(200,255,46,0.15)"
+            strokeWidth="1"
+          />
+          <line
+            x1="1166"
+            y1="606"
+            x2="1176"
+            y2="606"
+            stroke="rgba(200,255,46,0.15)"
+            strokeWidth="1"
+          />
+          <line
+            x1="1176"
+            y1="596"
+            x2="1176"
+            y2="606"
+            stroke="rgba(200,255,46,0.15)"
+            strokeWidth="1"
+          />
         </svg>
       </div>
     ),

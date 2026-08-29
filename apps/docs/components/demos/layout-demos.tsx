@@ -18,12 +18,24 @@ export function ExpandableCardDemo() {
       <motion.div layout="position" className="p-5">
         <motion.div layout="position" className="flex items-center gap-3 mb-1">
           <div className="w-8 h-8 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="stroke-[var(--color-accent)]" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="stroke-[var(--color-accent)]"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <rect x="3" y="3" width="18" height="18" rx="2" />
               <path d="M3 9h18" />
             </svg>
           </div>
-          <motion.p layout="position" className="text-[var(--color-accent)] font-semibold text-sm">
+          <motion.p
+            layout="position"
+            className="text-[var(--color-accent)] font-semibold text-sm"
+          >
             Dashboard
           </motion.p>
         </motion.div>
@@ -39,7 +51,9 @@ export function ExpandableCardDemo() {
             >
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[var(--color-fg-muted)]">Revenue</span>
-                <span className="text-[var(--color-accent)] font-mono font-semibold">$12,450</span>
+                <span className="text-[var(--color-accent)] font-mono font-semibold">
+                  $12,450
+                </span>
               </div>
               <div className="h-1.5 rounded-full bg-[var(--color-accent)]/10 overflow-hidden">
                 <motion.div
@@ -51,7 +65,9 @@ export function ExpandableCardDemo() {
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[var(--color-fg-muted)]">Users</span>
-                <span className="text-[var(--color-accent)] font-mono font-semibold">1,284</span>
+                <span className="text-[var(--color-accent)] font-mono font-semibold">
+                  1,284
+                </span>
               </div>
               <div className="h-1.5 rounded-full bg-[var(--color-accent)]/10 overflow-hidden">
                 <motion.div
@@ -61,13 +77,17 @@ export function ExpandableCardDemo() {
                   transition={{ duration: 0.8, delay: 0.25, ease: "easeOut" }}
                 />
               </div>
-              <p className="text-[10px] text-[var(--color-fg-muted)] pt-1">Click to collapse</p>
+              <p className="text-[10px] text-[var(--color-fg-muted)] pt-1">
+                Click to collapse
+              </p>
             </motion.div>
           )}
         </AnimatePresence>
 
         {!expanded && (
-          <p className="text-[10px] text-[var(--color-fg-muted)] mt-2">Click to expand</p>
+          <p className="text-[10px] text-[var(--color-fg-muted)] mt-2">
+            Click to expand
+          </p>
         )}
       </motion.div>
     </motion.div>
@@ -102,7 +122,9 @@ export function ShuffleListDemo() {
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
             className="flex items-center gap-3 rounded-lg bg-[var(--color-surface-elevated)] border border-[var(--color-border)] px-4 py-2.5 text-[var(--color-fg)]"
           >
-            <span className="text-[var(--color-accent)] text-xs">{item.icon}</span>
+            <span className="text-[var(--color-accent)] text-xs">
+              {item.icon}
+            </span>
             <span className="text-sm font-medium">{item.label}</span>
           </motion.div>
         ))}
@@ -125,7 +147,9 @@ export function SharedLayoutTabsDemo() {
             key={tab}
             onClick={() => setActive(tab)}
             className={`relative flex-1 px-3 py-2 rounded-lg text-xs font-medium cursor-pointer transition-colors z-10 ${
-              active === tab ? "text-[var(--color-accent-fg)]" : "text-[var(--color-fg-muted)]"
+              active === tab
+                ? "text-[var(--color-accent-fg)]"
+                : "text-[var(--color-fg-muted)]"
             }`}
           >
             {active === tab && (
@@ -147,7 +171,11 @@ export function SharedLayoutTabsDemo() {
         className="mt-4 p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border-subtle)]"
       >
         <p className="text-xs text-[var(--color-fg-muted)]">
-          Showing <span className="text-[var(--color-accent)] font-medium">{active}</span> content
+          Showing{" "}
+          <span className="text-[var(--color-accent)] font-medium">
+            {active}
+          </span>{" "}
+          content
         </p>
       </motion.div>
     </div>
@@ -187,7 +215,9 @@ export function GridToggleDemo() {
             transition={{ type: "spring", stiffness: 350, damping: 28 }}
             className="rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border)] p-4 text-center"
           >
-            <span className="text-[var(--color-accent)] font-mono font-bold text-sm">{String(item).padStart(2, "0")}</span>
+            <span className="text-[var(--color-accent)] font-mono font-bold text-sm">
+              {String(item).padStart(2, "0")}
+            </span>
           </motion.div>
         ))}
       </div>
@@ -203,7 +233,9 @@ export function DragReorderDemo() {
 
   return (
     <div className="w-56">
-      <p className="text-[10px] text-[var(--color-fg-muted)] uppercase tracking-wider mb-3 font-medium">Drag to reorder</p>
+      <p className="text-[10px] text-[var(--color-fg-muted)] uppercase tracking-wider mb-3 font-medium">
+        Drag to reorder
+      </p>
       <Reorder.Group
         axis="y"
         values={items}
@@ -220,12 +252,25 @@ export function DragReorderDemo() {
               boxShadow: "0 8px 32px var(--color-shadow)",
             }}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="stroke-[var(--color-fg-muted)]" strokeWidth="2.5" strokeLinecap="round">
-              <circle cx="9" cy="6" r="1" /><circle cx="15" cy="6" r="1" />
-              <circle cx="9" cy="12" r="1" /><circle cx="15" cy="12" r="1" />
-              <circle cx="9" cy="18" r="1" /><circle cx="15" cy="18" r="1" />
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="stroke-[var(--color-fg-muted)]"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <circle cx="9" cy="6" r="1" />
+              <circle cx="15" cy="6" r="1" />
+              <circle cx="9" cy="12" r="1" />
+              <circle cx="15" cy="12" r="1" />
+              <circle cx="9" cy="18" r="1" />
+              <circle cx="15" cy="18" r="1" />
             </svg>
-            <span className="text-sm font-medium text-[var(--color-fg)]">{item}</span>
+            <span className="text-sm font-medium text-[var(--color-fg)]">
+              {item}
+            </span>
           </Reorder.Item>
         ))}
       </Reorder.Group>

@@ -49,7 +49,9 @@ function EasingBar({
 
   return (
     <View style={styles.easingRow}>
-      <Text style={[styles.easingLabel, { color: colors.fgMuted }]}>{label}</Text>
+      <Text style={[styles.easingLabel, { color: colors.fgMuted }]}>
+        {label}
+      </Text>
       <View style={[styles.track, { backgroundColor: colors.surface }]}>
         <Animated.View style={[styles.bar, barStyle]} />
       </View>
@@ -62,12 +64,20 @@ export function EasingShowcase() {
   const { colors } = useTheme();
 
   return (
-    <DemoCard title="Easing Functions" subtitle="animate-ease-out, animate-ease-[0.23,1,0.32,1]">
+    <DemoCard
+      title="Easing Functions"
+      subtitle="animate-ease-out, animate-ease-[0.23,1,0.32,1]"
+    >
       <Pressable
-        style={[styles.replayBtn, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        style={[
+          styles.replayBtn,
+          { backgroundColor: colors.surface, borderColor: colors.border },
+        ]}
         onPress={() => setTrigger((t) => t + 1)}
       >
-        <Text style={[styles.replayText, { color: colors.fgMuted }]}>Replay All</Text>
+        <Text style={[styles.replayText, { color: colors.fgMuted }]}>
+          Replay All
+        </Text>
       </Pressable>
       <View style={styles.easings}>
         {EASINGS.map((e, i) => (
@@ -81,7 +91,12 @@ export function EasingShowcase() {
 const styles = StyleSheet.create({
   easings: { width: "100%", gap: 8 },
   easingRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  easingLabel: { fontSize: 10, width: 70, textAlign: "right", fontWeight: "500" },
+  easingLabel: {
+    fontSize: 10,
+    width: 70,
+    textAlign: "right",
+    fontWeight: "500",
+  },
   track: { flex: 1, height: 8, borderRadius: 4, overflow: "hidden" },
   bar: { height: "100%", borderRadius: 4 },
   replayBtn: {

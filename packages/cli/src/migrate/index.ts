@@ -66,7 +66,9 @@ export function runMigrate(args: string[]): void {
       result = migrateSource(source);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      console.log(`${YELLOW}⚠${RESET} ${file} ${DIM}(skipped: ${msg})${RESET}`);
+      console.log(
+        `${YELLOW}⚠${RESET} ${file} ${DIM}(skipped: ${msg})${RESET}`,
+      );
       continue;
     }
 
@@ -93,7 +95,9 @@ export function runMigrate(args: string[]): void {
       `${YELLOW}${totalSkipped}${RESET} skipped (dynamic or unsupported props).`,
   );
   if (write && filesChanged > 0) {
-    console.log(`${DIM}Run your formatter (e.g. prettier) to tidy the output.${RESET}\n`);
+    console.log(
+      `${DIM}Run your formatter (e.g. prettier) to tidy the output.${RESET}\n`,
+    );
   } else {
     console.log("");
   }

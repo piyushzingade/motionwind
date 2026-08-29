@@ -31,11 +31,24 @@ function ExpandableCard() {
 
   return (
     <Pressable onPress={toggle}>
-      <Animated.View style={[styles.expandCard, { backgroundColor: colors.accent }, animatedStyle]}>
-        <Text style={[styles.expandTitle, { color: colors.accentFg }]}>Tap to Expand</Text>
+      <Animated.View
+        style={[
+          styles.expandCard,
+          { backgroundColor: colors.accent },
+          animatedStyle,
+        ]}
+      >
+        <Text style={[styles.expandTitle, { color: colors.accentFg }]}>
+          Tap to Expand
+        </Text>
         {expanded && (
           <Animated.View entering={FadeIn.delay(100)} exiting={FadeOut}>
-            <Text style={[styles.expandBody, { color: colors.accentFg, opacity: 0.7 }]}>
+            <Text
+              style={[
+                styles.expandBody,
+                { color: colors.accentFg, opacity: 0.7 },
+              ]}
+            >
               Layout animations make size changes feel smooth and natural.
               Powered by Reanimated's layout transitions.
             </Text>
@@ -48,7 +61,13 @@ function ExpandableCard() {
 
 function ShuffleGrid() {
   const { colors } = useTheme();
-  const gridColors = [colors.accent, "#0ea5e9", "#10b981", "#f59e0b", "#ef4444"];
+  const gridColors = [
+    colors.accent,
+    "#0ea5e9",
+    "#10b981",
+    "#f59e0b",
+    "#ef4444",
+  ];
   const [items, setItems] = useState(() =>
     gridColors.map((c, i) => ({ id: i, color: c })),
   );
@@ -67,10 +86,15 @@ function ShuffleGrid() {
   return (
     <View style={styles.shuffleSection}>
       <Pressable
-        style={[styles.shuffleBtn, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        style={[
+          styles.shuffleBtn,
+          { backgroundColor: colors.surface, borderColor: colors.border },
+        ]}
         onPress={shuffle}
       >
-        <Text style={[styles.shuffleBtnText, { color: colors.fgMuted }]}>Shuffle</Text>
+        <Text style={[styles.shuffleBtnText, { color: colors.fgMuted }]}>
+          Shuffle
+        </Text>
       </Pressable>
       <View style={styles.shuffleGrid}>
         {items.map((item) => (
@@ -87,7 +111,10 @@ function ShuffleGrid() {
 
 export function LayoutAnimations() {
   return (
-    <DemoCard title="Layout Animations" subtitle="animate-layout animate-layout-id-card">
+    <DemoCard
+      title="Layout Animations"
+      subtitle="animate-layout animate-layout-id-card"
+    >
       <ExpandableCard />
       <View style={{ height: 16 }} />
       <ShuffleGrid />

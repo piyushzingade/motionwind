@@ -99,9 +99,27 @@ function OrbitingDots() {
   return (
     <View style={styles.orbitContainer}>
       {/* Orbit rings */}
-      <View style={[styles.orbitRing, styles.orbitRing1, { borderColor: `${colors.border}` }]} />
-      <View style={[styles.orbitRing, styles.orbitRing2, { borderColor: `${colors.border}` }]} />
-      <View style={[styles.orbitRing, styles.orbitRing3, { borderColor: `${colors.border}` }]} />
+      <View
+        style={[
+          styles.orbitRing,
+          styles.orbitRing1,
+          { borderColor: `${colors.border}` },
+        ]}
+      />
+      <View
+        style={[
+          styles.orbitRing,
+          styles.orbitRing2,
+          { borderColor: `${colors.border}` },
+        ]}
+      />
+      <View
+        style={[
+          styles.orbitRing,
+          styles.orbitRing3,
+          { borderColor: `${colors.border}` },
+        ]}
+      />
 
       {/* Center dot */}
       <View style={[styles.centerDot, { backgroundColor: colors.accent }]} />
@@ -189,7 +207,9 @@ export function WaveAnimation() {
       </View>
 
       {/* Orbital system */}
-      <Text style={[styles.sectionLabel, { color: colors.fgMuted, marginTop: 24 }]}>
+      <Text
+        style={[styles.sectionLabel, { color: colors.fgMuted, marginTop: 24 }]}
+      >
         Orbital System
       </Text>
       <OrbitingDots />

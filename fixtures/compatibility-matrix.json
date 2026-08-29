@@ -99,13 +99,13 @@
     "vanilla": {
       "adapter": "vanilla",
       "tier": "stable",
-      "browserScenarios": ["inview", "scroll", "svg"],
+      "browserScenarios": ["variant", "inview", "scroll", "svg"],
       "features": {
         "gestures": "pass",
         "scroll": "pass",
         "layout": "unsupported",
         "drag": "unsupported",
-        "variants": "unsupported",
+        "variants": "pass",
         "svg": "pass",
         "reduced-motion": "pass",
         "compile-time": "not-applicable",

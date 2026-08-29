@@ -50,7 +50,10 @@ export function DocsLayoutClient({
         onCloseMobile={handleCloseMobile}
       />
       <div className="relative flex flex-1 flex-col min-h-0 min-w-0">
-        <DocsHeader onToggleSidebar={handleToggleSidebar} starCount={starCount} />
+        <DocsHeader
+          onToggleSidebar={handleToggleSidebar}
+          starCount={starCount}
+        />
         <div className="docs-content-wrapper flex-1 overflow-y-auto min-h-0">
           {children}
         </div>

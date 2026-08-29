@@ -42,10 +42,18 @@ export function LogoDrawDemo() {
           fill="currentColor"
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.3, delay: 1.6, type: "spring", stiffness: 400 }}
+          transition={{
+            duration: 0.3,
+            delay: 1.6,
+            type: "spring",
+            stiffness: 400,
+          }}
         />
         <motion.line
-          x1="50" y1="25" x2="50" y2="5"
+          x1="50"
+          y1="25"
+          x2="50"
+          y2="5"
           stroke="currentColor"
           strokeWidth="1"
           initial={{ pathLength: 0 }}
@@ -53,7 +61,10 @@ export function LogoDrawDemo() {
           transition={{ duration: 0.4, delay: 1.8 }}
         />
         <motion.line
-          x1="50" y1="75" x2="50" y2="95"
+          x1="50"
+          y1="75"
+          x2="50"
+          y2="95"
           stroke="currentColor"
           strokeWidth="1"
           initial={{ pathLength: 0 }}
@@ -61,10 +72,7 @@ export function LogoDrawDemo() {
           transition={{ duration: 0.4, delay: 2.0 }}
         />
       </svg>
-      <button
-        onClick={() => setKey((k) => k + 1)}
-        className="demo-btn"
-      >
+      <button onClick={() => setKey((k) => k + 1)} className="demo-btn">
         Replay
       </button>
     </div>
@@ -86,15 +94,24 @@ export function CircularProgressDemo() {
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="relative">
-        <svg width="120" height="120" viewBox="0 0 100 100" className="-rotate-90">
+        <svg
+          width="120"
+          height="120"
+          viewBox="0 0 100 100"
+          className="-rotate-90"
+        >
           <circle
-            cx="50" cy="50" r={r}
+            cx="50"
+            cy="50"
+            r={r}
             fill="none"
             className="stroke-[var(--color-border)]"
             strokeWidth="6"
           />
           <motion.circle
-            cx="50" cy="50" r={r}
+            cx="50"
+            cy="50"
+            r={r}
             fill="none"
             className="stroke-[var(--color-accent)]"
             strokeWidth="6"
@@ -161,7 +178,9 @@ export function AnimatedCheckboxDemo() {
             </div>
             <span
               className={`text-xs font-medium transition-colors ${
-                isOn ? "text-[var(--color-accent)]" : "text-[var(--color-fg-muted)]"
+                isOn
+                  ? "text-[var(--color-accent)]"
+                  : "text-[var(--color-fg-muted)]"
               }`}
             >
               {i === 0 ? "Design" : "Develop"}
@@ -180,7 +199,13 @@ export function PulseRingsDemo() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <svg key={key} width="160" height="160" viewBox="0 0 160 160" className="text-[var(--color-accent)]">
+      <svg
+        key={key}
+        width="160"
+        height="160"
+        viewBox="0 0 160 160"
+        className="text-[var(--color-accent)]"
+      >
         {rings.map((i) => (
           <motion.circle
             key={i}
@@ -236,8 +261,21 @@ export function AnimatedChartDemo() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <svg key={key} width={totalW + 20} height="130" viewBox={`0 0 ${totalW + 20} 130`} className="text-[var(--color-accent)]">
-        <line x1="10" y1="105" x2={totalW + 10} y2="105" className="stroke-[var(--color-border)]" strokeWidth="1" />
+      <svg
+        key={key}
+        width={totalW + 20}
+        height="130"
+        viewBox={`0 0 ${totalW + 20} 130`}
+        className="text-[var(--color-accent)]"
+      >
+        <line
+          x1="10"
+          y1="105"
+          x2={totalW + 10}
+          y2="105"
+          className="stroke-[var(--color-border)]"
+          strokeWidth="1"
+        />
 
         {chartData.map((d, i) => {
           const h = (d.value / 100) * maxH;

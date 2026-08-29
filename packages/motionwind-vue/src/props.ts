@@ -8,7 +8,9 @@ import type { ParsedResult } from "motionwind-core";
  * Note: scroll-linked (`animate-scroll:*`) is not yet mapped here — it needs
  * useScroll/useTransform composables and is a follow-up for the Vue adapter.
  */
-export function buildMotionProps(parsed: ParsedResult): Record<string, unknown> {
+export function buildMotionProps(
+  parsed: ParsedResult,
+): Record<string, unknown> {
   const props: Record<string, unknown> = {};
 
   // Gesture props — a variant state selector (string) wins over an object value
@@ -26,8 +28,10 @@ export function buildMotionProps(parsed: ParsedResult): Record<string, unknown> 
     props[propName] = value;
   }
 
-  if (Object.keys(parsed.transition).length > 0) props.transition = parsed.transition;
-  if (Object.keys(parsed.viewport).length > 0) props.inViewOptions = parsed.viewport;
+  if (Object.keys(parsed.transition).length > 0)
+    props.transition = parsed.transition;
+  if (Object.keys(parsed.viewport).length > 0)
+    props.inViewOptions = parsed.viewport;
 
   // Drag
   if (parsed.dragConfig.drag !== undefined) props.drag = parsed.dragConfig.drag;
@@ -43,7 +47,8 @@ export function buildMotionProps(parsed: ParsedResult): Record<string, unknown> 
     props.dragConstraints = parsed.dragConfig.dragConstraints;
 
   // Layout
-  if (parsed.layoutConfig.layout !== undefined) props.layout = parsed.layoutConfig.layout;
+  if (parsed.layoutConfig.layout !== undefined)
+    props.layout = parsed.layoutConfig.layout;
   if (parsed.layoutConfig.layoutId !== undefined)
     props.layoutId = parsed.layoutConfig.layoutId;
   if (parsed.layoutConfig.layoutScroll !== undefined)

@@ -331,7 +331,8 @@ describe("React / Next.js integration", () => {
     });
 
     it("transforms template literal className by extracting static animate-* tokens", () => {
-      const input = "<div className={`animate-hover:scale-110 ${cls}`}>Hello</div>";
+      const input =
+        "<div className={`animate-hover:scale-110 ${cls}`}>Hello</div>";
       const output = transform(input);
       expect(output).toContain("motion.div");
       expect(output).toContain("whileHover");
@@ -345,7 +346,27 @@ describe("React / Next.js integration", () => {
     });
 
     it("correctly transforms all HTML element types", () => {
-      const elements = ["div", "span", "p", "a", "button", "section", "article", "header", "footer", "nav", "main", "h1", "h2", "h3", "ul", "li", "form", "label", "textarea"];
+      const elements = [
+        "div",
+        "span",
+        "p",
+        "a",
+        "button",
+        "section",
+        "article",
+        "header",
+        "footer",
+        "nav",
+        "main",
+        "h1",
+        "h2",
+        "h3",
+        "ul",
+        "li",
+        "form",
+        "label",
+        "textarea",
+      ];
       for (const tag of elements) {
         const input = `<${tag} className="animate-hover:scale-110">content</${tag}>`;
         const output = transform(input);
@@ -378,7 +399,9 @@ describe("React / Next.js integration", () => {
     it("preserves order of Tailwind classes", () => {
       const input = `<div className="relative z-10 flex items-center gap-2 animate-hover:scale-105">content</div>`;
       const output = transform(input);
-      expect(output).toContain('className="relative z-10 flex items-center gap-2"');
+      expect(output).toContain(
+        'className="relative z-10 flex items-center gap-2"',
+      );
     });
 
     it("handles large values", () => {
@@ -411,7 +434,9 @@ describe("React / Next.js integration", () => {
     it("combines all four filter types", () => {
       const input = `<div className="animate-hover:blur-5 animate-hover:brightness-120 animate-hover:contrast-150 animate-hover:saturate-200">fx</div>`;
       const output = transform(input);
-      expect(output).toContain("blur(5px) brightness(1.2) contrast(1.5) saturate(2)");
+      expect(output).toContain(
+        "blur(5px) brightness(1.2) contrast(1.5) saturate(2)",
+      );
     });
 
     it("keeps single filter unchanged", () => {
@@ -446,7 +471,9 @@ describe("React / Next.js integration", () => {
     it("passes through Tailwind animate-* utilities", () => {
       const input = `<div className="animate-spin animate-bounce animate-ping animate-pulse animate-hover:scale-110">tw</div>`;
       const output = transform(input);
-      expect(output).toContain("animate-spin animate-bounce animate-ping animate-pulse");
+      expect(output).toContain(
+        "animate-spin animate-bounce animate-ping animate-pulse",
+      );
       expect(output).toContain("motion.div");
     });
 
@@ -459,7 +486,9 @@ describe("React / Next.js integration", () => {
     it("passes through group and peer classes", () => {
       const input = `<div className="group peer hover:bg-blue-500 group-hover:opacity-100 animate-hover:scale-105">grp</div>`;
       const output = transform(input);
-      expect(output).toContain("group peer hover:bg-blue-500 group-hover:opacity-100");
+      expect(output).toContain(
+        "group peer hover:bg-blue-500 group-hover:opacity-100",
+      );
     });
   });
 
@@ -481,7 +510,9 @@ describe("React / Next.js integration", () => {
       expect(output).toContain('repeatType: "mirror"');
       expect(output).toContain("duration: 2");
       expect(output).toContain("ease: [0.4, 0, 0.2, 1]");
-      expect(output).toContain('className="w-20 h-20 bg-blue-500 rounded-full"');
+      expect(output).toContain(
+        'className="w-20 h-20 bg-blue-500 rounded-full"',
+      );
     });
 
     it("SVG path draw animation", () => {

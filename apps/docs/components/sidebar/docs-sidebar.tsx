@@ -5,11 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LazyMotion, domAnimation, m, AnimatePresence } from "motion/react";
-import {
-  WEB_SIDEBAR,
-  RN_SIDEBAR,
-  type Platform,
-} from "./sidebar-items";
+import { WEB_SIDEBAR, RN_SIDEBAR, type Platform } from "./sidebar-items";
 import { FeedbackDialog } from "./feedback-dialog";
 
 const easeOutQuint: [number, number, number, number] = [0.23, 1, 0.32, 1];

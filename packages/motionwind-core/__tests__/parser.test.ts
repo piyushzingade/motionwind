@@ -470,7 +470,9 @@ describe("parseMotionClasses", () => {
     });
 
     it("parses layout with layoutId together", () => {
-      const result = parseMotionClasses("animate-layout animate-layout-id-card");
+      const result = parseMotionClasses(
+        "animate-layout animate-layout-id-card",
+      );
       expect(result.layoutConfig.layout).toBe(true);
       expect(result.layoutConfig.layoutId).toBe("card");
     });
@@ -543,7 +545,9 @@ describe("parseMotionClasses", () => {
   describe("color properties", () => {
     it("parses bg-#hex as backgroundColor", () => {
       const result = parseMotionClasses("animate-hover:bg-#ff0000");
-      expect(result.gestures.whileHover).toEqual({ backgroundColor: "#ff0000" });
+      expect(result.gestures.whileHover).toEqual({
+        backgroundColor: "#ff0000",
+      });
     });
 
     it("parses text-#hex as color", () => {
@@ -602,7 +606,9 @@ describe("parseMotionClasses", () => {
 
   describe("box shadow", () => {
     it("parses shadow-[value]", () => {
-      const result = parseMotionClasses("animate-hover:shadow-[0px_10px_30px_rgba(0,0,0,0.3)]");
+      const result = parseMotionClasses(
+        "animate-hover:shadow-[0px_10px_30px_rgba(0,0,0,0.3)]",
+      );
       expect(result.gestures.whileHover).toEqual({
         boxShadow: "0px_10px_30px_rgba(0,0,0,0.3)",
       });
@@ -670,35 +676,51 @@ describe("parseMotionClasses", () => {
 
   describe("new easing functions", () => {
     it("parses circIn", () => {
-      expect(parseMotionClasses("animate-ease-circ-in").transition.ease).toBe("circIn");
+      expect(parseMotionClasses("animate-ease-circ-in").transition.ease).toBe(
+        "circIn",
+      );
     });
 
     it("parses circOut", () => {
-      expect(parseMotionClasses("animate-ease-circ-out").transition.ease).toBe("circOut");
+      expect(parseMotionClasses("animate-ease-circ-out").transition.ease).toBe(
+        "circOut",
+      );
     });
 
     it("parses circInOut", () => {
-      expect(parseMotionClasses("animate-ease-circ-in-out").transition.ease).toBe("circInOut");
+      expect(
+        parseMotionClasses("animate-ease-circ-in-out").transition.ease,
+      ).toBe("circInOut");
     });
 
     it("parses backIn", () => {
-      expect(parseMotionClasses("animate-ease-back-in").transition.ease).toBe("backIn");
+      expect(parseMotionClasses("animate-ease-back-in").transition.ease).toBe(
+        "backIn",
+      );
     });
 
     it("parses backOut", () => {
-      expect(parseMotionClasses("animate-ease-back-out").transition.ease).toBe("backOut");
+      expect(parseMotionClasses("animate-ease-back-out").transition.ease).toBe(
+        "backOut",
+      );
     });
 
     it("parses backInOut", () => {
-      expect(parseMotionClasses("animate-ease-back-in-out").transition.ease).toBe("backInOut");
+      expect(
+        parseMotionClasses("animate-ease-back-in-out").transition.ease,
+      ).toBe("backInOut");
     });
 
     it("parses anticipate", () => {
-      expect(parseMotionClasses("animate-ease-anticipate").transition.ease).toBe("anticipate");
+      expect(
+        parseMotionClasses("animate-ease-anticipate").transition.ease,
+      ).toBe("anticipate");
     });
 
     it("parses steps(n)", () => {
-      expect(parseMotionClasses("animate-ease-steps-5").transition.ease).toBe("steps(5)");
+      expect(parseMotionClasses("animate-ease-steps-5").transition.ease).toBe(
+        "steps(5)",
+      );
     });
   });
 
@@ -809,7 +831,9 @@ describe("parseMotionClasses", () => {
   describe("backdropFilter", () => {
     it("parses backdrop-blur", () => {
       const result = parseMotionClasses("animate-hover:backdrop-blur-10");
-      expect(result.gestures.whileHover).toEqual({ backdropFilter: "blur(10px)" });
+      expect(result.gestures.whileHover).toEqual({
+        backdropFilter: "blur(10px)",
+      });
     });
   });
 
@@ -832,7 +856,9 @@ describe("parseMotionClasses", () => {
     });
 
     it("parses right and bottom", () => {
-      const result = parseMotionClasses("animate-hover:right-20 animate-hover:bottom-10");
+      const result = parseMotionClasses(
+        "animate-hover:right-20 animate-hover:bottom-10",
+      );
       expect(result.gestures.whileHover).toEqual({ right: 20, bottom: 10 });
     });
   });
