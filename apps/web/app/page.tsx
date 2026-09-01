@@ -400,11 +400,11 @@ export default function Home() {
                     <div className="w-3 h-3 rounded-full bg-[#febc2e]/80" />
                     <div className="w-3 h-3 rounded-full bg-[#28c840]/80" />
                   </div>
-                  <span className="ml-3 text-xs text-text-muted font-[family-name:var(--font-geist-mono)]">
+                  <span className="ml-3 text-xs text-text-muted font-[family-name:var(--font-mono)]">
                     App.tsx
                   </span>
                 </div>
-                <pre className="p-5 text-sm leading-7 font-[family-name:var(--font-geist-mono)] overflow-x-auto">
+                <pre className="p-5 text-sm leading-7 font-[family-name:var(--font-mono)] overflow-x-auto">
                   <code>
                     <span className="code-comment">
                       {"// Just add classes. That's it."}
@@ -520,7 +520,7 @@ export default function Home() {
                 />
               </div>
               <div className="preview-code">
-                <code className="text-[11px] font-[family-name:var(--font-geist-mono)]">
+                <code className="text-[11px] font-[family-name:var(--font-mono)]">
                   <span className="text-acid">animate-focus:scale-105</span>
                   <span className="text-text-muted mx-2">·</span>
                   <span className="text-acid">animate-focus:y--2</span>
@@ -571,7 +571,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="preview-code">
-                <code className="text-[11px] font-[family-name:var(--font-geist-mono)]">
+                <code className="text-[11px] font-[family-name:var(--font-mono)]">
                   <span className="text-acid">animate-hover:scale-110</span>
                   <span className="text-text-muted mx-2">·</span>
                   <span className="text-acid">animate-tap:scale-90</span>
@@ -676,7 +676,7 @@ export default function Home() {
                           {gesture}
                         </td>
                         <td className="py-3">
-                          <code className="text-[11px] font-[family-name:var(--font-geist-mono)] text-acid bg-acid-soft px-2 py-1 rounded">
+                          <code className="text-[11px] font-[family-name:var(--font-mono)] text-acid bg-acid-soft px-2 py-1 rounded">
                             {prefix}
                           </code>
                         </td>
@@ -729,7 +729,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="preview-code">
-                <code className="text-[11px] font-[family-name:var(--font-geist-mono)]">
+                <code className="text-[11px] font-[family-name:var(--font-mono)]">
                   <span className="text-acid">animate-initial:opacity-0</span>
                   <span className="text-text-muted mx-2">·</span>
                   <span className="text-acid">animate-initial:y-20</span>
@@ -785,7 +785,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="preview-code">
-                <code className="text-[11px] font-[family-name:var(--font-geist-mono)]">
+                <code className="text-[11px] font-[family-name:var(--font-mono)]">
                   <span className="text-acid">animate-drag-both</span>
                   <span className="text-text-muted mx-2">·</span>
                   <span className="text-acid">animate-drag-elastic-30</span>
@@ -846,7 +846,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="preview-code">
-                <code className="text-[11px] font-[family-name:var(--font-geist-mono)]">
+                <code className="text-[11px] font-[family-name:var(--font-mono)]">
                   <span className="text-acid">animate-enter:rotate-360</span>
                   <span className="text-text-muted mx-2">·</span>
                   <span className="text-acid">animate-repeat-infinite</span>
@@ -895,7 +895,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="preview-code">
-                <code className="text-[11px] font-[family-name:var(--font-geist-mono)]">
+                <code className="text-[11px] font-[family-name:var(--font-mono)]">
                   <span className="text-acid">animate-spring</span>
                   <span className="text-text-muted mx-2">·</span>
                   <span className="text-acid">animate-stiffness-200</span>
@@ -962,11 +962,11 @@ export default function Home() {
                 <span className="text-xs font-medium text-acid">
                   What you write
                 </span>
-                <span className="text-[10px] text-text-muted font-[family-name:var(--font-geist-mono)]">
+                <span className="text-[10px] text-text-muted font-[family-name:var(--font-mono)]">
                   source.tsx
                 </span>
               </div>
-              <pre className="p-4 sm:p-5 text-[12px] sm:text-[13px] leading-7 font-[family-name:var(--font-geist-mono)] overflow-x-auto">
+              <pre className="p-4 sm:p-5 text-[12px] sm:text-[13px] leading-7 font-[family-name:var(--font-mono)] overflow-x-auto">
                 <code>
                   <span className="code-comment">{"// No imports needed"}</span>
                   {"\n"}
@@ -1064,11 +1064,11 @@ export default function Home() {
                 <span className="text-xs font-medium text-text-dim">
                   What gets compiled
                 </span>
-                <span className="text-[10px] text-text-muted font-[family-name:var(--font-geist-mono)]">
+                <span className="text-[10px] text-text-muted font-[family-name:var(--font-mono)]">
                   output.js
                 </span>
               </div>
-              <pre className="p-4 sm:p-5 text-[12px] sm:text-[13px] leading-7 font-[family-name:var(--font-geist-mono)] overflow-x-auto">
+              <pre className="p-4 sm:p-5 text-[12px] sm:text-[13px] leading-7 font-[family-name:var(--font-mono)] overflow-x-auto">
                 <code>
                   <span className="code-comment">
                     {"// Auto-injected by Babel"}
@@ -1167,7 +1167,7 @@ export default function Home() {
                   <div className="hidden sm:block absolute top-1/2 -right-2 sm:-right-2 w-4 h-px bg-gradient-to-r from-acid/20 to-transparent z-10" />
                 )}
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 rounded-lg border border-acid/20 bg-acid/5 flex items-center justify-center text-acid text-xs font-bold font-[family-name:var(--font-geist-mono)] shrink-0">
+                  <div className="w-8 h-8 rounded-lg border border-acid/20 bg-acid/5 flex items-center justify-center text-acid text-xs font-bold font-[family-name:var(--font-mono)] shrink-0">
                     {step.num}
                   </div>
                   <h3 className="text-sm font-semibold">{step.title}</h3>
@@ -1176,7 +1176,7 @@ export default function Home() {
                   {step.desc}
                 </p>
                 <div className="rounded-md bg-surface-inset border border-border-subtle px-3 py-2">
-                  <code className="text-[10px] font-[family-name:var(--font-geist-mono)] text-acid/70">
+                  <code className="text-[10px] font-[family-name:var(--font-mono)] text-acid/70">
                     {step.code}
                   </code>
                 </div>
@@ -1347,7 +1347,7 @@ export default function Home() {
           <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once rounded-2xl border border-border-subtle bg-surface-raised overflow-hidden">
             <div className="p-6 sm:p-8 border-b border-border-subtle">
               <div className="flex items-center justify-center">
-                <code className="text-base sm:text-lg md:text-2xl font-[family-name:var(--font-geist-mono)] flex flex-wrap items-center gap-1 justify-center">
+                <code className="text-base sm:text-lg md:text-2xl font-[family-name:var(--font-mono)] flex flex-wrap items-center gap-1 justify-center">
                   <span className="text-text-muted">animate-</span>
                   <span className="text-acid bg-acid/10 px-2 py-0.5 rounded">
                     {"{"}
@@ -1386,7 +1386,7 @@ export default function Home() {
                     key={prefix}
                     className="rounded-lg bg-surface/50 border border-border-subtle p-3 text-center"
                   >
-                    <code className="text-xs font-[family-name:var(--font-geist-mono)] text-acid">
+                    <code className="text-xs font-[family-name:var(--font-mono)] text-acid">
                       {prefix}
                     </code>
                     <p className="text-[10px] text-text-muted mt-1">{prop}</p>
@@ -1421,10 +1421,10 @@ export default function Home() {
 
           <div className="animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-200 animate-ease-out animate-once mt-10 sm:mt-12">
             <div className="inline-flex items-center gap-4 rounded-xl border border-border-strong bg-surface-raised/80 backdrop-blur-sm px-6 sm:px-8 py-4 shadow-lg shadow-black/20">
-              <span className="text-acid/80 font-[family-name:var(--font-geist-mono)] text-sm select-none">
+              <span className="text-acid/80 font-[family-name:var(--font-mono)] text-sm select-none">
                 $
               </span>
-              <code className="text-sm sm:text-[15px] font-[family-name:var(--font-geist-mono)] text-foreground tracking-tight">
+              <code className="text-sm sm:text-[15px] font-[family-name:var(--font-mono)] text-foreground tracking-tight">
                 <Typewriter text="npm i motionwind-react" />
               </code>
             </div>
@@ -1451,11 +1451,11 @@ export default function Home() {
                 <span className="text-xs font-semibold text-foreground">
                   Next.js
                 </span>
-                <span className="ml-auto text-[10px] text-text-muted font-[family-name:var(--font-geist-mono)]">
+                <span className="ml-auto text-[10px] text-text-muted font-[family-name:var(--font-mono)]">
                   next.config.js
                 </span>
               </div>
-              <pre className="px-4 py-4 text-[12px] leading-6 font-[family-name:var(--font-geist-mono)] code-dim">
+              <pre className="px-4 py-4 text-[12px] leading-6 font-[family-name:var(--font-mono)] code-dim">
                 <code>
                   <span className="text-acid/70">import</span>{" "}
                   <span className="code-fg">withMotionwind</span>{" "}
@@ -1486,11 +1486,11 @@ export default function Home() {
                 <span className="text-xs font-semibold text-foreground">
                   Vite
                 </span>
-                <span className="ml-auto text-[10px] text-text-muted font-[family-name:var(--font-geist-mono)]">
+                <span className="ml-auto text-[10px] text-text-muted font-[family-name:var(--font-mono)]">
                   vite.config.ts
                 </span>
               </div>
-              <pre className="px-4 py-4 text-[12px] leading-6 font-[family-name:var(--font-geist-mono)] code-dim">
+              <pre className="px-4 py-4 text-[12px] leading-6 font-[family-name:var(--font-mono)] code-dim">
                 <code>
                   <span className="text-acid/70">import</span>{" "}
                   <span className="code-fg">motionwind</span>{" "}
@@ -1602,7 +1602,7 @@ export default function Home() {
               <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
               <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
             </div>
-            <span className="text-[11px] text-text-muted font-[family-name:var(--font-geist-mono)]">
+            <span className="text-[11px] text-text-muted font-[family-name:var(--font-mono)]">
               {CODE_EXAMPLES[activeCode].file}
             </span>
           </div>
@@ -1648,7 +1648,7 @@ export default function Home() {
 
         {/* Code content */}
         <div className="flex-1 overflow-auto p-5">
-          <pre className="text-[13px] leading-7 font-[family-name:var(--font-geist-mono)]">
+          <pre className="text-[13px] leading-7 font-[family-name:var(--font-mono)]">
             <code>{highlightCode(CODE_EXAMPLES[activeCode].code)}</code>
           </pre>
         </div>
@@ -1671,7 +1671,7 @@ export default function Home() {
             </svg>
             Compiled at build time — zero runtime cost
           </div>
-          <span className="text-[10px] text-text-muted/60 font-[family-name:var(--font-geist-mono)]">
+          <span className="text-[10px] text-text-muted/60 font-[family-name:var(--font-mono)]">
             ESC to close
           </span>
         </div>
