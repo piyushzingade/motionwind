@@ -13,16 +13,18 @@ export function ControlsPanel({
 }: {
   editor: StudioState;
   updateEditor: (patch: Partial<StudioState>) => void;
-  parsed: ReturnType<typeof import("./use-generated-code").useGeneratedCode>["parsed"];
-  activeRecipe: ReturnType<typeof import("./use-generated-code").useGeneratedCode>["activeRecipe"];
+  parsed: ReturnType<
+    typeof import("./use-generated-code").useGeneratedCode
+  >["parsed"];
+  activeRecipe: ReturnType<
+    typeof import("./use-generated-code").useGeneratedCode
+  >["activeRecipe"];
   recipeSupportsTarget: boolean;
 }) {
   return (
     <div className="grid border-t border-border-subtle lg:grid-cols-2">
       <div className="border-b border-border-subtle p-4 lg:border-b-0 lg:border-r">
-        <ControlLabel htmlFor="studio-classes">
-          Motionwind classes
-        </ControlLabel>
+        <ControlLabel htmlFor="studio-classes">Motionwind classes</ControlLabel>
         <textarea
           id="studio-classes"
           aria-label="Motionwind classes"
@@ -35,10 +37,14 @@ export function ControlsPanel({
       </div>
       <div className="grid grid-cols-2 gap-3 p-4">
         <div>
-          <ControlLabel htmlFor="studio-element">Element</ControlLabel>
+          <label
+            htmlFor="studio-element"
+            className="mb-2 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-text-muted"
+          >
+            <span>Element</span>
+          </label>
           <select
             id="studio-element"
-            aria-label="Element"
             value={editor.tag}
             onChange={(event) => updateEditor({ tag: event.target.value })}
             className="w-full rounded-lg border border-border-subtle bg-surface-inset p-2 text-xs outline-none focus:border-acid/30"

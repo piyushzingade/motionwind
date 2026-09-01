@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import type { CodeKey } from "../lib/code-examples";
 import { onActivateKey } from "../lib/on-activate-key";
 import { ArrowConnector } from "./arrow-connector";
@@ -201,29 +202,32 @@ function CodeBlock({
 }
 
 function ProcessSteps() {
-  const steps = [
-    {
-      num: "1",
-      title: "Write classes",
-      desc: "Add motionwind classes to any element or component. No imports, no wrappers.",
-      code: "animate-hover:scale-110",
-      delay: "",
-    },
-    {
-      num: "2",
-      title: "Babel transforms",
-      desc: "At build time, classes are parsed and converted to Motion component props.",
-      code: "whileHover={{ scale: 1.1 }}",
-      delay: "animate-delay-150",
-    },
-    {
-      num: "3",
-      title: "Ship zero overhead",
-      desc: "Production bundle contains only optimized Motion components. No parser shipped.",
-      code: "0kb runtime added",
-      delay: "animate-delay-300",
-    },
-  ];
+  const steps = useMemo(
+    () => [
+      {
+        num: "1",
+        title: "Write classes",
+        desc: "Add motionwind classes to any element or component. No imports, no wrappers.",
+        code: "animate-hover:scale-110",
+        delay: "",
+      },
+      {
+        num: "2",
+        title: "Babel transforms",
+        desc: "At build time, classes are parsed and converted to Motion component props.",
+        code: "whileHover={{ scale: 1.1 }}",
+        delay: "animate-delay-150",
+      },
+      {
+        num: "3",
+        title: "Ship zero overhead",
+        desc: "Production bundle contains only optimized Motion components. No parser shipped.",
+        code: "0kb runtime added",
+        delay: "animate-delay-300",
+      },
+    ],
+    [],
+  );
 
   return (
     <div className="mt-12 sm:mt-16 grid sm:grid-cols-3 gap-6 sm:gap-4">

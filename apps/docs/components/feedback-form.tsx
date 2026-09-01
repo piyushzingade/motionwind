@@ -43,10 +43,13 @@ export function FeedbackForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- onEscape is a useEffectEvent; Effect Events must not be listed as effect dependencies
   }, [open]);
 
+  const sendingRef = useRef(false);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!message.trim()) return;
+    if (!message.trim() || sendingRef.current) return;
 
+    sendingRef.current = true;
     setStatus("sending");
     try {
       const res = await fetch("/api/feedback", {
@@ -64,6 +67,8 @@ export function FeedbackForm({
       }, 1800);
     } catch {
       setStatus("error");
+    } finally {
+      sendingRef.current = false;
     }
   }
 
@@ -105,7 +110,7 @@ export function FeedbackForm({
               type="button"
               aria-label="Close feedback dialog"
               onClick={onClose}
-              className="flex h-6 w-6 items-center justify-center rounded-md text-[var(--color-fg-muted)]/60 transition-all hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-fg)]"
+              className="flex h-6 w-6 items-center justify-center rounded-md text-[var(--color-fg-muted)]/60 transition-colors hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-fg)]"
             >
               <svg
                 width="12"
@@ -183,6 +188,7 @@ export function FeedbackForm({
                 placeholder="What's on your mind?"
                 required
                 rows={3}
+                aria-label="Message"
                 className="w-full resize-none rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-[13px] leading-relaxed text-[var(--color-fg)] placeholder:text-[var(--color-fg-muted)]/30 transition-colors duration-150 focus:border-[var(--color-accent)]/30 focus:bg-[var(--color-surface-elevated)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]/10"
               />
             </div>
@@ -199,6 +205,7 @@ export function FeedbackForm({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
+                aria-label="Email (optional)"
                 className="w-full rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[13px] text-[var(--color-fg)] placeholder:text-[var(--color-fg-muted)]/30 transition-colors duration-150 focus:border-[var(--color-accent)]/30 focus:bg-[var(--color-surface-elevated)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]/10"
               />
             </div>

@@ -40,7 +40,6 @@ export function ControlsPanel({
             <ControlLabel htmlFor="studio-element">Element</ControlLabel>
             <select
               id="studio-element"
-              aria-label="Element"
               value={editor.tag}
               onChange={(event) => updateEditor({ tag: event.target.value })}
               className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-2 text-xs outline-none focus:border-[var(--color-accent)]/30"

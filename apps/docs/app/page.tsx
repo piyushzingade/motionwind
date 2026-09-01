@@ -53,7 +53,7 @@ export default function DocsHome() {
       <div className="flex flex-wrap gap-3 justify-center">
         <Link
           href="/docs"
-          className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-[var(--color-accent-fg)] no-underline transition-all hover:bg-[var(--color-accent-hover)]"
+          className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-[var(--color-accent-fg)] no-underline transition-colors hover:bg-[var(--color-accent-hover)]"
         >
           Get Started
           <svg

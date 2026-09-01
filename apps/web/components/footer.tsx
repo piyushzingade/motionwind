@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export function Footer() {
   return (
     <footer className="border-t border-border-subtle py-10 sm:py-12 px-4 sm:px-6">
@@ -9,9 +11,12 @@ export function Footer() {
           <span className="text-xs text-text-muted">v2.0.0</span>
         </div>
         <div className="flex items-center gap-6 text-sm text-text-muted">
-          <a href="/play" className="hover:text-foreground transition-colors">
+          <Link
+            href="/play"
+            className="hover:text-foreground transition-colors"
+          >
             Studio
-          </a>
+          </Link>
           <a
             href="https://www.motionwind.xyz/docs/getting-started"
             className="hover:text-foreground transition-colors"

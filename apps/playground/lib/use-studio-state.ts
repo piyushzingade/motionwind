@@ -16,22 +16,19 @@ export function useStudioState() {
     window.history.replaceState(null, "", `#${encodeState(state)}`);
   }, []);
 
-  const updateEditor = useCallback(
-    (patch: Partial<StudioState>) => {
-      setEditor((current) => {
-        const next = { ...current, ...patch };
-        writeHash(next);
-        return next;
-      });
-    },
-    [writeHash],
-  );
+  const updateEditor = useCallback((patch: Partial<StudioState>) => {
+    setEditor((current) => ({ ...current, ...patch }));
+  }, []);
 
   useEffect(() => {
     const decoded = decodeState(window.location.hash);
     if (decoded) setEditor(decoded);
     else writeHash(INITIAL);
   }, [writeHash]);
+
+  useEffect(() => {
+    writeHash(editor);
+  }, [editor, writeHash]);
 
   const replay = useCallback(() => setReplayKey((k) => k + 1), []);
 

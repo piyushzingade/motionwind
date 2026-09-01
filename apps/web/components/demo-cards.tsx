@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import type { CodeKey } from "../lib/code-examples";
 import { onActivateKey } from "../lib/on-activate-key";
 
@@ -62,28 +63,39 @@ function PreviewCard({
 }
 
 function GestureTable() {
-  const rows: [string, string, string][] = [
-    [
-      "Hover",
-      "animate-hover:",
-      "Buttons, cards, links, any pointer interaction",
+  const rows: [string, string, string][] = useMemo(
+    () => [
+      [
+        "Hover",
+        "animate-hover:",
+        "Buttons, cards, links, any pointer interaction",
+      ],
+      ["Tap", "animate-tap:", "Button press feedback, click effects"],
+      [
+        "Focus",
+        "animate-focus:",
+        "Form inputs, accessibility focus indicators",
+      ],
+      ["Drag", "animate-drag:", "Draggable elements, sliders, sortable items"],
+      [
+        "InView",
+        "animate-inview:",
+        "Scroll-triggered reveals, lazy animations",
+      ],
+      [
+        "Initial",
+        "animate-initial:",
+        "Starting state for enter/inview animations",
+      ],
+      ["Enter", "animate-enter:", "Target state on mount"],
+      [
+        "Exit",
+        "animate-exit:",
+        "Target state on unmount (requires AnimatePresence)",
+      ],
     ],
-    ["Tap", "animate-tap:", "Button press feedback, click effects"],
-    ["Focus", "animate-focus:", "Form inputs, accessibility focus indicators"],
-    ["Drag", "animate-drag:", "Draggable elements, sliders, sortable items"],
-    ["InView", "animate-inview:", "Scroll-triggered reveals, lazy animations"],
-    [
-      "Initial",
-      "animate-initial:",
-      "Starting state for enter/inview animations",
-    ],
-    ["Enter", "animate-enter:", "Target state on mount"],
-    [
-      "Exit",
-      "animate-exit:",
-      "Target state on unmount (requires AnimatePresence)",
-    ],
-  ];
+    [],
+  );
 
   return (
     <div className="px-5 sm:px-6 py-4 bg-surface/50 rounded-b-2xl">
@@ -147,7 +159,11 @@ export function DemoCards({ openCode }: { openCode: (key: CodeKey) => void }) {
             title="Search Bar Focus"
             onClick={openCode}
           >
+            <label htmlFor="demo-search" className="sr-only">
+              Search
+            </label>
             <input
+              id="demo-search"
               type="text"
               placeholder="Search..."
               onClick={(e) => e.stopPropagation()}

@@ -8,13 +8,13 @@ export function CopyLlmsButton({ src = "/llms.txt" }: { src?: string }) {
   const handleCopy = useCallback(async () => {
     try {
       const res = await fetch(src);
+      if (!res.ok) throw new Error();
       const text = await res.text();
       await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback: open in new tab so user can manually copy
-      window.open(src, "_blank");
+      window.open(src, "_blank", "noopener,noreferrer");
     }
   }, [src]);
 

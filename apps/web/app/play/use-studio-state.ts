@@ -16,16 +16,9 @@ export function useStudioState() {
     window.history.replaceState(null, "", `#${encodeState(state)}`);
   }, []);
 
-  const updateEditor = useCallback(
-    (patch: Partial<StudioState>) => {
-      setEditor((current) => {
-        const next = { ...current, ...patch };
-        writeHash(next);
-        return next;
-      });
-    },
-    [writeHash],
-  );
+  const updateEditor = useCallback((patch: Partial<StudioState>) => {
+    setEditor((current) => ({ ...current, ...patch }));
+  }, []);
 
   useEffect(() => {
     const decoded = decodeState(window.location.hash);
@@ -33,18 +26,19 @@ export function useStudioState() {
     else writeHash(getInitial());
   }, [writeHash]);
 
+  useEffect(() => {
+    writeHash(editor);
+  }, [editor, writeHash]);
+
   const replay = useCallback(() => setReplayKey((k) => k + 1), []);
 
-  const copy = useCallback(
-    async (kind: "link" | "code", generated: string) => {
-      await navigator.clipboard.writeText(
-        kind === "link" ? window.location.href : generated,
-      );
-      setCopied(kind);
-      window.setTimeout(() => setCopied(null), 1400);
-    },
-    [],
-  );
+  const copy = useCallback(async (kind: "link" | "code", generated: string) => {
+    await navigator.clipboard.writeText(
+      kind === "link" ? window.location.href : generated,
+    );
+    setCopied(kind);
+    window.setTimeout(() => setCopied(null), 1400);
+  }, []);
 
   return {
     editor,

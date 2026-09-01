@@ -27,7 +27,7 @@ export function PreviewStage({
   replayKey: number;
 }) {
   const Preview = MwComponent[tag]!;
-  const stageWidth = STAGES.find(({ id }) => id === stage)!.width;
+  const stageWidth = STAGES.find(({ id }) => id === stage)?.width ?? 800;
 
   return (
     <div className="studio-checker flex min-h-[430px] items-center justify-center overflow-auto p-5 md:p-10">

@@ -137,7 +137,7 @@ export function PlaygroundSidebar({
     <LazyMotion features={domAnimation}>
       <m.aside
         initial={false}
-        animate={{ width: desktopCollapsed ? 0 : 260 }}
+        animate={{ x: desktopCollapsed ? -260 : 0 }}
         transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="hidden md:flex h-screen flex-shrink-0 flex-col border-r border-dashed border-[var(--color-border)] bg-[var(--color-bg)] sticky top-0 overflow-hidden"
       >
