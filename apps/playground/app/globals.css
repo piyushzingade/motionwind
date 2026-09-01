@@ -1,0 +1,1125 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-fg: var(--color-fg);
+  --color-fg-muted: var(--color-fg-muted);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-fg: var(--color-accent-fg);
+  --color-border: var(--color-border);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-surface: var(--color-surface);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-shadow: var(--color-shadow);
+  --color-code-bg: var(--color-code-bg);
+  --color-code-header: var(--color-code-header);
+  --color-code-border: var(--color-code-border);
+  --color-code-muted: var(--color-code-muted);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+/* ── Light Theme (default) ── */
+:root {
+  --color-bg: #fafaf9;
+  --color-fg: #171717;
+  --color-fg-muted: #64646e;
+  --color-accent: #4d7c0f;
+  --color-accent-hover: #3f6212;
+  --color-accent-fg: #ffffff;
+  --color-border: #e4e4e0;
+  --color-border-subtle: #f0f0ec;
+  --color-surface: #f5f5f2;
+  --color-surface-elevated: #ffffff;
+  --color-shadow: rgba(0, 0, 0, 0.06);
+  --color-code-bg: #f6f6f2;
+  --color-code-header: #eeeee8;
+  --color-code-border: #e0e0da;
+  --color-code-muted: #9a9a9a;
+  --color-selection: rgba(77, 124, 15, 0.12);
+  --color-dot-grid: rgba(77, 124, 15, 0.06);
+  --color-demo-glow: rgba(77, 124, 15, 0.06);
+  --color-demo-grid-line: rgba(77, 124, 15, 0.07);
+
+  /* Fumadocs overrides */
+  --color-fd-primary: #c7ff2d !important;
+  --color-fd-primary-foreground: #1a1a1a !important;
+}
+
+/* ── Dark Theme ── */
+.dark {
+  --color-bg: #0a0a0f;
+  --color-fg: #f0f0f0;
+  --color-fg-muted: #8a8a9a;
+  --color-accent: #c8ff2e;
+  --color-accent-hover: #b8ef1e;
+  --color-accent-fg: #0a0a0f;
+  --color-border: #1e1e2a;
+  --color-border-subtle: #141420;
+  --color-surface: #0f0f18;
+  --color-surface-elevated: #16161f;
+  --color-shadow: rgba(0, 0, 0, 0.5);
+  --color-code-bg: #0c0c14;
+  --color-code-header: #12121c;
+  --color-code-border: rgba(200, 255, 46, 0.06);
+  --color-code-muted: #5a5a6a;
+  --color-selection: rgba(200, 255, 46, 0.18);
+  --color-dot-grid: rgba(200, 255, 46, 0.03);
+  --color-demo-glow: rgba(200, 255, 46, 0.04);
+  --color-demo-grid-line: rgba(200, 255, 46, 0.04);
+
+  /* Fumadocs overrides */
+  --color-fd-primary: #c8ff2e !important;
+  --color-fd-primary-foreground: #0a0a0f !important;
+}
+
+/* ── Base styles ── */
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-fg-muted);
+}
+
+/* ── Selection ── */
+::selection {
+  background-color: var(--color-selection);
+  color: inherit;
+}
+
+/* ── No scrollbar ── */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Docs content wrapper ── */
+.docs-content-wrapper {
+  width: 100%;
+  padding: 1rem 2.5rem 4rem;
+}
+
+@media (max-width: 640px) {
+  .docs-content-wrapper {
+    padding: 1.5rem 1rem 3rem;
+  }
+}
+
+/* ── Docs inner layout (article + TOC) ── */
+.docs-layout-inner {
+  display: flex;
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Docs page container ── */
+.docs-page {
+  flex: 1;
+  min-width: 0;
+  max-width: 760px;
+}
+
+/* ── TOC sidebar ── */
+.toc-sidebar {
+  display: none;
+  width: 250px;
+  flex-shrink: 0;
+  position: sticky;
+  top: calc(3.5rem + 1rem); /* header height + padding */
+  max-height: calc(100vh - 3.5rem - 2rem);
+  overflow-y: auto;
+  align-self: flex-start;
+  margin-left: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.toc-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .toc-sidebar {
+    display: block;
+  }
+}
+
+/* ── Docs prose — typography for MDX content ── */
+.docs-prose {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.docs-prose h2,
+.docs-prose h3,
+.docs-prose h4 {
+  scroll-margin-top: 5rem;
+}
+
+.docs-prose h2 {
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-fg);
+  margin-top: 3rem;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.docs-prose h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-fg);
+  margin-top: 2.25rem;
+  margin-bottom: 0.875rem;
+}
+
+.docs-prose h4 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-fg);
+  margin-top: 1.75rem;
+  margin-bottom: 0.625rem;
+}
+
+.docs-prose p {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  color: var(--color-fg-muted);
+  margin-bottom: 1.25rem;
+}
+
+.docs-prose ol {
+  list-style: none;
+  counter-reset: docs-counter;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-bottom: 1.5rem;
+  padding-left: 0;
+}
+
+.docs-prose ol li {
+  counter-increment: docs-counter;
+  position: relative;
+  padding-left: 2.25rem;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--color-fg-muted);
+}
+
+.docs-prose ol li::before {
+  content: counter(docs-counter);
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 0.375rem;
+  background: var(--color-border-subtle);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--color-fg-muted);
+}
+
+.docs-prose ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.docs-prose ul li {
+  position: relative;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--color-fg-muted);
+}
+
+.docs-prose ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.docs-prose strong {
+  font-weight: 600;
+  color: var(--color-fg);
+}
+
+.docs-prose code {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8125rem;
+  background: var(--color-border-subtle);
+  padding: 0.15em 0.4em;
+  border-radius: 0.3125rem;
+  border: 1px solid var(--color-border);
+  color: var(--color-accent);
+}
+
+/* Don't style inline code inside code blocks */
+.docs-prose figure code,
+.docs-prose pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  color: inherit;
+}
+
+/* Table code — no bg/border, just accent color */
+.docs-prose td code,
+.docs-prose th code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  color: var(--color-accent);
+}
+
+.docs-prose a {
+  color: var(--color-accent);
+  text-decoration: none;
+  background-image: linear-gradient(var(--color-accent), var(--color-accent));
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.25s ease-out;
+}
+
+.docs-prose a:hover {
+  background-size: 100% 1px;
+}
+
+/* ── Animated link underline ── */
+.link-underline {
+  position: relative;
+}
+
+.link-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-accent);
+  transition: width 0.3s ease;
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* ── Fumadocs code block overrides ── */
+
+/* ── Code block overrides ── */
+figure.shiki pre,
+figure.shiki code,
+.shiki code,
+.shiki pre {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+figure.shiki {
+  border: 1px solid var(--color-border) !important;
+  border-radius: 0.5rem !important;
+  background: var(--color-code-bg) !important;
+  margin: 1.25rem 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  position: relative;
+  overflow: hidden !important;
+}
+
+/* Copy button — top-right */
+figure.shiki > div:first-child {
+  position: absolute !important;
+  top: 0.25rem !important;
+  right: 0.25rem !important;
+  z-index: 3 !important;
+  backdrop-filter: none !important;
+  background: none !important;
+}
+
+figure.shiki > div:first-child button {
+  color: var(--color-code-muted) !important;
+  opacity: 0;
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease !important;
+  border-radius: 0.25rem !important;
+  padding: 0.25rem !important;
+}
+
+figure.shiki:hover > div:first-child button {
+  opacity: 1;
+}
+
+figure.shiki > div:first-child button:hover {
+  color: var(--color-accent) !important;
+}
+
+/* Pre element — minimal padding */
+figure.shiki pre {
+  padding: 0.625rem 0.875rem !important;
+  margin: 0 !important;
+  overflow-x: auto;
+  font-size: 0.8125rem !important;
+  line-height: 1.7 !important;
+}
+
+/* Code element */
+code {
+  font-family: var(--font-mono), monospace;
+}
+
+figure.shiki code {
+  font-family: var(--font-mono), monospace !important;
+  font-size: 0.8125rem !important;
+}
+
+/* Shiki theme tokens — light by default, dark in .dark */
+code span {
+  color: var(--shiki-light) !important;
+  background-color: transparent !important;
+}
+
+.dark code span {
+  color: var(--shiki-dark) !important;
+}
+
+/* Minimal scrollbar on overflow */
+figure.shiki pre::-webkit-scrollbar {
+  height: 0;
+}
+
+/* ── Demo component refinements ── */
+.demo-container {
+  position: relative;
+  overflow: clip;
+}
+
+/* Demos render inside .docs-prose, which gives paragraphs a 1.25rem bottom
+   margin. MDX wraps a demo's text in a <p>, so that margin leaks in as phantom
+   bottom padding and pushes content off-center. Strip inherited prose spacing
+   inside the demo so every element sits truly centered in the stage. */
+.docs-prose .demo-container :is(p, h1, h2, h3, h4, ul, ol, pre) {
+  margin: 0;
+}
+
+/* Center text + icons inside demo content boxes (baseline reset). */
+.demo-container div[class*="bg-fd-primary"],
+.demo-container button[class*="bg-fd-primary"],
+.demo-container div[class*="bg-\\[#c8ff2e\\]"],
+.demo-container div[class*="bg-\\[#c8ff2e\\]\\/"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Crosshatch grid that fades out via radial mask */
+.demo-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--color-demo-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-demo-grid-line) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(
+    ellipse 60% 60% at 50% 50%,
+    black 20%,
+    transparent 70%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 60% 60% at 50% 50%,
+    black 20%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Radial glow behind demo content */
+.demo-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    var(--color-demo-glow),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* ── Fumadocs sidebar overrides ── */
+[data-fd-sidebar] {
+  --fd-sidebar-width: 260px;
+}
+
+/* Sidebar active item glow */
+[data-active="true"] {
+  color: var(--color-accent) !important;
+}
+
+/* ── Table overrides for docs ── */
+.docs-prose table {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.625rem;
+  margin: 1.5rem 0;
+  font-size: 0.8125rem;
+}
+
+/* Responsive wrapper — added by MDX or manually */
+.docs-prose .table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 0.625rem;
+}
+
+.docs-prose .table-wrapper table {
+  margin: 0;
+}
+
+.docs-prose thead th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-fg);
+  padding: 0.625rem 0.75rem;
+  background: var(--color-surface-elevated);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--color-border);
+  word-break: break-word;
+}
+
+.docs-prose thead th:first-child {
+  border-top-left-radius: 0.5625rem;
+}
+
+.docs-prose thead th:last-child {
+  border-top-right-radius: 0.5625rem;
+}
+
+.docs-prose tbody td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-fg-muted);
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.docs-prose tbody tr:nth-child(even) {
+  background: var(--color-surface);
+}
+
+.docs-prose tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.docs-prose tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 0.5625rem;
+}
+
+.docs-prose tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 0.5625rem;
+}
+
+/* First-column code gets accent color */
+.docs-prose tbody td:first-child code {
+  color: var(--color-accent);
+}
+
+/* Thin scrollbar for table overflow */
+.docs-prose table::-webkit-scrollbar {
+  height: 4px;
+}
+
+.docs-prose table::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.docs-prose table::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+/* On small screens, allow horizontal scroll */
+@media (max-width: 640px) {
+  .docs-prose table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .docs-prose table thead,
+  .docs-prose table tbody,
+  .docs-prose table tr {
+    display: table;
+    width: 100%;
+    table-layout: auto;
+  }
+
+  .docs-prose table thead {
+    display: table-header-group;
+  }
+
+  .docs-prose table tbody {
+    display: table-row-group;
+  }
+}
+
+/* ── Horizontal rule ── */
+.docs-prose hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-border),
+    transparent
+  );
+  margin: 3rem 0;
+}
+
+/* ── Blockquote ── */
+.docs-prose blockquote {
+  border-left: 2px solid var(--color-accent);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  background: var(--color-surface);
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: var(--color-fg-muted);
+  font-style: italic;
+}
+
+.docs-prose blockquote p {
+  margin-bottom: 0.5rem;
+}
+
+.docs-prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Table of Contents — Organic Thread ── */
+
+.toc-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--color-bg);
+  margin-bottom: 0.875rem;
+}
+
+.toc-header-label {
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: 0.8125rem;
+  color: var(--color-fg);
+  letter-spacing: -0.01em;
+}
+
+.toc-header-pct {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.5625rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent);
+  opacity: 0.6;
+  min-width: 1.75rem;
+  text-align: right;
+  transition: opacity 0.2s ease;
+}
+
+.toc:hover .toc-header-pct {
+  opacity: 1;
+}
+
+/* ── Body wrapper ── */
+.toc-body {
+  position: relative;
+  padding-left: 1.375rem;
+}
+
+/* ── SVG organic spine ── */
+.toc-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.toc-path-fill {
+  transition: stroke-dashoffset 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.toc-orb-core {
+  transition:
+    cx 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+    cy 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  animation: toc-orb-pulse 2s ease-in-out infinite;
+}
+@keyframes toc-orb-pulse {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ── TOC list ── */
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+/* ── TOC item ── */
+.toc-item {
+  position: relative;
+  padding-left: calc(var(--toc-indent, 0) * 0.75rem);
+}
+
+/* ── TOC link ── */
+.toc-link {
+  position: relative;
+  display: block;
+  padding: 0.25rem 0.375rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-fg-muted);
+  text-decoration: none;
+  border-radius: 4px;
+  transition:
+    color 0.15s ease,
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Active link */
+.toc-active {
+  color: var(--color-accent) !important;
+  font-weight: 600;
+}
+
+/* ── Demo buttons ── */
+.demo-btn {
+  padding: 0.375rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-accent);
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.demo-btn:active {
+  transform: scale(0.95);
+}
+
+.demo-btn-primary {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--color-accent);
+  border: none;
+  color: var(--color-accent-fg);
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.demo-btn-primary:active {
+  transform: scale(0.95);
+}
+
+/* ── React Native phone content theme override ── */
+/*
+ * Blanket override: in light mode, force ALL text/spans/divs inside
+ * the phone to use dark readable colors, regardless of inline styles.
+ * This is robust against replay (key remount) because it targets elements
+ * by type, not by exact style string matching.
+ */
+
+.rn-phone-light span,
+.rn-phone-light div {
+  color: #171717 !important;
+  border-color: rgba(77, 124, 15, 0.18) !important;
+}
+.rn-phone-light .rn-anim-fadeSlideUp,
+.rn-phone-light .rn-anim-fadeIn,
+.rn-phone-light .rn-anim-scaleIn,
+.rn-phone-light .rn-anim-slideRight,
+.rn-phone-light .rn-anim-rotate,
+.rn-phone-light .rn-anim-bounce,
+.rn-phone-light .rn-anim-spring,
+.rn-phone-light .rn-anim-pulse,
+.rn-phone-light .rn-anim-tapScale {
+  color: #171717 !important;
+}
+
+/* ── React Native code block syntax colors ── */
+
+.rn-code-panel {
+  background: #f6f7f9;
+  border-top: 1px solid #e5e7eb;
+}
+.dark .rn-code-panel {
+  background: var(--color-code-bg);
+  border-top-color: var(--color-border);
+}
+.rn-code-panel-header {
+  border-bottom: 1px solid #e5e7eb;
+}
+.dark .rn-code-panel-header {
+  border-bottom-color: var(--color-code-border);
+}
+
+.rn-code-block {
+  color: #1e293b;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.dark .rn-code-block {
+  color: #a1a1aa;
+}
+
+/* Keywords: import, from, export, const, function, return */
+.rn-hl-keyword {
+  color: #7c3aed;
+  font-weight: 500;
+}
+.dark .rn-hl-keyword {
+  color: #c084fc;
+}
+
+/* Strings: "...", '...' */
+.rn-hl-string {
+  color: #9f1239;
+}
+.dark .rn-hl-string {
+  color: #86efac;
+}
+
+/* Component tags: <mw.View>, <Animated.View> */
+.rn-hl-component {
+  color: #0369a1;
+  font-weight: 500;
+}
+.dark .rn-hl-component {
+  color: #67e8f9;
+}
+
+/* HTML tags: <div>, <span> */
+.rn-hl-tag {
+  color: #be185d;
+}
+.dark .rn-hl-tag {
+  color: #f472b6;
+}
+
+/* Props: className, style, onPress */
+.rn-hl-prop {
+  color: #0e7490;
+}
+.dark .rn-hl-prop {
+  color: #93c5fd;
+}
+
+/* animate-* classes — accent color both modes */
+.rn-hl-animate {
+  color: #4d7c0f;
+  font-weight: 500;
+}
+.dark .rn-hl-animate {
+  color: #c8ff2e;
+}
+
+/* Comments */
+.rn-hl-comment {
+  color: #94a3b8;
+  font-style: italic;
+}
+.dark .rn-hl-comment {
+  color: #52525b;
+}
+
+/* Numbers */
+.rn-hl-number {
+  color: #b45309;
+}
+.dark .rn-hl-number {
+  color: #fbbf24;
+}
+
+/* Punctuation: < > = { } */
+.rn-hl-punct {
+  color: #64748b;
+}
+.dark .rn-hl-punct {
+  color: #71717a;
+}
+
+/* ── React Native preview animations ── */
+
+.rn-anim-fadeSlideUp {
+  animation: rn-fadeSlideUp 600ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.rn-anim-fadeIn {
+  animation: rn-fadeIn 500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.rn-anim-scaleIn {
+  animation: rn-scaleIn 500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.rn-anim-slideRight {
+  animation: rn-slideRight 500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.rn-anim-rotate {
+  animation: rn-rotate 600ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.rn-anim-bounce {
+  animation: rn-bounce 800ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.rn-anim-pulse {
+  animation: rn-pulse 1200ms ease-in-out infinite;
+}
+.rn-anim-tapScale {
+  transition: transform 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.rn-anim-tapScale:active {
+  transform: scale(0.92);
+}
+.rn-anim-spring {
+  animation: rn-spring 700ms cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes rn-fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes rn-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes rn-scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes rn-slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes rn-rotate {
+  from {
+    opacity: 0;
+    transform: rotate(-15deg) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+/* ── Progressive Blur (bottom edge) ── */
+
+.progressive-blur {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.progressive-blur .blur-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.progressive-blur .blur-1 {
+  height: 100%;
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 16.67%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 16.67%);
+}
+
+.progressive-blur .blur-2 {
+  height: 83.33%;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+}
+
+.progressive-blur .blur-3 {
+  height: 66.67%;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 25%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25%);
+}
+
+.progressive-blur .blur-4 {
+  height: 50%;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 33%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 33%);
+}
+
+.progressive-blur .blur-5 {
+  height: 33.33%;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 50%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 50%);
+}
+
+.progressive-blur .blur-6 {
+  height: 16.67%;
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+}
+
+@keyframes rn-bounce {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-8px);
+  }
+  80% {
+    transform: translateY(4px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes rn-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.08);
+  }
+}
+@keyframes rn-spring {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  50% {
+    transform: scale(1.05) translateY(-4px);
+  }
+  75% {
+    transform: scale(0.98) translateY(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
