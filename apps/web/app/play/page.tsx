@@ -67,7 +67,7 @@ export default function StudioPage() {
           <button
             type="button"
             onClick={() => copy("code", generated)}
-            className="cursor-pointer rounded-md bg-acid px-3 py-1.5 text-[11px] font-bold text-black transition hover:bg-acid-dim"
+            className="cursor-pointer rounded-md bg-acid px-3 py-1.5 text-[11px] font-bold text-[var(--color-accent-fg)] transition hover:bg-acid-dim"
           >
             {copied === "code" ? "Copied" : "Copy code"}
           </button>

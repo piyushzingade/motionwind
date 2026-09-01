@@ -94,7 +94,7 @@ export function GetStartedSection({
         <div className="animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-400 animate-ease-out animate-once mt-12 sm:mt-14 flex gap-4 justify-center">
           <a
             href="https://www.motionwind.xyz/docs/getting-started"
-            className="animate-hover:scale-105 animate-tap:scale-95 animate-spring group inline-flex items-center gap-2.5 rounded-xl bg-acid px-6 sm:px-8 py-3.5 text-sm font-semibold text-gray-950 transition-shadow hover:shadow-[0_0_30px_var(--acid-glow)]"
+            className="animate-hover:scale-105 animate-tap:scale-95 animate-spring group inline-flex items-center gap-2.5 rounded-xl bg-acid px-6 sm:px-8 py-3.5 text-sm font-semibold text-[var(--color-accent-fg)] transition-shadow hover:shadow-[0_0_30px_var(--acid-glow)]"
           >
             Read the Docs
             <svg

@@ -32,7 +32,7 @@ export function PreviewStage({
   return (
     <div className="studio-checker flex min-h-[430px] items-center justify-center overflow-auto p-5 md:p-10">
       <div
-        className="relative flex min-h-[320px] max-w-full items-center justify-center overflow-hidden rounded-2xl border border-white/[0.06] bg-surface-raised/90 shadow-[0_30px_90px_#0008] transition-[width] duration-300"
+        className="relative flex min-h-[320px] max-w-full items-center justify-center overflow-hidden rounded-2xl border border-border-subtle bg-surface-raised/90 shadow-[0_30px_90px_var(--color-shadow)] transition-[width] duration-300"
         style={{ width: stageWidth }}
       >
         <div className="absolute left-4 top-4 flex items-center gap-2 font-mono text-[8px] uppercase tracking-[0.18em] code-muted">

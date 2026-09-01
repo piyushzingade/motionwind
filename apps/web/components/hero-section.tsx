@@ -76,7 +76,7 @@ export function HeroSection() {
             <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-700 animate-delay-400 animate-ease-out flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10">
               <a
                 href="https://www.motionwind.xyz/docs"
-                className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 group inline-flex items-center gap-2 rounded-lg bg-acid px-5 sm:px-6 py-3 text-sm font-semibold text-gray-950 transition-shadow hover:shadow-[0_0_30px_var(--acid-glow)] cursor-pointer"
+                className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 group inline-flex items-center gap-2 rounded-lg bg-acid px-5 sm:px-6 py-3 text-sm font-semibold text-[var(--color-accent-fg)] transition-shadow hover:shadow-[0_0_30px_var(--acid-glow)] cursor-pointer"
               >
                 Get Started
                 <svg

@@ -45,7 +45,7 @@ export function Header() {
         <ThemeToggle />
         <Link
           href="https://play.motionwind.xyz"
-          className="hidden sm:inline-flex items-center gap-2 rounded-md bg-acid px-4 py-1.5 text-sm font-semibold text-black transition-colors hover:bg-acid-dim"
+          className="hidden sm:inline-flex items-center gap-2 rounded-md bg-acid px-4 py-1.5 text-sm font-semibold text-[var(--color-accent-fg)] transition-colors hover:bg-acid-dim"
         >
           Try Studio
         </Link>

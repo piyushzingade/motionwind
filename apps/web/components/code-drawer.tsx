@@ -42,9 +42,9 @@ export function CodeDrawer({
         <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle">
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
-              <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
-              <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+              <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]/80" />
+              <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]/80" />
+              <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]/80" />
             </div>
             <span className="text-[11px] text-text-muted font-[family-name:var(--font-mono)]">
               {example.file}
