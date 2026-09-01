@@ -7,27 +7,37 @@ export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const mounted = useMounted();
 
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border-subtle bg-surface-raised text-text-dim"
+        aria-label="Toggle theme"
+      >
+        <span className="h-3.5 w-3.5" />
+      </button>
+    );
+  }
+
   const isDark = resolvedTheme === "dark";
 
   return (
     <button
       type="button"
-      role="switch"
-      aria-checked={isDark}
-      aria-label="Toggle color theme"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-raised text-text-dim transition-colors hover:border-acid/30 hover:text-acid"
+      className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border-subtle bg-surface-raised text-text-dim transition-colors hover:text-foreground hover:border-acid/20"
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
-      {mounted && (
+      {isDark ? (
         <svg
-          className={`h-4 w-4 transition-opacity ${isDark ? "opacity-100" : "opacity-0"}`}
-          fill="none"
+          width="14"
+          height="14"
           viewBox="0 0 24 24"
+          fill="none"
           stroke="currentColor"
-          strokeWidth={1.8}
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          style={{ gridArea: "1 / 1" }}
         >
           <circle cx="12" cy="12" r="4" />
           <path d="M12 2v2" />
@@ -39,22 +49,20 @@ export function ThemeToggle() {
           <path d="m6.34 17.66-1.41 1.41" />
           <path d="m19.07 4.93-1.41 1.41" />
         </svg>
-      )}
-      {mounted && (
+      ) : (
         <svg
-          className={`h-4 w-4 transition-opacity ${isDark ? "opacity-0" : "opacity-100"}`}
-          fill="none"
+          width="14"
+          height="14"
           viewBox="0 0 24 24"
+          fill="none"
           stroke="currentColor"
-          strokeWidth={1.8}
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          style={{ gridArea: "1 / 1" }}
         >
           <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
         </svg>
       )}
-      <span className="sr-only">Toggle theme</span>
     </button>
   );
 }
