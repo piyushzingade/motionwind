@@ -9,13 +9,16 @@ export function Header() {
       <div className="flex items-center gap-4">
         <Link
           href="/"
-          className="flex items-center gap-2 font-mono text-xs font-bold tracking-[-0.03em] text-accent hover:text-accent-dim transition-colors"
+          className="flex items-center gap-2 font-mono text-xs font-bold tracking-[-0.03em] text-acid hover:text-acid-dim transition-colors"
           aria-label="Motionwind home"
         >
           <span>motionwind</span>
           <span className="hidden sm:inline text-text-muted">v2</span>
         </Link>
-        <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
+        <nav
+          className="hidden md:flex items-center gap-1"
+          aria-label="Main navigation"
+        >
           <Link
             href="/"
             className="rounded-md px-3 py-1.5 text-sm font-medium text-text-dim hover:text-foreground hover:bg-surface-overlay transition-colors"
@@ -42,7 +45,7 @@ export function Header() {
         <ThemeToggle />
         <Link
           href="/play"
-          className="hidden sm:inline-flex items-center gap-2 rounded-md bg-accent px-4 py-1.5 text-sm font-semibold text-black transition-colors hover:bg-accent-dim"
+          className="hidden sm:inline-flex items-center gap-2 rounded-md bg-acid px-4 py-1.5 text-sm font-semibold text-black transition-colors hover:bg-acid-dim"
         >
           Try Studio
         </Link>

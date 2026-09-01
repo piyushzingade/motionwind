@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useSpring, useMotionValue, motion } from "motion/react";
 import { Typewriter } from "../components/typewriter";
-import { ThemeToggle } from "../components/theme-toggle";
+import { Header } from "../components/header";
 import { highlightCode } from "../lib/highlight";
 
 /**
@@ -278,49 +278,9 @@ export default function Home() {
   return (
     <div className="grain">
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       *  INTERACTIVE HINT BANNER — tells users to click for code
+       *  HEADER — persistent navigation with Studio link + theme toggle
        * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <div className="animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-800 animate-delay-1200 animate-ease-out sticky top-0 z-30 w-full">
-        <div className="relative overflow-hidden border-b border-border-subtle bg-surface/80 backdrop-blur-xl">
-          {/* Animated shimmer line */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute inset-0 animate-glow-line bg-gradient-to-r from-transparent via-acid/[0.07] to-transparent" />
-          </div>
-          <div className="relative flex items-center justify-center gap-3 px-4 py-2.5">
-            {/* Pulse dot */}
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-60 animate-pulse-glow" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
-            </span>
-            <p className="text-[11px] sm:text-xs text-text-dim tracking-wide">
-              <span className="text-foreground font-medium">Hover & click</span>{" "}
-              any component or section to see its motionwind code
-              <span className="hidden sm:inline text-text-muted">
-                {" "}
-                — the code panel slides in from the right
-              </span>
-            </p>
-            {/* Animated arrow icon */}
-            <svg
-              className="w-4 h-4 text-acid/60 hidden sm:block animate-nudge-x"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-              />
-            </svg>
-            {/* Theme toggle */}
-            <span className="ml-1 hidden sm:block">
-              <ThemeToggle />
-            </span>
-          </div>
-        </div>
-      </div>
+      <Header />
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
        *  HERO
@@ -1580,6 +1540,9 @@ export default function Home() {
             <span className="text-xs text-text-muted">v2.0.0</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-text-muted">
+            <a href="/play" className="hover:text-foreground transition-colors">
+              Studio
+            </a>
             <a
               href="https://www.motionwind.xyz/docs/getting-started"
               className="hover:text-foreground transition-colors"

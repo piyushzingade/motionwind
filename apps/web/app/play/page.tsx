@@ -292,13 +292,13 @@ export default function StudioPage() {
 
   return (
     <main className="min-h-screen bg-surface text-foreground">
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border-subtle bg-surface/90 px-4 backdrop-blur-xl md:px-6">
+      <header className="sticky top-0 z-200 flex h-14 items-center justify-between border-b border-border-subtle bg-surface/80 px-4 backdrop-blur-xl md:px-6">
         <div className="flex items-center gap-4">
           <Link
             href="/"
-            className="font-mono text-xs font-bold tracking-[-0.04em] text-acid"
+            className="font-mono text-xs font-bold tracking-[-0.03em] text-acid hover:text-acid-dim transition-colors"
           >
-            motionwind/
+            motionwind
           </Link>
           <span className="hidden h-4 w-px bg-border-strong sm:block" />
           <div>
