@@ -26,7 +26,7 @@ export function Header() {
             Features
           </Link>
           <Link
-            href="/play"
+            href="https://play.motionwind.xyz"
             className="rounded-md px-3 py-1.5 text-sm font-medium text-text-dim hover:text-foreground hover:bg-surface-overlay transition-colors"
           >
             Studio
@@ -44,7 +44,7 @@ export function Header() {
       <div className="flex items-center gap-2">
         <ThemeToggle />
         <Link
-          href="/play"
+          href="https://play.motionwind.xyz"
           className="hidden sm:inline-flex items-center gap-2 rounded-md bg-acid px-4 py-1.5 text-sm font-semibold text-black transition-colors hover:bg-acid-dim"
         >
           Try Studio

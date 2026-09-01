@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   description:
     "Interactive playground for Motionwind — write Motion animations as Tailwind-like utility classes and see them live.",
-  metadataBase: new URL("https://playground.motionwind.xyz"),
+  metadataBase: new URL("https://play.motionwind.xyz"),
   openGraph: {
     type: "website",
     siteName: "Motionwind Playground",

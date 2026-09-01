@@ -12,7 +12,7 @@ export function Footer() {
         </div>
         <div className="flex items-center gap-6 text-sm text-text-muted">
           <Link
-            href="/play"
+            href="https://play.motionwind.xyz"
             className="hover:text-foreground transition-colors"
           >
             Studio
