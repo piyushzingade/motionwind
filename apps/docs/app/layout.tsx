@@ -153,8 +153,7 @@ export default function RootLayout({
                   softwareVersion: "2.0.0",
                   downloadUrl: "https://www.npmjs.com/package/motionwind-react",
                   installUrl: "https://www.npmjs.com/package/motionwind-react",
-                  screenshot:
-                    "https://www.motionwind.xyz/og-docs.png",
+                  screenshot: "https://www.motionwind.xyz/og-docs.png",
                   featureList:
                     "Compile-time animation transforms, gesture animations, scroll animations, layout animations, spring physics, variants, drag, SVG animation, reduced motion support",
                   keywords:

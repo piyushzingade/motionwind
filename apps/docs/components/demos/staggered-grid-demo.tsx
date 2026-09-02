@@ -33,7 +33,10 @@ export function StaggeredGridDemo() {
 
   return (
     <div className="w-full max-w-xs">
-      <button onClick={() => setKey((k) => k + 1)} className="demo-btn-primary mb-4">
+      <button
+        onClick={() => setKey((k) => k + 1)}
+        className="demo-btn-primary mb-4"
+      >
         Replay
       </button>
       <motion.div
@@ -50,8 +53,12 @@ export function StaggeredGridDemo() {
             className="rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border)] p-4"
           >
             <span className="text-lg">{card.icon}</span>
-            <p className="text-[var(--color-accent)] font-semibold text-xs mt-2">{card.title}</p>
-            <p className="text-[var(--color-fg-muted)] text-[10px] mt-0.5">{card.desc}</p>
+            <p className="text-[var(--color-accent)] font-semibold text-xs mt-2">
+              {card.title}
+            </p>
+            <p className="text-[var(--color-fg-muted)] text-[10px] mt-0.5">
+              {card.desc}
+            </p>
           </motion.div>
         ))}
       </motion.div>

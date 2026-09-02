@@ -25,7 +25,10 @@ export function OrchestratedFormDemo() {
 
   return (
     <div className="w-full max-w-xs">
-      <button onClick={() => setKey((k) => k + 1)} className="demo-btn-primary mb-4">
+      <button
+        onClick={() => setKey((k) => k + 1)}
+        className="demo-btn-primary mb-4"
+      >
         Replay
       </button>
       <motion.div
@@ -44,7 +47,9 @@ export function OrchestratedFormDemo() {
               {field.label}
             </label>
             <div className="h-9 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] px-3 flex items-center">
-              <span className="text-xs text-[var(--color-fg-muted)]">{field.placeholder}</span>
+              <span className="text-xs text-[var(--color-fg-muted)]">
+                {field.placeholder}
+              </span>
             </div>
           </motion.div>
         ))}
@@ -53,12 +58,16 @@ export function OrchestratedFormDemo() {
             Message
           </label>
           <div className="h-16 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] px-3 pt-2">
-            <span className="text-xs text-[var(--color-fg-muted)]">Write something...</span>
+            <span className="text-xs text-[var(--color-fg-muted)]">
+              Write something...
+            </span>
           </div>
         </motion.div>
         <motion.div variants={formField}>
           <div className="h-9 rounded-lg bg-[var(--color-accent)] flex items-center justify-center cursor-pointer">
-            <span className="text-xs font-bold text-[var(--color-accent-fg)] uppercase tracking-wider">Submit</span>
+            <span className="text-xs font-bold text-[var(--color-accent-fg)] uppercase tracking-wider">
+              Submit
+            </span>
           </div>
         </motion.div>
       </motion.div>

@@ -116,7 +116,10 @@ export default function DocsHome() {
       </div>
 
       {/* Quick links for SEO and GEO */}
-      <nav className="mt-16 max-w-2xl w-full" aria-label="Documentation sections">
+      <nav
+        className="mt-16 max-w-2xl w-full"
+        aria-label="Documentation sections"
+      >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
           <Link
             href="/docs/getting-started"

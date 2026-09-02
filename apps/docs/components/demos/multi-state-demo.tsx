@@ -38,11 +38,22 @@ export function MultiStateDemo() {
         animate={state}
         transition={{ type: "spring", stiffness: 300, damping: 22 }}
         className={`rounded-2xl bg-[var(--color-surface-elevated)] border p-6 w-48 text-center ${
-          state === "active" ? "border-[var(--color-accent)]" : "border-[var(--color-border)]"
+          state === "active"
+            ? "border-[var(--color-accent)]"
+            : "border-[var(--color-border)]"
         }`}
       >
         <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center bg-[var(--color-accent)]/10">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="stroke-[var(--color-accent)]" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            className="stroke-[var(--color-accent)]"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M12 2L2 7l10 5 10-5-10-5z" />
             <path d="M2 17l10 5 10-5" />
             <path d="M2 12l10 5 10-5" />
@@ -51,7 +62,9 @@ export function MultiStateDemo() {
         <p className="text-sm font-semibold text-[var(--color-fg)]">
           {state.charAt(0).toUpperCase() + state.slice(1)}
         </p>
-        <p className="text-[10px] text-[var(--color-fg-muted)] mt-1">State: {state}</p>
+        <p className="text-[10px] text-[var(--color-fg-muted)] mt-1">
+          State: {state}
+        </p>
       </motion.div>
     </div>
   );

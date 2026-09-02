@@ -23,10 +23,7 @@ export function replaceClass(
   matcher: RegExp,
   next: string,
 ): string {
-  return [
-    ...classes.split(/\s+/).filter((token) => !matcher.test(token)),
-    next,
-  ]
+  return [...classes.split(/\s+/).filter((token) => !matcher.test(token)), next]
     .filter(Boolean)
     .join(" ");
 }

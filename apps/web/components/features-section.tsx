@@ -116,7 +116,9 @@ export function FeaturesSection({
                 </svg>
               </div>
               <h3 className="text-sm font-semibold mb-2">{f.title}</h3>
-              <p className="text-xs text-text-muted leading-relaxed">{f.desc}</p>
+              <p className="text-xs text-text-muted leading-relaxed">
+                {f.desc}
+              </p>
             </div>
           ))}
         </div>

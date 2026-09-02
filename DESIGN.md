@@ -3,6 +3,7 @@
 ## Color Tokens (OKLCH)
 
 ### Dark Mode (default)
+
 - **Background**: `oklch(0.06 0 0)` — `#0a0a0f`
 - **Surface**: `oklch(0.09 0 0)` — `#111119`
 - **Surface Raised**: `oklch(0.11 0 0)` — `#16161f`
@@ -28,6 +29,7 @@
 - **Syntax Punct**: `oklch(0.45 0.01 260)` — `#6b7280`
 
 ### Light Mode
+
 - **Background**: `oklch(0.98 0.002 260)` — `#f6f6f8`
 - **Surface**: `oklch(1 0 0)` — `#ffffff`
 - **Surface Raised**: `oklch(1 0 0)` — `#ffffff`
@@ -69,6 +71,7 @@
   - `--text-6xl`: `2.27rem` (36px)
 
 ## Spacing Scale (4px base)
+
 - `--space-1`: `0.25rem` (4px)
 - `--space-2`: `0.5rem` (8px)
 - `--space-3`: `0.75rem` (12px)
@@ -83,6 +86,7 @@
 - `--space-24`: `6rem` (96px)
 
 ## Border Radius
+
 - `--radius-sm`: `4px`
 - `--radius-md`: `8px`
 - `--radius-lg`: `12px`
@@ -91,6 +95,7 @@
 - `--radius-full`: `9999px`
 
 ## Shadows
+
 - **Elevation 1**: `0 1px 2px oklch(0 0 0 / 0.05)`
 - **Elevation 2**: `0 4px 8px -2px oklch(0 0 0 / 0.1)`
 - **Elevation 3**: `0 12px 24px -8px oklch(0 0 0 / 0.15)`
@@ -98,6 +103,7 @@
 - **Accent Glow**: `0 0 30px var(--accent-glow)`
 
 ## Motion Tokens
+
 - **Fast**: `150ms ease-out`
 - **Base**: `200ms ease-out`
 - **Slow**: `300ms ease-out`
@@ -107,6 +113,7 @@
 - **Reduced Motion**: `0ms` (instant) or crossfade only
 
 ## Z-Index Scale
+
 - **Dropdown**: `100`
 - **Sticky Header**: `200`
 - **Modal Backdrop**: `300`
@@ -116,6 +123,7 @@
 - **Code Drawer**: `500`
 
 ## Breakpoints
+
 - **sm**: `640px`
 - **md**: `768px`
 - **lg**: `1024px`
@@ -123,7 +131,9 @@
 - **2xl**: `1536px`
 
 ## Component State Vocabulary
+
 Every interactive element must have:
+
 - **Default**
 - **Hover** (pointer)
 - **Focus** (keyboard) — visible ring, 2px offset
@@ -133,18 +143,21 @@ Every interactive element must have:
 - **Error** — red accent ring + message
 
 ## Layout Primitives
+
 - **Container**: `max-w-[72rem]` (1152px), centered, `px-4 sm:px-6 lg:px-8`
 - **Section**: `py-20 sm:py-24 lg:py-28`
 - **Grid**: `repeat(auto-fit, minmax(280px, 1fr))` for cards
 - **Stack**: `space-y-6 sm:space-y-8`
 
 ## Code Blocks
+
 - **Font**: Geist Mono, `0.875rem` (14px), `line-height: 1.7`
 - **Padding**: `1.5rem`
 - **Radius**: `12px`
 - **Tab size**: 2 spaces
 
 ## Form Controls
+
 - **Height**: `40px` (comfortable touch target)
 - **Padding**: `0 1rem`
 - **Radius**: `8px`
@@ -153,6 +166,7 @@ Every interactive element must have:
 - **Placeholder**: `var(--text-muted)`
 
 ## Buttons
+
 - **Primary**: `bg-accent text-black font-semibold` — accent background, dark text
 - **Secondary**: `bg-surface-raised border-border-strong text-foreground`
 - **Ghost**: `text-text-dim hover:text-foreground hover:bg-surface-overlay`

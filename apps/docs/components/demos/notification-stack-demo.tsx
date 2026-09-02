@@ -39,7 +39,11 @@ export function NotificationStackDemo() {
       <button onClick={add} className="demo-btn-primary mb-3">
         Add Notification
       </button>
-      <motion.div variants={notifContainer} animate="visible" className="space-y-2">
+      <motion.div
+        variants={notifContainer}
+        animate="visible"
+        className="space-y-2"
+      >
         <AnimatePresence mode="popLayout">
           {notifs.map((n) => (
             <motion.div
@@ -53,14 +57,20 @@ export function NotificationStackDemo() {
               className="flex items-center gap-3 rounded-lg bg-[var(--color-surface-elevated)] border border-[var(--color-border)] px-4 py-2.5 cursor-pointer"
             >
               <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] flex-shrink-0" />
-              <span className="text-xs font-medium text-[var(--color-fg)] flex-1">{n.msg}</span>
-              <span className="text-[10px] text-[var(--color-fg-muted)]">✕</span>
+              <span className="text-xs font-medium text-[var(--color-fg)] flex-1">
+                {n.msg}
+              </span>
+              <span className="text-[10px] text-[var(--color-fg-muted)]">
+                ✕
+              </span>
             </motion.div>
           ))}
         </AnimatePresence>
       </motion.div>
       {notifs.length === 0 && (
-        <p className="text-[10px] text-[var(--color-fg-muted)] text-center mt-4">No notifications</p>
+        <p className="text-[10px] text-[var(--color-fg-muted)] text-center mt-4">
+          No notifications
+        </p>
       )}
     </div>
   );

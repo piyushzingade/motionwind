@@ -29,11 +29,23 @@ export default function StudioPage() {
     updateEditor,
   } = useStudioState();
 
-  const { parsed, generated, highlighted, duration, delay, stiffness, damping, activeRecipe, recipeSupportsTarget } =
-    useGeneratedCode(editor);
+  const {
+    parsed,
+    generated,
+    highlighted,
+    duration,
+    delay,
+    stiffness,
+    damping,
+    activeRecipe,
+    recipeSupportsTarget,
+  } = useGeneratedCode(editor);
 
   const applyRecipe = (recipe: MotionwindRecipe) => {
-    updateEditor({ classes: `${recipe.classes} ${PREVIEW_SKIN}`, text: recipe.name });
+    updateEditor({
+      classes: `${recipe.classes} ${PREVIEW_SKIN}`,
+      text: recipe.name,
+    });
     replay();
   };
 

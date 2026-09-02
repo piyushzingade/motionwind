@@ -9,7 +9,13 @@ export function PulseRingsDemo() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <svg key={key} width="160" height="160" viewBox="0 0 160 160" className="text-[var(--color-accent)]">
+      <svg
+        key={key}
+        width="160"
+        height="160"
+        viewBox="0 0 160 160"
+        className="text-[var(--color-accent)]"
+      >
         {rings.map((i) => (
           <motion.circle
             key={i}
@@ -21,13 +27,28 @@ export function PulseRingsDemo() {
             strokeWidth="1"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: [0, 0.6, 0] }}
-            transition={{ duration: 2, delay: i * 0.3, repeat: Infinity, ease: "easeOut" }}
+            transition={{
+              duration: 2,
+              delay: i * 0.3,
+              repeat: Infinity,
+              ease: "easeOut",
+            }}
             style={{ transformOrigin: "80px 80px" }}
           />
         ))}
-        <motion.circle cx="80" cy="80" r="8" fill="currentColor" initial={{ scale: 0 }} animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }} />
+        <motion.circle
+          cx="80"
+          cy="80"
+          r="8"
+          fill="currentColor"
+          initial={{ scale: 0 }}
+          animate={{ scale: [1, 1.15, 1] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        />
       </svg>
-      <button onClick={() => setKey((k) => k + 1)} className="demo-btn">Restart</button>
+      <button onClick={() => setKey((k) => k + 1)} className="demo-btn">
+        Restart
+      </button>
     </div>
   );
 }
