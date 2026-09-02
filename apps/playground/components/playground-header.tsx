@@ -3,33 +3,17 @@
 import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 
-export function PlaygroundHeader({
-  onToggleSidebar,
-}: {
-  onToggleSidebar: () => void;
-}) {
+export function PlaygroundHeader() {
   return (
     <header className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-dashed border-[var(--color-border)] px-4 sticky top-0 bg-[var(--color-bg)]/80 backdrop-blur-md z-40">
-      <button
-        type="button"
-        onClick={onToggleSidebar}
-        className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)] hover:bg-[var(--color-surface-elevated)]"
-        aria-label="Toggle sidebar"
-      >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <rect width="18" height="18" x="3" y="3" rx="2" />
-          <path d="M9 3v18" />
-        </svg>
-      </button>
+      <Link href="/" className="flex items-center gap-2.5 no-underline">
+        <span className="font-[family-name:var(--font-display)] text-xl italic tracking-tight text-[var(--color-fg)]">
+          motionwind
+        </span>
+        <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-fg-muted)]/50 ml-0.5">
+          studio
+        </span>
+      </Link>
 
       <div className="flex items-center gap-2">
         <ThemeToggle />
