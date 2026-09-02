@@ -2,11 +2,33 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Motionwind v2 — one Motion utility language across frameworks",
+  title: "Motionwind — Motion animations as utility classes",
   description:
-    "Documentation for Motionwind v2 across React, Vue, JavaScript, and React Native, including configuration, adapter capabilities, and tested compatibility.",
+    "Motionwind is a shared Motion utility language for React, Vue, JavaScript, and React Native. Write animate-* classes that compile to Motion at build time with zero runtime overhead.",
   alternates: {
     canonical: "https://www.motionwind.xyz",
+  },
+  openGraph: {
+    title: "Motionwind — Motion animations as utility classes",
+    description:
+      "Write Motion animations as Tailwind-like utility classes. Transformed at build time. Zero runtime overhead.",
+    url: "https://www.motionwind.xyz",
+    type: "website",
+    images: [
+      {
+        url: "https://www.motionwind.xyz/og-docs.png",
+        width: 1200,
+        height: 630,
+        alt: "Motionwind — Motion animations as utility classes",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Motionwind — Motion animations as utility classes",
+    description:
+      "Write Motion animations as Tailwind-like utility classes. Transformed at build time. Zero runtime overhead.",
+    images: ["https://www.motionwind.xyz/og-docs.png"],
   },
 };
 
@@ -92,6 +114,56 @@ export default function DocsHome() {
           </svg>
         </a>
       </div>
+
+      {/* Quick links for SEO and GEO */}
+      <nav className="mt-16 max-w-2xl w-full" aria-label="Documentation sections">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+          <Link
+            href="/docs/getting-started"
+            className="group rounded-lg border border-[var(--color-border)] p-5 transition-colors hover:border-[var(--color-accent)]/40"
+          >
+            <h3 className="text-sm font-semibold text-[var(--color-fg)] mb-1 group-hover:text-[var(--color-accent)]">
+              Getting Started
+            </h3>
+            <p className="text-xs text-[var(--color-fg-muted)]">
+              Install Motionwind and set up your first animation in minutes.
+            </p>
+          </Link>
+          <Link
+            href="/docs/frameworks"
+            className="group rounded-lg border border-[var(--color-border)] p-5 transition-colors hover:border-[var(--color-accent)]/40"
+          >
+            <h3 className="text-sm font-semibold text-[var(--color-fg)] mb-1 group-hover:text-[var(--color-accent)]">
+              Frameworks
+            </h3>
+            <p className="text-xs text-[var(--color-fg-muted)]">
+              React, Vue, vanilla JavaScript, and React Native adapters.
+            </p>
+          </Link>
+          <Link
+            href="/docs/syntax"
+            className="group rounded-lg border border-[var(--color-border)] p-5 transition-colors hover:border-[var(--color-accent)]/40"
+          >
+            <h3 className="text-sm font-semibold text-[var(--color-fg)] mb-1 group-hover:text-[var(--color-accent)]">
+              Syntax Reference
+            </h3>
+            <p className="text-xs text-[var(--color-fg-muted)]">
+              Complete reference for all animation classes and properties.
+            </p>
+          </Link>
+          <Link
+            href="/docs/configuration"
+            className="group rounded-lg border border-[var(--color-border)] p-5 transition-colors hover:border-[var(--color-accent)]/40"
+          >
+            <h3 className="text-sm font-semibold text-[var(--color-fg)] mb-1 group-hover:text-[var(--color-accent)]">
+              Configuration
+            </h3>
+            <p className="text-xs text-[var(--color-fg-muted)]">
+              Tokens, presets, diagnostics, and reduced-motion policy.
+            </p>
+          </Link>
+        </div>
+      </nav>
     </div>
   );
 }

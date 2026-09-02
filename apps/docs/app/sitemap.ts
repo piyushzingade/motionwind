@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const docPages: MetadataRoute.Sitemap = pages.map((page) => ({
     url: `${BASE_URL}${page.url}`,
     lastModified: new Date(),
-    changeFrequency: "weekly",
+    changeFrequency: "weekly" as const,
     priority: HIGH_PRIORITY.has(page.url) ? 0.9 : 0.7,
   }));
 
@@ -37,6 +37,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/docs/llms`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
     },
     ...docPages,
   ];

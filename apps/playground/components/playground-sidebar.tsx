@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LazyMotion, domAnimation, m, AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { PLAYGROUND_SIDEBAR, type SidebarGroup } from "./sidebar-items";
 
 const easeOutQuint: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -40,11 +40,7 @@ function SidebarGroupComponent({
                 `}
               >
                 {isActive && (
-                  <m.span
-                    layoutId="sidebar-active"
-                    className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-[2px] rounded-full bg-[var(--color-accent)]"
-                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                  />
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-[2px] rounded-full bg-[var(--color-accent)]" />
                 )}
                 <span className="truncate">{item.title}</span>
               </Link>
@@ -58,17 +54,17 @@ function SidebarGroupComponent({
 
 export function PlaygroundSidebar({
   mobileOpen,
-  desktopCollapsed,
+  collapsed,
   onCloseMobile,
 }: {
   mobileOpen: boolean;
-  desktopCollapsed: boolean;
+  collapsed: boolean;
   onCloseMobile: () => void;
 }) {
   const pathname = usePathname();
 
   const sidebarContent = (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col min-w-[260px]">
       <div className="flex h-14 items-center border-b border-dashed border-[var(--color-border)] px-4">
         <Link href="/" className="flex items-center gap-2.5 no-underline">
           <span className="font-[family-name:var(--font-display)] text-xl italic tracking-tight text-[var(--color-fg)]">
@@ -134,20 +130,19 @@ export function PlaygroundSidebar({
   );
 
   return (
-    <LazyMotion features={domAnimation}>
-      <m.aside
-        initial={false}
-        animate={{ x: desktopCollapsed ? -260 : 0 }}
-        transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="hidden md:flex h-screen flex-shrink-0 flex-col border-r border-dashed border-[var(--color-border)] bg-[var(--color-bg)] sticky top-0 overflow-hidden"
+    <>
+      <aside
+        className="hidden md:flex h-screen flex-shrink-0 flex-col border-r border-dashed border-[var(--color-border)] bg-[var(--color-bg)] overflow-hidden transition-[width] duration-200 ease-out"
+        style={{ width: collapsed ? 0 : 260 }}
+        aria-label="Sidebar navigation"
       >
-        <div className="w-[260px] h-full">{sidebarContent}</div>
-      </m.aside>
+        {sidebarContent}
+      </aside>
 
       <AnimatePresence>
         {mobileOpen && (
           <>
-            <m.div
+            <motion.div
               role="button"
               tabIndex={0}
               aria-label="Close navigation sidebar"
@@ -164,7 +159,7 @@ export function PlaygroundSidebar({
                 }
               }}
             />
-            <m.aside
+            <motion.aside
               initial={{ x: -280 }}
               animate={{ x: 0 }}
               exit={{ x: -280 }}
@@ -172,10 +167,10 @@ export function PlaygroundSidebar({
               className="fixed left-0 top-0 z-50 h-screen w-[280px] bg-[var(--color-bg)] border-r border-[var(--color-border)] md:hidden"
             >
               {sidebarContent}
-            </m.aside>
+            </motion.aside>
           </>
         )}
       </AnimatePresence>
-    </LazyMotion>
+    </>
   );
 }

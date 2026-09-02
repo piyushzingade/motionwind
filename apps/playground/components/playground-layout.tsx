@@ -10,14 +10,14 @@ export function PlaygroundLayoutClient({
   children: React.ReactNode;
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [desktopCollapsed, setDesktopCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "b") {
         e.preventDefault();
         if (window.matchMedia("(min-width: 768px)").matches) {
-          setDesktopCollapsed((prev) => !prev);
+          setSidebarCollapsed((prev) => !prev);
         } else {
           setMobileOpen((prev) => !prev);
         }
@@ -29,7 +29,7 @@ export function PlaygroundLayoutClient({
 
   const handleToggleSidebar = useCallback(() => {
     if (window.matchMedia("(min-width: 768px)").matches) {
-      setDesktopCollapsed((prev) => !prev);
+      setSidebarCollapsed((prev) => !prev);
     } else {
       setMobileOpen((prev) => !prev);
     }
@@ -40,25 +40,19 @@ export function PlaygroundLayoutClient({
   }, []);
 
   return (
-    <div className="flex h-screen w-full bg-[var(--color-bg)]">
+    <div className="flex h-screen w-full overflow-hidden bg-[var(--color-bg)]">
       <PlaygroundSidebar
         mobileOpen={mobileOpen}
-        desktopCollapsed={desktopCollapsed}
+        collapsed={sidebarCollapsed}
         onCloseMobile={handleCloseMobile}
       />
       <div className="relative flex flex-1 flex-col min-h-0 min-w-0">
         <PlaygroundHeader onToggleSidebar={handleToggleSidebar} />
-        <div className="docs-content-wrapper flex-1 overflow-y-auto min-h-0">
-          {children}
-        </div>
-        <div className="progressive-blur" aria-hidden="true">
-          <div className="blur-layer blur-1" />
-          <div className="blur-layer blur-2" />
-          <div className="blur-layer blur-3" />
-          <div className="blur-layer blur-4" />
-          <div className="blur-layer blur-5" />
-          <div className="blur-layer blur-6" />
-        </div>
+        <main className="flex-1 overflow-y-auto min-h-0">
+          <div className="p-5 sm:p-8 max-w-5xl mx-auto w-full">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );

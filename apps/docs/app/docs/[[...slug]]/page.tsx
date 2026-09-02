@@ -74,8 +74,8 @@ export default async function Page(props: {
   const url = `https://www.motionwind.xyz${page.url}`;
   const section = sectionForSlug(params.slug);
 
-  // Structured data: a TechArticle for the page + a breadcrumb trail. These
-  // power rich results and help search engines understand the docs hierarchy.
+  // Structured data: a TechArticle for the page + a breadcrumb trail + SoftwareSourceCode.
+  // These power rich results and help search engines and AI systems understand the docs hierarchy.
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -86,12 +86,34 @@ export default async function Page(props: {
         url,
         inLanguage: "en",
         articleSection: section,
-        author: { "@type": "Person", name: "Piyush" },
+        author: {
+          "@type": "Person",
+          name: "Piyush",
+          url: "https://github.com/piyushzingade",
+        },
+        publisher: {
+          "@type": "Person",
+          name: "Piyush",
+          url: "https://github.com/piyushzingade",
+        },
         isPartOf: {
           "@type": "WebSite",
           name: "Motionwind",
           url: "https://www.motionwind.xyz",
         },
+        about: {
+          "@type": "SoftwareApplication",
+          name: "Motionwind",
+          applicationCategory: "DeveloperApplication",
+          url: "https://www.motionwind.xyz",
+        },
+        keywords: [
+          "motionwind",
+          section.toLowerCase(),
+          "animation",
+          "motion",
+          "tailwind",
+        ],
       },
       {
         "@type": "BreadcrumbList",
@@ -99,12 +121,18 @@ export default async function Page(props: {
           {
             "@type": "ListItem",
             position: 1,
+            name: "Home",
+            item: "https://www.motionwind.xyz",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
             name: "Docs",
             item: "https://www.motionwind.xyz/docs",
           },
           {
             "@type": "ListItem",
-            position: 2,
+            position: 3,
             name: page.data.title,
             item: url,
           },
@@ -175,6 +203,9 @@ export async function generateMetadata(props: {
       `motionwind ${section.toLowerCase()}`,
       page.data.title.toLowerCase(),
       section.toLowerCase(),
+      "animation library",
+      "ui animation",
+      "frontend animation",
     ]),
   );
 
@@ -182,15 +213,19 @@ export async function generateMetadata(props: {
     title: page.data.title,
     description: page.data.description,
     keywords,
+    authors: [{ name: "Piyush", url: "https://github.com/piyushzingade" }],
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: `${page.data.title} | Motionwind`,
+      title: `${page.data.title} | Motionwind Docs`,
       description: page.data.description,
       url,
       type: "article",
       siteName: "Motionwind",
+      authors: ["Piyush"],
+      publishedTime: undefined,
+      modifiedTime: new Date().toISOString(),
       images: [
         {
           url: ogImageUrl,
@@ -202,9 +237,10 @@ export async function generateMetadata(props: {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${page.data.title} | Motionwind`,
+      title: `${page.data.title} | Motionwind Docs`,
       description: page.data.description,
       images: [ogImageUrl],
+      creator: "@piyushzingade",
     },
   };
 }

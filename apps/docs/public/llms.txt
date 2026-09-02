@@ -1,45 +1,100 @@
-# Motionwind v2.0.0 — machine reference
+# Motionwind v2.0.0 — Machine-Readable Reference for LLMs
 
 Motionwind is a shared Motion-first utility language for React, Vue, browser
 JavaScript, and React Native. It targets the common 80% of UI animation. Use
 direct Motion/platform APIs for imperative timelines and adapter capability
 gaps.
 
-Public support tiers:
+## Quick Start
+
+```bash
+npx create-motionwind@2 init
+```
+
+## What is Motionwind?
+
+Motionwind is a Babel plugin and runtime system that transforms Tailwind-like
+animation utility classes into Motion (formerly Framer Motion) component props
+at build time. Write `animate-hover:scale-110` and it becomes
+`whileHover={{ scale: 1.1 }}`. Zero imports, zero boilerplate, zero runtime
+overhead.
+
+## Who is Motionwind for?
+
+Frontend developers (React, Vue, vanilla, React Native) who want expressive,
+performant animations without learning a new API or shipping parser bundles.
+
+## What problem does Motionwind solve?
+
+Traditional animation code requires importing motion components, writing
+verbose prop objects, and understanding animation timing. Motionwind lets you
+express the same intent with familiar Tailwind-like classes that compile away
+at build time.
+
+## Core Value Props
+
+1. **Utility-first syntax** — `animate-hover:scale-110` feels native to Tailwind users
+2. **Build-time compilation** — Babel plugin emits optimized motion components; no parser in production
+3. **Framework agnostic** — One syntax, four targets (React, Vue, Vanilla, React Native)
+4. **Full Motion power** — Springs, drag, layout, scroll, variants, exit animations all available
+
+## Public Support Tiers
+
 - Stable: React, Next.js, React/Vite, Vue/Vite, Nuxt, vanilla JavaScript
 - Beta: React Native and Expo
 - Community: third-party adapters without core-team guarantees
 
-The public npm packages are version 2.0.0. Internal docs/example apps have
-private versions and are not npm release versions.
+## The public npm packages are version 2.0.0
 
-Quick setup:
-```bash
-npx create-motionwind@2 init --dry-run
-npx create-motionwind@2 init
-npx create-motionwind@2 doctor
+Internal docs/example apps have private versions and are not npm release
+versions.
+
+## Adapter Installs
+
+- React/Next/Vite: `motionwind-react@2 motion motionwind-core@2`
+- Vue/Nuxt: `motionwind-vue@2 motion-v @vueuse/core motionwind-core@2`
+- Vanilla: `motionwind-vanilla@2 motion motionwind-core@2`
+- React Native/Expo: `motionwind-react-native@2 react-native-reanimated
+  react-native-gesture-handler nativewind motionwind-core@2`
+
+## Core Class Grammar
+
+```
+animate-{gesture}:{property}-{value}
 ```
 
-Adapter installs:
-- React/Next/Vite: motionwind-react@2 motion motionwind-core@2
-- Vue/Nuxt: motionwind-vue@2 motion-v @vueuse/core motionwind-core@2
-- Vanilla: motionwind-vanilla@2 motion motionwind-core@2
-- React Native/Expo: motionwind-react-native@2 react-native-reanimated
-  react-native-gesture-handler nativewind motionwind-core@2
+### Gestures
 
-Core class grammar:
-- animate-{gesture}:{property}-{value}
-- gestures: hover, tap, focus, inview, drag, initial, enter, exit
-- transitions: animate-duration-300, animate-delay-100, animate-ease-out,
-  animate-spring, spring physics, repeats, stagger
-- viewport: animate-once, animate-amount-50, animate-margin-100
-- scroll: animate-scroll:y-[0,-200], animate-scroll:scaleX-[0,1]
-- layout: animate-layout, animate-layout-position, animate-layout-id-card
-- variants: animate-variant-hidden:opacity-0, animate-from-hidden,
-  animate-to-visible, animate-exit-hidden
-- presets: animate-preset-button-press or a configured preset
+hover, tap, focus, inview, drag, initial, enter, exit
 
-Configuration:
+### Transitions
+
+animate-duration-300, animate-delay-100, animate-ease-out,
+animate-spring, spring physics, repeats, stagger
+
+### Viewport
+
+animate-once, animate-amount-50, animate-margin-100
+
+### Scroll
+
+animate-scroll:y-[0,-200], animate-scroll:scaleX-[0,1]
+
+### Layout
+
+animate-layout, animate-layout-position, animate-layout-id-card
+
+### Variants
+
+animate-variant-hidden:opacity-0, animate-from-hidden,
+animate-to-visible, animate-exit-hidden
+
+### Presets
+
+animate-preset-button-press or a configured preset
+
+## Configuration
+
 ```ts
 import { defineConfig } from "motionwind-core";
 
@@ -58,7 +113,10 @@ export default defineConfig({
 });
 ```
 
-React:
+## Framework Details
+
+### React
+
 - Vite plugin must precede @vitejs/plugin-react and receives config.
 - Next uses withMotionwind(nextConfig, motionwindConfig).
 - Static tokens are compiled. Static tokens inside mixed template literals can
@@ -69,20 +127,23 @@ React:
 - Supports gestures, in-view, scroll, drag, layout, variants, SVG, reduced
   motion. Exit requires AnimatePresence.
 
-Vue:
+### Vue
+
 - Vue/Vite uses createMotionwindTransform(config) plus MotionwindPlugin.
 - Nuxt uses globally registered <Motionwind> runtime components.
 - Dynamic :class uses Motionwind/mw/useMotionwind.
 - Continuous animate-scroll:* is not mapped; use motion-v directly.
 
-Vanilla:
+### Vanilla
+
 - motionwind({ config, observe, respectReducedMotion, root, selector }) wires
   the DOM and returns cleanup.
 - Supports initial/enter, hover/tap/focus, in-view, continuous scroll, SVG,
   reduced motion.
 - Drag, layout, exit orchestration, and variant propagation are unsupported.
 
-React Native beta:
+### React Native (Beta)
+
 - Runtime mw.* backed by Reanimated; Reanimated Babel/build setup is required.
 - Explicit mapped components: View, Text, Image, ScrollView, FlatList,
   Pressable, TextInput.
@@ -90,14 +151,34 @@ React Native beta:
   reduced motion, and beta scroll values inside mw.ScrollView.
 - Drag, layout, in-view classes, SVG/web properties emit diagnostics and need
   direct native APIs. Exit unmount orchestration is application-owned.
-- Never present an unsupported native class as working or silently ignored.
 
-ParsedResult is the stable Motion-first v2 intermediate representation. It
-contains tailwindClasses, gestures, transition, viewport, dragConfig,
-layoutConfig, scroll, variants, variantState, diagnostics, and hasMotion.
+## ParsedResult
+
+The stable Motion-first v2 intermediate representation. It contains
+tailwindClasses, gestures, transition, viewport, dragConfig, layoutConfig,
+scroll, variants, variantState, diagnostics, and hasMotion.
+
+## Tooling
 
 Tooling reads the shared registry: ESLint, Prettier, VS Code, Studio,
 motionwind-unplugin, create-motionwind, and motionwind-mcp. The MCP server
 validates, explains, optimizes, generates, and exposes motionwind://syntax.
 
-Compatibility matrix: https://motionwind.xyz/docs/compatibility
+## Compatibility Matrix
+
+https://motionwind.xyz/docs/compatibility
+
+## Documentation
+
+- Getting Started: https://motionwind.xyz/docs/getting-started
+- Installation: https://motionwind.xyz/docs/installation
+- Syntax Reference: https://motionwind.xyz/docs/syntax
+- Configuration: https://motionwind.xyz/docs/configuration
+- Frameworks: https://motionwind.xyz/docs/frameworks
+- React: https://motionwind.xyz/docs/frameworks/react
+- Vue: https://motionwind.xyz/docs/frameworks/vue
+- Vanilla: https://motionwind.xyz/docs/frameworks/vanilla
+- React Native: https://motionwind.xyz/docs/react-native
+- API Reference: https://motionwind.xyz/docs/api
+- GitHub: https://github.com/piyushzingade/motionwind
+- npm: https://www.npmjs.com/package/motionwind-react

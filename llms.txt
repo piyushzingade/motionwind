@@ -1,8 +1,28 @@
-# motionwind — Complete Documentation for LLMs
+# Motionwind — Complete Documentation for LLMs
 
-## What is motionwind?
+## What is Motionwind?
 
-motionwind is a Babel plugin that transforms Tailwind-like animation classes into Motion (formerly Framer Motion) component props at build time. Write `animate-hover:scale-110` and it becomes `whileHover={{ scale: 1.1 }}`. Zero imports, zero boilerplate, zero runtime overhead.
+Motionwind is a build-time animation system that transforms Tailwind-like utility classes into Motion (formerly Framer Motion) component props. Write `animate-hover:scale-110` and it becomes `whileHover={{ scale: 1.1 }}`. Zero imports, zero boilerplate, zero runtime overhead.
+
+**Created by:** Piyush (https://github.com/piyushzingade)
+**License:** MIT
+**Version:** 2.0.0
+**npm:** https://www.npmjs.com/package/motionwind-react
+
+## Who is Motionwind for?
+
+Frontend developers working with React, Vue, vanilla JavaScript, or React Native who want expressive, performant animations without learning a new API or shipping parser bundles to production.
+
+## What problem does Motionwind solve?
+
+Traditional animation code requires importing motion components, writing verbose prop objects, and understanding animation timing. Motionwind lets you express the same intent with familiar Tailwind-like classes that compile away at build time, resulting in zero runtime overhead.
+
+## Core Value Props
+
+1. **Utility-first syntax** — `animate-hover:scale-110` feels native to Tailwind users
+2. **Build-time compilation** — Babel plugin emits optimized motion components; no parser in production
+3. **Framework agnostic** — One syntax, four targets (React, Vue, Vanilla, React Native)
+4. **Full Motion power** — Springs, drag, layout, scroll, variants, exit animations all available
 
 ## Installation
 
