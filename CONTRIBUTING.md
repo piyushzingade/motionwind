@@ -4,6 +4,17 @@ Motionwind welcomes code, documentation, recipes, adapters, diagnostics, and
 design feedback. Start with an issue or Discussion when a change introduces new
 syntax or a public API.
 
+All spaces follow our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). We expect every
+participant to make interactions respectful, constructive, and harassment-free.
+
+## Good first contributions
+
+Find bounded, triaged starter tasks by filtering issues for the
+[`good first issue` label](https://github.com/piyushzingade/motionwind/labels/good%20first%20issue).
+Each task links a clear, owner-independent acceptance test so you can verify
+your work without private infrastructure. Say that you are picking one up on the
+issue before you start, and keep the change scoped to that task.
+
 ## Local setup
 
 ```bash

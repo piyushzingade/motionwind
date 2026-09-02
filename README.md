@@ -56,7 +56,7 @@ Installable examples live in [`starters/`](starters). Reviewed, portable recipes
 - **Syntax & features** — [`packages/documentation/features.md`](packages/documentation/features.md)
 - **Architecture & internals** — [`packages/documentation/architecture.md`](packages/documentation/architecture.md)
 - **Roadmap and support** — [`ROADMAP.md`](ROADMAP.md) and [`SUPPORT.md`](SUPPORT.md)
-- **Contributing** — [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- **Contributing** — [`CONTRIBUTING.md`](CONTRIBUTING.md), [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md), and starter tasks tagged [`good first issue`](https://github.com/piyushzingade/motionwind/labels/good%20first%20issue)
 
 All public packages are released together with Changesets, generated changelogs, npm
 provenance, and canary tags. CI validates the common syntax corpus, package artifacts, registry,
