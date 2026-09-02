@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Hero } from "@/components/landing/hero";
 
 export const metadata: Metadata = {
   title: "Motionwind — Motion animations as utility classes",
@@ -32,141 +33,227 @@ export const metadata: Metadata = {
   },
 };
 
+const FRAMEWORKS: {
+  name: string;
+  href: string;
+  tagline: string;
+  icon: React.ReactNode;
+}[] = [
+  {
+    name: "React",
+    href: "/docs/frameworks/react",
+    tagline: "Vite & Next.js",
+    icon: (
+      <svg
+        viewBox="-11.5 -10.23 23 20.46"
+        width="20"
+        height="20"
+        aria-hidden="true"
+      >
+        <circle r="2" fill="currentColor" />
+        <g stroke="currentColor" strokeWidth="1" fill="none">
+          <ellipse rx="11" ry="4.2" />
+          <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+          <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    name: "React Native",
+    href: "/docs/frameworks/react-native",
+    tagline: "Expo · Reanimated",
+    icon: (
+      <svg
+        viewBox="-11.5 -10.23 23 20.46"
+        width="20"
+        height="20"
+        aria-hidden="true"
+      >
+        <circle r="2" fill="currentColor" />
+        <g stroke="currentColor" strokeWidth="1" fill="none" opacity="0.85">
+          <ellipse rx="11" ry="4.2" />
+          <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+          <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    name: "Vue 3",
+    href: "/docs/frameworks/vue",
+    tagline: "Build-time transform",
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          d="M2 3.5h4.2L12 13.2 17.8 3.5H22L12 20.5 2 3.5z"
+          opacity="0.55"
+        />
+        <path d="M6.2 3.5h3.3L12 7.8l2.5-4.3h3.3L12 13.4 6.2 3.5z" />
+      </svg>
+    ),
+  },
+  {
+    name: "Vanilla",
+    href: "/docs/frameworks/vanilla",
+    tagline: "DOM scan · no build",
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+    ),
+  },
+];
+
+const VALUES: {
+  title: string;
+  desc: string;
+}[] = [
+  {
+    title: "Zero runtime",
+    desc: "Static classes compiled away at build time. No parser, no overhead in production.",
+  },
+  {
+    title: "Familiar syntax",
+    desc: "If you know Tailwind, you already know motionwind. Same utility-first approach.",
+  },
+  {
+    title: "Cross-framework",
+    desc: "One animate-* language translated to React, Vue, React Native, and vanilla.",
+  },
+];
+
+const SECTIONS: {
+  href: string;
+  title: string;
+  desc: string;
+  label: string;
+}[] = [
+  {
+    href: "/docs/getting-started",
+    title: "Getting Started",
+    desc: "Install Motionwind and set up your first animation in minutes.",
+    label: "install & setup",
+  },
+  {
+    href: "/docs/frameworks",
+    title: "Frameworks",
+    desc: "React, Vue, vanilla JavaScript, and React Native adapters.",
+    label: "adapters",
+  },
+  {
+    href: "/docs/syntax",
+    title: "Syntax Reference",
+    desc: "Complete reference for all animation classes and properties.",
+    label: "animate-* reference",
+  },
+  {
+    href: "/docs/configuration",
+    title: "Configuration",
+    desc: "Tokens, presets, diagnostics, and reduced-motion policy.",
+    label: "tokens & presets",
+  },
+];
+
 export default function DocsHome() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-[var(--color-bg)]">
-      <div className="mb-8">
-        <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
-          Documentation · v2.0.0
-        </span>
-      </div>
+    <div className="min-h-screen bg-[var(--color-bg)]">
+      <Hero />
 
-      <h1 className="font-[family-name:var(--font-display)] text-5xl md:text-6xl italic tracking-tight mb-2">
-        <span className="text-[var(--color-accent)]">motionwind</span>
-      </h1>
-      <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl italic text-[var(--color-fg-muted)] tracking-tight mb-6">
-        docs
-      </h2>
-      <p className="text-[0.9375rem] text-[var(--color-fg-muted)] mb-10 max-w-md mx-auto leading-relaxed">
-        One tested animate-* language for React, Vue, JavaScript, and React
-        Native, with compile-time transforms and explicit runtime adapters.
-      </p>
+      {/* Framework strip */}
+      <section
+        className="mx-auto max-w-5xl px-6"
+        aria-label="Supported frameworks"
+      >
+        <h2 className="text-center font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
+          One language · every framework
+        </h2>
+        <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {FRAMEWORKS.map((f) => (
+            <li key={f.name}>
+              <Link
+                href={f.href}
+                className="group flex flex-col items-center gap-2 rounded-xl border border-[var(--color-border)] p-5 text-center no-underline transition-colors hover:border-[var(--color-accent)]/40"
+              >
+                <span className="text-[var(--color-accent)] transition-transform duration-200 group-hover:scale-110">
+                  {f.icon}
+                </span>
+                <span className="text-sm font-semibold text-[var(--color-fg)]">
+                  {f.name}
+                </span>
+                <span className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-wider text-[var(--color-fg-muted)]">
+                  {f.tagline}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-      {/* Dashed divider */}
-      <div className="w-32 mb-10">
-        <svg
-          width="100%"
-          height="1"
-          preserveAspectRatio="none"
-          className="block"
-        >
-          <line
-            x1="0"
-            y1="0.5"
-            x2="100%"
-            y2="0.5"
-            stroke="var(--color-border)"
-            strokeDasharray="6 4"
-            strokeWidth="1"
-          />
-        </svg>
-      </div>
-
-      <div className="flex flex-wrap gap-3 justify-center">
-        <Link
-          href="/docs"
-          className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-[var(--color-accent-fg)] no-underline transition-colors hover:bg-[var(--color-accent-hover)]"
-        >
-          Get Started
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-            />
-          </svg>
-        </Link>
-        <a
-          href="https://web.motionwind.xyz/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-lg border border-[var(--color-accent)] bg-[var(--color-accent)]/[0.06] px-6 py-3 text-sm font-semibold text-[var(--color-accent)] no-underline transition-colors hover:bg-[var(--color-accent)]/[0.12]"
-        >
-          Live Example
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-            />
-          </svg>
-        </a>
-      </div>
+      {/* Value props */}
+      <section className="mx-auto max-w-5xl px-6" aria-label="Why motionwind">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {VALUES.map((v) => (
+            <div
+              key={v.title}
+              className="rounded-xl border border-dashed border-[var(--color-border)] p-5"
+            >
+              <h3 className="text-sm font-semibold text-[var(--color-fg)]">
+                {v.title}
+              </h3>
+              <p className="mt-1.5 text-xs leading-relaxed text-[var(--color-fg-muted)]">
+                {v.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Quick links for SEO and GEO */}
-      <nav
-        className="mt-16 max-w-2xl w-full"
-        aria-label="Documentation sections"
+      <section
+        className="mx-auto max-w-5xl px-6 pb-24"
+        aria-label="Docs sections"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
-          <Link
-            href="/docs/getting-started"
-            className="group rounded-lg border border-[var(--color-border)] p-5 transition-colors hover:border-[var(--color-accent)]/40"
-          >
-            <h3 className="text-sm font-semibold text-[var(--color-fg)] mb-1 group-hover:text-[var(--color-accent)]">
-              Getting Started
-            </h3>
-            <p className="text-xs text-[var(--color-fg-muted)]">
-              Install Motionwind and set up your first animation in minutes.
-            </p>
-          </Link>
-          <Link
-            href="/docs/frameworks"
-            className="group rounded-lg border border-[var(--color-border)] p-5 transition-colors hover:border-[var(--color-accent)]/40"
-          >
-            <h3 className="text-sm font-semibold text-[var(--color-fg)] mb-1 group-hover:text-[var(--color-accent)]">
-              Frameworks
-            </h3>
-            <p className="text-xs text-[var(--color-fg-muted)]">
-              React, Vue, vanilla JavaScript, and React Native adapters.
-            </p>
-          </Link>
-          <Link
-            href="/docs/syntax"
-            className="group rounded-lg border border-[var(--color-border)] p-5 transition-colors hover:border-[var(--color-accent)]/40"
-          >
-            <h3 className="text-sm font-semibold text-[var(--color-fg)] mb-1 group-hover:text-[var(--color-accent)]">
-              Syntax Reference
-            </h3>
-            <p className="text-xs text-[var(--color-fg-muted)]">
-              Complete reference for all animation classes and properties.
-            </p>
-          </Link>
-          <Link
-            href="/docs/configuration"
-            className="group rounded-lg border border-[var(--color-border)] p-5 transition-colors hover:border-[var(--color-accent)]/40"
-          >
-            <h3 className="text-sm font-semibold text-[var(--color-fg)] mb-1 group-hover:text-[var(--color-accent)]">
-              Configuration
-            </h3>
-            <p className="text-xs text-[var(--color-fg-muted)]">
-              Tokens, presets, diagnostics, and reduced-motion policy.
-            </p>
-          </Link>
+        <h2 className="text-center font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
+          Browse the docs
+        </h2>
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {SECTIONS.map((s) => (
+            <Link
+              key={s.href}
+              href={s.href}
+              className="group flex flex-col rounded-xl border border-[var(--color-border)] p-6 no-underline transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-[var(--color-accent)]/40"
+            >
+              <span className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.15em] text-[var(--color-accent)]">
+                {s.label}
+              </span>
+              <h3 className="mt-2 text-base font-semibold text-[var(--color-fg)] transition-colors group-hover:text-[var(--color-accent)]">
+                {s.title}
+              </h3>
+              <p className="mt-1 text-xs leading-relaxed text-[var(--color-fg-muted)]">
+                {s.desc}
+              </p>
+            </Link>
+          ))}
         </div>
-      </nav>
+      </section>
     </div>
   );
 }
