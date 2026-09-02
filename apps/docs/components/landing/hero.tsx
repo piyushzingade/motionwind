@@ -3,6 +3,7 @@
 import { LazyMotion, domAnimation, m } from "motion/react";
 import { mw } from "motionwind-react";
 import Link from "next/link";
+import { MintlifyLogo } from "./mintlify-logo";
 
 /**
  * Animated hero for the docs landing page. Uses the same motion/react
@@ -46,9 +47,12 @@ export function Hero() {
             initial="hidden"
             animate="show"
             transition={{ duration: 0.5, ease: easeOutQuint }}
-            className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-fg-muted)]"
+            className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5"
           >
-            Documentation · v2.0.0
+            <MintlifyLogo className="h-3.5 w-auto" />
+            <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
+              OSS program
+            </span>
           </m.span>
 
           <m.h1
