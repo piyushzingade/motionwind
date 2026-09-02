@@ -5,10 +5,12 @@ import { MOTIONWIND_RECIPES } from "motionwind-react";
 import { PREVIEW_SKIN, STAGES } from "@/lib/types";
 import { useStudioState } from "@/lib/use-studio-state";
 import { useGeneratedCode } from "@/lib/use-generated-code";
+import { replaceClass } from "@/lib/utils";
 import { PreviewStage } from "./preview-stage";
-import { RecipeGrid } from "./recipe-grid";
+import { RecipeSidebar } from "./recipe-sidebar";
 import { ControlsPanel } from "./controls-panel";
 import { Timeline } from "./timeline";
+import { RangeControl } from "./range-control";
 
 export function PlaygroundStudio() {
   const {
@@ -30,6 +32,8 @@ export function PlaygroundStudio() {
     highlighted,
     duration,
     delay,
+    stiffness,
+    damping,
     activeRecipe,
     recipeSupportsTarget,
   } = useGeneratedCode(editor);
@@ -101,7 +105,61 @@ export function PlaygroundStudio() {
         </div>
       </div>
 
-      <RecipeGrid editor={editor} onApply={applyRecipe} />
+      <RecipeSidebar editor={editor} onApply={applyRecipe} />
+
+      <div className="mb-4 grid gap-5 rounded-lg border border-dashed border-[var(--color-border)] p-4 sm:grid-cols-3">
+        <RangeControl
+          id="duration"
+          label="Duration"
+          value={duration}
+          min={80}
+          max={1600}
+          step={20}
+          unit="ms"
+          onChange={(value) =>
+            updateEditor({
+              classes: replaceClass(
+                editor.classes,
+                /^animate-duration-/,
+                `animate-duration-${value}`,
+              ),
+            })
+          }
+        />
+        <RangeControl
+          id="stiffness"
+          label="Stiffness"
+          value={stiffness}
+          min={40}
+          max={700}
+          step={10}
+          onChange={(value) =>
+            updateEditor({
+              classes: replaceClass(
+                editor.classes,
+                /^animate-stiffness-/,
+                `animate-stiffness-${value}`,
+              ),
+            })
+          }
+        />
+        <RangeControl
+          id="damping"
+          label="Damping"
+          value={damping}
+          min={4}
+          max={60}
+          onChange={(value) =>
+            updateEditor({
+              classes: replaceClass(
+                editor.classes,
+                /^animate-damping-/,
+                `animate-damping-${value}`,
+              ),
+            })
+          }
+        />
+      </div>
 
       <PreviewStage
         tag={editor.tag}

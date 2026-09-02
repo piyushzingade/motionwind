@@ -27,3 +27,13 @@ export function numericToken(
   const value = token ? Number(token.slice(prefix.length)) : NaN;
   return Number.isFinite(value) ? value : fallback;
 }
+
+export function replaceClass(
+  classes: string,
+  matcher: RegExp,
+  next: string,
+): string {
+  return [...classes.split(/\s+/).filter((token) => !matcher.test(token)), next]
+    .filter(Boolean)
+    .join(" ");
+}

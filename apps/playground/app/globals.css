@@ -44,6 +44,7 @@
   --color-dot-grid: rgba(77, 124, 15, 0.06);
   --color-demo-glow: rgba(77, 124, 15, 0.06);
   --color-demo-grid-line: rgba(77, 124, 15, 0.07);
+  --acid-glow: rgba(77, 124, 15, 0.35);
 
   /* Fumadocs overrides */
   --color-fd-primary: #c7ff2d !important;
@@ -71,6 +72,7 @@
   --color-dot-grid: rgba(200, 255, 46, 0.03);
   --color-demo-glow: rgba(200, 255, 46, 0.04);
   --color-demo-grid-line: rgba(200, 255, 46, 0.04);
+  --acid-glow: rgba(200, 255, 46, 0.35);
 
   /* Fumadocs overrides */
   --color-fd-primary: #c8ff2e !important;
@@ -1122,4 +1124,79 @@ figure.shiki pre::-webkit-scrollbar {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
+}
+
+/* ── Studio checkerboard ───────────────────────────────────────────── */
+.studio-checker {
+  background-color: var(--color-bg);
+  background-image:
+    linear-gradient(45deg, var(--color-demo-grid-line) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--color-demo-grid-line) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--color-demo-grid-line) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--color-demo-grid-line) 75%);
+  background-position:
+    0 0,
+    0 8px,
+    8px -8px,
+    -8px 0;
+  background-size: 16px 16px;
+}
+
+/* ── Studio range slider ───────────────────────────────────────────── */
+.studio-range {
+  width: 100%;
+  height: 4px;
+  appearance: none;
+  border-radius: 999px;
+  outline: none;
+  background: linear-gradient(
+    to right,
+    var(--color-accent) 0,
+    var(--color-accent) var(--range-progress),
+    var(--color-border) var(--range-progress),
+    var(--color-border) 100%
+  );
+}
+.studio-range::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  appearance: none;
+  cursor: grab;
+  border: 2px solid var(--color-bg);
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow:
+    0 0 0 2px var(--acid-glow),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 100ms ease-out;
+}
+.studio-range::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+.studio-range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  cursor: grab;
+  border: 2px solid var(--color-bg);
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+/* ── Studio timeline ───────────────────────────────────────────────── */
+@keyframes studio-playhead {
+  from {
+    transform: translateX(8px);
+  }
+  to {
+    transform: translateX(calc(100cqw - 16px));
+  }
+}
+.studio-timeline {
+  container-type: inline-size;
+}
+.studio-playhead {
+  animation-name: studio-playhead;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
 }

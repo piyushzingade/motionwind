@@ -29,6 +29,8 @@ export function useGeneratedCode(editor: StudioState) {
 
   const duration = numericToken(editor.classes, "animate-duration-", 300);
   const delay = numericToken(editor.classes, "animate-delay-", 0);
+  const stiffness = numericToken(editor.classes, "animate-stiffness-", 300);
+  const damping = numericToken(editor.classes, "animate-damping-", 24);
 
   const activeRecipe = MOTIONWIND_RECIPES.find((recipe) =>
     editor.classes.startsWith(recipe.classes),
@@ -49,6 +51,8 @@ export function useGeneratedCode(editor: StudioState) {
     highlighted,
     duration,
     delay,
+    stiffness,
+    damping,
     activeRecipe,
     recipeSupportsTarget,
   };
