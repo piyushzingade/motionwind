@@ -2,6 +2,7 @@
 
 import { LazyMotion, domAnimation, m } from "motion/react";
 import { useHeroGlow } from "../lib/use-hero-glow";
+import { MintlifyLogo } from "./mintlify-logo";
 
 export function HeroSection() {
   const { springX, springY, heroGlow, onMouseMove, onMouseLeave } =
@@ -14,7 +15,6 @@ export function HeroSection() {
         onMouseLeave={onMouseLeave}
         className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 overflow-hidden glow-top"
       >
-        <div className="grid-bg absolute inset-0 pointer-events-none" />
         <div className="hero-gradient" aria-hidden="true" />
         <m.div
           ref={heroGlow}
@@ -28,12 +28,14 @@ export function HeroSection() {
         <div className="relative z-10 w-full max-w-4xl mx-auto">
           <div className="flex flex-col items-center justify-center px-6 sm:px-10 py-12 sm:py-16 relative">
             <div className="animate-initial:opacity-0 animate-initial:y-12 animate-enter:opacity-100 animate-enter:y-0 animate-duration-600 animate-ease-out mb-6 sm:mb-8">
-              <span className="inline-flex items-center gap-2 rounded-full border border-acid/25 bg-acid-soft px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-medium tracking-wide text-acid uppercase">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-75 animate-pulse-glow" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface-raised/70 px-3 sm:px-4 py-1.5 backdrop-blur-sm">
+                <MintlifyLogo className="h-3 w-auto" />
+                <span className="text-[10px] sm:text-xs font-medium tracking-wide text-text-dim">
+                  Backed by ·{" "}
+                  <span className="font-semibold text-text-strong">
+                    OSS program
+                  </span>
                 </span>
-                v0.3 — Now in Public Beta
               </span>
             </div>
 
@@ -76,7 +78,7 @@ export function HeroSection() {
             <div className="animate-initial:opacity-0 animate-initial:y-20 animate-enter:opacity-100 animate-enter:y-0 animate-duration-700 animate-delay-400 animate-ease-out flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10">
               <a
                 href="https://www.motionwind.xyz/docs"
-                className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 group inline-flex items-center gap-2 rounded-lg bg-acid px-5 sm:px-6 py-3 text-sm font-semibold text-[var(--color-accent-fg)] transition-shadow hover:shadow-[0_0_30px_var(--acid-glow)] cursor-pointer"
+                className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 group inline-flex items-center gap-2 rounded-lg bg-acid px-5 sm:px-6 py-3 text-sm font-semibold text-background transition-shadow hover:shadow-[0_0_30px_var(--acid-glow)] cursor-pointer"
               >
                 Get Started
                 <svg
@@ -95,7 +97,7 @@ export function HeroSection() {
               </a>
               <a
                 href="https://github.com/piyushzingade/motionwind"
-                className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 inline-flex items-center gap-2 rounded-lg border border-border-strong bg-surface-raised/60 px-5 sm:px-6 py-3 text-sm font-medium text-text-dim backdrop-blur-sm transition-colors hover:bg-surface-overlay hover:text-foreground"
+                className="animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-300 animate-damping-20 inline-flex items-center gap-2 rounded-lg border border-border-strong bg-surface-raised/60 px-5 sm:px-6 py-3 text-sm font-semibold text-text-strong backdrop-blur-sm transition-colors hover:bg-surface-overlay hover:text-foreground"
               >
                 <svg
                   className="w-4 h-4"

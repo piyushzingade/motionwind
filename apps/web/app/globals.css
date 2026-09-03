@@ -194,14 +194,6 @@ body {
   background-size: 256px 256px;
 }
 
-/* ── Grid background ───────────────────────────────────────────────── */
-.grid-bg {
-  background-image:
-    linear-gradient(to right, var(--color-demo-grid-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-demo-grid-line) 1px, transparent 1px);
-  background-size: 64px 64px;
-}
-
 /* ── Radial glow (hero) ────────────────────────────────────────────── */
 .glow-top {
   background: radial-gradient(
@@ -483,7 +475,7 @@ body {
     transparent 70%
   );
   will-change: transform;
-  mix-blend-mode: screen;
+  mix-blend-mode: multiply;
 }
 .dark .hero-glow {
   mix-blend-mode: plus-lighter;
@@ -524,10 +516,6 @@ body {
   padding: 2rem 1.5rem;
   position: relative;
   background-color: var(--color-surface);
-  background-image:
-    linear-gradient(to right, var(--color-demo-grid-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-demo-grid-line) 1px, transparent 1px);
-  background-size: 28px 28px;
 }
 
 .preview-code {

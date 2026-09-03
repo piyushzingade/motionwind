@@ -177,7 +177,7 @@ export function DemoCards({ openCode }: { openCode: (key: CodeKey) => void }) {
             delay="animate-delay-100"
             onClick={openCode}
           >
-            <div className="animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 px-8 py-4 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold select-none cursor-pointer shadow-[0_0_24px_var(--acid-glow)]">
+            <div className="animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 px-8 py-4 rounded-xl bg-acid/20 border border-acid/40 text-sm text-acid font-semibold select-none cursor-pointer shadow-[0_0_24px_var(--acid-glow)]">
               Hover me, or tap me
             </div>
           </PreviewCard>
@@ -197,7 +197,7 @@ export function DemoCards({ openCode }: { openCode: (key: CodeKey) => void }) {
             delay="animate-delay-300"
             onClick={openCode}
           >
-            <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-once px-10 py-5 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold shadow-[0_0_24px_var(--acid-glow)]">
+            <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-once px-10 py-5 rounded-xl bg-acid/20 border border-acid/40 text-sm text-acid font-semibold shadow-[0_0_24px_var(--acid-glow)]">
               I appear on scroll
             </div>
           </PreviewCard>
@@ -210,7 +210,7 @@ export function DemoCards({ openCode }: { openCode: (key: CodeKey) => void }) {
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              className="animate-drag-both animate-drag-elastic-30 animate-drag-snap animate-hover:scale-105 animate-spring px-8 py-4 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold cursor-grab active:cursor-grabbing select-none shadow-[0_0_24px_var(--acid-glow)]"
+              className="animate-drag-both animate-drag-elastic-30 animate-drag-snap animate-hover:scale-105 animate-spring px-8 py-4 rounded-xl bg-acid/20 border border-acid/40 text-sm text-acid font-semibold cursor-grab active:cursor-grabbing select-none shadow-[0_0_24px_var(--acid-glow)]"
             >
               Drag me around
             </div>
@@ -222,7 +222,7 @@ export function DemoCards({ openCode }: { openCode: (key: CodeKey) => void }) {
             delay="animate-delay-200"
             onClick={openCode}
           >
-            <div className="animate-initial:rotate-0 animate-enter:rotate-360 animate-duration-2000 animate-ease-linear animate-repeat-infinite w-16 h-16 rounded-xl bg-acid/15 border border-acid/25 flex items-center justify-center shadow-[0_0_24px_var(--acid-glow)]">
+            <div className="animate-initial:rotate-0 animate-enter:rotate-360 animate-duration-2000 animate-ease-linear animate-repeat-infinite w-16 h-16 rounded-xl bg-acid/20 border border-acid/40 flex items-center justify-center shadow-[0_0_24px_var(--acid-glow)]">
               <svg
                 className="w-6 h-6 text-acid"
                 fill="none"
@@ -245,7 +245,7 @@ export function DemoCards({ openCode }: { openCode: (key: CodeKey) => void }) {
             delay="animate-delay-300"
             onClick={openCode}
           >
-            <div className="animate-hover:rotate-12 animate-hover:scale-115 animate-tap:rotate-0 animate-tap:scale-85 animate-spring animate-stiffness-200 animate-damping-8 px-8 py-4 rounded-xl bg-acid/15 border border-acid/25 text-sm text-acid font-semibold cursor-pointer select-none shadow-[0_0_24px_var(--acid-glow)]">
+            <div className="animate-hover:rotate-12 animate-hover:scale-115 animate-tap:rotate-0 animate-tap:scale-85 animate-spring animate-stiffness-200 animate-damping-8 px-8 py-4 rounded-xl bg-acid/20 border border-acid/40 text-sm text-acid font-semibold cursor-pointer select-none shadow-[0_0_24px_var(--acid-glow)]">
               Hover for springy bounce
             </div>
           </PreviewCard>
