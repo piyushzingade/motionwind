@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import type { CodeKey } from "../lib/code-examples";
 import { onActivateKey } from "../lib/on-activate-key";
+import { SectionHeader } from "./section-header";
 
 function PreviewCard({
   codeKey,
@@ -138,20 +139,17 @@ function GestureTable() {
 
 export function DemoCards({ openCode }: { openCode: (key: CodeKey) => void }) {
   return (
-    <section className="relative py-20 sm:py-24 px-4 sm:px-6 overflow-hidden">
+    <section
+      id="demos"
+      className="section-anchor relative py-20 sm:py-24 px-4 sm:px-6 overflow-hidden"
+    >
       <div className="max-w-4xl mx-auto">
-        <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once text-center mb-12 sm:mb-16">
-          <span className="text-xs font-medium tracking-[0.2em] uppercase text-acid/70 mb-4 block">
-            Interactive Playground
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-            Feel the difference
-          </h2>
-          <p className="mt-4 text-text-dim text-base sm:text-lg max-w-xl mx-auto">
-            Every preview below is powered by motionwind classes. Interact to
-            feel them live.
-          </p>
-        </div>
+        <SectionHeader
+          index="01"
+          eyebrow="Interactive Playground"
+          title="Feel the difference"
+          lede="Every preview below is powered by motionwind classes. Interact to feel them live."
+        />
 
         <div className="flex flex-col gap-8">
           <PreviewCard

@@ -1,7 +1,7 @@
 "use client";
 
 import type { CodeKey } from "../lib/code-examples";
-import { onActivateKey } from "../lib/on-activate-key";
+import { SectionHeader } from "./section-header";
 
 const FEATURES = [
   {
@@ -53,39 +53,19 @@ export function FeaturesSection({
   openCode: (key: CodeKey) => void;
 }) {
   return (
-    <section className="relative py-20 sm:py-24 px-4 sm:px-6">
+    <section
+      id="features"
+      className="section-anchor relative py-20 sm:py-24 px-4 sm:px-6"
+    >
       <div className="max-w-6xl mx-auto">
-        <div
-          role="button"
-          tabIndex={0}
-          aria-label="View code for the features section"
-          onClick={() => openCode("features")}
-          onKeyDown={onActivateKey(() => openCode("features"))}
-          className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once text-center mb-12 sm:mb-16 cursor-pointer group/feat"
-        >
-          <span className="text-xs font-medium tracking-[0.2em] uppercase text-acid/70 mb-4 block">
-            Features
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight group-hover/feat:text-acid/90 transition-colors">
-            Everything you need
-          </h2>
-          <p className="mt-2 text-[11px] text-text-muted opacity-0 group-hover/feat:opacity-100 transition-opacity flex items-center gap-1 justify-center">
-            <svg
-              className="w-3 h-3"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
-              />
-            </svg>
-            Click to see code
-          </p>
-        </div>
+        <SectionHeader
+          index="03"
+          eyebrow="Features"
+          title="Everything you need"
+          lede="Eight capabilities, one syntax. Click the header to see them as code."
+          codeKey="features"
+          openCode={openCode}
+        />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {FEATURES.map((f, i) => (

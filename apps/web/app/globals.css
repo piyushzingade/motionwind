@@ -620,6 +620,7 @@ body {
   }
   .hero-gradient,
   .hero-glow,
+  .marquee-track,
   .animate-glow-line,
   .animate-pulse-glow,
   .animate-nudge-x,
@@ -651,4 +652,120 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* ── Editorial specimen system (landing redesign) ──────────────────── */
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+.spec-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-fg-muted);
+}
+
+.spec-index {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 7%, transparent);
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+.spec-rule {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-accent) 28%, transparent),
+    var(--color-border-subtle) 30%,
+    var(--color-border-subtle) 70%,
+    transparent
+  );
+}
+
+.section-anchor {
+  scroll-margin-top: 5rem;
+}
+
+.hero-grid {
+  background-image: radial-gradient(
+    circle,
+    var(--color-dot-grid) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+  mask-image: radial-gradient(
+    ellipse 90% 70% at 50% 30%,
+    black 30%,
+    transparent 75%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 90% 70% at 50% 30%,
+    black 30%,
+    transparent 75%
+  );
+}
+
+.live-chip {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-elevated);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: default;
+  user-select: none;
+  white-space: nowrap;
+  transition: border-color 200ms ease;
+}
+.live-chip:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+}
+.live-chip .chip-gesture {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.live-chip .chip-rest {
+  color: var(--color-fg-muted);
+}
+
+/* ── Hero class ticker ─────────────────────────────────────────────── */
+.marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+}
+.marquee-track {
+  display: flex;
+  gap: 0.5rem;
+  width: max-content;
+  animation: marquee-scroll 32s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
 }

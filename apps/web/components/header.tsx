@@ -5,9 +5,10 @@ import { ThemeToggle } from "./theme-toggle";
 import { MotionwindLogo } from "./motionwind-logo";
 
 const NAV_ITEMS = [
-  { label: "Features", href: "/" },
-  { label: "Studio", href: "https://play.motionwind.xyz" },
-  { label: "Docs", href: "https://www.motionwind.xyz/docs" },
+  { label: "Demos", href: "#demos" },
+  { label: "How", href: "#how" },
+  { label: "Features", href: "#features" },
+  { label: "Syntax", href: "#syntax" },
 ];
 
 export function Header() {
@@ -19,12 +20,13 @@ export function Header() {
           className="flex items-center gap-2.5 group"
           aria-label="Motionwind home"
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-acid text-background transition-transform group-hover:scale-105">
+          <span className="animate-hover:scale-110 animate-tap:scale-95 animate-spring flex h-7 w-7 items-center justify-center rounded-md bg-acid text-background">
             <MotionwindLogo className="h-4 w-4" />
           </span>
           <span className="text-[15px] font-bold tracking-[-0.03em] text-text-strong">
             motionwind
           </span>
+          <span className="spec-index hidden sm:inline">v2.0.0</span>
         </Link>
         <nav
           className="hidden md:flex items-center gap-1"
@@ -34,21 +36,26 @@ export function Header() {
             <Link
               key={item.label}
               href={item.href}
-              {...(item.href.startsWith("http")
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-              className="rounded-md px-3 py-1.5 text-sm font-medium text-text-dim hover:text-text-strong hover:bg-surface-overlay transition-colors"
+              className="rounded-md px-3 py-1.5 font-[family-name:var(--font-mono)] text-xs tracking-wide text-text-dim hover:text-text-strong hover:bg-surface-overlay transition-colors"
             >
               {item.label}
             </Link>
           ))}
+          <Link
+            href="https://www.motionwind.xyz/docs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md px-3 py-1.5 font-[family-name:var(--font-mono)] text-xs tracking-wide text-text-dim hover:text-text-strong hover:bg-surface-overlay transition-colors"
+          >
+            Docs
+          </Link>
         </nav>
       </div>
       <div className="flex items-center gap-2">
         <ThemeToggle />
         <Link
           href="https://play.motionwind.xyz"
-          className="hidden sm:inline-flex items-center gap-2 rounded-md bg-acid px-4 py-1.5 text-sm font-semibold text-background transition-colors hover:bg-acid-dim"
+          className="animate-hover:scale-105 animate-tap:scale-95 animate-spring hidden sm:inline-flex items-center gap-2 rounded-md bg-acid px-4 py-1.5 text-sm font-semibold text-background transition-colors hover:bg-acid-dim"
         >
           Try Studio
         </Link>

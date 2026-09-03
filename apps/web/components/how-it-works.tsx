@@ -4,23 +4,21 @@ import { useMemo } from "react";
 import type { CodeKey } from "../lib/code-examples";
 import { onActivateKey } from "../lib/on-activate-key";
 import { ArrowConnector } from "./arrow-connector";
+import { SectionHeader } from "./section-header";
 
 export function HowItWorks({ openCode }: { openCode: (key: CodeKey) => void }) {
   return (
-    <section className="relative py-20 sm:py-24 px-4 sm:px-6">
+    <section
+      id="how"
+      className="section-anchor relative py-20 sm:py-24 px-4 sm:px-6"
+    >
       <div className="max-w-5xl mx-auto">
-        <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once text-center mb-12 sm:mb-16">
-          <span className="text-xs font-medium tracking-[0.2em] uppercase text-acid/70 mb-4 block">
-            How It Works
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-            Build time, not runtime
-          </h2>
-          <p className="mt-4 text-text-dim text-base sm:text-lg max-w-xl mx-auto">
-            A Babel plugin reads your classes and emits optimized Motion
-            components. Your users never pay for parsing.
-          </p>
-        </div>
+        <SectionHeader
+          index="02"
+          eyebrow="How It Works"
+          title="Build time, not runtime"
+          lede="A Babel plugin reads your classes and emits optimized Motion components. Your users never pay for parsing."
+        />
 
         <BeforeAfter openCode={openCode} />
 

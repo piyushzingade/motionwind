@@ -3,6 +3,7 @@
 import { Typewriter } from "./typewriter";
 import type { CodeKey } from "../lib/code-examples";
 import { onActivateKey } from "../lib/on-activate-key";
+import { SectionHeader } from "./section-header";
 
 export function GetStartedSection({
   openCode,
@@ -10,20 +11,25 @@ export function GetStartedSection({
   openCode: (key: CodeKey) => void;
 }) {
   return (
-    <section className="relative py-20 sm:py-24 px-4 sm:px-6">
+    <section
+      id="start"
+      className="section-anchor relative py-20 sm:py-24 px-4 sm:px-6"
+    >
       <div className="max-w-5xl mx-auto text-center">
-        <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once">
-          <span className="text-xs font-medium tracking-[0.2em] uppercase text-acid/70 mb-4 block">
-            Get Started
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-            Up and running in
-            <span className="text-acid"> 30 seconds</span>
-          </h2>
-          <p className="mt-4 text-text-dim text-base sm:text-lg max-w-xl mx-auto">
-            One command to install. One line to configure. Start animating
-            immediately.
-          </p>
+        <div className="text-left">
+          <SectionHeader
+            index="05"
+            eyebrow="Get Started"
+            title={
+              <>
+                Up and running in{" "}
+                <em className="font-display italic font-normal text-acid">
+                  30 seconds
+                </em>
+              </>
+            }
+            lede="One command to install. One line to configure. Start animating immediately."
+          />
         </div>
 
         <div className="animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-delay-200 animate-ease-out animate-once mt-10 sm:mt-12">
