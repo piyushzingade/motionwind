@@ -1,14 +1,12 @@
 "use client";
 
 import { LazyMotion, domAnimation, m } from "motion/react";
-import { mw } from "motionwind-react";
 import Link from "next/link";
 import { MintlifyLogo } from "./mintlify-logo";
 
 /**
  * Animated hero for the docs landing page. Uses the same motion/react
- * primitives as the docs sidebar (wrapped in LazyMotion + domAnimation) and
- * dogfoods motionwind's own `mw.*` runtime components for the live chip.
+ * primitives as the docs sidebar (wrapped in LazyMotion + domAnimation).
  */
 
 const easeOutQuint: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -17,15 +15,6 @@ const fadeUp = {
   hidden: { opacity: 0, y: 16 },
   show: { opacity: 1, y: 0 },
 };
-
-function MwChip({ children }: { children: React.ReactNode }) {
-  const Chips = mw as unknown as Record<
-    string,
-    React.ComponentType<{ className?: string; children?: React.ReactNode }>
-  >;
-  const Chip = Chips.div!;
-  return <Chip>{children}</Chip>;
-}
 
 export function Hero() {
   return (
@@ -125,25 +114,6 @@ export function Hero() {
                 />
               </svg>
             </a>
-          </m.div>
-
-          {/* Live demo chip — dogfoods motionwind's own runtime classes */}
-          <m.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            transition={{ duration: 0.5, delay: 0.3, ease: easeOutQuint }}
-            className="mt-12 w-full max-w-md"
-          >
-            <div className="demo-container overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
-              <div className="flex min-h-[150px] items-center justify-center p-8">
-                <MwChip>
-                  <div className="animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-420 animate-damping-24 rounded-full bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-[var(--color-accent-fg)]">
-                    animate-hover:scale-110
-                  </div>
-                </MwChip>
-              </div>
-            </div>
           </m.div>
         </div>
       </section>
