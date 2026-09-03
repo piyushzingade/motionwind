@@ -40,7 +40,7 @@ export function Hero() {
           >
             <MintlifyLogo className="h-3 w-auto" />
             <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
-              Backed by · Mintlify · OSS program
+              Backed by · OSS program
             </span>
           </m.span>
 

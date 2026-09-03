@@ -47,9 +47,8 @@ export function HeroSection() {
                 <span className="text-[10px] sm:text-xs font-medium tracking-wide text-text-dim">
                   Backed by ·{" "}
                   <span className="font-semibold text-text-strong">
-                    Mintlify
-                  </span>{" "}
-                  · OSS program
+                    OSS program
+                  </span>
                 </span>
             </span>
             <span className="spec-label hidden sm:inline">Specimen № 001</span>

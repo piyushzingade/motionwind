@@ -19,7 +19,7 @@ export function PlaygroundHeader() {
         <span className="hidden sm:inline-flex items-center gap-2 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)]/70 px-3 py-1 backdrop-blur-sm shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
           <MintlifyLogo className="h-3 w-auto" />
           <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--color-fg-muted)]">
-            Backed by · Mintlify · OSS program
+            Backed by · OSS program
           </span>
         </span>
       </div>
