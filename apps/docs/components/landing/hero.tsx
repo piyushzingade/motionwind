@@ -19,7 +19,7 @@ const fadeUp = {
 export function Hero() {
   return (
     <LazyMotion features={domAnimation}>
-      <section className="relative overflow-hidden">
+      <section className="relative flex min-h-screen flex-col justify-center overflow-hidden">
         {/* Radial glow behind the hero */}
         <div
           aria-hidden="true"
@@ -30,7 +30,7 @@ export function Hero() {
           }}
         />
 
-        <div className="flex flex-col items-center justify-center px-6 py-24 text-center sm:py-32">
+        <div className="flex flex-col items-center justify-center px-6 py-20 text-center sm:py-24">
           <m.span
             variants={fadeUp}
             initial="hidden"
