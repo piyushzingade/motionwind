@@ -43,7 +43,6 @@
   --color-selection: rgba(77, 124, 15, 0.12);
   --color-dot-grid: rgba(77, 124, 15, 0.06);
   --color-demo-glow: rgba(77, 124, 15, 0.06);
-  --color-demo-grid-line: rgba(77, 124, 15, 0.07);
 
   /* Fumadocs overrides */
   --color-fd-primary: #c7ff2d !important;
@@ -70,7 +69,6 @@
   --color-selection: rgba(200, 255, 46, 0.18);
   --color-dot-grid: rgba(200, 255, 46, 0.03);
   --color-demo-glow: rgba(200, 255, 46, 0.04);
-  --color-demo-grid-line: rgba(200, 255, 46, 0.04);
 
   /* Fumadocs overrides */
   --color-fd-primary: #c8ff2e !important;
@@ -350,7 +348,7 @@ body {
 }
 
 .link-underline::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -1px;
   left: 0;
@@ -399,7 +397,9 @@ figure.shiki > div:first-child {
 figure.shiki > div:first-child button {
   color: var(--color-code-muted) !important;
   opacity: 0;
-  transition: opacity 0.15s ease, color 0.15s ease !important;
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease !important;
   border-radius: 0.25rem !important;
   padding: 0.25rem !important;
 }
@@ -446,7 +446,6 @@ figure.shiki pre::-webkit-scrollbar {
   height: 0;
 }
 
-
 /* ── Demo component refinements ── */
 .demo-container {
   position: relative;
@@ -472,27 +471,16 @@ figure.shiki pre::-webkit-scrollbar {
   line-height: 1;
 }
 
-
-/* Crosshatch grid that fades out via radial mask */
-.demo-container::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, var(--color-demo-grid-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-demo-grid-line) 1px, transparent 1px);
-  background-size: 28px 28px;
-  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
-  pointer-events: none;
-}
-
 /* Radial glow behind demo content */
 .demo-container::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 50% 50% at 50% 50%, var(--color-demo-glow), transparent 70%);
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    var(--color-demo-glow),
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -622,7 +610,12 @@ figure.shiki pre::-webkit-scrollbar {
 .docs-prose hr {
   border: none;
   height: 1px;
-  background: linear-gradient(to right, transparent, var(--color-border), transparent);
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-border),
+    transparent
+  );
   margin: 3rem 0;
 }
 
@@ -703,15 +696,20 @@ figure.shiki pre::-webkit-scrollbar {
 }
 
 .toc-orb-core {
-  transition: cx 0.35s cubic-bezier(0.23, 1, 0.32, 1),
-              cy 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  transition:
+    cx 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+    cy 0.35s cubic-bezier(0.23, 1, 0.32, 1);
   animation: toc-orb-pulse 2s ease-in-out infinite;
 }
 @keyframes toc-orb-pulse {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
 }
-
 
 /* ── TOC list ── */
 .toc-list {
@@ -944,24 +942,52 @@ figure.shiki pre::-webkit-scrollbar {
 }
 
 @keyframes rn-fadeSlideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes rn-fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes rn-scaleIn {
-  from { opacity: 0; transform: scale(0.85); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 @keyframes rn-slideRight {
-  from { opacity: 0; transform: translateX(-20px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 @keyframes rn-rotate {
-  from { opacity: 0; transform: rotate(-15deg) scale(0.9); }
-  to { opacity: 1; transform: rotate(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: rotate(-15deg) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
 }
 /* ── Progressive Blur (bottom edge) ── */
 
@@ -1031,18 +1057,45 @@ figure.shiki pre::-webkit-scrollbar {
 }
 
 @keyframes rn-bounce {
-  0% { opacity: 0; transform: translateY(30px); }
-  60% { opacity: 1; transform: translateY(-8px); }
-  80% { transform: translateY(4px); }
-  100% { transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-8px);
+  }
+  80% {
+    transform: translateY(4px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 @keyframes rn-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.08); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.08);
+  }
 }
 @keyframes rn-spring {
-  0% { opacity: 0; transform: scale(0.8) translateY(10px); }
-  50% { transform: scale(1.05) translateY(-4px); }
-  75% { transform: scale(0.98) translateY(1px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  50% {
+    transform: scale(1.05) translateY(-4px);
+  }
+  75% {
+    transform: scale(0.98) translateY(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
