@@ -15,7 +15,7 @@ export function GetStartedSection({
       id="start"
       className="section-anchor relative py-20 sm:py-24 px-4 sm:px-6"
     >
-      <div className="max-w-5xl mx-auto text-center">
+      <div className="max-w-7xl mx-auto text-center">
         <div className="text-left">
           <SectionHeader
             index="05"

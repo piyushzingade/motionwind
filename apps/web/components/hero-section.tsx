@@ -39,7 +39,7 @@ export function HeroSection() {
           <div className="hero-glow" />
         </m.div>
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 pb-10">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 pb-10">
           {/* ── Specimen meta row ─────────────────────────────────── */}
           <div className="animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-700 animate-ease-out flex flex-wrap items-center gap-x-5 gap-y-2 mb-8 sm:mb-12">
             <span className="inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface-raised/70 px-3 sm:px-4 py-1.5 backdrop-blur-sm">

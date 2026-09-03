@@ -57,7 +57,7 @@ export function FeaturesSection({
       id="features"
       className="section-anchor relative py-20 sm:py-24 px-4 sm:px-6"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeader
           index="03"
           eyebrow="Features"

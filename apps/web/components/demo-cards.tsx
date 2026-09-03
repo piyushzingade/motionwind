@@ -143,7 +143,7 @@ export function DemoCards({ openCode }: { openCode: (key: CodeKey) => void }) {
       id="demos"
       className="section-anchor relative py-20 sm:py-24 px-4 sm:px-6 overflow-hidden"
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeader
           index="01"
           eyebrow="Interactive Playground"

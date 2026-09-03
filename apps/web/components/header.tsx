@@ -13,8 +13,9 @@ const NAV_ITEMS = [
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-200 h-14 flex items-center justify-between border-b border-border-strong bg-background/85 backdrop-blur-xl px-4 sm:px-6 lg:px-8">
-      <div className="flex items-center gap-6">
+    <header className="sticky top-0 z-200 bg-background/85 backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
+      <div className="mx-auto max-w-7xl flex items-center justify-between h-14 px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-6">
         <Link
           href="/"
           className="flex items-center gap-2.5 group"
@@ -50,15 +51,16 @@ export function Header() {
             Docs
           </Link>
         </nav>
-      </div>
-      <div className="flex items-center gap-2">
-        <ThemeToggle />
-        <Link
-          href="https://play.motionwind.xyz"
-          className="animate-hover:scale-105 animate-tap:scale-95 animate-spring hidden sm:inline-flex items-center gap-2 rounded-md bg-acid px-4 py-1.5 text-sm font-semibold text-background transition-colors hover:bg-acid-dim"
-        >
-          Try Studio
-        </Link>
+        </div>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Link
+            href="https://play.motionwind.xyz"
+            className="animate-hover:scale-105 animate-tap:scale-95 animate-spring hidden sm:inline-flex items-center gap-2 rounded-md bg-acid px-4 py-1.5 text-sm font-semibold text-background transition-colors hover:bg-acid-dim"
+          >
+            Try Studio
+          </Link>
+        </div>
       </div>
     </header>
   );

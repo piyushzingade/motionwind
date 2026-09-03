@@ -20,19 +20,19 @@ export default function Home() {
       <Header />
       <HeroSection />
 
-      <div className="section-divider mx-auto max-w-6xl" />
+      <div className="section-divider mx-auto max-w-7xl" />
       <DemoCards openCode={openCode} />
 
-      <div className="section-divider mx-auto max-w-6xl" />
+      <div className="section-divider mx-auto max-w-7xl" />
       <HowItWorks openCode={openCode} />
 
-      <div className="section-divider mx-auto max-w-6xl" />
+      <div className="section-divider mx-auto max-w-7xl" />
       <FeaturesSection openCode={openCode} />
 
-      <div className="section-divider mx-auto max-w-6xl" />
+      <div className="section-divider mx-auto max-w-7xl" />
       <SyntaxSection openCode={openCode} />
 
-      <div className="section-divider mx-auto max-w-6xl" />
+      <div className="section-divider mx-auto max-w-7xl" />
       <GetStartedSection openCode={openCode} />
 
       <Footer />

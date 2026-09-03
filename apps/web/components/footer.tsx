@@ -4,8 +4,8 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border-subtle py-10 sm:py-12 px-4 sm:px-6">
-      <div className="max-w-6xl mx-auto">
+    <footer className="py-10 sm:py-12 px-4 sm:px-6 shadow-[0_-1px_3px_rgba(0,0,0,0.03)] dark:shadow-[0_-1px_3px_rgba(0,0,0,0.15)]">
+      <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
           <span className="spec-index">MW — 002</span>
           <span className="spec-label">Motion as class names</span>
