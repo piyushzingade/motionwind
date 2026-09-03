@@ -11,6 +11,7 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@repo/ui": "workspace:*",
     "@vercel/analytics": "^2.0.1",
     "motion": "^12.12.1",
     "motionwind-react": "*",

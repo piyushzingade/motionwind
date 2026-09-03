@@ -19,6 +19,7 @@
       "name": "docs",
       "version": "0.1.0",
       "dependencies": {
+        "@repo/ui": "workspace:*",
         "@types/mdx": "^2.0.13",
         "@vercel/analytics": "^2.0.1",
         "@vercel/speed-insights": "^2.0.0",
@@ -101,6 +102,7 @@
       "name": "web",
       "version": "0.1.0",
       "dependencies": {
+        "@repo/ui": "workspace:*",
         "@vercel/analytics": "^2.0.1",
         "motion": "^12.12.1",
         "motionwind-react": "*",
@@ -365,6 +367,13 @@
     "packages/typescript-config": {
       "name": "@repo/typescript-config",
       "version": "0.0.0",
+    },
+    "packages/ui": {
+      "name": "@repo/ui",
+      "version": "0.0.0",
+      "peerDependencies": {
+        "react": "^18.0.0 || ^19.0.0",
+      },
     },
     "packages/vscode-extension": {
       "name": "motion-wind",
@@ -1067,6 +1076,8 @@
     "@repo/eslint-config": ["@repo/eslint-config@workspace:packages/eslint-config"],
 
     "@repo/typescript-config": ["@repo/typescript-config@workspace:packages/typescript-config"],
+
+    "@repo/ui": ["@repo/ui@workspace:packages/ui"],
 
     "@rollup/rollup-android-arm-eabi": ["@rollup/rollup-android-arm-eabi@4.59.0", "", { "os": "android", "cpu": "arm" }, "sha512-upnNBkA6ZH2VKGcBj9Fyl9IGNPULcjXRlg0LLeaioQWueH30p6IXtJEbKAgvyv+mJaMxSm1l6xwDXYjpEMiLMg=="],
 

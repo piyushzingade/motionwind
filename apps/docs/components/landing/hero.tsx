@@ -2,6 +2,7 @@
 
 import { LazyMotion, domAnimation, m } from "motion/react";
 import Link from "next/link";
+import { OssProgramBadge } from "@repo/ui/oss-program-badge";
 import { MintlifyLogo } from "./mintlify-logo";
 
 /**
@@ -31,18 +32,15 @@ export function Hero() {
         />
 
         <div className="flex flex-col items-center justify-center px-6 py-20 text-center sm:py-24">
-          <m.span
+          <m.div
             variants={fadeUp}
             initial="hidden"
             animate="show"
             transition={{ duration: 0.5, ease: easeOutQuint }}
-            className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5"
+            className="inline-flex"
           >
-            <MintlifyLogo className="h-3 w-auto" />
-            <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
-              Backed by · OSS program
-            </span>
-          </m.span>
+            <OssProgramBadge brand={<MintlifyLogo className="h-3 w-auto" />} />
+          </m.div>
 
           <m.h1
             variants={fadeUp}

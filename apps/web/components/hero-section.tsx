@@ -1,6 +1,7 @@
 "use client";
 
 import { LazyMotion, domAnimation, m } from "motion/react";
+import { OssProgramBadge } from "@repo/ui/oss-program-badge";
 import { useHeroGlow } from "../lib/use-hero-glow";
 import { MintlifyLogo } from "./mintlify-logo";
 
@@ -43,13 +44,7 @@ export function HeroSection() {
           {/* ── Specimen meta row ─────────────────────────────────── */}
           <div className="animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-700 animate-ease-out flex flex-wrap items-center gap-x-5 gap-y-2 mb-8 sm:mb-12">
             <span className="inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface-raised/70 px-3 sm:px-4 py-1.5 backdrop-blur-sm">
-                <MintlifyLogo className="h-4 w-auto" />
-                <span className="text-[10px] sm:text-xs font-medium tracking-wide text-text-dim">
-                  Backed by ·{" "}
-                  <span className="font-semibold text-text-strong">
-                    OSS program
-                  </span>
-                </span>
+              <OssProgramBadge brand={<MintlifyLogo className="h-4 w-auto" />} />
             </span>
             <span className="spec-label hidden sm:inline">Specimen № 001</span>
             <span className="spec-label hidden md:inline">Build-time</span>
