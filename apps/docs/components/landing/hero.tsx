@@ -38,9 +38,9 @@ export function Hero() {
             transition={{ duration: 0.5, ease: easeOutQuint }}
             className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5"
           >
-            <MintlifyLogo className="h-3.5 w-auto" />
+            <MintlifyLogo className="h-3 w-auto" />
             <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
-              Backed by · OSS program
+              Backed by · Mintlify · OSS program
             </span>
           </m.span>
 
