@@ -114,7 +114,7 @@ export function HeroSection() {
               Read the docs <ArrowIcon />
             </a>
             <a
-              href="/play"
+              href="https://play.motionwind.xyz"
               className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface-elevated px-5 py-3 text-sm font-semibold text-fg transition-colors hover:border-accent/30 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               Open playground <ArrowIcon />
