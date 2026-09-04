@@ -1,5 +1,3 @@
-"use client";
-
 import { Header } from "../components/header";
 import { HeroSection } from "../components/hero-section";
 import { DemoCards } from "../components/demo-cards";
@@ -8,41 +6,30 @@ import { FeaturesSection } from "../components/features-section";
 import { SyntaxSection } from "../components/syntax-section";
 import { GetStartedSection } from "../components/get-started-section";
 import { Footer } from "../components/footer";
-import { CodeDrawer } from "../components/code-drawer";
-import { useCodeDrawer } from "../lib/use-code-drawer";
 
 export default function Home() {
-  const { codeOpen, setCodeOpen, activeCode, setActiveCode, openCode } =
-    useCodeDrawer();
-
   return (
-    <div className="grain">
+    <div>
       <Header />
       <HeroSection />
 
       <div className="section-divider mx-auto max-w-7xl" />
-      <DemoCards openCode={openCode} />
+      <DemoCards />
 
       <div className="section-divider mx-auto max-w-7xl" />
-      <HowItWorks openCode={openCode} />
+      <HowItWorks />
 
       <div className="section-divider mx-auto max-w-7xl" />
-      <FeaturesSection openCode={openCode} />
+      <FeaturesSection />
 
       <div className="section-divider mx-auto max-w-7xl" />
-      <SyntaxSection openCode={openCode} />
+      <SyntaxSection />
 
       <div className="section-divider mx-auto max-w-7xl" />
-      <GetStartedSection openCode={openCode} />
+      <GetStartedSection />
 
       <Footer />
 
-      <CodeDrawer
-        codeOpen={codeOpen}
-        setCodeOpen={setCodeOpen}
-        activeCode={activeCode}
-        setActiveCode={setActiveCode}
-      />
     </div>
   );
 }

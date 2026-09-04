@@ -1,7 +1,7 @@
 "use client";
 
-import type { CodeKey } from "../lib/code-examples";
 import { SectionHeader } from "./section-header";
+import { Reveal } from "./reveal";
 
 const FEATURES = [
   {
@@ -47,59 +47,55 @@ const FEATURES = [
   },
 ];
 
-export function FeaturesSection({
-  openCode,
-}: {
-  openCode: (key: CodeKey) => void;
-}) {
+export function FeaturesSection() {
   return (
     <section
       id="features"
-      className="section-anchor relative py-20 sm:py-24 px-4 sm:px-6"
+      className="section-anchor relative py-20 sm:py-28 px-4 sm:px-6"
     >
       <div className="max-w-7xl mx-auto">
-        <SectionHeader
-          index="03"
-          eyebrow="Features"
-          title="Everything you need"
-          lede="Eight capabilities, one syntax. Click the header to see them as code."
-          codeKey="features"
-          openCode={openCode}
-        />
+        <Reveal>
+          <SectionHeader
+            label="Built for real interfaces"
+            title="Use the full Motion vocabulary, without the ceremony."
+            lede="Motionwind keeps the mental model small while giving you the primitives needed for polished, accessible UI."
+          />
+        </Reveal>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div className="grid gap-x-12 sm:grid-cols-2">
           {FEATURES.map((f, i) => (
-            <div
-              key={f.title}
-              className={`animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 ${i > 0 ? `animate-delay-${Math.min(i, 4) * 100}` : ""} animate-ease-out animate-once animate-hover:y--2 group rounded-2xl border border-border-subtle bg-surface-raised p-5 sm:p-6 transition-colors hover:border-acid/10`}
-            >
-              <div className="w-10 h-10 rounded-xl bg-acid/10 flex items-center justify-center mb-4">
-                <svg
-                  className="w-5 h-5 text-acid"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d={f.icon}
-                  />
-                  {f.icon2 && (
+            <Reveal key={f.title} delay={(i % 2) * 0.06}>
+              <div className="flex gap-4 border-t border-border-subtle py-5">
+                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-acid/10">
+                  <svg
+                    className="w-5 h-5 text-acid"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d={f.icon2}
+                      d={f.icon}
                     />
-                  )}
-                </svg>
+                    {f.icon2 && (
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d={f.icon2}
+                      />
+                    )}
+                  </svg>
+                </div>
+                <div>
+                <h3 className="text-sm font-semibold text-foreground">{f.title}</h3>
+                <p className="mt-1.5 text-sm text-text-muted leading-relaxed">
+                  {f.desc}
+                </p>
+                </div>
               </div>
-              <h3 className="text-sm font-semibold mb-2">{f.title}</h3>
-              <p className="text-xs text-text-muted leading-relaxed">
-                {f.desc}
-              </p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

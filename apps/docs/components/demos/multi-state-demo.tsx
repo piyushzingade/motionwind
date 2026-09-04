@@ -7,8 +7,8 @@ type CardState = "idle" | "hover" | "active" | "disabled";
 
 const stateVariants: Variants = {
   idle: { scale: 1, y: 0, opacity: 1 },
-  hover: { scale: 1.03, y: -4 },
-  active: { scale: 1.06, y: -8 },
+  hover: { scale: 1.02, y: 0 },
+  active: { scale: 0.97, y: 0 },
   disabled: { scale: 0.97, y: 0, opacity: 0.4 },
 };
 

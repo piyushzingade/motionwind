@@ -1,7 +1,7 @@
 "use client";
 
-import type { CodeKey } from "../lib/code-examples";
 import { SectionHeader } from "./section-header";
+import { Reveal } from "./reveal";
 
 const GESTURES = [
   ["hover:", "whileHover"],
@@ -14,37 +14,26 @@ const GESTURES = [
   ["exit:", "exit"],
 ] as const;
 
-export function SyntaxSection({
-  openCode,
-}: {
-  openCode: (key: CodeKey) => void;
-}) {
+export function SyntaxSection() {
   return (
     <section
       id="syntax"
-      className="section-anchor relative py-20 sm:py-24 px-4 sm:px-6"
+      className="section-anchor relative py-20 sm:py-28 px-4 sm:px-6"
     >
       <div className="max-w-7xl mx-auto">
-        <SectionHeader
-          index="04"
-          eyebrow="Syntax"
-          title={
-            <>
-              One pattern,{" "}
-              <em className="font-display italic font-normal text-acid">
-                infinite motion
-              </em>
-            </>
-          }
-          lede="Gesture, property, value — composed exactly like Tailwind."
-          codeKey="syntax"
-          openCode={openCode}
-        />
+        <Reveal>
+          <SectionHeader
+            label="One readable pattern"
+            title="Describe the interaction, then the motion."
+            lede="Each class follows the same shape: when it happens, what changes, and by how much."
+          />
+        </Reveal>
 
-        <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once rounded-2xl border border-border-subtle bg-surface-raised overflow-hidden">
+        <Reveal y={28}>
+          <div className="overflow-hidden rounded-lg border border-border-strong bg-surface-raised">
           <div className="p-6 sm:p-8 border-b border-border-subtle">
             <div className="flex items-center justify-center">
-              <code className="text-base sm:text-lg md:text-2xl font-[family-name:var(--font-mono)] flex flex-wrap items-center gap-1 justify-center">
+              <code className="text-sm sm:text-base md:text-xl font-[family-name:var(--font-mono)] flex flex-wrap items-center gap-1 justify-center">
                 <span className="text-text-muted">animate-</span>
                 <span className="text-acid bg-acid/10 px-2 py-0.5 rounded">
                   {"{"}
@@ -83,6 +72,7 @@ export function SyntaxSection({
             </div>
           </div>
         </div>
+        </Reveal>
       </div>
     </section>
   );

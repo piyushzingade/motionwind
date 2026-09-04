@@ -1,26 +1,28 @@
 "use client";
 
 import { useMemo } from "react";
-import type { CodeKey } from "../lib/code-examples";
-import { onActivateKey } from "../lib/on-activate-key";
 import { ArrowConnector } from "./arrow-connector";
 import { SectionHeader } from "./section-header";
+import { Reveal } from "./reveal";
 
-export function HowItWorks({ openCode }: { openCode: (key: CodeKey) => void }) {
+export function HowItWorks() {
   return (
     <section
       id="how"
-      className="section-anchor relative py-20 sm:py-24 px-4 sm:px-6"
+      className="section-anchor relative py-20 sm:py-28 px-4 sm:px-6"
     >
       <div className="max-w-7xl mx-auto">
-        <SectionHeader
-          index="02"
-          eyebrow="How It Works"
-          title="Build time, not runtime"
-          lede="A Babel plugin reads your classes and emits optimized Motion components. Your users never pay for parsing."
-        />
+        <Reveal>
+          <SectionHeader
+            label="Why Motionwind"
+            title="The convenience stays in development."
+            lede="A build transform reads your animation classes and emits Motion props. The work happens before your code reaches the browser."
+          />
+        </Reveal>
 
-        <BeforeAfter openCode={openCode} />
+        <Reveal y={32}>
+          <BeforeAfter />
+        </Reveal>
 
         <ProcessSteps />
       </div>
@@ -28,32 +30,9 @@ export function HowItWorks({ openCode }: { openCode: (key: CodeKey) => void }) {
   );
 }
 
-function BeforeAfter({ openCode }: { openCode: (key: CodeKey) => void }) {
+function BeforeAfter() {
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      aria-label="View the compiled output"
-      onClick={() => openCode("compiled")}
-      onKeyDown={onActivateKey(() => openCode("compiled"))}
-      className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-600 animate-ease-out animate-once relative grid md:grid-cols-[1fr_auto_1fr] gap-0 items-stretch cursor-pointer group/code"
-    >
-      <div className="absolute -top-8 right-0 text-[10px] text-text-muted opacity-0 group-hover/code:opacity-100 transition-opacity flex items-center gap-1">
-        <svg
-          className="w-3 h-3"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
-          />
-        </svg>
-        Click to see compiled output
-      </div>
+    <div className="grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr] md:gap-0">
 
       <CodeBlock
         label="What you write"
@@ -230,28 +209,24 @@ function ProcessSteps() {
   return (
     <div className="mt-12 sm:mt-16 grid sm:grid-cols-3 gap-6 sm:gap-4">
       {steps.map((step, i) => (
-        <div
-          key={step.num}
-          className={`animate-initial:opacity-0 animate-initial:y-15 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 ${step.delay} animate-ease-out animate-once relative rounded-xl border border-border-subtle bg-surface-raised p-5 sm:p-6`}
-        >
-          {i < 2 && (
-            <div className="hidden sm:block absolute top-1/2 -right-2 sm:-right-2 w-4 h-px bg-gradient-to-r from-acid/20 to-transparent z-10" />
-          )}
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-8 h-8 rounded-lg border border-acid/20 bg-acid/5 flex items-center justify-center text-acid text-xs font-bold font-[family-name:var(--font-mono)] shrink-0">
-              {step.num}
+        <Reveal key={step.num} delay={i * 0.08}>
+          <div className="border-t border-border-strong pt-5 sm:pt-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="text-acid text-sm font-[family-name:var(--font-mono)] shrink-0">
+                {step.num}
+              </div>
+              <h3 className="text-sm font-semibold">{step.title}</h3>
             </div>
-            <h3 className="text-sm font-semibold">{step.title}</h3>
+            <p className="text-xs text-text-muted leading-relaxed mb-3">
+              {step.desc}
+            </p>
+            <div className="rounded-md bg-surface-inset border border-border-subtle px-3 py-2">
+              <code className="text-[10px] font-[family-name:var(--font-mono)] text-acid/70">
+                {step.code}
+              </code>
+            </div>
           </div>
-          <p className="text-xs text-text-muted leading-relaxed mb-3">
-            {step.desc}
-          </p>
-          <div className="rounded-md bg-surface-inset border border-border-subtle px-3 py-2">
-            <code className="text-[10px] font-[family-name:var(--font-mono)] text-acid/70">
-              {step.code}
-            </code>
-          </div>
-        </div>
+        </Reveal>
       ))}
     </div>
   );

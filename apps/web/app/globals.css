@@ -199,15 +199,6 @@ body {
   background-size: 256px 256px;
 }
 
-/* ── Radial glow (hero) ────────────────────────────────────────────── */
-.glow-top {
-  background: radial-gradient(
-    ellipse 60% 40% at 50% 0%,
-    color-mix(in srgb, var(--color-accent) 5%, transparent),
-    transparent 70%
-  );
-}
-
 /* ── Code syntax colors ────────────────────────────────────────────── */
 .syntax-keyword {
   color: var(--color-accent);
@@ -432,6 +423,43 @@ body {
   animation-fill-mode: both;
 }
 
+/* ── Ambient surface grid (crosshatch, radial-masked) ─────────────── */
+/*
+ * Matches the docs/playground demo-container treatment so all three
+ * surfaces read as one system: a 28px crosshatch grid that fades out via
+ * a radial mask, with a soft accent glow behind content.
+ */
+.surface-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--color-demo-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-demo-grid-line) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 40%,
+    black 15%,
+    transparent 75%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 40%,
+    black 15%,
+    transparent 75%
+  );
+}
+
+.surface-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 35%,
+    var(--color-demo-glow),
+    transparent 70%
+  );
+}
+
 /* ── Section divider ───────────────────────────────────────────────── */
 .section-divider {
   height: 1px;
@@ -442,48 +470,6 @@ body {
     color-mix(in srgb, var(--color-border) 40%, transparent) 75%,
     transparent
   );
-}
-
-/* ── Hero ambience ─────────────────────────────────────────────────── */
-.hero-gradient {
-  position: absolute;
-  inset: -30% -20% auto -20%;
-  height: 110%;
-  pointer-events: none;
-  opacity: 0.4;
-  filter: blur(80px);
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-accent) 25%, transparent) 0%,
-    color-mix(in srgb, var(--color-accent) 3%, transparent) 25%,
-    color-mix(in srgb, oklch(0.6 0.2 240) 15%, transparent) 50%,
-    color-mix(in srgb, oklch(0.7 0.2 280) 12%, transparent) 75%,
-    color-mix(in srgb, var(--color-accent) 25%, transparent) 100%
-  );
-  background-size: 300% 300%;
-  animation: hero-drift 25s ease-in-out infinite;
-}
-
-.hero-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 48rem;
-  height: 48rem;
-  border-radius: 9999px;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--color-accent) 18%, transparent) 0%,
-    color-mix(in srgb, var(--color-accent) 3%, transparent) 40%,
-    transparent 70%
-  );
-  will-change: transform;
-  mix-blend-mode: multiply;
-}
-.dark .hero-glow {
-  mix-blend-mode: plus-lighter;
 }
 
 /* ── Preview cards (browser-style demo panels) ─────────────────────── */
@@ -624,17 +610,12 @@ body {
     animation: none;
     left: calc(100% - 8px);
   }
-  .hero-gradient,
-  .hero-glow,
   .marquee-track,
   .animate-glow-line,
   .animate-pulse-glow,
   .animate-nudge-x,
   .animate-shimmer {
     animation: none !important;
-    opacity: 0;
-  }
-  .hero-glow {
     opacity: 0;
   }
   *,
@@ -660,7 +641,7 @@ body {
   border: 0;
 }
 
-/* ── Editorial specimen system (landing redesign) ──────────────────── */
+/* ── Shared landing utilities ─────────────────────────────────────── */
 .font-display {
   font-family: var(--font-display), Georgia, serif;
 }
@@ -699,25 +680,6 @@ body {
 
 .section-anchor {
   scroll-margin-top: 5rem;
-}
-
-.hero-grid {
-  background-image: radial-gradient(
-    circle,
-    var(--color-dot-grid) 1px,
-    transparent 1px
-  );
-  background-size: 28px 28px;
-  mask-image: radial-gradient(
-    ellipse 90% 70% at 50% 30%,
-    black 30%,
-    transparent 75%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse 90% 70% at 50% 30%,
-    black 30%,
-    transparent 75%
-  );
 }
 
 .live-chip {

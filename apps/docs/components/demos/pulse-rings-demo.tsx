@@ -25,13 +25,13 @@ export function PulseRingsDemo() {
             fill="none"
             stroke="currentColor"
             strokeWidth="1"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: [0, 0.6, 0] }}
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1.15, opacity: [0, 0.6, 0] }}
             transition={{
               duration: 2,
               delay: i * 0.3,
               repeat: Infinity,
-              ease: "easeOut",
+              ease: [0.23, 1, 0.32, 1],
             }}
             style={{ transformOrigin: "80px 80px" }}
           />
@@ -41,9 +41,9 @@ export function PulseRingsDemo() {
           cy="80"
           r="8"
           fill="currentColor"
-          initial={{ scale: 0 }}
+          initial={{ scale: 0.95 }}
           animate={{ scale: [1, 1.15, 1] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: [0.23, 1, 0.32, 1] }}
         />
       </svg>
       <button onClick={() => setKey((k) => k + 1)} className="demo-btn">
