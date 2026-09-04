@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
-import { MintlifyLogo } from "./mintlify-logo";
 
 export function PlaygroundHeader({
   onToggleSidebar,
@@ -33,20 +32,6 @@ export function PlaygroundHeader({
             </svg>
           </button>
         )}
-        <Link href="/" className="flex items-center gap-2.5 no-underline">
-          <span className="font-[family-name:var(--font-display)] text-xl italic tracking-tight text-[var(--color-fg)]">
-            motionwind
-          </span>
-          <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-fg-muted)]/50 ml-0.5">
-            studio
-          </span>
-        </Link>
-        <span className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[var(--color-surface-elevated)]/70 px-3 py-1 backdrop-blur-sm shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_1px_2px_rgba(0,0,0,0.04)]">
-          <MintlifyLogo className="h-3 w-auto" />
-          <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--color-fg-muted)]">
-            Backed by · OSS program
-          </span>
-        </span>
       </div>
 
       <div className="flex items-center gap-2 px-4">
