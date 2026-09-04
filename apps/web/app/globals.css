@@ -695,3 +695,42 @@ body {
     transform: translateX(-50%);
   }
 }
+
+/* ── OSS badge beam animation ─────────────────────────────────────── */
+.oss-badge-beam {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.oss-badge-beam::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -100%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  transform: skewX(-20deg);
+  animation: oss-beam 4s ease-in-out infinite;
+}
+@keyframes oss-beam {
+  0%,
+  100% {
+    left: -100%;
+  }
+  50% {
+    left: 150%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oss-badge-beam::before {
+    animation: none;
+  }
+}
