@@ -7,7 +7,6 @@ import { useStudioState } from "@/lib/use-studio-state";
 import { useGeneratedCode } from "@/lib/use-generated-code";
 import { replaceClass } from "@/lib/utils";
 import { PreviewStage } from "./preview-stage";
-import { RecipeSidebar } from "./recipe-sidebar";
 import { ControlsPanel } from "./controls-panel";
 import { Timeline } from "./timeline";
 import { RangeControl } from "./range-control";
@@ -37,17 +36,6 @@ export function PlaygroundStudio() {
     activeRecipe,
     recipeSupportsTarget,
   } = useGeneratedCode(editor);
-
-  const applyRecipe = useCallback(
-    (recipe: (typeof MOTIONWIND_RECIPES)[number]) => {
-      updateEditor({
-        classes: `${recipe.classes} ${PREVIEW_SKIN}`,
-        text: recipe.name,
-      });
-      replay();
-    },
-    [updateEditor, replay],
-  );
 
   return (
     <div className="mt-6">
@@ -104,8 +92,6 @@ export function PlaygroundStudio() {
           </button>
         </div>
       </div>
-
-      <RecipeSidebar editor={editor} onApply={applyRecipe} />
 
       <div className="mb-4 grid gap-5 rounded-lg border border-dashed border-[var(--color-border)] p-4 sm:grid-cols-3">
         <RangeControl

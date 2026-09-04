@@ -4,10 +4,35 @@ import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 import { MintlifyLogo } from "./mintlify-logo";
 
-export function PlaygroundHeader() {
+export function PlaygroundHeader({
+  onToggleSidebar,
+}: {
+  onToggleSidebar?: () => void;
+}) {
   return (
     <header className="flex h-14 shrink-0 items-center justify-between gap-2 bg-[var(--color-bg)]/80 backdrop-blur-md z-40 shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
       <div className="flex items-center gap-4 px-4">
+        {onToggleSidebar && (
+          <button
+            type="button"
+            onClick={onToggleSidebar}
+            className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-fg-muted)] hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-fg)] transition-colors"
+            aria-label="Toggle sidebar"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-4 h-4"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <line x1="9" y1="3" x2="9" y2="21" />
+            </svg>
+          </button>
+        )}
         <Link href="/" className="flex items-center gap-2.5 no-underline">
           <span className="font-[family-name:var(--font-display)] text-xl italic tracking-tight text-[var(--color-fg)]">
             motionwind
