@@ -1,8 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
-import { MOTIONWIND_RECIPES } from "motionwind-react";
-import { PREVIEW_SKIN, STAGES } from "@/lib/types";
+import { STAGES } from "@/lib/types";
 import { useStudioState } from "@/lib/use-studio-state";
 import { useGeneratedCode } from "@/lib/use-generated-code";
 import { replaceClass } from "@/lib/utils";
