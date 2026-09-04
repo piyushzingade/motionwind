@@ -155,7 +155,7 @@ export function DemoCards() {
 
           <Reveal delay={0.1} y={20}>
             <PreviewCard title="Hover and tap">
-              <div className="animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 px-8 py-4 rounded-xl bg-accent/20 border border-accent/40 text-sm text-accent font-semibold select-none cursor-pointer shadow-[0_0_24px_var(--accent-glow)]">
+              <div className="animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 px-8 py-4 rounded-xl bg-accent text-sm text-accent-fg font-semibold select-none cursor-pointer">
                 Hover me, or tap me
               </div>
             </PreviewCard>
@@ -163,7 +163,7 @@ export function DemoCards() {
 
           <Reveal delay={0.05} y={20}>
             <PreviewCard title="Scroll reveal">
-              <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-once px-10 py-5 rounded-xl bg-accent/20 border border-accent/40 text-sm text-accent font-semibold shadow-[0_0_24px_var(--accent-glow)]">
+              <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-once px-10 py-5 rounded-xl bg-accent text-sm text-accent-fg font-semibold">
                 I appear on scroll
               </div>
             </PreviewCard>
@@ -171,7 +171,7 @@ export function DemoCards() {
 
           <Reveal delay={0.1} y={20}>
             <PreviewCard title="Drag interaction">
-              <div className="animate-drag-both animate-drag-elastic-30 animate-drag-snap animate-hover:scale-105 animate-spring px-8 py-4 rounded-xl bg-accent/20 border border-accent/40 text-sm text-accent font-semibold cursor-grab active:cursor-grabbing select-none shadow-[0_0_24px_var(--accent-glow)]">
+              <div className="animate-drag-both animate-drag-elastic-30 animate-drag-snap animate-hover:scale-105 animate-spring px-8 py-4 rounded-xl bg-accent text-sm text-accent-fg font-semibold cursor-grab active:cursor-grabbing select-none">
                 Drag me around
               </div>
             </PreviewCard>
@@ -179,9 +179,9 @@ export function DemoCards() {
 
           <Reveal delay={0.15} y={20}>
             <PreviewCard title="Infinite loop">
-              <div className="animate-initial:rotate-0 animate-enter:rotate-360 animate-duration-2000 animate-ease-linear animate-repeat-infinite w-16 h-16 rounded-xl bg-accent/20 border border-accent/40 flex items-center justify-center shadow-[0_0_24px_var(--accent-glow)]">
+              <div className="animate-initial:rotate-0 animate-enter:rotate-360 animate-duration-2000 animate-ease-linear animate-repeat-infinite w-16 h-16 rounded-xl bg-accent flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-accent"
+                  className="w-6 h-6 text-accent-fg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -199,7 +199,7 @@ export function DemoCards() {
 
           <Reveal delay={0.2} y={20}>
             <PreviewCard title="Spring physics">
-              <div className="animate-hover:rotate-12 animate-hover:scale-115 animate-tap:rotate-0 animate-tap:scale-85 animate-spring animate-stiffness-200 animate-damping-8 px-8 py-4 rounded-xl bg-accent/20 border border-accent/40 text-sm text-accent font-semibold cursor-pointer select-none shadow-[0_0_24px_var(--accent-glow)]">
+              <div className="animate-hover:rotate-12 animate-hover:scale-115 animate-tap:rotate-0 animate-tap:scale-85 animate-spring animate-stiffness-200 animate-damping-8 px-8 py-4 rounded-xl bg-accent text-sm text-accent-fg font-semibold cursor-pointer select-none">
                 Hover for springy bounce
               </div>
             </PreviewCard>

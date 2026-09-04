@@ -6,11 +6,6 @@ export function Footer() {
   return (
     <footer className="py-10 sm:py-12 px-4 sm:px-6 shadow-[0_-1px_3px_rgba(0,0,0,0.03)] dark:shadow-[0_-1px_3px_rgba(0,0,0,0.15)]">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-3 mb-8">
-          <span className="spec-index">MW — 002</span>
-          <span className="spec-label">Motion as class names</span>
-          <span className="spec-rule flex-1" aria-hidden="true" />
-        </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <span className="font-display italic text-2xl tracking-tight">
