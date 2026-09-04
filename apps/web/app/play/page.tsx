@@ -50,19 +50,19 @@ export default function StudioPage() {
   };
 
   return (
-    <main className="min-h-screen bg-surface text-foreground">
+    <main className="min-h-screen bg-surface text-fg">
       <header className="sticky top-0 z-200 flex h-14 items-center justify-between border-b border-border-subtle bg-surface/80 px-4 backdrop-blur-xl md:px-6">
         <div className="flex items-center gap-4">
           <Link
             href="/"
-            className="font-mono text-xs font-bold tracking-[-0.03em] text-acid hover:text-acid-dim transition-colors"
+            className="font-mono text-xs font-bold tracking-[-0.03em] text-accent hover:text-accent-hover transition-colors"
           >
             motionwind
           </Link>
-          <span className="hidden h-4 w-px bg-border-strong sm:block" />
+          <span className="hidden h-4 w-px bg-border sm:block" />
           <div>
             <h1 className="text-xs font-semibold">Motion Studio</h1>
-            <p className="hidden font-mono text-[8px] uppercase tracking-[0.2em] text-text-muted sm:block">
+            <p className="hidden font-mono text-[8px] uppercase tracking-[0.2em] text-code-muted sm:block">
               Classes in · production code out
             </p>
           </div>
@@ -72,14 +72,14 @@ export default function StudioPage() {
           <button
             type="button"
             onClick={() => copy("link", generated)}
-            className="cursor-pointer rounded-md border border-border-subtle px-3 py-1.5 text-[11px] text-text-dim transition hover:border-border-strong hover:text-foreground"
+            className="cursor-pointer rounded-md border border-border-subtle px-3 py-1.5 text-[11px] text-fg-muted transition hover:border-border hover:text-fg"
           >
             {copied === "link" ? "Link copied" : "Share"}
           </button>
           <button
             type="button"
             onClick={() => copy("code", generated)}
-            className="cursor-pointer rounded-md bg-acid px-3 py-1.5 text-[11px] font-bold text-[var(--color-accent-fg)] transition hover:bg-acid-dim"
+            className="cursor-pointer rounded-md bg-accent px-3 py-1.5 text-[11px] font-bold text-[var(--color-accent-fg)] transition hover:bg-accent-hover"
           >
             {copied === "code" ? "Copied" : "Copy code"}
           </button>
@@ -88,8 +88,8 @@ export default function StudioPage() {
 
       <div className="grid min-h-[calc(100vh-3.5rem)] xl:grid-cols-[220px_minmax(0,1fr)_320px]">
         {/* Recipe sidebar */}
-        <aside className="border-b border-border-subtle bg-surface-overlay xl:border-b-0 xl:border-r">
-          <div className="border-b border-border-subtle px-4 py-3 font-mono text-[9px] uppercase tracking-[0.2em] text-text-muted">
+        <aside className="border-b border-border-subtle bg-surface xl:border-b-0 xl:border-r">
+          <div className="border-b border-border-subtle px-4 py-3 font-mono text-[9px] uppercase tracking-[0.2em] text-code-muted">
             Reviewed recipes
           </div>
           <div className="grid sm:grid-cols-2 xl:block">
@@ -102,11 +102,11 @@ export default function StudioPage() {
               />
             ))}
           </div>
-          <div className="m-4 rounded-lg border border-acid/10 bg-acid-soft p-3">
-            <div className="mb-1 font-mono text-[9px] uppercase tracking-wider text-acid">
+          <div className="m-4 rounded-lg border border-accent/10 bg-accent/10 p-3">
+            <div className="mb-1 font-mono text-[9px] uppercase tracking-wider text-accent">
               Registry contract
             </div>
-            <p className="text-[10px] leading-relaxed text-text-muted">
+            <p className="text-[10px] leading-relaxed text-code-muted">
               Every recipe declares adapters, accessibility guidance, source,
               version, and maintainer.
             </p>
@@ -114,10 +114,10 @@ export default function StudioPage() {
         </aside>
 
         {/* Main preview area */}
-        <section className="min-w-0 bg-background">
+        <section className="min-w-0 bg-bg">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-subtle px-4 py-3 md:px-5">
             <div
-              className="flex rounded-md border border-border-subtle bg-surface-inset p-0.5"
+              className="flex rounded-md border border-border-subtle bg-code-header p-0.5"
               aria-label="Preview size"
             >
               {STAGES.map((size) => (
@@ -126,7 +126,7 @@ export default function StudioPage() {
                   type="button"
                   aria-pressed={stage === size.id}
                   onClick={() => setStage(size.id)}
-                  className="cursor-pointer rounded px-2.5 py-1 font-mono text-[9px] text-text-muted aria-pressed:bg-surface-overlay aria-pressed:text-foreground"
+                  className="cursor-pointer rounded px-2.5 py-1 font-mono text-[9px] text-code-muted aria-pressed:bg-surface aria-pressed:text-fg"
                 >
                   {size.label}
                 </button>
@@ -137,17 +137,17 @@ export default function StudioPage() {
                 type="button"
                 aria-pressed={reduceMotion}
                 onClick={() => setReduceMotion((v) => !v)}
-                className="flex cursor-pointer items-center gap-2 font-mono text-[9px] uppercase tracking-wider text-text-muted hover:text-foreground"
+                className="flex cursor-pointer items-center gap-2 font-mono text-[9px] uppercase tracking-wider text-code-muted hover:text-fg"
               >
                 <span
-                  className={`h-2 w-2 rounded-full ${reduceMotion ? "bg-amber-400" : "bg-acid"}`}
+                  className={`h-2 w-2 rounded-full ${reduceMotion ? "bg-amber-400" : "bg-accent"}`}
                 />
                 {reduceMotion ? "Reduced" : "Full motion"}
               </button>
               <button
                 type="button"
                 onClick={replay}
-                className="cursor-pointer rounded-md border border-border-subtle px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-wider text-text-dim hover:text-acid"
+                className="cursor-pointer rounded-md border border-border-subtle px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-wider text-fg-muted hover:text-accent"
               >
                 ↻ Replay
               </button>
@@ -175,7 +175,7 @@ export default function StudioPage() {
         </section>
 
         {/* Properties + code panel */}
-        <aside className="border-t border-border-subtle bg-surface-overlay xl:border-l xl:border-t-0">
+        <aside className="border-t border-border-subtle bg-surface xl:border-l xl:border-t-0">
           <div className="border-b border-border-subtle p-4">
             <div className="grid gap-5">
               <RangeControl

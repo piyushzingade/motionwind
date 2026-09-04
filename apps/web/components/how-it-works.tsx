@@ -33,7 +33,6 @@ export function HowItWorks() {
 function BeforeAfter() {
   return (
     <div className="grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr] md:gap-0">
-
       <CodeBlock
         label="What you write"
         filename="source.tsx"
@@ -45,27 +44,27 @@ function BeforeAfter() {
             <span className="syntax-tag">{"div"}</span>
             {"\n"}
             {"  "}
-            <span className="text-acid/80">{"className"}</span>
+            <span className="text-accent/80">{"className"}</span>
             <span className="code-dim">{"="}</span>
             <span className="syntax-string">{'"'}</span>
             {"\n"}
             {"    "}
-            <span className="text-acid">{"animate-initial:opacity-0"}</span>
+            <span className="text-accent">{"animate-initial:opacity-0"}</span>
             {"\n"}
             {"    "}
-            <span className="text-acid">{"animate-initial:y-20"}</span>
+            <span className="text-accent">{"animate-initial:y-20"}</span>
             {"\n"}
             {"    "}
-            <span className="text-acid">{"animate-inview:opacity-100"}</span>
+            <span className="text-accent">{"animate-inview:opacity-100"}</span>
             {"\n"}
             {"    "}
-            <span className="text-acid">{"animate-inview:y-0"}</span>
+            <span className="text-accent">{"animate-inview:y-0"}</span>
             {"\n"}
             {"    "}
-            <span className="text-acid">{"animate-duration-500"}</span>
+            <span className="text-accent">{"animate-duration-500"}</span>
             {"\n"}
             {"    "}
-            <span className="text-acid">{"animate-once"}</span>
+            <span className="text-accent">{"animate-once"}</span>
             {"\n"}
             {"    "}
             <span className="code-dim">{"p-4 rounded-lg"}</span>
@@ -93,23 +92,23 @@ function BeforeAfter() {
           <>
             <span className="code-comment">{"// Auto-injected by Babel"}</span>
             {"\n"}
-            <span className="text-acid/80">{"import"}</span>
+            <span className="text-accent/80">{"import"}</span>
             {" { "}
             <span className="code-fg">{"motion"}</span>
             {" } "}
-            <span className="text-acid/80">{"from"}</span>{" "}
+            <span className="text-accent/80">{"from"}</span>{" "}
             <span className="syntax-string">{'"motion/react"'}</span>
             {"\n\n"}
             <span className="code-dim">{"<"}</span>
             <span className="syntax-component">{"motion.div"}</span>
             {"\n"}
             {"  "}
-            <span className="text-acid/80">{"className"}</span>
+            <span className="text-accent/80">{"className"}</span>
             <span className="code-dim">{"="}</span>
             <span className="syntax-string">{'"p-4 rounded-lg"'}</span>
             {"\n"}
             {"  "}
-            <span className="text-acid/80">{"initial"}</span>
+            <span className="text-accent/80">{"initial"}</span>
             <span className="code-dim">{"={"}</span>
             {"{ "}
             <span className="code-fg">{"opacity: 0, y: 20"}</span>
@@ -117,7 +116,7 @@ function BeforeAfter() {
             <span className="code-dim">{"}"}</span>
             {"\n"}
             {"  "}
-            <span className="text-acid/80">{"whileInView"}</span>
+            <span className="text-accent/80">{"whileInView"}</span>
             <span className="code-dim">{"={"}</span>
             {"{ "}
             <span className="code-fg">{"opacity: 1, y: 0"}</span>
@@ -125,7 +124,7 @@ function BeforeAfter() {
             <span className="code-dim">{"}"}</span>
             {"\n"}
             {"  "}
-            <span className="text-acid/80">{"transition"}</span>
+            <span className="text-accent/80">{"transition"}</span>
             <span className="code-dim">{"={"}</span>
             {"{ "}
             <span className="code-fg">{"duration: 0.5"}</span>
@@ -133,7 +132,7 @@ function BeforeAfter() {
             <span className="code-dim">{"}"}</span>
             {"\n"}
             {"  "}
-            <span className="text-acid/80">{"viewport"}</span>
+            <span className="text-accent/80">{"viewport"}</span>
             <span className="code-dim">{"={"}</span>
             {"{ "}
             <span className="code-fg">{"once: true"}</span>
@@ -164,10 +163,10 @@ function CodeBlock({
   code: React.ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-border-subtle bg-surface-raised overflow-hidden">
+    <div className="rounded-xl border border-border-subtle bg-surface-elevated overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
-        <span className="text-xs font-medium text-acid">{label}</span>
-        <span className="text-[10px] text-text-muted font-[family-name:var(--font-mono)]">
+        <span className="text-xs font-medium text-accent">{label}</span>
+        <span className="text-[10px] text-code-muted font-[family-name:var(--font-mono)]">
           {filename}
         </span>
       </div>
@@ -210,18 +209,18 @@ function ProcessSteps() {
     <div className="mt-12 sm:mt-16 grid sm:grid-cols-3 gap-6 sm:gap-4">
       {steps.map((step, i) => (
         <Reveal key={step.num} delay={i * 0.08}>
-          <div className="border-t border-border-strong pt-5 sm:pt-6">
+          <div className="border-t border-border pt-5 sm:pt-6">
             <div className="flex items-center gap-3 mb-3">
-              <div className="text-acid text-sm font-[family-name:var(--font-mono)] shrink-0">
+              <div className="text-accent text-sm font-[family-name:var(--font-mono)] shrink-0">
                 {step.num}
               </div>
               <h3 className="text-sm font-semibold">{step.title}</h3>
             </div>
-            <p className="text-xs text-text-muted leading-relaxed mb-3">
+            <p className="text-xs text-code-muted leading-relaxed mb-3">
               {step.desc}
             </p>
-            <div className="rounded-md bg-surface-inset border border-border-subtle px-3 py-2">
-              <code className="text-[10px] font-[family-name:var(--font-mono)] text-acid/70">
+            <div className="rounded-md bg-code-header border border-border-subtle px-3 py-2">
+              <code className="text-[10px] font-[family-name:var(--font-mono)] text-accent/70">
                 {step.code}
               </code>
             </div>

@@ -66,9 +66,9 @@ export function FeaturesSection() {
           {FEATURES.map((f, i) => (
             <Reveal key={f.title} delay={(i % 2) * 0.06}>
               <div className="flex gap-4 border-t border-border-subtle py-5">
-                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-acid/10">
+                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-accent/10">
                   <svg
-                    className="w-5 h-5 text-acid"
+                    className="w-5 h-5 text-accent"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -89,10 +89,10 @@ export function FeaturesSection() {
                   </svg>
                 </div>
                 <div>
-                <h3 className="text-sm font-semibold text-foreground">{f.title}</h3>
-                <p className="mt-1.5 text-sm text-text-muted leading-relaxed">
-                  {f.desc}
-                </p>
+                  <h3 className="text-sm font-semibold text-fg">{f.title}</h3>
+                  <p className="mt-1.5 text-sm text-code-muted leading-relaxed">
+                    {f.desc}
+                  </p>
                 </div>
               </div>
             </Reveal>

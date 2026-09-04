@@ -11,7 +11,7 @@ export function ThemeToggle() {
     return (
       <button
         type="button"
-        className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border-subtle bg-surface-raised text-text-dim"
+        className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border-subtle bg-surface-elevated text-fg-muted"
         aria-label="Toggle theme"
       >
         <span className="h-3.5 w-3.5" />
@@ -25,7 +25,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border-subtle bg-surface-raised text-text-dim transition-colors hover:text-foreground hover:border-acid/20"
+      className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border-subtle bg-surface-elevated text-fg-muted transition-colors hover:text-fg hover:border-accent/20"
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDark ? (

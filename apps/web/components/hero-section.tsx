@@ -83,10 +83,9 @@ export function HeroSection() {
             initial="hidden"
             animate="show"
             transition={{ duration: 0.5, delay: 0.06, ease: easeOutQuint }}
-            className="mt-8 text-balance font-[family-name:var(--font-display)] text-5xl italic tracking-[-0.02em] text-foreground sm:text-6xl md:text-7xl"
+            className="mt-8 text-balance font-[family-name:var(--font-display)] text-5xl italic tracking-[-0.02em] text-fg sm:text-6xl md:text-7xl"
           >
-            Motion, written like{" "}
-            <span className="text-acid">Tailwind.</span>
+            Motion, written like <span className="text-accent">Tailwind.</span>
           </m.h1>
 
           <m.p
@@ -94,11 +93,11 @@ export function HeroSection() {
             initial="hidden"
             animate="show"
             transition={{ duration: 0.5, delay: 0.13, ease: easeOutQuint }}
-            className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-text-dim sm:text-lg"
+            className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg"
           >
             Motionwind turns familiar utility classes into optimized Motion
-            components during your build. Create expressive interactions
-            without learning a new API or shipping a parser to your users.
+            components during your build. Create expressive interactions without
+            learning a new API or shipping a parser to your users.
           </m.p>
 
           <m.div
@@ -110,13 +109,13 @@ export function HeroSection() {
           >
             <a
               href="https://www.motionwind.xyz/docs"
-              className="inline-flex items-center gap-2 rounded-lg bg-acid px-5 py-3 text-sm font-semibold text-[var(--color-accent-fg)] transition-colors hover:bg-acid-dim focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid"
+              className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-[var(--color-accent-fg)] transition-colors hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               Read the docs <ArrowIcon />
             </a>
             <a
               href="/play"
-              className="inline-flex items-center gap-2 rounded-lg border border-border-strong bg-surface-raised px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-acid/30 hover:bg-surface-overlay focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid"
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface-elevated px-5 py-3 text-sm font-semibold text-fg transition-colors hover:border-accent/30 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               Open playground <ArrowIcon />
             </a>

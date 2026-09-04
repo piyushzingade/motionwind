@@ -34,12 +34,12 @@ export function highlightCode(code: string): ReactNode[] {
     let pos = abs; // absolute offset of the next unconsumed char
 
     while (remaining.length > 0) {
-      // animate-* classes (acid green, bold)
+      // animate-* classes (accent green, bold)
       const animateMatch = remaining.match(/^(animate-[\w:.\-[\],]+)/);
       if (animateMatch) {
         const len = animateMatch[1]!.length;
         result.push(
-          <span key={pos} className="text-acid font-semibold">
+          <span key={pos} className="text-accent font-semibold">
             {animateMatch[1]}
           </span>,
         );
@@ -114,7 +114,7 @@ export function highlightCode(code: string): ReactNode[] {
       if (kwMatch) {
         const len = kwMatch[1]!.length;
         result.push(
-          <span key={pos} className="text-acid/80">
+          <span key={pos} className="text-accent/80">
             {kwMatch[1]}
           </span>,
         );

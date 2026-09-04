@@ -30,48 +30,48 @@ export function SyntaxSection() {
         </Reveal>
 
         <Reveal y={28}>
-          <div className="overflow-hidden rounded-lg border border-border-strong bg-surface-raised">
-          <div className="p-6 sm:p-8 border-b border-border-subtle">
-            <div className="flex items-center justify-center">
-              <code className="text-sm sm:text-base md:text-xl font-[family-name:var(--font-mono)] flex flex-wrap items-center gap-1 justify-center">
-                <span className="text-text-muted">animate-</span>
-                <span className="text-acid bg-acid/10 px-2 py-0.5 rounded">
-                  {"{"}
-                  <span className="text-[10px] align-top">gesture</span>
-                  {"}"}
-                </span>
-                <span className="text-text-muted">:</span>
-                <span className="text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">
-                  {"{"}
-                  <span className="text-[10px] align-top">property</span>
-                  {"}"}
-                </span>
-                <span className="text-text-muted">-</span>
-                <span className="text-fuchsia-400 bg-fuchsia-400/10 px-2 py-0.5 rounded">
-                  {"{"}
-                  <span className="text-[10px] align-top">value</span>
-                  {"}"}
-                </span>
-              </code>
+          <div className="overflow-hidden rounded-lg border border-border bg-surface-elevated">
+            <div className="p-6 sm:p-8 border-b border-border-subtle">
+              <div className="flex items-center justify-center">
+                <code className="text-sm sm:text-base md:text-xl font-[family-name:var(--font-mono)] flex flex-wrap items-center gap-1 justify-center">
+                  <span className="text-code-muted">animate-</span>
+                  <span className="text-accent bg-accent/10 px-2 py-0.5 rounded">
+                    {"{"}
+                    <span className="text-[10px] align-top">gesture</span>
+                    {"}"}
+                  </span>
+                  <span className="text-code-muted">:</span>
+                  <span className="text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">
+                    {"{"}
+                    <span className="text-[10px] align-top">property</span>
+                    {"}"}
+                  </span>
+                  <span className="text-code-muted">-</span>
+                  <span className="text-fuchsia-400 bg-fuchsia-400/10 px-2 py-0.5 rounded">
+                    {"{"}
+                    <span className="text-[10px] align-top">value</span>
+                    {"}"}
+                  </span>
+                </code>
+              </div>
             </div>
-          </div>
 
-          <div className="p-4 sm:p-6">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-              {GESTURES.map(([prefix, prop]) => (
-                <div
-                  key={prefix}
-                  className="rounded-lg bg-surface/50 border border-border-subtle p-3 text-center"
-                >
-                  <code className="text-xs font-[family-name:var(--font-mono)] text-acid">
-                    {prefix}
-                  </code>
-                  <p className="text-[10px] text-text-muted mt-1">{prop}</p>
-                </div>
-              ))}
+            <div className="p-4 sm:p-6">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+                {GESTURES.map(([prefix, prop]) => (
+                  <div
+                    key={prefix}
+                    className="rounded-lg bg-surface/50 border border-border-subtle p-3 text-center"
+                  >
+                    <code className="text-xs font-[family-name:var(--font-mono)] text-accent">
+                      {prefix}
+                    </code>
+                    <p className="text-[10px] text-code-muted mt-1">{prop}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
         </Reveal>
       </div>
     </section>

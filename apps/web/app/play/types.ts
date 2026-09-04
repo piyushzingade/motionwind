@@ -24,7 +24,7 @@ export const STAGES: { id: StageSize; label: string; width: number }[] = [
 ];
 
 export const PREVIEW_SKIN =
-  "rounded-xl bg-acid px-6 py-3 font-semibold text-black";
+  "rounded-xl bg-accent px-6 py-3 font-semibold text-black";
 
 export function getInitial(): StudioState {
   return {

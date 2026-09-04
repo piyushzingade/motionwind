@@ -16,21 +16,19 @@ function PreviewCard({
   className?: string;
 }) {
   return (
-    <div
-      className={`preview-card ${className}`}
-    >
+    <div className={`preview-card ${className}`}>
       <div className="preview-titlebar">
         <div className="flex items-center gap-2.5">
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-acid opacity-60 animate-pulse-glow" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-acid" />
+            <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-60 animate-pulse-glow" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
           </span>
-          <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-text-dim">
+          <span className="text-[11px] font-medium tracking-[0.15em] uppercase text-fg-muted">
             {title}
           </span>
         </div>
         <svg
-          className="w-4 h-4 text-text-muted"
+          className="w-4 h-4 text-code-muted"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -93,13 +91,13 @@ function GestureTable() {
       <table className="w-full text-left">
         <thead>
           <tr className="border-b border-border-subtle">
-            <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-text-muted w-24">
+            <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-code-muted w-24">
               Gesture
             </th>
-            <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-text-muted w-44">
+            <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-code-muted w-44">
               Prefix
             </th>
-            <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-text-muted">
+            <th className="pb-3 text-[10px] font-semibold tracking-[0.15em] uppercase text-code-muted">
               Use Case
             </th>
           </tr>
@@ -108,17 +106,15 @@ function GestureTable() {
           {rows.map(([gesture, prefix, useCase], i) => (
             <tr
               key={gesture}
-              className={`border-b border-border-subtle ${i % 2 === 0 ? "bg-surface-inset/50" : ""}`}
+              className={`border-b border-border-subtle ${i % 2 === 0 ? "bg-code-header/50" : ""}`}
             >
-              <td className="py-3 text-foreground font-medium text-xs">
-                {gesture}
-              </td>
+              <td className="py-3 text-fg font-medium text-xs">{gesture}</td>
               <td className="py-3">
-                <code className="text-[11px] font-[family-name:var(--font-mono)] text-acid bg-acid-soft px-2 py-1 rounded">
+                <code className="text-[11px] font-[family-name:var(--font-mono)] text-accent bg-accent/10 px-2 py-1 rounded">
                   {prefix}
                 </code>
               </td>
-              <td className="py-3 text-xs text-text-muted">{useCase}</td>
+              <td className="py-3 text-xs text-code-muted">{useCase}</td>
             </tr>
           ))}
         </tbody>
@@ -152,28 +148,22 @@ export function DemoCards() {
                 id="demo-search"
                 type="text"
                 placeholder="Search..."
-                className="animate-focus:scale-105 animate-focus:y--2 animate-spring animate-stiffness-300 animate-damping-20 w-full max-w-md rounded-xl bg-surface-inset border border-border-strong px-5 py-3 text-sm text-foreground placeholder:text-text-muted outline-none focus:border-acid/50 focus:ring-2 focus:ring-acid/20 focus:shadow-[0_0_20px_var(--acid-glow)] transition-[border-color,box-shadow]"
+                className="animate-focus:scale-105 animate-focus:y--2 animate-spring animate-stiffness-300 animate-damping-20 w-full max-w-md rounded-xl bg-code-header border border-border px-5 py-3 text-sm text-fg placeholder:text-code-muted outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20 focus:shadow-[0_0_20px_var(--accent-glow)] transition-[border-color,box-shadow]"
               />
             </PreviewCard>
           </Reveal>
 
           <Reveal delay={0.1} y={20}>
             <PreviewCard title="Hover and tap">
-              <div className="animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 px-8 py-4 rounded-xl bg-acid/20 border border-acid/40 text-sm text-acid font-semibold select-none cursor-pointer shadow-[0_0_24px_var(--acid-glow)]">
+              <div className="animate-hover:scale-110 animate-tap:scale-90 animate-spring animate-stiffness-400 animate-damping-15 px-8 py-4 rounded-xl bg-accent/20 border border-accent/40 text-sm text-accent font-semibold select-none cursor-pointer shadow-[0_0_24px_var(--accent-glow)]">
                 Hover me, or tap me
               </div>
             </PreviewCard>
           </Reveal>
 
-          <Reveal delay={0.15} y={20}>
-            <PreviewCard title="Gesture prefixes" className="md:col-span-2">
-              <GestureTable />
-            </PreviewCard>
-          </Reveal>
-
           <Reveal delay={0.05} y={20}>
             <PreviewCard title="Scroll reveal">
-              <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-once px-10 py-5 rounded-xl bg-acid/20 border border-acid/40 text-sm text-acid font-semibold shadow-[0_0_24px_var(--acid-glow)]">
+              <div className="animate-initial:opacity-0 animate-initial:y-20 animate-inview:opacity-100 animate-inview:y-0 animate-duration-500 animate-once px-10 py-5 rounded-xl bg-accent/20 border border-accent/40 text-sm text-accent font-semibold shadow-[0_0_24px_var(--accent-glow)]">
                 I appear on scroll
               </div>
             </PreviewCard>
@@ -181,9 +171,7 @@ export function DemoCards() {
 
           <Reveal delay={0.1} y={20}>
             <PreviewCard title="Drag interaction">
-              <div
-                className="animate-drag-both animate-drag-elastic-30 animate-drag-snap animate-hover:scale-105 animate-spring px-8 py-4 rounded-xl bg-acid/20 border border-acid/40 text-sm text-acid font-semibold cursor-grab active:cursor-grabbing select-none shadow-[0_0_24px_var(--acid-glow)]"
-              >
+              <div className="animate-drag-both animate-drag-elastic-30 animate-drag-snap animate-hover:scale-105 animate-spring px-8 py-4 rounded-xl bg-accent/20 border border-accent/40 text-sm text-accent font-semibold cursor-grab active:cursor-grabbing select-none shadow-[0_0_24px_var(--accent-glow)]">
                 Drag me around
               </div>
             </PreviewCard>
@@ -191,9 +179,9 @@ export function DemoCards() {
 
           <Reveal delay={0.15} y={20}>
             <PreviewCard title="Infinite loop">
-              <div className="animate-initial:rotate-0 animate-enter:rotate-360 animate-duration-2000 animate-ease-linear animate-repeat-infinite w-16 h-16 rounded-xl bg-acid/20 border border-acid/40 flex items-center justify-center shadow-[0_0_24px_var(--acid-glow)]">
+              <div className="animate-initial:rotate-0 animate-enter:rotate-360 animate-duration-2000 animate-ease-linear animate-repeat-infinite w-16 h-16 rounded-xl bg-accent/20 border border-accent/40 flex items-center justify-center shadow-[0_0_24px_var(--accent-glow)]">
                 <svg
-                  className="w-6 h-6 text-acid"
+                  className="w-6 h-6 text-accent"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -209,11 +197,17 @@ export function DemoCards() {
             </PreviewCard>
           </Reveal>
 
-          <Reveal delay={0.05} y={20}>
+          <Reveal delay={0.2} y={20}>
             <PreviewCard title="Spring physics">
-              <div className="animate-hover:rotate-12 animate-hover:scale-115 animate-tap:rotate-0 animate-tap:scale-85 animate-spring animate-stiffness-200 animate-damping-8 px-8 py-4 rounded-xl bg-acid/20 border border-acid/40 text-sm text-acid font-semibold cursor-pointer select-none shadow-[0_0_24px_var(--acid-glow)]">
+              <div className="animate-hover:rotate-12 animate-hover:scale-115 animate-tap:rotate-0 animate-tap:scale-85 animate-spring animate-stiffness-200 animate-damping-8 px-8 py-4 rounded-xl bg-accent/20 border border-accent/40 text-sm text-accent font-semibold cursor-pointer select-none shadow-[0_0_24px_var(--accent-glow)]">
                 Hover for springy bounce
               </div>
+            </PreviewCard>
+          </Reveal>
+
+          <Reveal delay={0.05} y={20}>
+            <PreviewCard title="Gesture prefixes" className="md:col-span-2">
+              <GestureTable />
             </PreviewCard>
           </Reveal>
         </div>

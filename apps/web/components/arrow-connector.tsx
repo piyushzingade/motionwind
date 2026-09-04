@@ -3,10 +3,10 @@ export function ArrowConnector() {
     <>
       <div className="hidden md:flex items-center justify-center px-4">
         <div className="flex flex-col items-center gap-2">
-          <div className="w-px h-8 bg-gradient-to-b from-transparent to-acid/30" />
-          <div className="w-8 h-8 rounded-full border border-acid/20 bg-acid/5 flex items-center justify-center">
+          <div className="w-px h-8 bg-gradient-to-b from-transparent to-accent/30" />
+          <div className="w-8 h-8 rounded-full border border-accent/20 bg-accent/5 flex items-center justify-center">
             <svg
-              className="w-4 h-4 text-acid"
+              className="w-4 h-4 text-accent"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -19,13 +19,13 @@ export function ArrowConnector() {
               />
             </svg>
           </div>
-          <div className="w-px h-8 bg-gradient-to-b from-acid/30 to-transparent" />
+          <div className="w-px h-8 bg-gradient-to-b from-accent/30 to-transparent" />
         </div>
       </div>
       <div className="flex md:hidden items-center justify-center py-3">
-        <div className="w-8 h-8 rounded-full border border-acid/20 bg-acid/5 flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border border-accent/20 bg-accent/5 flex items-center justify-center">
           <svg
-            className="w-4 h-4 text-acid rotate-90"
+            className="w-4 h-4 text-accent rotate-90"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

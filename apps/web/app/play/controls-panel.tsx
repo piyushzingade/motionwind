@@ -32,14 +32,14 @@ export function ControlsPanel({
           onChange={(event) => updateEditor({ classes: event.target.value })}
           spellCheck={false}
           rows={6}
-          className="w-full resize-y rounded-lg border border-border-subtle bg-surface-inset p-3 font-mono text-[11px] leading-relaxed text-acid outline-none transition focus:border-acid/30"
+          className="w-full resize-y rounded-lg border border-border-subtle bg-code-header p-3 font-mono text-[11px] leading-relaxed text-accent outline-none transition focus:border-accent/30"
         />
       </div>
       <div className="grid grid-cols-2 gap-3 p-4">
         <div>
           <label
             htmlFor="studio-element"
-            className="mb-2 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-text-muted"
+            className="mb-2 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-code-muted"
           >
             <span>Element</span>
           </label>
@@ -47,7 +47,7 @@ export function ControlsPanel({
             id="studio-element"
             value={editor.tag}
             onChange={(event) => updateEditor({ tag: event.target.value })}
-            className="w-full rounded-lg border border-border-subtle bg-surface-inset p-2 text-xs outline-none focus:border-acid/30"
+            className="w-full rounded-lg border border-border-subtle bg-code-header p-2 text-xs outline-none focus:border-accent/30"
           >
             {TAGS.map((tag) => (
               <option key={tag}>{tag}</option>
@@ -61,7 +61,7 @@ export function ControlsPanel({
             aria-label="Content"
             value={editor.text}
             onChange={(event) => updateEditor({ text: event.target.value })}
-            className="w-full rounded-lg border border-border-subtle bg-surface-inset p-2 text-xs outline-none focus:border-acid/30"
+            className="w-full rounded-lg border border-border-subtle bg-code-header p-2 text-xs outline-none focus:border-accent/30"
           />
         </div>
         <div className="col-span-2 flex flex-wrap gap-1.5 pt-1">

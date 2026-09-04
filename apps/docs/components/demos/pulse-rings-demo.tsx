@@ -43,7 +43,11 @@ export function PulseRingsDemo() {
           fill="currentColor"
           initial={{ scale: 0.95 }}
           animate={{ scale: [1, 1.15, 1] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: [0.23, 1, 0.32, 1] }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: [0.23, 1, 0.32, 1],
+          }}
         />
       </svg>
       <button onClick={() => setKey((k) => k + 1)} className="demo-btn">
