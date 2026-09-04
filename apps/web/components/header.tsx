@@ -38,31 +38,28 @@ export async function Header() {
             <span className="font-display text-xl italic tracking-[-0.02em] text-fg transition-colors group-hover:text-fg">
               motionwind
             </span>
-            <span className="hidden text-[10px] text-code-muted font-[family-name:var(--font-mono)] sm:inline">
-              / landing
-            </span>
           </Link>
           <nav
             className="hidden md:flex items-center gap-1"
             aria-label="Main navigation"
           >
             {NAV_ITEMS.map((item) => (
-              <Link
+              <a
                 key={item.label}
                 href={item.href}
                 className="rounded-md px-3 py-1.5 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg-muted hover:text-fg hover:bg-surface transition-colors"
               >
                 {item.label}
-              </Link>
+              </a>
             ))}
-            <Link
+            <a
               href="https://www.motionwind.xyz/docs"
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-md px-3 py-1.5 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg-muted hover:text-fg hover:bg-surface transition-colors"
             >
               Docs
-            </Link>
+            </a>
           </nav>
         </div>
         <div className="flex items-center gap-2">
