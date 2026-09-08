@@ -11,7 +11,6 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@databuddy/sdk": "^1.4.2",
     "@repo/ui": "workspace:*",
     "@vercel/analytics": "^2.0.1",
     "motion": "^12.12.1",

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
-import { Databuddy } from "@databuddy/sdk";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -25,6 +24,8 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   display: "swap",
 });
+
+const databuddyClientId = process.env.DATABUDDY_CLIENT_ID;
 
 export const metadata: Metadata = {
   title: {
@@ -188,6 +189,20 @@ export default function RootLayout({
               .replace(/&/g, "\\u0026"),
           }}
         />
+        {databuddyClientId ? (
+          <script
+            src="https://cdn.databuddy.cc/databuddy.js"
+            data-client-id={databuddyClientId}
+            data-track-hash-changes="true"
+            data-track-attributes="true"
+            data-track-outgoing-links="true"
+            data-track-interactions="true"
+            data-track-web-vitals="true"
+            data-track-errors="true"
+            crossOrigin="anonymous"
+            async
+          />
+        ) : null}
       </head>
       <body className={`${fontVars} antialiased`}>
         <RootProvider
@@ -199,15 +214,6 @@ export default function RootLayout({
         >
           {children}
         </RootProvider>
-        <Databuddy
-          clientId={process.env.DATABUDDY_CLIENT_ID!}
-          trackErrors
-          trackHashChanges
-          trackAttributes
-          trackOutgoingLinks
-          trackInteractions
-          trackWebVitals
-        />
         <Analytics />
         <SpeedInsights />
       </body>

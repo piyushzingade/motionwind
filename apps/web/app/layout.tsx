@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
-import { Databuddy } from "@databuddy/sdk";
 import { Analytics } from "@vercel/analytics/next";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -22,6 +21,8 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   display: "swap",
 });
+
+const databuddyClientId = process.env.DATABUDDY_CLIENT_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://web.motionwind.xyz"),
@@ -143,6 +144,20 @@ export default function RootLayout({
               .replace(/&/g, "\\u0026"),
           }}
         />
+        {databuddyClientId ? (
+          <script
+            src="https://cdn.databuddy.cc/databuddy.js"
+            data-client-id={databuddyClientId}
+            data-track-hash-changes="true"
+            data-track-attributes="true"
+            data-track-outgoing-links="true"
+            data-track-interactions="true"
+            data-track-web-vitals="true"
+            data-track-errors="true"
+            crossOrigin="anonymous"
+            async
+          />
+        ) : null}
       </head>
       <body
         className={`${instrumentSerif.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
@@ -158,15 +173,6 @@ export default function RootLayout({
             <div className="blur-layer blur-6" />
           </div>
         </Providers>
-        <Databuddy
-          clientId={process.env.DATABUDDY_CLIENT_ID!}
-          trackErrors
-          trackHashChanges
-          trackAttributes
-          trackOutgoingLinks
-          trackInteractions
-          trackWebVitals
-        />
         <Analytics />
       </body>
     </html>
