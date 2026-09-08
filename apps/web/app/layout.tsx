@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { Databuddy } from "@databuddy/sdk";
 import { Analytics } from "@vercel/analytics/next";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -157,6 +158,11 @@ export default function RootLayout({
             <div className="blur-layer blur-6" />
           </div>
         </Providers>
+        <Databuddy
+          clientId={process.env.NEXT_PUBLIC_DATABUDDY_CLIENT_ID!}
+          trackWebVitals
+          trackErrors
+        />
         <Analytics />
       </body>
     </html>

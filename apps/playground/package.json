@@ -11,6 +11,7 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@databuddy/sdk": "^1.4.2",
     "@vercel/analytics": "^2.0.1",
     "fumadocs-core": "^16.6.17",
     "fumadocs-ui": "^16.6.17",

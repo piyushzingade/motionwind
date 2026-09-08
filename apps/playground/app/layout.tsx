@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { Databuddy } from "@databuddy/sdk";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import { Analytics } from "@vercel/analytics/next";
 import "fumadocs-ui/style.css";
@@ -140,6 +141,11 @@ export default function RootLayout({
         >
           {children}
         </RootProvider>
+        <Databuddy
+          clientId={process.env.NEXT_PUBLIC_DATABUDDY_CLIENT_ID!}
+          trackWebVitals
+          trackErrors
+        />
         <Analytics />
       </body>
     </html>
