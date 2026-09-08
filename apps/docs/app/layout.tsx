@@ -200,9 +200,13 @@ export default function RootLayout({
           {children}
         </RootProvider>
         <Databuddy
-          clientId={process.env.NEXT_PUBLIC_DATABUDDY_CLIENT_ID!}
-          trackWebVitals
+          clientId={process.env.DATABUDDY_CLIENT_ID!}
           trackErrors
+          trackHashChanges
+          trackAttributes
+          trackOutgoingLinks
+          trackInteractions
+          trackWebVitals
         />
         <Analytics />
         <SpeedInsights />
