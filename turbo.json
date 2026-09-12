@@ -1,7 +1,7 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
-  "globalEnv": ["NODE_ENV", "RESEND_API_KEY", "DATABUDDY_CLIENT_ID"],
+  "globalEnv": ["NODE_ENV", "RESEND_API_KEY", "DATABUDDY_CLIENT_ID", "FEEDBACK_TO_EMAIL", "FEEDBACK_FROM_EMAIL"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

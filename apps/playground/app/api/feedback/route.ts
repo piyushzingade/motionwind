@@ -8,6 +8,32 @@ import {
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const FEEDBACK_TO = process.env.FEEDBACK_TO_EMAIL ?? "piyushzingade@gmail.com";
+const FEEDBACK_FROM =
+  process.env.FEEDBACK_FROM_EMAIL ?? "motionwind <onboarding@resend.dev>";
+
+/* ── Simple in-memory rate limiter ─────────────────────────────────── */
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_WINDOW = 60_000;
+const RATE_LIMIT_MAX = 5;
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+
+  if (entry.count >= RATE_LIMIT_MAX) return false;
+
+  entry.count++;
+  return true;
+}
+
 function escapeHtml(value: string) {
   return value.replace(
     /[&<>'"]/g,
@@ -23,6 +49,16 @@ function escapeHtml(value: string) {
 }
 
 export async function POST(request: NextRequest) {
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+
+  if (!checkRateLimit(ip)) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 },
+    );
+  }
+
   let body: {
     type?: unknown;
     message?: unknown;
@@ -65,8 +101,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
+  if (!process.env.RESEND_API_KEY) {
     return NextResponse.json(
       { error: "Email service not configured" },
       { status: 503 },
@@ -74,14 +109,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const resend = new Resend(apiKey);
     const { data, error } = await resend.emails.send({
-      from: "motionwind <onboarding@resend.dev>",
-      to: ["piyushzingade@gmail.com"],
+      from: FEEDBACK_FROM,
+      to: [FEEDBACK_TO],
       subject: `[motionwind playground] ${body.type}: New feedback`,
       html: `
         <div style="font-family: system-ui, -apple-system, sans-serif; max-width: 560px; margin: 0 auto;">
-          <h2 style="font-size: 18px; margin-bottom: 16px;">Playground feedback: ${escapeHtml(body.type)}</h2>
+          <h2 style="font-size: 18px; margin-bottom: 16px;">Playground feedback: ${escapeHtml(body.type as string)}</h2>
           <div style="background: #f4f4f5; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
             <p style="margin: 0; white-space: pre-wrap;">${escapeHtml(message)}</p>
           </div>

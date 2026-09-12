@@ -12,6 +12,8 @@ const MwComponent = mw as unknown as Record<
   ComponentType<{ className?: string; children?: ReactNode }>
 >;
 
+const DEFAULT_TAG = "div";
+
 export function PreviewStage({
   tag,
   classes,
@@ -27,8 +29,8 @@ export function PreviewStage({
   reduceMotion: boolean;
   replayKey: number;
 }) {
-  const Preview = MwComponent[tag]!;
-  const stageWidth = STAGES.find(({ id }) => id === stage)!.width;
+  const Preview = (MwComponent[tag] ?? MwComponent[DEFAULT_TAG]) as ComponentType<{ className?: string; children?: ReactNode }>;
+  const stageWidth = STAGES.find(({ id }) => id === stage)?.width ?? 400;
   const systemReducedMotion = useReducedMotion();
   const shouldReduceMotion = reduceMotion || systemReducedMotion;
 

@@ -73,10 +73,6 @@ export function FeedbackDialog({
       setStatus("sent");
       closeTimer.current = window.setTimeout(() => {
         onOpenChange(false);
-        setMessage("");
-        setEmail("");
-        setType("Feature Request");
-        setStatus("idle");
       }, 1200);
     } catch {
       setStatus("error");
@@ -85,8 +81,21 @@ export function FeedbackDialog({
     }
   }
 
+  function resetForm() {
+    setMessage("");
+    setEmail("");
+    setType("Feature Request");
+    setStatus("idle");
+    sendingRef.current = false;
+    if (closeTimer.current) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }
+
   function handleOpenChange(nextOpen: boolean) {
-    if (nextOpen) setStatus("idle");
+    if (!nextOpen) resetForm();
+    else setStatus("idle");
     onOpenChange(nextOpen);
   }
 
