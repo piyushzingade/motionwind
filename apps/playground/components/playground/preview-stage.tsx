@@ -1,7 +1,8 @@
 "use client";
 
 import { type ComponentType, type ReactNode } from "react";
-import { MotionConfig } from "motion/react";
+import { CheckerboardIcon } from "@phosphor-icons/react";
+import { MotionConfig, useReducedMotion } from "motion/react";
 import { mw } from "motionwind-react";
 import { STAGES } from "@/lib/types";
 import type { StageSize } from "@/lib/types";
@@ -28,18 +29,21 @@ export function PreviewStage({
 }) {
   const Preview = MwComponent[tag]!;
   const stageWidth = STAGES.find(({ id }) => id === stage)!.width;
+  const systemReducedMotion = useReducedMotion();
+  const shouldReduceMotion = reduceMotion || systemReducedMotion;
 
   return (
-    <div className="studio-checker flex min-h-[320px] items-center justify-center overflow-auto p-5 rounded-lg border border-dashed border-[var(--color-border)]">
+    <div className="studio-checker flex min-h-[360px] items-center justify-center overflow-auto p-3 sm:p-5">
       <div
-        className="relative flex min-h-[260px] max-w-full items-center justify-center overflow-hidden rounded-2xl border border-white/[0.06] bg-[var(--color-surface-elevated)] shadow-[0_30px_90px_#0008] transition-[width] duration-300"
+        className={`relative flex min-h-[300px] max-w-full items-center justify-center overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] shadow-[0_18px_55px_var(--color-shadow)] ${shouldReduceMotion ? "" : "transition-[width] duration-200 ease-[cubic-bezier(0.645,0.045,0.355,1)]"}`}
         style={{ width: stageWidth }}
+        data-testid="preview-viewport"
       >
-        <div className="absolute left-4 top-4 flex items-center gap-2 font-[family-name:var(--font-mono)] text-[8px] uppercase tracking-[0.18em] text-[var(--color-code-muted)]">
-          <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]/70" />
-          live viewport · {stageWidth}px
+        <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-bg)]/80 px-2 py-1 font-[family-name:var(--font-mono)] text-[8px] uppercase tracking-[0.1em] text-[var(--color-code-muted)] backdrop-blur-sm">
+          <CheckerboardIcon size={11} />
+          Live viewport {stageWidth}px
         </div>
-        <MotionConfig reducedMotion={reduceMotion ? "always" : "never"}>
+        <MotionConfig reducedMotion={shouldReduceMotion ? "always" : "user"}>
           <Preview key={replayKey} className={classes}>
             {text}
           </Preview>

@@ -23,22 +23,22 @@
   --font-mono: var(--font-mono);
 }
 
-/* ── Light Theme (default) ── */
+/* Light theme */
 :root {
-  --color-bg: #fafaf9;
-  --color-fg: #171717;
-  --color-fg-muted: #64646e;
+  --color-bg: #fbfbfb;
+  --color-fg: #18181a;
+  --color-fg-muted: #66666d;
   --color-accent: #4d7c0f;
   --color-accent-hover: #3f6212;
   --color-accent-fg: #ffffff;
-  --color-border: #e4e4e0;
-  --color-border-subtle: #f0f0ec;
-  --color-surface: #f5f5f2;
+  --color-border: #e3e3e5;
+  --color-border-subtle: #efeff1;
+  --color-surface: #f5f5f6;
   --color-surface-elevated: #ffffff;
   --color-shadow: rgba(0, 0, 0, 0.06);
-  --color-code-bg: #f6f6f2;
-  --color-code-header: #eeeee8;
-  --color-code-border: #e0e0da;
+  --color-code-bg: #f7f7f8;
+  --color-code-header: #efeff1;
+  --color-code-border: #e1e1e4;
   --color-code-muted: #9a9a9a;
   --color-selection: rgba(77, 124, 15, 0.12);
   --color-dot-grid: rgba(77, 124, 15, 0.06);
@@ -51,23 +51,23 @@
   --color-fd-primary-foreground: #1a1a1a !important;
 }
 
-/* ── Dark Theme ── */
+/* Dark theme */
 .dark {
-  --color-bg: #0a0a0f;
-  --color-fg: #f0f0f0;
-  --color-fg-muted: #8a8a9a;
+  --color-bg: #0b0b0c;
+  --color-fg: #f0f0f1;
+  --color-fg-muted: #929299;
   --color-accent: #c8ff2e;
   --color-accent-hover: #b8ef1e;
-  --color-accent-fg: #0a0a0f;
-  --color-border: #1e1e2a;
-  --color-border-subtle: #141420;
-  --color-surface: #0f0f18;
-  --color-surface-elevated: #16161f;
+  --color-accent-fg: #0b0b0c;
+  --color-border: #29292c;
+  --color-border-subtle: #1c1c1f;
+  --color-surface: #111113;
+  --color-surface-elevated: #18181b;
   --color-shadow: rgba(0, 0, 0, 0.5);
-  --color-code-bg: #0c0c14;
-  --color-code-header: #12121c;
+  --color-code-bg: #0e0e10;
+  --color-code-header: #151518;
   --color-code-border: rgba(200, 255, 46, 0.06);
-  --color-code-muted: #5a5a6a;
+  --color-code-muted: #6f6f78;
   --color-selection: rgba(200, 255, 46, 0.18);
   --color-dot-grid: rgba(200, 255, 46, 0.03);
   --color-demo-glow: rgba(200, 255, 46, 0.04);
@@ -84,6 +84,23 @@ body {
   font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:where(
+  a[href],
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  input[type="range"]:not(:disabled),
+  select:not(:disabled),
+  summary
+) {
+  cursor: pointer;
+}
+
+:where(button:disabled, [aria-disabled="true"], input:disabled, select:disabled) {
+  cursor: not-allowed;
 }
 
 /* ── Scrollbar ── */
@@ -118,18 +135,6 @@ body {
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
-}
-
-/* ── Reduced motion ── */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
 }
 
 /* ── Docs content wrapper ── */
@@ -1157,6 +1162,10 @@ figure.shiki pre::-webkit-scrollbar {
     var(--color-border) 100%
   );
 }
+.studio-range:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+  outline-offset: 5px;
+}
 .studio-range::-webkit-slider-thumb {
   width: 14px;
   height: 14px;
@@ -1195,8 +1204,120 @@ figure.shiki pre::-webkit-scrollbar {
 .studio-timeline {
   container-type: inline-size;
 }
+.timeline-ticks {
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(10% - 1px),
+    var(--color-border-subtle) calc(10% - 1px),
+    var(--color-border-subtle) 10%
+  );
+}
 .studio-playhead {
   animation-name: studio-playhead;
   animation-timing-function: linear;
   animation-fill-mode: both;
+}
+.studio-playhead[data-reduced-motion="true"] {
+  animation: none;
+  transform: translateX(calc(100cqw - 16px));
+}
+
+.control-press:active {
+  transform: scale(0.98);
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes overlay-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes drawer-out {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 10px)) scale(0.97);
+  }
+}
+
+@keyframes dialog-out {
+  to {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 8px)) scale(0.98);
+  }
+}
+
+.mobile-drawer-overlay[data-state="open"],
+.feedback-overlay[data-state="open"] {
+  animation: overlay-in 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.mobile-drawer-overlay[data-state="closed"],
+.feedback-overlay[data-state="closed"] {
+  animation: overlay-out 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.mobile-drawer-content[data-state="open"] {
+  animation: drawer-in 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.mobile-drawer-content[data-state="closed"] {
+  animation: drawer-out 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.feedback-content[data-state="open"] {
+  animation: dialog-in 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.feedback-content[data-state="closed"] {
+  animation: dialog-out 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.feedback-spinner {
+  animation: feedback-spin 700ms linear infinite;
+  will-change: transform;
+}
+
+@keyframes feedback-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  .mobile-drawer-overlay,
+  .mobile-drawer-content,
+  .feedback-overlay,
+  .feedback-content,
+  .feedback-spinner,
+  .studio-playhead {
+    animation: none;
+  }
+
+  .control-press,
+  .studio-range::-webkit-slider-thumb {
+    transition: none;
+  }
 }

@@ -1,25 +1,17 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
-import { RootProvider } from "fumadocs-ui/provider/next";
+import localFont from "next/font/local";
+import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/next";
-import "fumadocs-ui/style.css";
 import "./globals.css";
 
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
+const geistSans = localFont({
+  src: "../../web/app/fonts/GeistVF.woff",
   variable: "--font-sans",
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
+const geistMono = localFont({
+  src: "../../web/app/fonts/GeistMonoVF.woff",
   variable: "--font-mono",
   display: "swap",
 });
@@ -28,11 +20,11 @@ const databuddyClientId = process.env.DATABUDDY_CLIENT_ID;
 
 export const metadata: Metadata = {
   title: {
-    default: "Motionwind Playground — Interactive Animation Editor",
+    default: "Motionwind Playground - Interactive Animation Editor",
     template: "%s | Motionwind Playground",
   },
   description:
-    "Interactive playground for Motionwind — write Motion animations as Tailwind-like utility classes, preview them live, and generate production-ready code.",
+    "Interactive playground for Motionwind. Write Motion animations as Tailwind-like utility classes, preview them live, and generate production-ready code.",
   metadataBase: new URL("https://play.motionwind.xyz"),
   keywords: [
     "motionwind",
@@ -51,17 +43,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Motionwind Playground",
-    title: "Motionwind Playground — Interactive Animation Editor",
+    title: "Motionwind Playground - Interactive Animation Editor",
     description:
-      "Interactive playground for Motionwind — write Motion animations as Tailwind-like utility classes, preview them live, and generate production-ready code.",
+      "Interactive playground for Motionwind. Write Motion animations as Tailwind-like utility classes, preview them live, and generate production-ready code.",
     url: "https://play.motionwind.xyz",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Motionwind Playground — Interactive Animation Editor",
+    title: "Motionwind Playground - Interactive Animation Editor",
     description:
-      "Interactive playground for Motionwind — write Motion animations as Tailwind-like utility classes, preview them live, and generate production-ready code.",
+      "Interactive playground for Motionwind. Write Motion animations as Tailwind-like utility classes, preview them live, and generate production-ready code.",
     creator: "@piyushzingade",
   },
   robots: {
@@ -74,7 +66,7 @@ export const metadata: Metadata = {
   },
 };
 
-const fontVars = [instrumentSerif, inter, jetbrainsMono]
+const fontVars = [geistSans, geistMono]
   .map((f) => f.variable)
   .join(" ");
 
@@ -97,7 +89,7 @@ export default function RootLayout({
                   name: "Motionwind Playground",
                   url: "https://play.motionwind.xyz",
                   description:
-                    "Interactive playground for Motionwind — write Motion animations as Tailwind-like utility classes, preview them live, and generate production-ready code.",
+                    "Interactive playground for Motionwind. Write Motion animations as Tailwind-like utility classes, preview them live, and generate production-ready code.",
                   publisher: {
                     "@type": "Person",
                     name: "Piyush",
@@ -111,7 +103,7 @@ export default function RootLayout({
                   applicationCategory: "DeveloperApplication",
                   operatingSystem: "Any",
                   description:
-                    "Interactive playground for Motionwind — write Motion animations as Tailwind-like utility classes, preview them live, and generate production-ready code.",
+                    "Interactive playground for Motionwind. Write Motion animations as Tailwind-like utility classes, preview them live, and generate production-ready code.",
                   url: "https://play.motionwind.xyz",
                   offers: {
                     "@type": "Offer",
@@ -147,15 +139,14 @@ export default function RootLayout({
         ) : null}
       </head>
       <body className={`${fontVars} antialiased`}>
-        <RootProvider
-          theme={{
-            defaultTheme: "light",
-            attribute: "class",
-            enableSystem: true,
-          }}
+        <ThemeProvider
+          defaultTheme="dark"
+          attribute="class"
+          enableSystem
+          disableTransitionOnChange
         >
           {children}
-        </RootProvider>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

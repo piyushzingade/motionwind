@@ -1,20 +1,30 @@
-import type { Target, StudioState } from "./types";
-import { TARGETS } from "./types";
+import type { SharedStudioState, StageSize, Target } from "./types";
+import { INITIAL_SHARED, STAGES, TAGS, TARGETS } from "./types";
 
-export function encodeState(state: StudioState): string {
-  return new URLSearchParams(Object.entries(state)).toString();
+export function encodeState(state: SharedStudioState): string {
+  const { reduceMotion, ...values } = state;
+  return new URLSearchParams({
+    ...values,
+    motion: reduceMotion ? "reduced" : "full",
+  }).toString();
 }
 
-export function decodeState(hash: string): StudioState | null {
+export function decodeState(hash: string): SharedStudioState | null {
   const params = new URLSearchParams(hash.replace(/^#/, ""));
   const classes = params.get("classes");
   if (!classes) return null;
   const target = params.get("target") as Target | null;
+  const stage = params.get("stage") as StageSize | null;
+  const tag = params.get("tag");
   return {
     classes,
-    tag: params.get("tag") ?? "div",
+    tag: TAGS.some((value) => value === tag) ? tag! : "div",
     text: params.get("text") ?? "",
     target: TARGETS.some(({ id }) => id === target) ? target! : "react",
+    stage: STAGES.some(({ id }) => id === stage)
+      ? stage!
+      : INITIAL_SHARED.stage,
+    reduceMotion: params.get("motion") === "reduced",
   };
 }
 
