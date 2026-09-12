@@ -14,7 +14,13 @@ export function TocSvg({
   scrollDir: "down" | "up";
 }) {
   return (
-    <svg className="toc-svg" width={22} height={listH} aria-hidden="true" filter="url(#toc-glow)">
+    <svg
+      className="toc-svg"
+      width={22}
+      height={listH}
+      aria-hidden="true"
+      filter="url(#toc-glow)"
+    >
       <defs>
         <filter id="toc-glow">
           <feGaussianBlur stdDeviation="2" result="b" />
