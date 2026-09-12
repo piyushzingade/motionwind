@@ -1,15 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import {
-  LazyMotion,
-  domAnimation,
-  m,
-  useMotionValue,
-  useSpring,
-  useMotionTemplate,
-} from "motion/react";
+import { useMemo } from "react";
+import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
+import { mw } from "motionwind-react";
+import { generateMotionCode } from "motionwind-react/tooling";
 import { OssProgramBadge } from "@repo/ui/oss-program-badge";
+import { highlightCode } from "../lib/highlight";
 import { MintlifyLogo } from "./mintlify-logo";
 
 const easeOutQuint: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -19,106 +15,136 @@ const fadeUp = {
   show: { opacity: 1, y: 0 },
 };
 
-const spring = { type: "spring" as const, stiffness: 300, damping: 22 };
+const heroClasses =
+  "animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-420 animate-damping-24 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-accent-fg cursor-pointer";
 
 export function HeroSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(50);
-  const mouseY = useMotionValue(40);
-  const glowX = useSpring(mouseX, spring);
-  const glowY = useSpring(mouseY, spring);
-  const glow = useMotionTemplate`radial-gradient(480px circle at ${glowX}% ${glowY}%, var(--color-demo-glow), transparent 70%)`;
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect();
-      mouseX.set(((e.clientX - rect.left) / rect.width) * 100);
-      mouseY.set(((e.clientY - rect.top) / rect.height) * 100);
-    };
-    el.addEventListener("mousemove", onMove);
-    return () => el.removeEventListener("mousemove", onMove);
-  }, [mouseX, mouseY]);
+  const reduceMotion = useReducedMotion();
+  const generated = useMemo(
+    () =>
+      generateMotionCode("button", heroClasses, {
+        text: "Ship interaction",
+        target: "react",
+      }),
+    [],
+  );
 
   return (
     <LazyMotion features={domAnimation}>
-      {/* Reduced-motion / SSR fallback glow so content is never bare */}
-      <div className="pointer-events-none absolute inset-0 rotate-[0.5deg] overflow-hidden">
+      <section className="relative overflow-hidden px-4 sm:px-6">
         <div className="surface-grid" aria-hidden="true" />
-        <div
-          className="absolute left-1/2 top-0 h-[420px] w-[720px] -translate-x-1/2 -translate-y-1/3 rounded-full"
-          aria-hidden="true"
-          style={{
-            background:
-              "radial-gradient(ellipse 50% 50% at 50% 50%, var(--color-demo-glow), transparent 70%)",
-          }}
-        />
-      </div>
+        <div className="surface-glow" aria-hidden="true" />
 
-      <section
-        ref={ref}
-        className="relative flex min-h-[calc(100svh-3.5rem)] items-center justify-center overflow-hidden px-4 sm:px-6"
-      >
-        {/* Spring-smoothed mouse-follow glow, composite-only */}
-        <m.div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 hidden lg:block"
-          style={{ background: glow }}
-        />
+        <div className="relative mx-auto grid min-h-[calc(88dvh-3.5rem)] max-w-7xl items-center gap-8 py-14 sm:py-16 lg:min-h-[700px] lg:grid-cols-[0.92fr_1.08fr] lg:py-18">
+          <div className="max-w-2xl">
+            <m.div
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              transition={{ duration: 0.5, ease: easeOutQuint }}
+              className="inline-flex"
+            >
+              <OssProgramBadge
+                brand={<MintlifyLogo className="h-3 w-auto" />}
+              />
+            </m.div>
 
-        <div className="relative mx-auto flex max-w-3xl flex-col items-center py-20 text-center sm:py-28">
+            <m.h1
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              transition={{ duration: 0.5, delay: 0.06, ease: easeOutQuint }}
+              className="mt-8 max-w-[11ch] text-balance text-5xl font-semibold tracking-[-0.04em] text-fg sm:text-6xl lg:text-7xl"
+            >
+              Motion as utility classes.
+            </m.h1>
+
+            <m.p
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              transition={{ duration: 0.5, delay: 0.13, ease: easeOutQuint }}
+              className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg"
+            >
+              Write animation intent in className. Motionwind compiles it into
+              Motion props before your app ships.
+            </m.p>
+
+            <m.div
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              transition={{ duration: 0.5, delay: 0.2, ease: easeOutQuint }}
+              className="mt-8 flex flex-wrap gap-3"
+            >
+              <a
+                href="https://www.motionwind.xyz/docs"
+                className="inline-flex cursor-pointer items-center rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-[var(--color-accent-fg)] transition-colors hover:bg-accent-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              >
+                Read docs
+              </a>
+              <a
+                href="https://play.motionwind.xyz"
+                className="inline-flex cursor-pointer items-center rounded-lg border border-border bg-surface-elevated px-5 py-3 text-sm font-semibold text-fg transition-colors hover:border-accent/30 hover:bg-surface active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              >
+                Open playground
+              </a>
+            </m.div>
+          </div>
+
           <m.div
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            transition={{ duration: 0.5, ease: easeOutQuint }}
-            className="inline-flex"
+            transition={{ duration: 0.6, delay: 0.16, ease: easeOutQuint }}
+            className="relative"
           >
-            <OssProgramBadge brand={<MintlifyLogo className="h-3 w-auto" />} />
-          </m.div>
+            <div className="overflow-hidden rounded-[1.4rem] border border-border bg-surface-elevated shadow-[0_28px_90px_-56px_var(--color-shadow)]">
+              <div className="grid gap-0 lg:grid-cols-[minmax(0,1.32fr)_minmax(220px,0.68fr)]">
+                <div className="grid min-w-0 gap-3 border-b border-border-subtle bg-surface/70 p-3 lg:border-b-0 lg:border-r">
+                  <CodePane
+                    title="className"
+                    code={`<button className="${heroClasses}">\n  Ship interaction\n</button>`}
+                    expanded
+                  />
+                  <div className="flex items-center justify-between px-1 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
+                    <span>compile step</span>
+                    <span>Motion props</span>
+                  </div>
+                  <CodePane title="generated output" code={generated} expanded />
+                </div>
 
-          <m.h1
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            transition={{ duration: 0.5, delay: 0.06, ease: easeOutQuint }}
-            className="mt-8 text-balance font-[family-name:var(--font-display)] text-5xl italic tracking-[-0.02em] text-fg sm:text-6xl md:text-7xl"
-          >
-            Motion, written like <span className="text-accent">Tailwind.</span>
-          </m.h1>
-
-          <m.p
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            transition={{ duration: 0.5, delay: 0.13, ease: easeOutQuint }}
-            className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg"
-          >
-            Motionwind turns familiar utility classes into optimized Motion
-            components during your build. Create expressive interactions without
-            learning a new API or shipping a parser to your users.
-          </m.p>
-
-          <m.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            transition={{ duration: 0.5, delay: 0.2, ease: easeOutQuint }}
-            className="mt-9 flex flex-wrap justify-center gap-3"
-          >
-            <a
-              href="https://www.motionwind.xyz/docs"
-              className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-[var(--color-accent-fg)] transition-colors hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-            >
-              Read the docs <ArrowIcon />
-            </a>
-            <a
-              href="https://play.motionwind.xyz"
-              className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface-elevated px-5 py-3 text-sm font-semibold text-fg transition-colors hover:border-accent/30 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-            >
-              Open playground <ArrowIcon />
-            </a>
+                <div className="studio-checker flex min-h-[220px] flex-col justify-between gap-5 p-5">
+                  <div>
+                    <div className="font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
+                      live preview
+                    </div>
+                    <p className="mt-2 max-w-48 text-sm leading-relaxed text-fg-muted">
+                      The component stays semantic while Motion receives real
+                      hover and tap props.
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-center py-4">
+                    <mw.button
+                      className={heroClasses}
+                      data-demo-ready={!reduceMotion}
+                    >
+                      Ship interaction
+                    </mw.button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {["hover", "tap", "spring", "build"].map((item) => (
+                      <span
+                        key={item}
+                        className="rounded-md border border-border bg-surface-elevated px-2.5 py-2 text-center font-[family-name:var(--font-mono)] text-[10px] text-code-muted"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </m.div>
         </div>
       </section>
@@ -126,21 +152,25 @@ export function HeroSection() {
   );
 }
 
-function ArrowIcon() {
+function CodePane({
+  title,
+  code,
+  expanded = false,
+}: {
+  title: string;
+  code: string;
+  expanded?: boolean;
+}) {
   return (
-    <svg
-      className="h-4 w-4"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2.5}
-      aria-hidden="true"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-      />
-    </svg>
+    <div className="min-w-0 rounded-lg border border-border-subtle bg-code-bg">
+      <div className="border-b border-border-subtle px-3 py-2 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
+        {title}
+      </div>
+      <pre
+        className={`overflow-auto px-3 py-3 font-[family-name:var(--font-mono)] text-[11px] leading-5 ${expanded ? "max-h-56" : "max-h-40"}`}
+      >
+        <code>{highlightCode(code)}</code>
+      </pre>
+    </div>
   );
 }

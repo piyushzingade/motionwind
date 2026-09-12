@@ -1,232 +1,114 @@
 "use client";
 
-import { useMemo } from "react";
-import { ArrowConnector } from "./arrow-connector";
-import { SectionHeader } from "./section-header";
+import { generateMotionCode } from "motionwind-react/tooling";
+import { highlightCode } from "../lib/highlight";
 import { Reveal } from "./reveal";
+
+const sourceCode = `<button className="animate-hover:scale-105 animate-tap:scale-95 animate-spring rounded-lg px-5 py-3">
+  Save changes
+</button>`;
+
+const outputCode = generateMotionCode(
+  "button",
+  "animate-hover:scale-105 animate-tap:scale-95 animate-spring rounded-lg px-5 py-3",
+  {
+    text: "Save changes",
+    target: "react",
+  },
+);
 
 export function HowItWorks() {
   return (
     <section
       id="how"
-      className="section-anchor relative py-20 sm:py-28 px-4 sm:px-6"
+      className="section-anchor relative px-4 py-16 sm:px-6 sm:py-22 lg:py-24"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto max-w-7xl">
         <Reveal>
-          <SectionHeader
-            label="Why Motionwind"
-            title="The convenience stays in development."
-            lede="A build transform reads your animation classes and emits Motion props. The work happens before your code reaches the browser."
-          />
+          <div className="mb-8 max-w-2xl sm:mb-10">
+            <h2 className="text-balance text-3xl font-semibold tracking-[-0.035em] text-fg sm:text-4xl md:text-5xl">
+              Write classes. Compile props. Ship motion.
+            </h2>
+            <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg">
+              Motionwind keeps authoring simple while leaving production output
+              explicit, inspectable, and framework-ready.
+            </p>
+          </div>
         </Reveal>
 
-        <Reveal y={32}>
-          <BeforeAfter />
-        </Reveal>
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]">
+          <Reveal y={24}>
+            <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+              <PrincipleCard
+                title="Write classes"
+                body="Use Tailwind-like animation utilities directly where the interaction lives."
+                code="animate-hover:scale-105"
+              />
+              <PrincipleCard
+                title="Compile to props"
+                body="The transform separates animation intent from static styling during build."
+                code="whileHover={{ scale: 1.05 }}"
+              />
+              <PrincipleCard
+                title="Ship interaction"
+                body="Users get Motion components, not a class parser running in the browser."
+                code="runtime parser: none"
+              />
+            </div>
+          </Reveal>
 
-        <ProcessSteps />
+          <Reveal y={24} delay={0.08}>
+            <div className="grid overflow-hidden rounded-[1.4rem] border border-border bg-surface-elevated shadow-[0_24px_80px_-60px_var(--color-shadow)] md:grid-cols-2">
+              <CodePanel title="Source" filename="component.tsx" code={sourceCode} />
+              <CodePanel title="Compiled" filename="motion-output.tsx" code={outputCode} />
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
 }
 
-function BeforeAfter() {
+function PrincipleCard({
+  title,
+  body,
+  code,
+}: {
+  title: string;
+  body: string;
+  code: string;
+}) {
   return (
-    <div className="grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr] md:gap-0">
-      <CodeBlock
-        label="What you write"
-        filename="source.tsx"
-        code={
-          <>
-            <span className="code-comment">{"// No imports needed"}</span>
-            {"\n"}
-            <span className="code-dim">{"<"}</span>
-            <span className="syntax-tag">{"div"}</span>
-            {"\n"}
-            {"  "}
-            <span className="text-accent/80">{"className"}</span>
-            <span className="code-dim">{"="}</span>
-            <span className="syntax-string">{'"'}</span>
-            {"\n"}
-            {"    "}
-            <span className="text-accent">{"animate-initial:opacity-0"}</span>
-            {"\n"}
-            {"    "}
-            <span className="text-accent">{"animate-initial:y-20"}</span>
-            {"\n"}
-            {"    "}
-            <span className="text-accent">{"animate-inview:opacity-100"}</span>
-            {"\n"}
-            {"    "}
-            <span className="text-accent">{"animate-inview:y-0"}</span>
-            {"\n"}
-            {"    "}
-            <span className="text-accent">{"animate-duration-500"}</span>
-            {"\n"}
-            {"    "}
-            <span className="text-accent">{"animate-once"}</span>
-            {"\n"}
-            {"    "}
-            <span className="code-dim">{"p-4 rounded-lg"}</span>
-            {"\n"}
-            {"  "}
-            <span className="syntax-string">{'"'}</span>
-            {"\n"}
-            <span className="code-dim">{">"}</span>
-            {"\n"}
-            {"  Hello world"}
-            {"\n"}
-            <span className="code-dim">{"</"}</span>
-            <span className="syntax-tag">{"div"}</span>
-            <span className="code-dim">{">"}</span>
-          </>
-        }
-      />
-
-      <ArrowConnector />
-
-      <CodeBlock
-        label="What gets compiled"
-        filename="output.js"
-        code={
-          <>
-            <span className="code-comment">{"// Auto-injected by Babel"}</span>
-            {"\n"}
-            <span className="text-accent/80">{"import"}</span>
-            {" { "}
-            <span className="code-fg">{"motion"}</span>
-            {" } "}
-            <span className="text-accent/80">{"from"}</span>{" "}
-            <span className="syntax-string">{'"motion/react"'}</span>
-            {"\n\n"}
-            <span className="code-dim">{"<"}</span>
-            <span className="syntax-component">{"motion.div"}</span>
-            {"\n"}
-            {"  "}
-            <span className="text-accent/80">{"className"}</span>
-            <span className="code-dim">{"="}</span>
-            <span className="syntax-string">{'"p-4 rounded-lg"'}</span>
-            {"\n"}
-            {"  "}
-            <span className="text-accent/80">{"initial"}</span>
-            <span className="code-dim">{"={"}</span>
-            {"{ "}
-            <span className="code-fg">{"opacity: 0, y: 20"}</span>
-            {" }"}
-            <span className="code-dim">{"}"}</span>
-            {"\n"}
-            {"  "}
-            <span className="text-accent/80">{"whileInView"}</span>
-            <span className="code-dim">{"={"}</span>
-            {"{ "}
-            <span className="code-fg">{"opacity: 1, y: 0"}</span>
-            {" }"}
-            <span className="code-dim">{"}"}</span>
-            {"\n"}
-            {"  "}
-            <span className="text-accent/80">{"transition"}</span>
-            <span className="code-dim">{"={"}</span>
-            {"{ "}
-            <span className="code-fg">{"duration: 0.5"}</span>
-            {" }"}
-            <span className="code-dim">{"}"}</span>
-            {"\n"}
-            {"  "}
-            <span className="text-accent/80">{"viewport"}</span>
-            <span className="code-dim">{"={"}</span>
-            {"{ "}
-            <span className="code-fg">{"once: true"}</span>
-            {" }"}
-            <span className="code-dim">{"}"}</span>
-            {"\n"}
-            <span className="code-dim">{">"}</span>
-            {"\n"}
-            {"  Hello world"}
-            {"\n"}
-            <span className="code-dim">{"</"}</span>
-            <span className="syntax-component">{"motion.div"}</span>
-            <span className="code-dim">{">"}</span>
-          </>
-        }
-      />
-    </div>
+    <article className="rounded-xl border border-border bg-surface-elevated p-5 shadow-[0_18px_60px_-52px_var(--color-shadow)]">
+      <h3 className="text-sm font-semibold text-fg">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-fg-muted">{body}</p>
+      <code className="mt-4 block truncate rounded-md bg-code-bg px-3 py-2 font-[family-name:var(--font-mono)] text-[11px] text-accent/80">
+        {code}
+      </code>
+    </article>
   );
 }
 
-function CodeBlock({
-  label,
+function CodePanel({
+  title,
   filename,
   code,
 }: {
-  label: string;
+  title: string;
   filename: string;
-  code: React.ReactNode;
+  code: string;
 }) {
   return (
-    <div className="rounded-xl border border-border-subtle bg-surface-elevated overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
-        <span className="text-xs font-medium text-accent">{label}</span>
-        <span className="text-[10px] text-code-muted font-[family-name:var(--font-mono)]">
+    <div className="min-w-0 border-t border-border-subtle first:border-t-0 md:border-l md:border-t-0 md:first:border-l-0">
+      <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
+        <span className="text-sm font-semibold text-fg">{title}</span>
+        <span className="font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
           {filename}
         </span>
       </div>
-      <pre className="p-4 sm:p-5 text-[12px] sm:text-[13px] leading-7 font-[family-name:var(--font-mono)] overflow-x-auto">
-        <code>{code}</code>
+      <pre className="max-h-[360px] overflow-auto p-4 font-[family-name:var(--font-mono)] text-[11px] leading-6">
+        <code>{highlightCode(code)}</code>
       </pre>
-    </div>
-  );
-}
-
-function ProcessSteps() {
-  const steps = useMemo(
-    () => [
-      {
-        num: "1",
-        title: "Write classes",
-        desc: "Add motionwind classes to any element or component. No imports, no wrappers.",
-        code: "animate-hover:scale-110",
-        delay: "",
-      },
-      {
-        num: "2",
-        title: "Babel transforms",
-        desc: "At build time, classes are parsed and converted to Motion component props.",
-        code: "whileHover={{ scale: 1.1 }}",
-        delay: "animate-delay-150",
-      },
-      {
-        num: "3",
-        title: "Ship zero overhead",
-        desc: "Production bundle contains only optimized Motion components. No parser shipped.",
-        code: "0kb runtime added",
-        delay: "animate-delay-300",
-      },
-    ],
-    [],
-  );
-
-  return (
-    <div className="mt-12 sm:mt-16 grid sm:grid-cols-3 gap-6 sm:gap-4">
-      {steps.map((step, i) => (
-        <Reveal key={step.num} delay={i * 0.08}>
-          <div className="border-t border-border pt-5 sm:pt-6">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="text-accent text-sm font-[family-name:var(--font-mono)] shrink-0">
-                {step.num}
-              </div>
-              <h3 className="text-sm font-semibold">{step.title}</h3>
-            </div>
-            <p className="text-xs text-code-muted leading-relaxed mb-3">
-              {step.desc}
-            </p>
-            <div className="rounded-md bg-code-header border border-border-subtle px-3 py-2">
-              <code className="text-[10px] font-[family-name:var(--font-mono)] text-accent/70">
-                {step.code}
-              </code>
-            </div>
-          </div>
-        </Reveal>
-      ))}
     </div>
   );
 }

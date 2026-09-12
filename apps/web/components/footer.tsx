@@ -11,32 +11,29 @@ export function Footer() {
             <span className="font-display italic text-2xl tracking-tight">
               motionwind
             </span>
-            <span className="text-xs text-code-muted font-[family-name:var(--font-mono)]">
-              v2.0.0
-            </span>
           </div>
           <div className="flex items-center gap-6 text-sm text-code-muted">
             <Link
               href="https://play.motionwind.xyz"
-              className="hover:text-fg transition-colors"
+              className="cursor-pointer transition-colors hover:text-fg"
             >
               Studio
             </Link>
             <a
               href="https://www.motionwind.xyz/docs/getting-started"
-              className="hover:text-fg transition-colors"
+              className="cursor-pointer transition-colors hover:text-fg"
             >
               Docs
             </a>
             <a
               href="https://github.com/piyushzingade/motionwind"
-              className="hover:text-fg transition-colors"
+              className="cursor-pointer transition-colors hover:text-fg"
             >
               GitHub
             </a>
             <a
               href="https://www.npmjs.com/package/motionwind-react"
-              className="hover:text-fg transition-colors"
+              className="cursor-pointer transition-colors hover:text-fg"
             >
               npm
             </a>

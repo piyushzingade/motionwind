@@ -1,78 +1,101 @@
 "use client";
 
-import { SectionHeader } from "./section-header";
 import { Reveal } from "./reveal";
 
+const PARTS = [
+  ["when", "hover", "tap, focus, inview, drag, enter, exit"],
+  ["what", "scale", "opacity, x, y, rotate, path-length"],
+  ["how much", "105", "numbers, percentages, bracket values"],
+] as const;
+
 const GESTURES = [
-  ["hover:", "whileHover"],
-  ["tap:", "whileTap"],
-  ["focus:", "whileFocus"],
-  ["inview:", "whileInView"],
-  ["drag:", "whileDrag"],
-  ["initial:", "initial"],
-  ["enter:", "animate"],
-  ["exit:", "exit"],
+  ["animate-hover:", "whileHover"],
+  ["animate-tap:", "whileTap"],
+  ["animate-focus:", "whileFocus"],
+  ["animate-inview:", "whileInView"],
+  ["animate-drag:", "whileDrag"],
+  ["animate-initial:", "initial"],
+  ["animate-enter:", "animate"],
+  ["animate-exit:", "exit"],
 ] as const;
 
 export function SyntaxSection() {
   return (
     <section
       id="syntax"
-      className="section-anchor relative py-20 sm:py-28 px-4 sm:px-6"
+      className="section-anchor relative px-4 py-16 sm:px-6 sm:py-22 lg:py-24"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto max-w-7xl">
         <Reveal>
-          <SectionHeader
-            label="One readable pattern"
-            title="Describe the interaction, then the motion."
-            lede="Each class follows the same shape: when it happens, what changes, and by how much."
-          />
+          <div className="mb-8 max-w-2xl sm:mb-10">
+            <h2 className="text-balance text-3xl font-semibold tracking-[-0.035em] text-fg sm:text-4xl md:text-5xl">
+              One grammar, many interactions.
+            </h2>
+            <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg">
+              Every class names the trigger, the animated property, and the
+              target value.
+            </p>
+          </div>
         </Reveal>
 
-        <Reveal y={28}>
-          <div className="overflow-hidden rounded-lg border border-border bg-surface-elevated">
-            <div className="p-6 sm:p-8 border-b border-border-subtle">
-              <div className="flex items-center justify-center">
-                <code className="text-sm sm:text-base md:text-xl font-[family-name:var(--font-mono)] flex flex-wrap items-center gap-1 justify-center">
-                  <span className="text-code-muted">animate-</span>
-                  <span className="text-accent bg-accent/10 px-2 py-0.5 rounded">
-                    {"{"}
-                    <span className="text-[10px] align-top">gesture</span>
-                    {"}"}
-                  </span>
-                  <span className="text-code-muted">:</span>
-                  <span className="text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">
-                    {"{"}
-                    <span className="text-[10px] align-top">property</span>
-                    {"}"}
-                  </span>
-                  <span className="text-code-muted">-</span>
-                  <span className="text-fuchsia-400 bg-fuchsia-400/10 px-2 py-0.5 rounded">
-                    {"{"}
-                    <span className="text-[10px] align-top">value</span>
-                    {"}"}
-                  </span>
-                </code>
-              </div>
-            </div>
+        <div className="grid gap-4 lg:grid-cols-[0.82fr_1.18fr]">
+          <Reveal y={22}>
+            <div className="rounded-[1.4rem] border border-border bg-surface-elevated p-5 shadow-[0_24px_80px_-60px_var(--color-shadow)] sm:p-6">
+              <code className="block rounded-xl border border-border-subtle bg-code-bg p-4 font-[family-name:var(--font-mono)] text-sm text-fg sm:text-base">
+                <span className="text-code-muted">animate-</span>
+                <span className="text-accent">hover</span>
+                <span className="text-code-muted">:</span>
+                <span className="text-accent">scale</span>
+                <span className="text-code-muted">-</span>
+                <span className="text-accent">105</span>
+              </code>
 
-            <div className="p-4 sm:p-6">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-                {GESTURES.map(([prefix, prop]) => (
+              <div className="mt-5 grid gap-3">
+                {PARTS.map(([label, value, examples]) => (
                   <div
-                    key={prefix}
-                    className="rounded-lg bg-surface/50 border border-border-subtle p-3 text-center"
+                    key={label}
+                    className="rounded-lg border border-border-subtle bg-surface px-4 py-3"
                   >
-                    <code className="text-xs font-[family-name:var(--font-mono)] text-accent">
-                      {prefix}
-                    </code>
-                    <p className="text-[10px] text-code-muted mt-1">{prop}</p>
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-sm font-semibold text-fg">
+                        {label}
+                      </span>
+                      <code className="rounded bg-accent/10 px-2 py-1 font-[family-name:var(--font-mono)] text-[11px] text-accent">
+                        {value}
+                      </code>
+                    </div>
+                    <p className="mt-2 text-xs leading-relaxed text-code-muted">
+                      {examples}
+                    </p>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+
+          <Reveal y={22} delay={0.08}>
+            <div className="overflow-hidden rounded-[1.4rem] border border-border bg-surface-elevated shadow-[0_24px_80px_-60px_var(--color-shadow)]">
+              <div className="border-b border-border-subtle px-5 py-4">
+                <h3 className="text-sm font-semibold text-fg">
+                  Prefixes map to Motion props
+                </h3>
+              </div>
+              <div className="grid sm:grid-cols-2">
+                {GESTURES.map(([prefix, prop]) => (
+                  <div
+                    key={prefix}
+                    className="flex items-center justify-between gap-4 border-b border-border-subtle px-5 py-4 sm:odd:border-r"
+                  >
+                    <code className="font-[family-name:var(--font-mono)] text-[12px] text-accent">
+                      {prefix}
+                    </code>
+                    <span className="text-xs text-code-muted">{prop}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
