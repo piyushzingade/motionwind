@@ -59,8 +59,16 @@ export function HowItWorks() {
 
           <Reveal y={24} delay={0.08}>
             <div className="grid overflow-hidden rounded-[1.4rem] border border-border bg-surface-elevated shadow-[0_24px_80px_-60px_var(--color-shadow)] md:grid-cols-2">
-              <CodePanel title="Source" filename="component.tsx" code={sourceCode} />
-              <CodePanel title="Compiled" filename="motion-output.tsx" code={outputCode} />
+              <CodePanel
+                title="Source"
+                filename="component.tsx"
+                code={sourceCode}
+              />
+              <CodePanel
+                title="Compiled"
+                filename="motion-output.tsx"
+                code={outputCode}
+              />
             </div>
           </Reveal>
         </div>

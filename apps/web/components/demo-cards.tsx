@@ -173,7 +173,10 @@ export function DemoCards() {
 
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.16fr)_minmax(300px,0.84fr)]">
           <Reveal y={24}>
-            <RecipeShowcase recipe={activeRecipe} generatedCode={generatedCode} />
+            <RecipeShowcase
+              recipe={activeRecipe}
+              generatedCode={generatedCode}
+            />
           </Reveal>
 
           <Reveal y={24} delay={0.08}>
@@ -319,7 +322,9 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       );
     case "menu-pop":
       return (
-        <mw.div className={`${recipe.classes} w-64 rounded-xl border border-border bg-surface-elevated p-2 shadow-[0_20px_60px_-40px_var(--color-shadow)]`}>
+        <mw.div
+          className={`${recipe.classes} w-64 rounded-xl border border-border bg-surface-elevated p-2 shadow-[0_20px_60px_-40px_var(--color-shadow)]`}
+        >
           {["Copy classes", "Open in playground", "View docs"].map((item) => (
             <div
               key={item}
@@ -336,7 +341,9 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
           <div className="border-b border-border-subtle px-4 py-3 text-sm font-semibold">
             Runtime output
           </div>
-          <mw.div className={`${recipe.classes} px-4 py-4 text-sm leading-relaxed text-fg-muted`}>
+          <mw.div
+            className={`${recipe.classes} px-4 py-4 text-sm leading-relaxed text-fg-muted`}
+          >
             Motionwind emits Motion props and leaves your static Tailwind
             classes intact.
           </mw.div>
@@ -414,7 +421,9 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
     case "drawer":
       return (
         <div className="relative h-56 w-full max-w-md overflow-hidden rounded-xl border border-border bg-surface">
-          <mw.div className={`${recipe.classes} absolute inset-y-0 right-0 w-64 border-l border-border bg-surface-elevated p-5`}>
+          <mw.div
+            className={`${recipe.classes} absolute inset-y-0 right-0 w-64 border-l border-border bg-surface-elevated p-5`}
+          >
             <div className="text-sm font-semibold">Inspector</div>
             <p className="mt-2 text-xs leading-relaxed text-fg-muted">
               Slides in and exits with the same class language.
@@ -426,7 +435,9 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       return (
         <div className="relative flex h-32 items-end justify-center">
           <button className={buttonSkin()}>Hover target</button>
-          <mw.div className={`${recipe.classes} absolute bottom-16 rounded-lg border border-border bg-surface-elevated px-3 py-2 text-xs text-fg shadow-[0_20px_60px_-40px_var(--color-shadow)]`}>
+          <mw.div
+            className={`${recipe.classes} absolute bottom-16 rounded-lg border border-border bg-surface-elevated px-3 py-2 text-xs text-fg shadow-[0_20px_60px_-40px_var(--color-shadow)]`}
+          >
             Motionwind tooltip
           </mw.div>
         </div>
@@ -435,13 +446,17 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       return (
         <div className="grid w-full max-w-sm gap-3">
           <mw.div className={`${recipe.classes} h-4 rounded-full bg-border`} />
-          <mw.div className={`${recipe.classes} h-4 w-4/5 rounded-full bg-border`} />
+          <mw.div
+            className={`${recipe.classes} h-4 w-4/5 rounded-full bg-border`}
+          />
           <mw.div className={`${recipe.classes} h-24 rounded-xl bg-border`} />
         </div>
       );
     case "card-hover":
       return (
-        <mw.article className={`${recipe.classes} ${panelSkin()} max-w-sm cursor-pointer`}>
+        <mw.article
+          className={`${recipe.classes} ${panelSkin()} max-w-sm cursor-pointer`}
+        >
           <div className="text-sm font-semibold">Interactive card</div>
           <p className="mt-2 text-xs leading-relaxed text-fg-muted">
             Lift, scale, and spring response in a single class list.
@@ -451,7 +466,9 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
     case "parallax-scroll":
       return (
         <div className="relative h-64 w-full max-w-md overflow-hidden rounded-2xl border border-border bg-surface">
-          <mw.div className={`${recipe.classes} absolute left-1/2 top-16 h-32 w-32 -translate-x-1/2 rounded-2xl bg-accent/25`} />
+          <mw.div
+            className={`${recipe.classes} absolute left-1/2 top-16 h-32 w-32 -translate-x-1/2 rounded-2xl bg-accent/25`}
+          />
           <div className="absolute inset-x-6 bottom-6 rounded-xl bg-surface-elevated p-4 text-sm text-fg">
             Layer follows scroll progress
           </div>
@@ -470,20 +487,26 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
   switch (recipe.id) {
     case "dialog-enter":
       return (
-        <mw.div className={`${recipe.classes} w-36 rounded-xl border border-border bg-surface-elevated p-3`}>
+        <mw.div
+          className={`${recipe.classes} w-36 rounded-xl border border-border bg-surface-elevated p-3`}
+        >
           <div className="h-2.5 w-20 rounded-full bg-fg/20" />
           <div className="mt-2 h-2 w-28 rounded-full bg-border" />
         </mw.div>
       );
     case "loading-orbit":
       return (
-        <mw.div className={`${recipe.classes} flex h-12 w-12 items-center justify-center rounded-xl border border-accent/30 bg-accent/10`}>
+        <mw.div
+          className={`${recipe.classes} flex h-12 w-12 items-center justify-center rounded-xl border border-accent/30 bg-accent/10`}
+        >
           <span className="h-4 w-4 rounded-full border-2 border-accent border-t-transparent" />
         </mw.div>
       );
     case "menu-pop":
       return (
-        <mw.div className={`${recipe.classes} grid w-36 gap-1.5 rounded-xl border border-border bg-surface-elevated p-2`}>
+        <mw.div
+          className={`${recipe.classes} grid w-36 gap-1.5 rounded-xl border border-border bg-surface-elevated p-2`}
+        >
           <span className="h-7 rounded-md bg-surface" />
           <span className="h-7 rounded-md bg-accent/10" />
           <span className="h-7 rounded-md bg-surface" />
@@ -506,14 +529,20 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       );
     case "toast-enter":
       return (
-        <mw.div className={`${recipe.classes} w-40 rounded-xl border border-border bg-surface-elevated p-3`}>
+        <mw.div
+          className={`${recipe.classes} w-40 rounded-xl border border-border bg-surface-elevated p-3`}
+        >
           <div className="h-2.5 w-24 rounded-full bg-fg/20" />
           <div className="mt-2 h-2 w-32 rounded-full bg-border" />
         </mw.div>
       );
     case "svg-line-loader":
       return (
-        <svg viewBox="0 0 120 56" className="h-16 w-32 text-accent" aria-hidden="true">
+        <svg
+          viewBox="0 0 120 56"
+          className="h-16 w-32 text-accent"
+          aria-hidden="true"
+        >
           <mw.path
             className={recipe.classes}
             d="M10 34 C32 6 52 6 60 34 S92 62 110 34"
@@ -528,7 +557,9 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       return (
         <div className="w-36">
           <div className="h-2 overflow-hidden rounded-full bg-border-subtle">
-            <mw.div className={`${recipe.classes} h-full origin-left rounded-full bg-accent`} />
+            <mw.div
+              className={`${recipe.classes} h-full origin-left rounded-full bg-accent`}
+            />
           </div>
           <div className="mt-3 grid gap-1.5">
             <span className="h-2 rounded-full bg-border" />
@@ -540,13 +571,17 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       return (
         <div className="grid w-36 gap-2">
           <mw.div className={`${recipe.classes} h-3 rounded-full bg-border`} />
-          <mw.div className={`${recipe.classes} h-3 w-4/5 rounded-full bg-border`} />
+          <mw.div
+            className={`${recipe.classes} h-3 w-4/5 rounded-full bg-border`}
+          />
           <mw.div className={`${recipe.classes} h-12 rounded-lg bg-border`} />
         </div>
       );
     default:
       return (
-        <mw.div className={`${recipe.classes} rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-accent-fg`}>
+        <mw.div
+          className={`${recipe.classes} rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-accent-fg`}
+        >
           Preview
         </mw.div>
       );

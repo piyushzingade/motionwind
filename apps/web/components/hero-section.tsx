@@ -111,7 +111,11 @@ export function HeroSection() {
                     <span>compile step</span>
                     <span>Motion props</span>
                   </div>
-                  <CodePane title="generated output" code={generated} expanded />
+                  <CodePane
+                    title="generated output"
+                    code={generated}
+                    expanded
+                  />
                 </div>
 
                 <div className="studio-checker flex min-h-[220px] flex-col justify-between gap-5 p-5">

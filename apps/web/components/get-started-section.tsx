@@ -4,7 +4,10 @@ import { Reveal } from "./reveal";
 
 export function GetStartedSection() {
   return (
-    <section id="start" className="section-anchor px-4 py-16 sm:px-6 sm:py-22 lg:py-24">
+    <section
+      id="start"
+      className="section-anchor px-4 py-16 sm:px-6 sm:py-22 lg:py-24"
+    >
       <div className="mx-auto max-w-5xl">
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">
