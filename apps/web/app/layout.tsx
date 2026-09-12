@@ -27,11 +27,11 @@ const databuddyClientId = process.env.DATABUDDY_CLIENT_ID;
 export const metadata: Metadata = {
   metadataBase: new URL("https://web.motionwind.xyz"),
   title: {
-    default: "Motionwind — Motion animations as Tailwind classes",
+    default: "Motionwind - Motion animations as Tailwind classes",
     template: "%s | Motionwind",
   },
   description:
-    "Motionwind lets you write Motion animations as Tailwind-like utility classes. A Babel plugin transforms them at build time — zero imports, zero boilerplate, zero runtime overhead.",
+    "Motionwind lets you write Motion animations as Tailwind-like utility classes. A Babel plugin transforms them at build time with zero imports, zero boilerplate, and zero runtime overhead.",
   keywords: [
     "motionwind",
     "motion",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Motionwind",
     url: "https://web.motionwind.xyz",
-    title: "Motionwind — Motion animations as Tailwind classes",
+    title: "Motionwind - Motion animations as Tailwind classes",
     description:
       "Write Motion animations as Tailwind-like utility classes. Zero imports, zero boilerplate, zero runtime overhead.",
     locale: "en_US",
@@ -65,13 +65,13 @@ export const metadata: Metadata = {
         url: "https://www.motionwind.xyz/og.png",
         width: 1200,
         height: 630,
-        alt: "Motionwind — Motion animations as Tailwind classes",
+        alt: "Motionwind - Motion animations as Tailwind classes",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Motionwind — Motion animations as Tailwind classes",
+    title: "Motionwind - Motion animations as Tailwind classes",
     description:
       "Write Motion animations as Tailwind-like utility classes. Zero imports, zero boilerplate, zero runtime overhead.",
     images: ["https://www.motionwind.xyz/og.png"],

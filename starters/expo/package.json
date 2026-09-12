@@ -8,20 +8,21 @@
     "ios": "expo start --ios"
   },
   "dependencies": {
-    "@expo/metro-runtime": "^5.0.0",
-    "expo": "^53.0.0",
+    "@expo/metro-runtime": "^57.0.15",
+    "expo": "^57.0.22",
     "motionwind-react-native": "^2.0.0",
     "motionwind-core": "^2.0.0",
-    "nativewind": "^4.1.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-native": "^0.79.0",
-    "react-native-gesture-handler": "^2.24.0",
-    "react-native-reanimated": "^3.17.0",
-    "react-native-web": "^0.20.0"
+    "nativewind": "^4.2.6",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-native": "^0.86.3",
+    "react-native-gesture-handler": "^3.3.0",
+    "react-native-reanimated": "^4.6.0",
+    "react-native-web": "^0.21.2",
+    "react-native-worklets": "^0.12.2"
   },
   "devDependencies": {
-    "babel-preset-expo": "^13.2.5",
+    "babel-preset-expo": "^57.0.11",
     "typescript": "^5.9.2"
   }
 }

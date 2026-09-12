@@ -10,6 +10,11 @@ export interface StudioState {
   target: Target;
 }
 
+export interface SharedStudioState extends StudioState {
+  stage: StageSize;
+  reduceMotion: boolean;
+}
+
 export const TAGS = ["div", "button", "span", "a", "section"] as const;
 
 export const TARGETS: { id: Target; label: string }[] = [
@@ -33,4 +38,10 @@ export const INITIAL: StudioState = {
   tag: "button",
   text: "Ship the interaction",
   target: "react",
+};
+
+export const INITIAL_SHARED: SharedStudioState = {
+  ...INITIAL,
+  stage: "desktop",
+  reduceMotion: false,
 };

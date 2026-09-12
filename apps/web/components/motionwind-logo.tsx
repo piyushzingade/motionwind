@@ -1,5 +1,5 @@
 /**
- * Motionwind logomark — three wind bars with progressive offset plus an
+ * Motionwind logomark: three wind bars with progressive offset plus an
  * arrow accent. Renders in `currentColor` so it adapts to light/dark.
  */
 export function MotionwindLogo({ className }: { className?: string }) {
