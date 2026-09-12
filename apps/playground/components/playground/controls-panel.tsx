@@ -1,10 +1,25 @@
 "use client";
 
 import { TAGS, TARGETS } from "@/lib/types";
-import type { StudioState } from "@/lib/types";
+import type { StudioState, Target } from "@/lib/types";
 import type { MotionwindRecipe } from "motionwind-react";
-import { CheckCircleIcon, WarningCircleIcon } from "@phosphor-icons/react";
+import {
+  AtomIcon,
+  CheckCircleIcon,
+  CodeIcon,
+  DevicesIcon,
+  FileJsIcon,
+  TriangleIcon,
+  WarningCircleIcon,
+} from "@phosphor-icons/react";
 import { ControlLabel } from "./control-label";
+
+const TARGET_ICONS: Record<Target, typeof AtomIcon> = {
+  react: AtomIcon,
+  vue: TriangleIcon,
+  javascript: FileJsIcon,
+  "react-native": DevicesIcon,
+};
 
 export function ControlsPanel({
   editor,
@@ -23,6 +38,8 @@ export function ControlsPanel({
   activeRecipe: MotionwindRecipe | undefined;
   recipeSupportsTarget: boolean;
 }) {
+  const activeTarget = TARGETS.find((target) => target.id === editor.target);
+
   return (
     <div className="grid lg:grid-cols-2">
       <div className="border-b border-[var(--color-border)] p-4 lg:border-b-0 lg:border-r">
@@ -88,28 +105,56 @@ export function ControlsPanel({
 
       <div className="p-4">
         <div className="mb-3 flex items-center justify-between font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.2em] text-[var(--color-fg-muted)]">
-          <span>Production output</span>
+          <span className="inline-flex items-center gap-1.5">
+            <CodeIcon size={12} className="text-[var(--color-accent)]" />
+            Production output
+          </span>
           <span className="text-[var(--color-accent)]">{editor.target}</span>
         </div>
-        <div className="grid grid-cols-2 gap-1.5 mb-3">
-          {TARGETS.map((target) => (
-            <button
-              key={target.id}
-              type="button"
-              aria-pressed={editor.target === target.id}
-              onClick={() => updateEditor({ target: target.id })}
-              className="control-press min-h-10 cursor-pointer rounded-md border border-[var(--color-border)] px-2 py-2 text-[10px] text-[var(--color-fg-muted)] transition-[border-color,color,background-color] duration-150 hover:border-[var(--color-accent)]/30 hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/45 aria-pressed:border-[var(--color-accent)]/30 aria-pressed:bg-[var(--color-accent)]/[0.08] aria-pressed:text-[var(--color-accent)]"
-            >
-              {target.label}
-            </button>
-          ))}
-        </div>
-        <pre
-          className="max-h-[400px] overflow-auto rounded-lg border border-[var(--color-border)] bg-[var(--color-code-bg)] p-3 font-[family-name:var(--font-mono)] text-[10px] leading-relaxed"
-          data-testid="generated-code"
+        <div
+          className="grid grid-cols-4 gap-1.5 mb-3"
+          role="group"
+          aria-label="Output framework"
         >
-          <code>{highlighted}</code>
-        </pre>
+          {TARGETS.map((target) => {
+            const TargetIcon = TARGET_ICONS[target.id];
+            const isActive = editor.target === target.id;
+            return (
+              <button
+                key={target.id}
+                type="button"
+                aria-pressed={isActive}
+                title={`${target.label} (${target.file})`}
+                onClick={() => updateEditor({ target: target.id })}
+                className="control-press inline-flex min-h-12 cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-[var(--color-border)] px-1 py-2 text-[10px] text-[var(--color-fg-muted)] transition-[border-color,color,background-color] duration-150 hover:border-[var(--color-accent)]/30 hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/45 aria-pressed:border-[var(--color-accent)]/30 aria-pressed:bg-[var(--color-accent)]/[0.08] aria-pressed:text-[var(--color-accent)]"
+              >
+                <TargetIcon size={15} weight={isActive ? "fill" : "regular"} />
+                {target.label}
+              </button>
+            );
+          })}
+        </div>
+        <div className="overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-code-bg)]">
+          <div className="flex items-center gap-2 border-b border-[var(--color-border)] bg-[var(--color-code-header)] px-3 py-2">
+            <span className="flex gap-1.5" aria-hidden="true">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]/80" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]/80" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]/80" />
+            </span>
+            <span className="ml-1 truncate font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-fg-muted)]">
+              {activeTarget?.file}
+            </span>
+            <span className="ml-auto shrink-0 rounded border border-[var(--color-accent)]/25 bg-[var(--color-accent)]/[0.08] px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-[8px] uppercase tracking-[0.1em] text-[var(--color-accent)]">
+              {activeRecipe ? activeRecipe.id : "custom"}
+            </span>
+          </div>
+          <pre
+            className="max-h-[400px] overflow-auto p-3 font-[family-name:var(--font-mono)] text-[10px] leading-relaxed"
+            data-testid="generated-code"
+          >
+            <code>{highlighted}</code>
+          </pre>
+        </div>
       </div>
     </div>
   );

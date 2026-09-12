@@ -146,6 +146,7 @@ export function PlaygroundStudio({ studio }: { studio: StudioController }) {
             stage={stage}
             reduceMotion={reduceMotion}
             replayKey={replayKey}
+            recipe={activeRecipe}
           />
           <Timeline
             duration={duration}

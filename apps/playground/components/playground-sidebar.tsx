@@ -4,19 +4,21 @@ import { useDeferredValue, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
-  ArrowsClockwiseIcon,
+  ArrowsDownUpIcon,
+  ArrowUpRightIcon,
   ChatCircleDotsIcon,
   CursorClickIcon,
   LayoutIcon,
   MagnifyingGlassIcon,
   SpinnerGapIcon,
-  TrendUpIcon,
+  SquaresFourIcon,
   XIcon,
 } from "@phosphor-icons/react";
 import { MOTIONWIND_RECIPES } from "motionwind-react";
 import type { MotionwindRecipe } from "motionwind-react";
 import type { StudioState } from "@/lib/types";
 import { FeedbackDialog } from "./feedback-dialog";
+import { RECIPE_SCENE_ICONS } from "./playground/recipe-preview";
 
 type Category = MotionwindRecipe["category"];
 type CategoryFilter = "all" | Category;
@@ -26,13 +28,28 @@ const CATEGORIES: {
   label: string;
   icon: typeof CursorClickIcon;
 }[] = [
-  { id: "all", label: "All", icon: ArrowsClockwiseIcon },
+  { id: "all", label: "All", icon: SquaresFourIcon },
   { id: "interaction", label: "Interaction", icon: CursorClickIcon },
-  { id: "entrance", label: "Entrance", icon: TrendUpIcon },
-  { id: "scroll", label: "Scroll", icon: TrendUpIcon },
+  { id: "entrance", label: "Entrance", icon: ArrowUpRightIcon },
+  { id: "scroll", label: "Scroll", icon: ArrowsDownUpIcon },
   { id: "layout", label: "Layout", icon: LayoutIcon },
   { id: "loading", label: "Loading", icon: SpinnerGapIcon },
 ];
+
+const CATEGORY_ICONS: Record<Category, typeof CursorClickIcon> = {
+  interaction: CursorClickIcon,
+  entrance: ArrowUpRightIcon,
+  scroll: ArrowsDownUpIcon,
+  layout: LayoutIcon,
+  loading: SpinnerGapIcon,
+};
+
+const ADAPTER_LABELS: Record<string, string> = {
+  react: "React",
+  vue: "Vue",
+  vanilla: "JS",
+  "react-native": "Native",
+};
 
 function RecipeList({
   recipes,
@@ -74,13 +91,17 @@ function RecipeList({
             <ul className="space-y-0.5">
               {items.map((recipe) => {
                 const isActive = editor.classes.startsWith(recipe.classes);
+                const RecipeIcon =
+                  RECIPE_SCENE_ICONS[recipe.id] ??
+                  CATEGORY_ICONS[recipe.category];
                 return (
                   <li key={recipe.id}>
                     <button
                       type="button"
                       aria-pressed={isActive}
+                      title={recipe.description}
                       onClick={() => onApply(recipe)}
-                      className="group relative flex w-full items-center gap-2.5 rounded-lg px-3 py-1.5 text-left text-[13px] text-[var(--color-fg-muted)] transition-[color,background-color] duration-150 hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-accent)]/45 aria-pressed:bg-[var(--color-accent)]/[0.06] aria-pressed:text-[var(--color-accent)]"
+                      className="group relative flex w-full items-start gap-2.5 rounded-lg px-3 py-1.5 text-left text-[13px] text-[var(--color-fg-muted)] transition-[color,background-color] duration-150 hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-accent)]/45 aria-pressed:bg-[var(--color-accent)]/[0.06] aria-pressed:text-[var(--color-accent)]"
                     >
                       {isActive ? (
                         <span
@@ -88,7 +109,31 @@ function RecipeList({
                           aria-hidden="true"
                         />
                       ) : null}
-                      <span className="truncate">{recipe.name}</span>
+                      <RecipeIcon
+                        size={15}
+                        weight={isActive ? "fill" : "regular"}
+                        className="mt-0.5 shrink-0"
+                      />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate">{recipe.name}</span>
+                        {isActive ? (
+                          <span className="mt-1 block text-[11px] font-normal leading-relaxed text-[var(--color-fg-muted)]">
+                            {recipe.description}
+                          </span>
+                        ) : null}
+                        {isActive ? (
+                          <span className="mt-1.5 flex flex-wrap gap-1">
+                            {recipe.adapters.map((adapter) => (
+                              <span
+                                key={adapter}
+                                className="rounded border border-[var(--color-border)] px-1 py-px font-[family-name:var(--font-mono)] text-[8px] uppercase tracking-[0.08em] text-[var(--color-fg-muted)]"
+                              >
+                                {ADAPTER_LABELS[adapter] ?? adapter}
+                              </span>
+                            ))}
+                          </span>
+                        ) : null}
+                      </span>
                     </button>
                   </li>
                 );

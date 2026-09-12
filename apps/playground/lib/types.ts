@@ -17,11 +17,11 @@ export interface SharedStudioState extends StudioState {
 
 export const TAGS = ["div", "button", "span", "a", "section"] as const;
 
-export const TARGETS: { id: Target; label: string }[] = [
-  { id: "react", label: "React" },
-  { id: "vue", label: "Vue" },
-  { id: "javascript", label: "JavaScript" },
-  { id: "react-native", label: "Native" },
+export const TARGETS: { id: Target; label: string; file: string }[] = [
+  { id: "react", label: "React", file: "component.tsx" },
+  { id: "vue", label: "Vue", file: "component.vue" },
+  { id: "javascript", label: "JavaScript", file: "motionwind.js" },
+  { id: "react-native", label: "Native", file: "component.native.tsx" },
 ];
 
 export const STAGES: { id: StageSize; label: string; width: number }[] = [

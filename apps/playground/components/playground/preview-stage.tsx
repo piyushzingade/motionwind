@@ -4,8 +4,10 @@ import { type ComponentType, type ReactNode } from "react";
 import { CheckerboardIcon } from "@phosphor-icons/react";
 import { MotionConfig, useReducedMotion } from "motion/react";
 import { mw } from "motionwind-react";
+import type { MotionwindRecipe } from "motionwind-react";
 import { STAGES } from "@/lib/types";
 import type { StageSize } from "@/lib/types";
+import { RecipePreview } from "./recipe-preview";
 
 const MwComponent = mw as unknown as Record<
   string,
@@ -21,6 +23,7 @@ export function PreviewStage({
   stage,
   reduceMotion,
   replayKey,
+  recipe,
 }: {
   tag: string;
   classes: string;
@@ -28,8 +31,13 @@ export function PreviewStage({
   stage: StageSize;
   reduceMotion: boolean;
   replayKey: number;
+  recipe: MotionwindRecipe | undefined;
 }) {
-  const Preview = (MwComponent[tag] ?? MwComponent[DEFAULT_TAG]) as ComponentType<{ className?: string; children?: ReactNode }>;
+  const Preview = (MwComponent[tag] ??
+    MwComponent[DEFAULT_TAG]) as ComponentType<{
+    className?: string;
+    children?: ReactNode;
+  }>;
   const stageWidth = STAGES.find(({ id }) => id === stage)?.width ?? 400;
   const systemReducedMotion = useReducedMotion();
   const shouldReduceMotion = reduceMotion || systemReducedMotion;
@@ -43,12 +51,21 @@ export function PreviewStage({
       >
         <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-bg)]/80 px-2 py-1 font-[family-name:var(--font-mono)] text-[8px] uppercase tracking-[0.1em] text-[var(--color-code-muted)] backdrop-blur-sm">
           <CheckerboardIcon size={11} />
-          Live viewport {stageWidth}px
+          Live viewport {stageWidth}px{recipe ? ` · ${recipe.name}` : ""}
         </div>
         <MotionConfig reducedMotion={shouldReduceMotion ? "always" : "user"}>
-          <Preview key={replayKey} className={classes}>
-            {text}
-          </Preview>
+          {recipe ? (
+            <RecipePreview
+              key={replayKey}
+              recipe={recipe}
+              classes={classes}
+              text={text}
+            />
+          ) : (
+            <Preview key={replayKey} className={classes}>
+              {text}
+            </Preview>
+          )}
         </MotionConfig>
       </div>
     </div>

@@ -1302,6 +1302,71 @@ figure.shiki pre::-webkit-scrollbar {
   }
 }
 
+/* ── Studio code tokens (production output) ────────────────────────── */
+.pg-tok-animate {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.pg-tok-keyword {
+  color: #7c3aed;
+  font-weight: 500;
+}
+.dark .pg-tok-keyword {
+  color: #c084fc;
+}
+.pg-tok-string {
+  color: #9f1239;
+}
+.dark .pg-tok-string {
+  color: #86efac;
+}
+.pg-tok-component {
+  color: #0369a1;
+  font-weight: 500;
+}
+.dark .pg-tok-component {
+  color: #67e8f9;
+}
+.pg-tok-tag {
+  color: #be185d;
+}
+.dark .pg-tok-tag {
+  color: #f472b6;
+}
+.pg-tok-prop {
+  color: #0e7490;
+}
+.dark .pg-tok-prop {
+  color: #93c5fd;
+}
+.pg-tok-number,
+.pg-tok-bool {
+  color: #b45309;
+}
+.dark .pg-tok-number,
+.dark .pg-tok-bool {
+  color: #fbbf24;
+}
+.pg-tok-bool {
+  font-weight: 600;
+}
+.pg-tok-comment {
+  color: #94a3b8;
+  font-style: italic;
+}
+.dark .pg-tok-comment {
+  color: #52525b;
+}
+.pg-tok-punct {
+  color: #64748b;
+}
+.dark .pg-tok-punct {
+  color: #71717a;
+}
+.pg-tok-plain {
+  color: var(--color-fg);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {
     scroll-behavior: auto;

@@ -11,7 +11,7 @@ test("recipe selection keeps the workspace and URL in sync", async ({
     /animate-duration-240/,
   );
   await expect(
-    page.getByTestId("preview-viewport").getByRole("button", {
+    page.getByTestId("preview-viewport").getByRole("heading", {
       name: "Dialog entrance",
     }),
   ).toBeVisible();
@@ -56,6 +56,32 @@ test("timeline and shareable preferences use exact state", async ({ page }) => {
     page.getByRole("button", { name: /phone preview/ }),
   ).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("button", { name: "Reduced" })).toBeVisible();
+});
+
+test("recipes render dedicated preview scenes, not a bare button", async ({
+  page,
+}) => {
+  await page.goto("/playground");
+  const viewport = page.getByTestId("preview-viewport");
+
+  await page.getByRole("button", { name: "Progress bar" }).click();
+  await expect(
+    viewport.getByRole("progressbar", { name: "Progress bar" }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "SVG line loader" }).click();
+  await expect(viewport.locator("svg path").first()).toBeVisible();
+  await expect(viewport.getByText("SVG line loader").first()).toBeVisible();
+
+  await page.getByRole("button", { name: "Stepper" }).click();
+  await expect(viewport.getByText("Build")).toBeVisible();
+  await expect(viewport.getByText("Ship")).toBeVisible();
+
+  await page.getByRole("button", { name: "Skeleton pulse" }).click();
+  await expect(viewport.getByLabel("Loading content")).toHaveAttribute(
+    "aria-busy",
+    "true",
+  );
 });
 
 test("mobile drawer and feedback dialog manage focus and validation", async ({
