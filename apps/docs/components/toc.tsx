@@ -1,14 +1,14 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useMounted } from "../lib/use-mounted";
-import { buildPath } from "../lib/toc-path";
+import { generateIndicatorPath } from "../lib/toc-path";
 import type { TOCItem } from "../lib/toc-path";
 import { useTocObserver } from "../lib/use-toc-observer";
 import { useTocMeasure } from "../lib/use-toc-measure";
-import { useTocPath } from "../lib/use-toc-path";
 import { TocSvg } from "./toc-svg";
 import { TocList } from "./toc-list";
+import { TocIndicator } from "./toc-indicator";
 
 export function TableOfContents({ items }: { items: TOCItem[] }) {
   const mounted = useMounted();
@@ -17,22 +17,33 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
   const { activeId, activeIndex, scrollPct, scrollDir, navRef, handleClick } =
     useTocObserver(items, itemEls);
 
-  const { listRef, ys, listH } = useTocMeasure(items, mounted, itemEls);
+  const { listRef, ys, rows, listH } = useTocMeasure(items, mounted, itemEls);
 
-  const accentRef = useRef<SVGPathElement>(null);
-  const trackRef = useRef<SVGPathElement>(null);
+  // One measured path drives the track, the progress fill, and the marker —
+  // lengths are analytic, so no DOM measuring round-trip can deadlock.
+  const { path, totalLength, centerDistances } = useMemo(
+    () => generateIndicatorPath(items, rows),
+    [items, rows],
+  );
 
-  const { totalLen, tocProgress, arrowPos } = useTocPath({
-    ys,
-    activeIndex,
-    scrollPct,
-    accentRef,
-  });
+  const tocProgress = useMemo(() => {
+    if (activeIndex < 0 || ys.length < 2) return 0;
+    if (scrollPct > 0.95) return 1;
+    const firstY = ys[0] ?? 0;
+    const lastY = ys[ys.length - 1] ?? 0;
+    const range = lastY - firstY;
+    if (range <= 0) return 0;
+    const activeY = ys[activeIndex] ?? firstY;
+    const raw = (activeY - firstY) / range;
+    return activeIndex === 0 ? Math.max(raw, 0.03) : raw;
+  }, [activeIndex, ys, scrollPct]);
 
-  const pathD = buildPath(items, ys);
-  const dashOff = totalLen > 0 ? totalLen * (1 - tocProgress) : totalLen;
+  const dashOff =
+    totalLength > 0 ? totalLength * (1 - tocProgress) : totalLength;
 
   if (!items.length) return null;
+
+  const showSpine = mounted && listH > 0 && path.length > 0;
 
   return (
     <nav ref={navRef} className="toc" aria-label="Table of contents">
@@ -42,18 +53,23 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
       </div>
 
       <div className="toc-body">
-        {mounted && listH > 0 && (
-          <TocSvg
-            listH={listH}
-            pathD={pathD}
-            totalLen={totalLen}
-            tocProgress={tocProgress}
-            dashOff={dashOff}
-            accentRef={accentRef}
-            trackRef={trackRef}
-            arrowPos={arrowPos}
-            scrollDir={scrollDir}
-          />
+        {showSpine && (
+          <>
+            <TocSvg
+              listH={listH}
+              pathD={path}
+              totalLen={totalLength}
+              dashOff={dashOff}
+              scrollDir={scrollDir}
+            />
+            <TocIndicator
+              path={path}
+              totalLength={totalLength}
+              centerDistances={centerDistances}
+              activeIndex={activeIndex}
+              height={listH}
+            />
+          </>
         )}
         <TocList
           items={items}
