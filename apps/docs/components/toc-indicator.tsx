@@ -10,11 +10,6 @@ import {
 
 const SPRING = { stiffness: 180, damping: 20 };
 
-/**
- * Active-row marker that rides the TOC spine: a small diamond gliding along
- * the measured path via CSS offset-distance, driven by a spring so it chases
- * the active heading, trailed by a soft radial bloom.
- */
 export function TocIndicator({
   path,
   totalLength,
@@ -46,10 +41,6 @@ export function TocIndicator({
   const offsetDistance = useTransform(animatedDistance, (v) =>
     totalLength > 0 ? `${(v / totalLength) * 100}%` : "0%",
   );
-  // The bloom trails slightly behind the diamond head.
-  const tailOffset = useTransform(animatedDistance, (v) =>
-    totalLength > 0 ? `${(Math.max(0, v - 16) / totalLength) * 100}%` : "0%",
-  );
 
   const offsetPath = `path('${path}')`;
 
@@ -59,28 +50,6 @@ export function TocIndicator({
       className="pointer-events-none absolute left-0 top-0 overflow-visible"
       style={{ width: 22, height }}
     >
-      <motion.div
-        className="absolute left-0 top-0"
-        style={{
-          width: 30,
-          height: 30,
-          offsetPath,
-          offsetDistance: tailOffset,
-          offsetRotate: "0deg",
-          opacity: valid ? 1 : 0,
-        }}
-      >
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            borderRadius: "50%",
-            background:
-              "radial-gradient(circle, var(--color-accent) 0%, transparent 70%)",
-            opacity: 0.45,
-          }}
-        />
-      </motion.div>
       <motion.div
         className="absolute left-0 top-0 size-[7px] rounded-[1.5px] bg-[var(--color-accent)]"
         style={{

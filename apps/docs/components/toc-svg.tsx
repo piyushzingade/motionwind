@@ -14,21 +14,8 @@ export function TocSvg({
   scrollDir: "down" | "up";
 }) {
   return (
-    <svg
-      className="toc-svg"
-      width={22}
-      height={listH}
-      aria-hidden="true"
-      filter="url(#toc-glow)"
-    >
+    <svg className="toc-svg" width={22} height={listH} aria-hidden="true">
       <defs>
-        <filter id="toc-glow">
-          <feGaussianBlur stdDeviation="2" result="b" />
-          <feMerge>
-            <feMergeNode in="b" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
         <linearGradient
           id="toc-accent-grad"
           gradientUnits="userSpaceOnUse"
