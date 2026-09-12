@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import localFont from "next/font/local";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/next";
@@ -76,8 +77,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script
+        <Script
+          id="ld-json"
           type="application/ld+json"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -122,7 +125,7 @@ export default function RootLayout({
           }}
         />
         {databuddyClientId ? (
-          <script
+          <Script
             src="https://cdn.databuddy.cc/databuddy.js"
             data-client-id={databuddyClientId}
             data-track-hash-changes="true"
@@ -132,7 +135,7 @@ export default function RootLayout({
             data-track-web-vitals="true"
             data-track-errors="true"
             crossOrigin="anonymous"
-            async
+            strategy="afterInteractive"
           />
         ) : null}
       </head>

@@ -4,6 +4,13 @@
 `animate-hover:scale-110` into Motion output at build time across React, Vue, and JavaScript,
 with an explicit runtime fallback for dynamic classes and React Native.
 
+<p>
+  <a href="https://mintlify.com/oss">
+    <img src="https://img.shields.io/badge/Sponsored%20by-Mintlify%20OSS%20Program-18E299?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIuMjY0IDMuNDM0SDYuNjkwNkM2LjI1NzQgMy40MzQgNS44NjQgMy42OTUgNS41ODIgNC4wNzJMMy41NDQgNi44MTZDMy4yMzYgNy4yMzIgMy4wNzIgNy43NDQgMy4wNzIgOC4yNzJWMTcuMzQ0QzMuMDcyIDE3Ljg3MiAzLjIzNiAxOC4zODQgMy41NDQgMTguOEw1LjU4MiAyMS41NDRDNS44NjQgMjEuOTIgNi4yNTcyIDIyLjE4NCA2LjY5MDYgMjIuMTg0SDEyLjI2NEMxMi42OTc0IDIyLjE4NCAxMy4wOSAyMS45MiAxMy4zNzIgMjEuNTQ0TDE1LjQxIDE4LjhDMTUuNzE4IDE4LjM4NCAxNS44ODIgMTcuODcyIDE1Ljg4MiAxNy4zNDRWOC4yNzJDMTUuODgyIDcuNzQ0IDE1LjcxOCA3LjIzMiAxNS40MSA2LjgxNkwxMy4zNzIgNC4wNzJDMTMuMDkgMy42OTUgMTIuNjk3NCAzLjQzNCAxMi4yNjQgMy40MzRaIiBmaWxsPSIjMThFMjk5Ii8+PC9zdmc+&labelColor=transparent&color=transparent"
+    alt="Sponsored by Mintlify OSS Program"
+  />
+</p>
+
 ```jsx
 // Before
 <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>Click</motion.button>
@@ -52,7 +59,7 @@ Installable examples live in [`starters/`](starters). Reviewed, portable recipes
 
 ## Docs
 
-- **Guides & reference** — [motionwind.xyz](https://motionwind.xyz), or design an interaction in [Motionwind Studio](https://web.motionwind.xyz/play)
+- **Guides & reference** — [motionwind.xyz](https://motionwind.xyz), or design an interaction in [Motionwind Studio](https://play.motionwind.xyz)
 - **Syntax & features** — [`packages/documentation/features.md`](packages/documentation/features.md)
 - **Architecture & internals** — [`packages/documentation/architecture.md`](packages/documentation/architecture.md)
 - **Roadmap and support** — [`ROADMAP.md`](ROADMAP.md) and [`SUPPORT.md`](SUPPORT.md)
@@ -61,6 +68,10 @@ Installable examples live in [`starters/`](starters). Reviewed, portable recipes
 All public packages are released together with Changesets, generated changelogs, npm
 provenance, and canary tags. CI validates the common syntax corpus, package artifacts, registry,
 supported Node versions, and adapter test suites.
+
+## Sponsors
+
+Motionwind is sponsored by the [Mintlify OSS Program](https://mintlify.com/oss), supporting open-source developer tools.
 
 ## License
 
