@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
@@ -9,7 +9,6 @@ import {
   ChatCircleDotsIcon,
   CursorClickIcon,
   LayoutIcon,
-  MagnifyingGlassIcon,
   SpinnerGapIcon,
   SquaresFourIcon,
   XIcon,
@@ -21,28 +20,24 @@ import { FeedbackDialog } from "./feedback-dialog";
 import { RECIPE_SCENE_ICONS } from "./playground/recipe-preview";
 
 type Category = MotionwindRecipe["category"];
-type CategoryFilter = "all" | Category;
 
-const CATEGORIES: {
-  id: CategoryFilter;
-  label: string;
-  icon: typeof CursorClickIcon;
-}[] = [
-  { id: "all", label: "All", icon: SquaresFourIcon },
-  { id: "interaction", label: "Interaction", icon: CursorClickIcon },
-  { id: "entrance", label: "Entrance", icon: ArrowUpRightIcon },
-  { id: "scroll", label: "Scroll", icon: ArrowsDownUpIcon },
-  { id: "layout", label: "Layout", icon: LayoutIcon },
-  { id: "loading", label: "Loading", icon: SpinnerGapIcon },
+const CATEGORIES: { id: Category; label: string }[] = [
+  { id: "interaction", label: "Interaction" },
+  { id: "entrance", label: "Entrance" },
+  { id: "scroll", label: "Scroll" },
+  { id: "layout", label: "Layout" },
+  { id: "loading", label: "Loading" },
 ];
 
-const CATEGORY_ICONS: Record<Category, typeof CursorClickIcon> = {
+export const CATEGORY_ICONS: Record<Category, typeof CursorClickIcon> = {
   interaction: CursorClickIcon,
   entrance: ArrowUpRightIcon,
   scroll: ArrowsDownUpIcon,
   layout: LayoutIcon,
   loading: SpinnerGapIcon,
 };
+
+export const SIDEBAR_ALL_ICON = SquaresFourIcon;
 
 const ADAPTER_LABELS: Record<string, string> = {
   react: "React",
@@ -52,30 +47,26 @@ const ADAPTER_LABELS: Record<string, string> = {
 };
 
 function RecipeList({
-  recipes,
   editor,
   onApply,
 }: {
-  recipes: MotionwindRecipe[];
   editor: StudioState;
   onApply: (recipe: MotionwindRecipe) => void;
 }) {
   const groupedRecipes = useMemo(() => {
     const groups = new Map<Category, MotionwindRecipe[]>();
-    for (const recipe of recipes) {
+    for (const recipe of MOTIONWIND_RECIPES) {
       const group = groups.get(recipe.category) ?? [];
       group.push(recipe);
       groups.set(recipe.category, group);
     }
     return groups;
-  }, [recipes]);
-
-  if (recipes.length === 0) return null;
+  }, []);
 
   return (
     <>
-      {CATEGORIES.slice(1).map(({ id, label }) => {
-        const items = groupedRecipes.get(id as Category);
+      {CATEGORIES.map(({ id, label }) => {
+        const items = groupedRecipes.get(id);
         if (!items?.length) return null;
 
         return (
@@ -117,11 +108,6 @@ function RecipeList({
                       <span className="min-w-0 flex-1">
                         <span className="block truncate">{recipe.name}</span>
                         {isActive ? (
-                          <span className="mt-1 block text-[11px] font-normal leading-relaxed text-[var(--color-fg-muted)]">
-                            {recipe.description}
-                          </span>
-                        ) : null}
-                        {isActive ? (
                           <span className="mt-1.5 flex flex-wrap gap-1">
                             {recipe.adapters.map((adapter) => (
                               <span
@@ -147,25 +133,13 @@ function RecipeList({
 }
 
 function SidebarContent({
-  query,
-  category,
-  filteredRecipes,
   editor,
-  onQueryChange,
-  onCategoryChange,
-  onClear,
   onApply,
   onOpenFeedback,
   onClose,
   mobile,
 }: {
-  query: string;
-  category: CategoryFilter;
-  filteredRecipes: MotionwindRecipe[];
   editor: StudioState;
-  onQueryChange: (query: string) => void;
-  onCategoryChange: (category: CategoryFilter) => void;
-  onClear: () => void;
   onApply: (recipe: MotionwindRecipe) => void;
   onOpenFeedback: () => void;
   onClose?: () => void;
@@ -202,43 +176,12 @@ function SidebarContent({
         ) : null}
       </div>
 
-      <div className="shrink-0 space-y-3 border-b border-dashed border-[var(--color-border)] p-3">
-        <label className="relative block">
-          <span className="sr-only">Search recipes</span>
-          <MagnifyingGlassIcon
-            size={14}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-fg-muted)]"
-          />
-          <input
-            type="search"
-            value={query}
-            onChange={(event) => onQueryChange(event.target.value)}
-            placeholder="Search recipes"
-            className="h-10 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] pl-9 pr-3 text-xs text-[var(--color-fg)] outline-none transition-[border-color,box-shadow,background-color] duration-150 placeholder:text-[var(--color-fg-muted)]/70 focus:border-[var(--color-accent)]/35 focus:bg-[var(--color-surface-elevated)] focus:ring-2 focus:ring-[var(--color-accent)]/10"
-          />
-        </label>
-        <div className="grid grid-cols-2 gap-1" aria-label="Recipe category">
-          {CATEGORIES.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              type="button"
-              aria-pressed={category === id}
-              onClick={() => onCategoryChange(id)}
-              className="control-press relative inline-flex h-8 min-w-0 items-center justify-center gap-1.5 rounded-lg px-2 text-[10px] text-[var(--color-fg-muted)] transition-[color,background-color] duration-150 hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/45 aria-pressed:bg-[var(--color-accent)]/[0.06] aria-pressed:text-[var(--color-accent)]"
-            >
-              {category === id ? (
-                <span
-                  className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-[var(--color-accent)]"
-                  aria-hidden="true"
-                />
-              ) : null}
-              <Icon size={12} weight={category === id ? "fill" : "regular"} />
-              {label}
-            </button>
-          ))}
-        </div>
-        <p className="font-[family-name:var(--font-mono)] text-[9px] tabular-nums text-[var(--color-fg-muted)]">
-          {filteredRecipes.length} of {MOTIONWIND_RECIPES.length} recipes
+      <div className="flex shrink-0 items-center justify-between border-b border-dashed border-[var(--color-border)] px-4 py-2.5">
+        <p className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.15em] text-[var(--color-fg-muted)]">
+          Recipes
+        </p>
+        <p className="font-[family-name:var(--font-mono)] text-[9px] tabular-nums text-[var(--color-code-muted)]">
+          {MOTIONWIND_RECIPES.length}
         </p>
       </div>
 
@@ -246,33 +189,7 @@ function SidebarContent({
         className="min-h-0 flex-1 overflow-y-auto px-2 py-3 no-scrollbar"
         aria-label="Animation recipes"
       >
-        {filteredRecipes.length > 0 ? (
-          <RecipeList
-            recipes={filteredRecipes}
-            editor={editor}
-            onApply={onApply}
-          />
-        ) : (
-          <div className="flex h-full min-h-40 flex-col items-center justify-center px-5 text-center">
-            <MagnifyingGlassIcon
-              size={20}
-              className="mb-3 text-[var(--color-code-muted)]"
-            />
-            <p className="text-xs font-medium text-[var(--color-fg)]">
-              No recipes found
-            </p>
-            <p className="mt-1 max-w-[22ch] text-[11px] leading-relaxed text-[var(--color-fg-muted)]">
-              Try another term or clear the current filters.
-            </p>
-            <button
-              type="button"
-              onClick={onClear}
-              className="control-press mt-3 h-9 rounded-md border border-[var(--color-border)] px-3 text-[11px] font-medium text-[var(--color-fg-muted)] transition-[border-color,color] duration-150 hover:border-[var(--color-accent)]/30 hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/45"
-            >
-              Clear filters
-            </button>
-          </div>
-        )}
+        <RecipeList editor={editor} onApply={onApply} />
       </nav>
 
       <div className="shrink-0 border-t border-dashed border-[var(--color-border)] p-3">
@@ -305,30 +222,8 @@ export function PlaygroundSidebar({
   editor: StudioState;
   onApply: (recipe: MotionwindRecipe) => void;
 }) {
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<CategoryFilter>("all");
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const deferredQuery = useDeferredValue(query.trim().toLowerCase());
   const feedbackTrigger = useRef<HTMLElement | null>(null);
-
-  const filteredRecipes = useMemo(
-    () =>
-      MOTIONWIND_RECIPES.filter((recipe) => {
-        const categoryMatches =
-          category === "all" || recipe.category === category;
-        if (!categoryMatches) return false;
-        if (!deferredQuery) return true;
-        return `${recipe.name} ${recipe.id} ${recipe.category} ${recipe.classes}`
-          .toLowerCase()
-          .includes(deferredQuery);
-      }),
-    [category, deferredQuery],
-  );
-
-  function clearFilters() {
-    setQuery("");
-    setCategory("all");
-  }
 
   function openFeedback() {
     feedbackTrigger.current = document.activeElement as HTMLElement | null;
@@ -350,13 +245,7 @@ export function PlaygroundSidebar({
   }
 
   const sharedProps = {
-    query,
-    category,
-    filteredRecipes,
     editor,
-    onQueryChange: setQuery,
-    onCategoryChange: setCategory,
-    onClear: clearFilters,
     onApply,
     onOpenFeedback: openFeedback,
   };

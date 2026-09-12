@@ -67,6 +67,8 @@ export function PlaygroundPage({ starCount }: { starCount: number | null }) {
           sidebarCollapsed={desktopCollapsed}
           onToggleSidebar={handleToggleSidebar}
           starCount={starCount}
+          editor={editor}
+          onApply={applyRecipe}
         />
         <main className="min-h-0 flex-1 overflow-y-auto">
           <PlaygroundStudio studio={studio} />

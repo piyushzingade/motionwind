@@ -81,7 +81,12 @@
 
 /* ── Base styles ── */
 body {
-  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family:
+    var(--font-sans),
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -99,7 +104,12 @@ body {
   cursor: pointer;
 }
 
-:where(button:disabled, [aria-disabled="true"], input:disabled, select:disabled) {
+:where(
+  button:disabled,
+  [aria-disabled="true"],
+  input:disabled,
+  select:disabled
+) {
   cursor: not-allowed;
 }
 
@@ -1291,6 +1301,38 @@ figure.shiki pre::-webkit-scrollbar {
   animation: dialog-out 180ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+/* ── Command palette (top-anchored; transform-only so it composes with
+   the Tailwind translate property used for horizontal centering) ── */
+@keyframes palette-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+}
+
+@keyframes palette-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.99);
+  }
+}
+
+.palette-overlay[data-state="open"] {
+  animation: overlay-in 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.palette-overlay[data-state="closed"] {
+  animation: overlay-out 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.palette-content[data-state="open"] {
+  animation: palette-in 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.palette-content[data-state="closed"] {
+  animation: palette-out 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
 .feedback-spinner {
   animation: feedback-spin 700ms linear infinite;
   will-change: transform;
@@ -1376,6 +1418,8 @@ figure.shiki pre::-webkit-scrollbar {
   .mobile-drawer-content,
   .feedback-overlay,
   .feedback-content,
+  .palette-overlay,
+  .palette-content,
   .feedback-spinner,
   .studio-playhead {
     animation: none;

@@ -6,16 +6,23 @@ import {
   SidebarSimpleIcon,
   StarIcon,
 } from "@phosphor-icons/react";
+import type { MotionwindRecipe } from "motionwind-react";
+import type { StudioState } from "@/lib/types";
 import { ThemeToggle } from "./theme-toggle";
+import { SearchPalette } from "./search-palette";
 
 export function PlaygroundHeader({
   sidebarCollapsed,
   onToggleSidebar,
   starCount,
+  editor,
+  onApply,
 }: {
   sidebarCollapsed: boolean;
   onToggleSidebar: () => void;
   starCount: number | null;
+  editor: StudioState;
+  onApply: (recipe: MotionwindRecipe) => void;
 }) {
   return (
     <header className="z-40 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-dashed border-[var(--color-border)] bg-[var(--color-bg)]/90 px-3 backdrop-blur-md sm:px-4">
@@ -44,6 +51,7 @@ export function PlaygroundHeader({
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
+        <SearchPalette editor={editor} onApply={onApply} />
         <ThemeToggle />
         <Link
           href="https://github.com/piyushzingade/motionwind"

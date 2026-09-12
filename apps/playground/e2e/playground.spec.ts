@@ -22,19 +22,33 @@ test("recipe selection keeps the workspace and URL in sync", async ({
   );
 });
 
-test("search and category filters combine and recover from no results", async ({
+test("command palette searches recipes and applies on enter", async ({
   page,
 }) => {
   await page.goto("/playground");
 
-  await page.getByRole("searchbox", { name: "Search recipes" }).fill("tooltip");
-  await expect(page.getByText("1 of 30 recipes")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Tooltip pop" })).toBeVisible();
+  await page.keyboard.press("ControlOrMeta+k");
+  const searchbox = page.getByPlaceholder(
+    "Search recipes, categories, classes…",
+  );
+  await expect(searchbox).toBeVisible();
 
-  await page.getByRole("button", { name: "Loading", exact: true }).click();
+  await searchbox.fill("tooltip");
+  await expect(page.getByText("1 of 30 recipes")).toBeVisible();
+  await page.keyboard.press("Enter");
+  await expect(searchbox).toBeHidden();
+  await expect(
+    page
+      .getByTestId("preview-viewport")
+      .getByRole("tooltip", { name: "Tooltip pop" }),
+  ).toBeVisible();
+
+  await page.keyboard.press("ControlOrMeta+k");
+  await expect(searchbox).toBeVisible();
+  await searchbox.fill("zzz-no-match");
   await expect(page.getByText("No recipes found")).toBeVisible();
-  await page.getByRole("button", { name: "Clear filters" }).click();
-  await expect(page.getByText("30 of 30 recipes")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(searchbox).toBeHidden();
 });
 
 test("timeline and shareable preferences use exact state", async ({ page }) => {
