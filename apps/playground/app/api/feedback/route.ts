@@ -49,7 +49,9 @@ export async function POST(request: NextRequest) {
   }
   if (!message || message.length > FEEDBACK_MESSAGE_MAX) {
     return NextResponse.json(
-      { error: `Message must be between 1 and ${FEEDBACK_MESSAGE_MAX} characters` },
+      {
+        error: `Message must be between 1 and ${FEEDBACK_MESSAGE_MAX} characters`,
+      },
       { status: 400 },
     );
   }

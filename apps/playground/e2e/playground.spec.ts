@@ -1,6 +1,8 @@
 import { expect, test } from "playwright/test";
 
-test("recipe selection keeps the workspace and URL in sync", async ({ page }) => {
+test("recipe selection keeps the workspace and URL in sync", async ({
+  page,
+}) => {
   await page.goto("/playground");
 
   await page.getByRole("button", { name: "Dialog entrance" }).click();
@@ -50,10 +52,9 @@ test("timeline and shareable preferences use exact state", async ({ page }) => {
   await expect(page).toHaveURL(/stage=phone&motion=reduced/);
 
   await page.reload();
-  await expect(page.getByRole("button", { name: /phone preview/ })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
+  await expect(
+    page.getByRole("button", { name: /phone preview/ }),
+  ).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("button", { name: "Reduced" })).toBeVisible();
 });
 
@@ -73,9 +74,13 @@ test("mobile drawer and feedback dialog manage focus and validation", async ({
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/playground");
   await page.getByRole("button", { name: "Toggle recipe sidebar" }).click();
-  await expect(page.getByRole("dialog", { name: "Animation recipes" })).toBeVisible();
+  await expect(
+    page.getByRole("dialog", { name: "Animation recipes" }),
+  ).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("dialog", { name: "Animation recipes" })).toBeHidden();
+  await expect(
+    page.getByRole("dialog", { name: "Animation recipes" }),
+  ).toBeHidden();
 
   await page.getByRole("button", { name: "Toggle recipe sidebar" }).click();
   const feedbackTrigger = page.getByRole("button", { name: "Send feedback" });
@@ -86,7 +91,9 @@ test("mobile drawer and feedback dialog manage focus and validation", async ({
   await expect(
     feedbackDialog.getByRole("button", { name: "Send feedback" }),
   ).toBeDisabled();
-  await feedbackDialog.getByLabel("Message").fill("The timeline is very clear.");
+  await feedbackDialog
+    .getByLabel("Message")
+    .fill("The timeline is very clear.");
   await expect(
     feedbackDialog.getByRole("button", { name: "Send feedback" }),
   ).toBeEnabled();

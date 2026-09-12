@@ -49,7 +49,11 @@ export function PlaygroundHeader({
           href="https://github.com/piyushzingade/motionwind"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={starCount === null ? "Star Motionwind on GitHub" : `Star Motionwind on GitHub, ${starCount} stars`}
+          aria-label={
+            starCount === null
+              ? "Star Motionwind on GitHub"
+              : `Star Motionwind on GitHub, ${starCount} stars`
+          }
           className="control-press inline-flex h-7 items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-2.5 text-xs text-[var(--color-fg-muted)] no-underline transition-[border-color,color] duration-150 hover:border-[var(--color-accent)]/20 hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/45"
         >
           <GithubLogoIcon size={12} weight="fill" />
@@ -57,7 +61,10 @@ export function PlaygroundHeader({
           <span>Star</span>
           {starCount !== null ? (
             <>
-              <span className="h-3 w-px bg-[var(--color-border)]" aria-hidden="true" />
+              <span
+                className="h-3 w-px bg-[var(--color-border)]"
+                aria-hidden="true"
+              />
               <span className="tabular-nums">{starCount}</span>
             </>
           ) : null}

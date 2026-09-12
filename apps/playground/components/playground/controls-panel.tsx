@@ -3,10 +3,7 @@
 import { TAGS, TARGETS } from "@/lib/types";
 import type { StudioState } from "@/lib/types";
 import type { MotionwindRecipe } from "motionwind-react";
-import {
-  CheckCircleIcon,
-  WarningCircleIcon,
-} from "@phosphor-icons/react";
+import { CheckCircleIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import { ControlLabel } from "./control-label";
 
 export function ControlsPanel({
@@ -107,7 +104,10 @@ export function ControlsPanel({
             </button>
           ))}
         </div>
-        <pre className="max-h-[400px] overflow-auto rounded-lg border border-[var(--color-border)] bg-[var(--color-code-bg)] p-3 font-[family-name:var(--font-mono)] text-[10px] leading-relaxed" data-testid="generated-code">
+        <pre
+          className="max-h-[400px] overflow-auto rounded-lg border border-[var(--color-border)] bg-[var(--color-code-bg)] p-3 font-[family-name:var(--font-mono)] text-[10px] leading-relaxed"
+          data-testid="generated-code"
+        >
           <code>{highlighted}</code>
         </pre>
       </div>

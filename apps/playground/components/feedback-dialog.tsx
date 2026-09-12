@@ -67,7 +67,8 @@ export function FeedbackDialog({
         }),
       });
       const result = (await response.json()) as { error?: string };
-      if (!response.ok) throw new Error(result.error || "Unable to send feedback");
+      if (!response.ok)
+        throw new Error(result.error || "Unable to send feedback");
 
       setStatus("sent");
       closeTimer.current = window.setTimeout(() => {
@@ -184,7 +185,10 @@ export function FeedbackDialog({
                   htmlFor="feedback-email"
                   className="mb-2 block font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.1em] text-[var(--color-fg-muted)]"
                 >
-                  Email <span className="normal-case tracking-normal">(optional)</span>
+                  Email{" "}
+                  <span className="normal-case tracking-normal">
+                    (optional)
+                  </span>
                 </label>
                 <input
                   id="feedback-email"
@@ -229,7 +233,9 @@ export function FeedbackDialog({
               </Dialog.Close>
               <button
                 type="submit"
-                disabled={!message.trim() || status === "sending" || status === "sent"}
+                disabled={
+                  !message.trim() || status === "sending" || status === "sent"
+                }
                 className="control-press inline-flex h-9 min-w-[116px] items-center justify-center gap-2 rounded-md bg-[var(--color-accent)] px-4 text-xs font-semibold text-[var(--color-accent-fg)] transition-colors duration-150 hover:bg-[var(--color-accent-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)] disabled:pointer-events-none disabled:opacity-40"
               >
                 {status === "sending" ? (

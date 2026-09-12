@@ -27,11 +27,7 @@ const stageIcons = {
   desktop: DesktopIcon,
 };
 
-export function PlaygroundStudio({
-  studio,
-}: {
-  studio: StudioController;
-}) {
+export function PlaygroundStudio({ studio }: { studio: StudioController }) {
   const {
     editor,
     stage,
@@ -132,7 +128,11 @@ export function PlaygroundStudio({
         <section className="min-w-0 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
           <div className="flex h-11 items-center justify-between border-b border-dashed border-[var(--color-border)] px-4">
             <div className="flex items-center gap-2 text-xs font-medium">
-              <PlayIcon size={14} weight="fill" className="text-[var(--color-accent)]" />
+              <PlayIcon
+                size={14}
+                weight="fill"
+                className="text-[var(--color-accent)]"
+              />
               Preview
             </div>
             <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-fg-muted)]">

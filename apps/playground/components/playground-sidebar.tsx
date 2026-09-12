@@ -197,13 +197,25 @@ function SidebarContent({
         </p>
       </div>
 
-      <nav className="min-h-0 flex-1 overflow-y-auto px-2 py-3 no-scrollbar" aria-label="Animation recipes">
+      <nav
+        className="min-h-0 flex-1 overflow-y-auto px-2 py-3 no-scrollbar"
+        aria-label="Animation recipes"
+      >
         {filteredRecipes.length > 0 ? (
-          <RecipeList recipes={filteredRecipes} editor={editor} onApply={onApply} />
+          <RecipeList
+            recipes={filteredRecipes}
+            editor={editor}
+            onApply={onApply}
+          />
         ) : (
           <div className="flex h-full min-h-40 flex-col items-center justify-center px-5 text-center">
-            <MagnifyingGlassIcon size={20} className="mb-3 text-[var(--color-code-muted)]" />
-            <p className="text-xs font-medium text-[var(--color-fg)]">No recipes found</p>
+            <MagnifyingGlassIcon
+              size={20}
+              className="mb-3 text-[var(--color-code-muted)]"
+            />
+            <p className="text-xs font-medium text-[var(--color-fg)]">
+              No recipes found
+            </p>
             <p className="mt-1 max-w-[22ch] text-[11px] leading-relaxed text-[var(--color-fg-muted)]">
               Try another term or clear the current filters.
             </p>
@@ -257,7 +269,8 @@ export function PlaygroundSidebar({
   const filteredRecipes = useMemo(
     () =>
       MOTIONWIND_RECIPES.filter((recipe) => {
-        const categoryMatches = category === "all" || recipe.category === category;
+        const categoryMatches =
+          category === "all" || recipe.category === category;
         if (!categoryMatches) return false;
         if (!deferredQuery) return true;
         return `${recipe.name} ${recipe.id} ${recipe.category} ${recipe.classes}`
@@ -311,7 +324,10 @@ export function PlaygroundSidebar({
         <SidebarContent {...sharedProps} />
       </aside>
 
-      <Dialog.Root open={mobileOpen} onOpenChange={(open) => !open && onCloseMobile()}>
+      <Dialog.Root
+        open={mobileOpen}
+        onOpenChange={(open) => !open && onCloseMobile()}
+      >
         <Dialog.Portal>
           <Dialog.Overlay className="mobile-drawer-overlay fixed inset-0 z-[100] bg-black/55 md:hidden" />
           <Dialog.Content className="mobile-drawer-content fixed inset-y-0 left-0 z-[200] h-[100dvh] w-[min(88vw,280px)] border-r border-[var(--color-border)] bg-[var(--color-bg)] focus:outline-none md:hidden">
@@ -321,7 +337,10 @@ export function PlaygroundSidebar({
         </Dialog.Portal>
       </Dialog.Root>
 
-      <FeedbackDialog open={feedbackOpen} onOpenChange={handleFeedbackOpenChange} />
+      <FeedbackDialog
+        open={feedbackOpen}
+        onOpenChange={handleFeedbackOpenChange}
+      />
     </>
   );
 }

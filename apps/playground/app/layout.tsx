@@ -66,9 +66,7 @@ export const metadata: Metadata = {
   },
 };
 
-const fontVars = [geistSans, geistMono]
-  .map((f) => f.variable)
-  .join(" ");
+const fontVars = [geistSans, geistMono].map((f) => f.variable).join(" ");
 
 export default function RootLayout({
   children,

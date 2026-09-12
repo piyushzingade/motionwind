@@ -13,7 +13,12 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button type="button" className={buttonClassName} aria-label="Toggle theme" disabled>
+      <button
+        type="button"
+        className={buttonClassName}
+        aria-label="Toggle theme"
+        disabled
+      >
         <span className="h-4 w-4" />
       </button>
     );
