@@ -8,7 +8,11 @@ import {
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend: Resend | null = null;
+function getResendClient(): Resend {
+  if (!resend) resend = new Resend(process.env.RESEND_API_KEY);
+  return resend;
+}
 
 const FEEDBACK_TO = process.env.FEEDBACK_TO_EMAIL ?? "piyushzingade@gmail.com";
 const FEEDBACK_FROM =
@@ -109,7 +113,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResendClient().emails.send({
       from: FEEDBACK_FROM,
       to: [FEEDBACK_TO],
       subject: `[motionwind playground] ${body.type}: New feedback`,
