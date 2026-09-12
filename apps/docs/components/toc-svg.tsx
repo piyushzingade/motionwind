@@ -99,14 +99,29 @@ export function TocSvg({
         />
       )}
       {arrowPos && tocProgress > 0.01 && (
-        <circle
-          cx={arrowPos.x}
-          cy={arrowPos.y}
-          r="3"
-          fill="var(--color-accent)"
+        <g
+          className="toc-orb-slide"
+          style={{
+            transform: `translate(${arrowPos.x}px, ${arrowPos.y}px) rotate(${arrowPos.pathAngle}deg)`,
+          }}
           filter="url(#toc-orb-bloom)"
-          className="toc-orb-core"
-        />
+        >
+          {/* Slide trail smeared behind the direction of travel */}
+          <rect
+            x={-16}
+            y={-1.2}
+            width={11}
+            height={2.4}
+            rx={1.2}
+            fill="var(--color-accent)"
+            opacity={0.35}
+          />
+          {/* Diamond head — small kite elongated along the path */}
+          <path
+            d="M -5 0 L 0 -3.2 L 5 0 L 0 3.2 Z"
+            fill="var(--color-accent)"
+          />
+        </g>
       )}
     </svg>
   );
