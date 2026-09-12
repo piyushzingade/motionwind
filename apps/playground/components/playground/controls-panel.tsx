@@ -1,6 +1,7 @@
 "use client";
 
-import { TAGS, TARGETS } from "@/lib/types";
+import type { ElementType } from "react";
+import { TARGETS } from "@/lib/types";
 import type { StudioState, Target } from "@/lib/types";
 import type { MotionwindRecipe } from "motionwind-react";
 import {
@@ -9,14 +10,15 @@ import {
   CodeIcon,
   DevicesIcon,
   FileJsIcon,
-  TriangleIcon,
   WarningCircleIcon,
 } from "@phosphor-icons/react";
+import { VueLogoIcon } from "../vue-logo-icon";
 import { ControlLabel } from "./control-label";
+import { TagSelect } from "./tag-select";
 
-const TARGET_ICONS: Record<Target, typeof AtomIcon> = {
+const TARGET_ICONS: Record<Target, ElementType> = {
   react: AtomIcon,
-  vue: TriangleIcon,
+  vue: VueLogoIcon,
   javascript: FileJsIcon,
   "react-native": DevicesIcon,
 };
@@ -54,19 +56,10 @@ export function ControlsPanel({
           className="w-full resize-y rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-3 font-[family-name:var(--font-mono)] text-[11px] leading-relaxed text-[var(--color-accent)] outline-none transition-[border-color,box-shadow] duration-150 focus:border-[var(--color-accent)]/40 focus:ring-2 focus:ring-[var(--color-accent)]/10"
         />
         <div className="grid grid-cols-2 gap-3 mt-3">
-          <div>
-            <ControlLabel htmlFor="studio-element">Element</ControlLabel>
-            <select
-              id="studio-element"
-              value={editor.tag}
-              onChange={(event) => updateEditor({ tag: event.target.value })}
-              className="h-10 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-2.5 text-xs outline-none transition-[border-color,box-shadow] duration-150 focus:border-[var(--color-accent)]/40 focus:ring-2 focus:ring-[var(--color-accent)]/10"
-            >
-              {TAGS.map((tag) => (
-                <option key={tag}>{tag}</option>
-              ))}
-            </select>
-          </div>
+          <TagSelect
+            value={editor.tag}
+            onChange={(tag) => updateEditor({ tag })}
+          />
           <div>
             <ControlLabel htmlFor="studio-text">Content</ControlLabel>
             <input
