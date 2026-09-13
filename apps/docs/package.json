@@ -12,6 +12,7 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "@repo/ui": "workspace:*",
     "@types/mdx": "^2.0.13",
     "@vercel/analytics": "^2.0.1",

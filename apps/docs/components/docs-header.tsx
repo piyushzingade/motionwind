@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { ThemeToggle } from "./theme-toggle";
-import { SearchDialog } from "./search-dialog";
 
 export function DocsHeader({
   onToggleSidebar,
@@ -46,21 +46,9 @@ export function DocsHeader({
               new KeyboardEvent("keydown", { key: "k", ctrlKey: true }),
             );
           }}
-          className="inline-flex h-8 items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-2.5 text-xs text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)] hover:border-[var(--color-accent)]/20 cursor-pointer"
+          className="inline-flex h-8 items-center gap-2 rounded-lg px-2.5 text-xs text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)] hover:bg-[var(--color-surface-elevated)] cursor-pointer"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.3-4.3" />
-          </svg>
+          <MagnifyingGlassIcon size={15} />
           <span className="hidden sm:inline">Search</span>
           <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1 py-0.5 text-[10px] font-mono text-[var(--color-fg-muted)]/60 bg-[var(--color-bg)] border border-[var(--color-border)] rounded">
             <span className="text-[9px]">⌘</span>K
@@ -88,7 +76,6 @@ export function DocsHeader({
           )}
         </Link>
       </div>
-      <SearchDialog />
     </header>
   );
 }

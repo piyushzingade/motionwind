@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId } from "react";
+import { useEffect } from "react";
 import {
   motion,
   useReducedMotion,
@@ -9,7 +9,7 @@ import {
 } from "motion/react";
 
 const SPRING = { stiffness: 180, damping: 20 };
-const TAIL_SIZE = 72;
+const TAIL_LENGTH = 72;
 
 export function TocIndicator({
   path,
@@ -27,10 +27,8 @@ export function TocIndicator({
   scrollDirection: "down" | "up";
 }) {
   const animatedDistance = useSpring(0, SPRING);
-  const tailRotation = useSpring(90, SPRING);
-  const tailOffset = useSpring(-TAIL_SIZE / 2, SPRING);
+  const animatedTailStart = useSpring(0, SPRING);
   const reduceMotion = useReducedMotion();
-  const maskId = useId().replace(/:/g, "");
 
   const valid =
     activeIndex >= 0 &&
@@ -40,31 +38,32 @@ export function TocIndicator({
   const target = valid ? (centerDistances[activeIndex] ?? 0) : 0;
 
   useEffect(() => {
-    const rotation = scrollDirection === "down" ? 90 : -90;
-    const offset = scrollDirection === "down" ? -TAIL_SIZE / 2 : TAIL_SIZE / 2;
+    const tailStart =
+      scrollDirection === "down"
+        ? Math.max(0, target - TAIL_LENGTH)
+        : Math.min(target, Math.max(0, totalLength - TAIL_LENGTH));
 
     if (reduceMotion) {
       animatedDistance.jump(target);
-      tailRotation.jump(rotation);
-      tailOffset.jump(offset);
+      animatedTailStart.jump(tailStart);
       return;
     }
 
     animatedDistance.set(target);
-    tailRotation.set(rotation);
-    tailOffset.set(offset);
+    animatedTailStart.set(tailStart);
   }, [
     target,
     scrollDirection,
+    totalLength,
     animatedDistance,
-    tailOffset,
-    tailRotation,
+    animatedTailStart,
     reduceMotion,
   ]);
 
   const offsetDistance = useTransform(animatedDistance, (v) =>
     totalLength > 0 ? `${(v / totalLength) * 100}%` : "0%",
   );
+  const tailDashOffset = useTransform(animatedTailStart, (v) => -v);
 
   const offsetPath = `path('${path}')`;
   return (
@@ -78,40 +77,20 @@ export function TocIndicator({
         height={height}
         className="absolute inset-0 overflow-visible"
       >
-        <defs>
-          <mask id={maskId} maskUnits="userSpaceOnUse">
-            <path
-              d={path}
-              fill="none"
-              stroke="white"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </mask>
-        </defs>
-      </svg>
-      {!reduceMotion && valid && (
-        <div
-          className="absolute inset-0 overflow-visible"
-          style={{ mask: `url(#${maskId})`, WebkitMask: `url(#${maskId})` }}
-        >
-          <motion.div
-            className="absolute left-0 top-0"
-            style={{
-              width: TAIL_SIZE,
-              height: TAIL_SIZE,
-              offsetPath,
-              offsetDistance,
-              offsetRotate: "0deg",
-              rotate: tailRotation,
-              marginTop: tailOffset,
-              background:
-                "linear-gradient(90deg, transparent 0%, var(--color-accent) 100%)",
-            }}
+        {!reduceMotion && valid && (
+          <motion.path
+            d={path}
+            fill="none"
+            stroke="var(--color-accent)"
+            strokeOpacity="0.72"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeDasharray={`${TAIL_LENGTH} ${totalLength + TAIL_LENGTH}`}
+            style={{ strokeDashoffset: tailDashOffset }}
           />
-        </div>
-      )}
+        )}
+      </svg>
       <motion.div
         className="absolute left-0 top-0 size-[7px] rounded-[1.5px] bg-[var(--color-accent)]"
         style={{

@@ -2,6 +2,14 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  FileTextIcon,
+  MagnifyingGlassIcon,
+  KeyReturnIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 
 interface SearchItem {
   title: string;
@@ -221,28 +229,24 @@ export function SearchDialog() {
   let itemIndex = -1;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 bg-[var(--color-bg)]/60 backdrop-blur-sm"
         onClick={() => setOpen(false)}
       />
-      <div className="relative w-full max-w-lg mx-4 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl shadow-2xl overflow-hidden">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search documentation"
+        className="relative flex max-h-[min(76dvh,42rem)] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] shadow-2xl"
+      >
         {/* Search input */}
-        <div className="flex items-center gap-3 px-4 border-b border-[var(--color-border)]">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        <div className="flex items-center gap-3 border-b border-[var(--color-border)] px-5">
+          <MagnifyingGlassIcon
+            size={19}
+            weight="regular"
             className="shrink-0 text-[var(--color-fg-muted)]"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.3-4.3" />
-          </svg>
+          />
           <input
             ref={inputRef}
             type="text"
@@ -250,15 +254,20 @@ export function SearchDialog() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="flex-1 h-12 bg-transparent text-[var(--color-fg)] placeholder:text-[var(--color-fg-muted)]/50 outline-none text-sm"
+            className="h-14 flex-1 bg-transparent text-[15px] text-[var(--color-fg)] outline-none placeholder:text-[var(--color-fg-muted)]/50"
           />
-          <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono text-[var(--color-fg-muted)]/60 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded">
-            ESC
-          </kbd>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            aria-label="Close search"
+            className="inline-flex size-9 cursor-pointer items-center justify-center rounded-lg text-[var(--color-fg-muted)] transition-colors hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-fg)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+          >
+            <XIcon size={17} />
+          </button>
         </div>
 
         {/* Results */}
-        <div ref={listRef} className="max-h-80 overflow-y-auto p-2">
+        <div ref={listRef} className="min-h-0 flex-1 overflow-y-auto p-3">
           {flatFiltered.length === 0 ? (
             <div className="py-8 text-center text-sm text-[var(--color-fg-muted)]/60">
               No results found for &quot;{query}&quot;
@@ -283,20 +292,11 @@ export function SearchDialog() {
                           : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] hover:bg-[var(--color-surface-elevated)]"
                       }`}
                     >
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="shrink-0 opacity-40"
-                      >
-                        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-                        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-                      </svg>
+                      <FileTextIcon
+                        size={16}
+                        weight={isSelected ? "duotone" : "regular"}
+                        className="shrink-0 opacity-60"
+                      />
                       <span className="truncate">{item.title}</span>
                     </Link>
                   );
@@ -309,17 +309,17 @@ export function SearchDialog() {
         {/* Footer */}
         <div className="flex items-center gap-4 px-4 py-2 border-t border-[var(--color-border)] text-[10px] text-[var(--color-fg-muted)]/50">
           <span className="flex items-center gap-1">
-            <kbd className="px-1 py-0.5 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded font-mono">
-              ↑
+            <kbd className="inline-flex size-5 items-center justify-center rounded border border-[var(--color-border)] bg-[var(--color-surface-elevated)] font-mono">
+              <ArrowUpIcon size={11} />
             </kbd>
-            <kbd className="px-1 py-0.5 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded font-mono">
-              ↓
+            <kbd className="inline-flex size-5 items-center justify-center rounded border border-[var(--color-border)] bg-[var(--color-surface-elevated)] font-mono">
+              <ArrowDownIcon size={11} />
             </kbd>
             navigate
           </span>
           <span className="flex items-center gap-1">
-            <kbd className="px-1 py-0.5 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded font-mono">
-              ↵
+            <kbd className="inline-flex size-5 items-center justify-center rounded border border-[var(--color-border)] bg-[var(--color-surface-elevated)] font-mono">
+              <KeyReturnIcon size={11} />
             </kbd>
             open
           </span>

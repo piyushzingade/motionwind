@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { DocsSidebar } from "./sidebar/docs-sidebar";
 import { DocsHeader } from "./docs-header";
+import { SearchDialog } from "./search-dialog";
 
 export function DocsLayoutClient({
   children,
@@ -66,6 +67,7 @@ export function DocsLayoutClient({
           <div className="blur-layer blur-6" />
         </div>
       </div>
+      <SearchDialog />
     </div>
   );
 }
