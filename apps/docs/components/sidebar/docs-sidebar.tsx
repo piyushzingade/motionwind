@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LazyMotion, domAnimation, m, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { WEB_SIDEBAR, RN_SIDEBAR, type Platform } from "./sidebar-items";
 import { FeedbackDialog } from "./feedback-dialog";
 
@@ -77,8 +77,6 @@ export function DocsSidebar({
   const pathname = usePathname();
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
-  // Platform is derived from the URL — React Native docs live under
-  // /docs/react-native; everything else is Web.
   const platform: Platform = pathname.startsWith("/docs/react-native")
     ? "react-native"
     : "web";
@@ -179,16 +177,17 @@ export function DocsSidebar({
   );
 
   return (
-    <LazyMotion features={domAnimation}>
-      {/* Desktop sidebar — collapsible */}
-      <m.aside
-        initial={false}
-        animate={{ width: desktopCollapsed ? 0 : 260 }}
-        transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="hidden md:flex h-screen flex-shrink-0 flex-col border-r border-dashed border-[var(--color-border)] bg-[var(--color-bg)] overflow-hidden"
+    <>
+      {/* Desktop sidebar — collapsible via CSS transition */}
+      <aside
+        style={{
+          width: desktopCollapsed ? 0 : 260,
+          transition: "width 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        }}
+        className="max-md:hidden md:flex h-screen flex-shrink-0 flex-col border-r border-dashed border-[var(--color-border)] bg-[var(--color-bg)] overflow-hidden"
       >
         <div className="w-[260px] h-full">{sidebarContent}</div>
-      </m.aside>
+      </aside>
 
       {/* Mobile overlay */}
       <AnimatePresence>
@@ -223,6 +222,6 @@ export function DocsSidebar({
           </>
         )}
       </AnimatePresence>
-    </LazyMotion>
+    </>
   );
 }
