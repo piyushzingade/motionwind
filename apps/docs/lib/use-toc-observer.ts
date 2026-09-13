@@ -21,18 +21,31 @@ export function useTocObserver(
   const mounted = useMounted();
   const [scrollDir, setScrollDir] = useState<"down" | "up">("down");
 
-  const obsRef = useRef<IntersectionObserver | null>(null);
   const navRef = useRef<HTMLElement>(null);
-  const isClickScrolling = useRef(false);
-  const clickTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastScrollTop = useRef(0);
+  const headingOffsets = useRef<number[]>([]);
 
-  /* scroll progress */
+  /* Scroll progress and active heading share one deterministic reading line. */
   useEffect(() => {
     const container = getScrollContainer();
-    if (!container) return;
+    if (!container || !items.length || !mounted) return;
 
-    const fn = () => {
+    let frame = 0;
+
+    const measure = () => {
+      const containerTop = container.getBoundingClientRect().top;
+      headingOffsets.current = items.map((item) => {
+        const heading = document.getElementById(item.url.slice(1));
+        if (!heading) return Number.POSITIVE_INFINITY;
+        return (
+          heading.getBoundingClientRect().top -
+          containerTop +
+          container.scrollTop
+        );
+      });
+    };
+
+    const update = () => {
       const scrollTop = container.scrollTop;
       const scrollH = container.scrollHeight - container.clientHeight;
       setScrollPct(scrollH > 0 ? Math.min(scrollTop / scrollH, 1) : 0);
@@ -42,39 +55,53 @@ export function useTocObserver(
         setScrollDir(delta > 0 ? "down" : "up");
       }
       lastScrollTop.current = scrollTop;
-    };
 
-    container.addEventListener("scroll", fn, { passive: true });
-    fn();
-    return () => container.removeEventListener("scroll", fn);
-  }, [mounted]);
-
-  /* active heading */
-  useEffect(() => {
-    if (!items.length || !mounted) return;
-
-    const container = getScrollContainer();
-
-    obsRef.current = new IntersectionObserver(
-      (entries) => {
-        if (isClickScrolling.current) return;
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            const id = e.target.id;
-            setActiveId(id);
-            const idx = items.findIndex((it) => it.url.slice(1) === id);
-            if (idx !== -1) setActiveIndex(idx);
+      let nextIndex = 0;
+      if (scrollH > 0 && scrollTop >= scrollH - 1) {
+        nextIndex = items.length - 1;
+      } else {
+        const readingLine =
+          scrollTop + Math.min(112, container.clientHeight * 0.25);
+        for (let i = 0; i < headingOffsets.current.length; i++) {
+          if ((headingOffsets.current[i] ?? Infinity) <= readingLine) {
+            nextIndex = i;
+          } else {
+            break;
           }
         }
-      },
-      { root: container, rootMargin: "-80px 0px -75% 0px" },
-    );
+      }
 
-    for (const it of items) {
-      const el = document.getElementById(it.url.slice(1));
-      if (el) obsRef.current.observe(el);
-    }
-    return () => obsRef.current?.disconnect();
+      const nextId = items[nextIndex]?.url.slice(1) ?? "";
+      setActiveIndex((current) =>
+        current === nextIndex ? current : nextIndex,
+      );
+      setActiveId((current) => (current === nextId ? current : nextId));
+    };
+
+    const requestUpdate = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(update);
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      measure();
+      requestUpdate();
+    });
+
+    measure();
+    update();
+    resizeObserver.observe(container);
+    const article = container.querySelector(".docs-page");
+    if (article) resizeObserver.observe(article);
+    container.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+      container.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+    };
   }, [items, mounted]);
 
   /* Auto-scroll TOC sidebar */
@@ -108,9 +135,6 @@ export function useTocObserver(
       const id = url.slice(1);
       const el = document.getElementById(id);
       if (el) {
-        isClickScrolling.current = true;
-        if (clickTimeout.current) clearTimeout(clickTimeout.current);
-
         const container = getScrollContainer();
         if (container) {
           const elTop =
@@ -119,17 +143,10 @@ export function useTocObserver(
             container.scrollTop;
           container.scrollTo({ top: elTop - 80, behavior: "smooth" });
         }
-        setActiveId(id);
-        const idx = items.findIndex((it) => it.url.slice(1) === id);
-        if (idx !== -1) setActiveIndex(idx);
         history.replaceState(null, "", url);
-
-        clickTimeout.current = setTimeout(() => {
-          isClickScrolling.current = false;
-        }, 600);
       }
     },
-    [items],
+    [],
   );
 
   return {
