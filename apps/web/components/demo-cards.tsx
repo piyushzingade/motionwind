@@ -34,13 +34,13 @@ const TOP_EXAMPLE_IDS = [
   "parallax-scroll",
 ] as const;
 
-const CATEGORY_FILTERS: { id: Category; label: string }[] = [
-  { id: "top", label: "Top examples" },
-  { id: "interaction", label: "Interaction" },
-  { id: "entrance", label: "Entrance" },
-  { id: "layout", label: "Layout" },
-  { id: "loading", label: "Loading" },
-  { id: "scroll", label: "Scroll" },
+const CATEGORY_FILTERS: { id: Category; label: string; icon: string }[] = [
+  { id: "top", label: "All", icon: "◈" },
+  { id: "interaction", label: "Interaction", icon: "◉" },
+  { id: "entrance", label: "Entrance", icon: "↗" },
+  { id: "layout", label: "Layout", icon: "⊞" },
+  { id: "loading", label: "Loading", icon: "◌" },
+  { id: "scroll", label: "Scroll", icon: "↕" },
 ];
 
 const TAG_BY_RECIPE: Record<string, string> = {
@@ -54,17 +54,6 @@ const TAG_BY_RECIPE: Record<string, string> = {
   "parallax-scroll": "div",
 };
 
-const PREVIEW_WALL_IDS: readonly string[] = [
-  "dialog-enter",
-  "loading-orbit",
-  "menu-pop",
-  "tab-indicator",
-  "toast-enter",
-  "svg-line-loader",
-  "scroll-progress",
-  "skeleton-pulse",
-] as const;
-
 export function DemoCards() {
   const recipes = useMemo(
     () =>
@@ -73,6 +62,7 @@ export function DemoCards() {
       ).filter(Boolean) as MotionwindRecipe[],
     [],
   );
+
   const [category, setCategory] = useState<Category>("top");
   const visibleRecipes = useMemo(
     () =>
@@ -81,6 +71,7 @@ export function DemoCards() {
         : recipes.filter((recipe) => recipe.category === category),
     [category, recipes],
   );
+
   const [activeId, setActiveId] = useState(recipes[0]?.id ?? "");
 
   useEffect(() => {
@@ -106,11 +97,18 @@ export function DemoCards() {
   return (
     <section
       id="demos"
-      className="section-anchor relative overflow-hidden px-4 py-16 sm:px-6 sm:py-22 lg:py-24"
+      className="section-anchor relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
     >
       <div className="mx-auto max-w-7xl">
+        {/* ── Header ── */}
         <Reveal>
-          <div className="mb-8 max-w-2xl sm:mb-10">
+          <div className="mb-12 max-w-2xl sm:mb-14">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/20 bg-accent/8 px-3 py-1 font-[family-name:var(--font-mono)] text-[11px] text-accent">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
+                Interactive demos
+              </span>
+            </div>
             <h2 className="text-balance text-3xl font-semibold tracking-[-0.035em] text-fg sm:text-4xl md:text-5xl">
               The examples are the API.
             </h2>
@@ -121,66 +119,77 @@ export function DemoCards() {
           </div>
         </Reveal>
 
-        <Reveal y={18}>
-          <div className="mb-5 flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+        {/* ── Filters ── */}
+        <Reveal y={14}>
+          <div className="mb-8 flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             {CATEGORY_FILTERS.map((filter) => (
               <button
                 key={filter.id}
                 type="button"
                 aria-pressed={category === filter.id}
                 onClick={() => setCategory(filter.id)}
-                className="shrink-0 cursor-pointer rounded-lg border border-border bg-surface-elevated px-3 py-2 text-xs font-medium text-fg-muted transition-colors hover:border-accent/30 hover:text-fg active:scale-[0.98] aria-pressed:border-accent/30 aria-pressed:bg-accent/10 aria-pressed:text-accent"
+                className="shrink-0 cursor-pointer rounded-full border border-border bg-surface-elevated px-4 py-2 text-xs font-medium text-fg-muted transition-all hover:border-accent/30 hover:text-fg active:scale-[0.97] aria-pressed:border-accent/40 aria-pressed:bg-accent/10 aria-pressed:text-accent aria-pressed:shadow-[0_0_12px_-4px_var(--accent-glow)]"
               >
+                <span className="mr-1.5 opacity-60">{filter.icon}</span>
                 {filter.label}
               </button>
             ))}
           </div>
         </Reveal>
 
-        <Reveal y={20}>
-          <div className="mb-5 grid grid-flow-dense gap-3 md:grid-cols-4">
-            {recipes
-              .filter((recipe) => PREVIEW_WALL_IDS.includes(recipe.id))
-              .map((recipe, index) => (
-                <button
-                  key={recipe.id}
-                  type="button"
-                  onClick={() => {
-                    setCategory("top");
-                    setActiveId(recipe.id);
-                  }}
-                  className={`group min-h-36 cursor-pointer overflow-hidden rounded-xl border border-border bg-surface-elevated text-left shadow-[0_18px_60px_-54px_var(--color-shadow)] transition-colors hover:border-accent/30 active:scale-[0.99] ${
-                    index === 0 || index === 4 ? "md:col-span-2" : ""
-                  }`}
-                >
-                  <div className="studio-checker flex h-28 items-center justify-center overflow-hidden p-4">
-                    <MiniRecipePreview recipe={recipe} />
+        {/* ── Preview grid ── */}
+        <Reveal y={18}>
+          <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {visibleRecipes.map((recipe) => (
+              <button
+                key={recipe.id}
+                type="button"
+                onClick={() => setActiveId(recipe.id)}
+                className={`group relative cursor-pointer overflow-hidden rounded-2xl border bg-surface-elevated text-left transition-all duration-200 ${
+                  recipe.id === activeRecipe.id
+                    ? "border-accent/40 shadow-[0_0_24px_-6px_var(--accent-glow)]"
+                    : "border-border hover:border-accent/25 hover:shadow-[0_12px_40px_-12px_var(--color-shadow)]"
+                }`}
+              >
+                {/* Preview area */}
+                <div className="studio-checker flex h-32 items-center justify-center overflow-hidden p-4 sm:h-36">
+                  <MiniRecipePreview recipe={recipe} />
+                </div>
+
+                {/* Card footer */}
+                <div className="border-t border-border-subtle px-3.5 py-2.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="truncate text-[13px] font-medium text-fg">
+                      {recipe.name}
+                    </span>
+                    <span className="shrink-0 rounded-md bg-surface px-2 py-0.5 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-wider text-code-muted">
+                      {recipe.category}
+                    </span>
                   </div>
-                  <div className="border-t border-border-subtle px-4 py-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-sm font-semibold text-fg">
-                        {recipe.name}
-                      </span>
-                      <span className="font-[family-name:var(--font-mono)] text-[10px] text-code-muted group-hover:text-accent">
-                        {recipe.category}
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              ))}
+                </div>
+
+                {/* Active indicator */}
+                {recipe.id === activeRecipe.id && (
+                  <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent" />
+                )}
+              </button>
+            ))}
           </div>
         </Reveal>
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.16fr)_minmax(300px,0.84fr)]">
-          <Reveal y={24}>
+        {/* ── Showcase ── */}
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
+          {/* Main preview */}
+          <Reveal y={22}>
             <RecipeShowcase
               recipe={activeRecipe}
               generatedCode={generatedCode}
             />
           </Reveal>
 
-          <Reveal y={24} delay={0.08}>
-            <div className="grid max-h-[700px] gap-3 overflow-y-auto pr-1 sm:grid-cols-2 lg:grid-cols-1">
+          {/* Recipe list */}
+          <Reveal y={22} delay={0.06}>
+            <div className="grid max-h-[680px] gap-2.5 overflow-y-auto pr-1 scrollbar-thin">
               {visibleRecipes.map((recipe) => (
                 <RecipeTile
                   key={recipe.id}
@@ -197,6 +206,8 @@ export function DemoCards() {
   );
 }
 
+/* ── Showcase ── */
+
 function RecipeShowcase({
   recipe,
   generatedCode,
@@ -207,30 +218,35 @@ function RecipeShowcase({
   const classSnippet = `<${getRecipeTag(recipe)} className="${recipe.classes}">`;
 
   return (
-    <article className="overflow-hidden rounded-[1.4rem] border border-border bg-surface-elevated shadow-[0_24px_80px_-60px_var(--color-shadow)]">
+    <article className="overflow-hidden rounded-2xl border border-border bg-surface-elevated shadow-[0_32px_80px_-60px_var(--color-shadow)]">
+      {/* Header */}
       <div className="border-b border-border-subtle p-5 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="font-[family-name:var(--font-mono)] text-[11px] text-accent">
-              {recipe.category}
-            </p>
-            <h3 className="mt-2 text-2xl font-semibold tracking-[-0.025em] text-fg">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="rounded-md bg-accent/10 px-2 py-0.5 font-[family-name:var(--font-mono)] text-[10px] font-medium text-accent">
+                {recipe.category}
+              </span>
+              <span className="rounded-md border border-border bg-surface px-2 py-0.5 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
+                {recipe.adapters.join(" / ")}
+              </span>
+            </div>
+            <h3 className="text-2xl font-semibold tracking-[-0.025em] text-fg">
               {recipe.name}
             </h3>
           </div>
-          <span className="rounded-md border border-border bg-surface px-2.5 py-1 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
-            {recipe.adapters.join(" / ")}
-          </span>
         </div>
-        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-fg-muted">
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-fg-muted">
           {recipe.description}
         </p>
       </div>
 
-      <div className="studio-checker flex min-h-[300px] items-center justify-center overflow-hidden p-6">
+      {/* Preview */}
+      <div className="studio-checker flex min-h-[320px] items-center justify-center overflow-hidden p-8">
         <RecipePreview recipe={recipe} />
       </div>
 
+      {/* Code output */}
       <div className="grid border-t border-border-subtle lg:grid-cols-2">
         <CodeBlock title="Motionwind classes" code={classSnippet} />
         <CodeBlock title="Generated Motion output" code={generatedCode} />
@@ -238,6 +254,8 @@ function RecipeShowcase({
     </article>
   );
 }
+
+/* ── Recipe Tile ── */
 
 function RecipeTile({
   recipe,
@@ -253,36 +271,50 @@ function RecipeTile({
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className="group cursor-pointer rounded-xl border border-border bg-surface-elevated p-4 text-left transition-colors hover:border-accent/30 active:scale-[0.99] aria-pressed:border-accent/40 aria-pressed:bg-accent/10"
+      className={`group cursor-pointer rounded-xl border p-3.5 text-left transition-all duration-150 active:scale-[0.98] ${
+        active
+          ? "border-accent/40 bg-accent/8 shadow-[0_0_16px_-4px_var(--accent-glow)]"
+          : "border-border bg-surface-elevated hover:border-accent/25"
+      }`}
     >
-      <span className="flex items-start justify-between gap-3">
-        <span className="text-sm font-semibold text-fg">{recipe.name}</span>
-        <span className="font-[family-name:var(--font-mono)] text-[10px] text-code-muted group-aria-pressed:text-accent">
+      <div className="flex items-start justify-between gap-2">
+        <span className="text-[13px] font-medium text-fg">{recipe.name}</span>
+        <span
+          className={`shrink-0 rounded-md px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-[9px] ${
+            active
+              ? "bg-accent/15 text-accent"
+              : "bg-surface text-code-muted group-hover:text-accent"
+          }`}
+        >
           {recipe.category}
         </span>
-      </span>
-      <span className="mt-2 block text-xs leading-relaxed text-code-muted">
+      </div>
+      <span className="mt-1.5 block text-xs leading-relaxed text-code-muted line-clamp-2">
         {recipe.description}
       </span>
-      <code className="mt-3 block truncate rounded-md bg-code-bg px-3 py-2 font-[family-name:var(--font-mono)] text-[10px] text-accent/80">
+      <code className="mt-2.5 block truncate rounded-md bg-code-bg px-2.5 py-1.5 font-[family-name:var(--font-mono)] text-[10px] text-accent/70">
         {recipe.classes}
       </code>
     </button>
   );
 }
 
+/* ── Code Block ── */
+
 function CodeBlock({ title, code }: { title: string; code: string }) {
   return (
     <div className="min-w-0 border-t border-border-subtle p-4 first:border-t-0 lg:border-l lg:border-t-0 lg:first:border-l-0">
-      <div className="mb-3 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
+      <div className="mb-2.5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider text-code-muted">
         {title}
       </div>
-      <pre className="max-h-[280px] overflow-auto rounded-lg border border-border-subtle bg-code-bg p-3 font-[family-name:var(--font-mono)] text-[11px] leading-5">
+      <pre className="max-h-[260px] overflow-auto rounded-xl border border-border-subtle bg-code-bg p-3 font-[family-name:var(--font-mono)] text-[11px] leading-5">
         <code>{highlightCode(code)}</code>
       </pre>
     </div>
   );
 }
+
+/* ── Previews ── */
 
 function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
   switch (recipe.id) {
@@ -483,6 +515,8 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
   }
 }
 
+/* ── Mini Previews ── */
+
 function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
   switch (recipe.id) {
     case "dialog-enter":
@@ -588,6 +622,8 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
   }
 }
 
+/* ── Tab Indicator Preview ── */
+
 function TabIndicatorPreview({ recipe }: { recipe: MotionwindRecipe }) {
   const [active, setActive] = useState("Preview");
   const tabs = ["Preview", "Classes", "Output"];
@@ -614,6 +650,8 @@ function TabIndicatorPreview({ recipe }: { recipe: MotionwindRecipe }) {
     </div>
   );
 }
+
+/* ── Helpers ── */
 
 function getRecipeTag(recipe: MotionwindRecipe) {
   return TAG_BY_RECIPE[recipe.id] ?? "div";
