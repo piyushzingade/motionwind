@@ -6,8 +6,8 @@ export interface TOCItem {
   depth: number;
 }
 
-export const SPINE_X = 5;
-export const INDENT_X = 16;
+export const SPINE_X = 8;
+export const INDENT_X = 18;
 export const SVG_W = 22;
 
 /** Fixed vertical room reserved for a bend between two depths. */
@@ -53,7 +53,9 @@ export function generateIndicatorPath(
   const centerDistances: number[] = [];
 
   let currentX = xFor(items[0]!.depth);
-  let currentY = rows[0]!.top + rows[0]!.height / 2;
+  // Start above the first row so the spine always enters the first marker.
+  // Starting at its center made the top segment disappear entirely.
+  let currentY = Math.max(0, rows[0]!.top - DEPTH_BEND_LENGTH);
   let accumulated = 0;
 
   parts.push(`M ${currentX} ${currentY}`);

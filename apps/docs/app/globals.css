@@ -691,10 +691,6 @@ figure.shiki pre::-webkit-scrollbar {
   overflow: visible;
 }
 
-.toc-path-fill {
-  transition: stroke-dashoffset 0.35s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
 /* ── TOC list ── */
 .toc-list {
   list-style: none;
