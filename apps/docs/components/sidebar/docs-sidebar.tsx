@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -77,16 +77,18 @@ export function DocsSidebar({
   const pathname = usePathname();
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
+  const onClose = useEffectEvent(() => onCloseMobile());
+
   useEffect(() => {
     if (!mobileOpen) return;
 
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onCloseMobile();
+      if (event.key === "Escape") onClose();
     };
 
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
-  }, [mobileOpen, onCloseMobile]);
+  }, [mobileOpen]);
 
   const platform: Platform = pathname.startsWith("/docs/react-native")
     ? "react-native"
