@@ -27,6 +27,7 @@ export function TocIndicator({
   scrollDirection: "down" | "up";
 }) {
   const animatedDistance = useSpring(0, SPRING);
+  const animatedTailStart = useSpring(0, SPRING);
   const reduceMotion = useReducedMotion();
 
   const valid =
@@ -37,24 +38,32 @@ export function TocIndicator({
   const target = valid ? (centerDistances[activeIndex] ?? 0) : 0;
 
   useEffect(() => {
+    const tailStart =
+      scrollDirection === "down"
+        ? Math.max(0, target - TAIL_LENGTH)
+        : Math.min(target, Math.max(0, totalLength - TAIL_LENGTH));
+
     if (reduceMotion) {
       animatedDistance.jump(target);
+      animatedTailStart.jump(tailStart);
       return;
     }
 
     animatedDistance.set(target);
-  }, [target, animatedDistance, reduceMotion]);
+    animatedTailStart.set(tailStart);
+  }, [
+    target,
+    scrollDirection,
+    totalLength,
+    animatedDistance,
+    animatedTailStart,
+    reduceMotion,
+  ]);
 
   const offsetDistance = useTransform(animatedDistance, (v) =>
     totalLength > 0 ? `${(v / totalLength) * 100}%` : "0%",
   );
-  const tailDashOffset = useTransform(animatedDistance, (distance) => {
-    const start =
-      scrollDirection === "down"
-        ? Math.max(0, distance - TAIL_LENGTH)
-        : Math.min(distance, Math.max(0, totalLength - TAIL_LENGTH));
-    return -start;
-  });
+  const tailDashOffset = useTransform(animatedTailStart, (v) => -v);
 
   const offsetPath = `path('${path}')`;
   return (
