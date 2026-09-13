@@ -39,13 +39,6 @@ export const CATEGORY_ICONS: Record<Category, typeof CursorClickIcon> = {
 
 export const SIDEBAR_ALL_ICON = SquaresFourIcon;
 
-const ADAPTER_LABELS: Record<string, string> = {
-  react: "React",
-  vue: "Vue",
-  vanilla: "JS",
-  "react-native": "Native",
-};
-
 function RecipeList({
   editor,
   onApply,
@@ -107,18 +100,6 @@ function RecipeList({
                       />
                       <span className="min-w-0 flex-1">
                         <span className="block truncate">{recipe.name}</span>
-                        {isActive ? (
-                          <span className="mt-1.5 flex flex-wrap gap-1">
-                            {recipe.adapters.map((adapter) => (
-                              <span
-                                key={adapter}
-                                className="rounded border border-[var(--color-border)] px-1 py-px font-[family-name:var(--font-mono)] text-[8px] uppercase tracking-[0.08em] text-[var(--color-fg-muted)]"
-                              >
-                                {ADAPTER_LABELS[adapter] ?? adapter}
-                              </span>
-                            ))}
-                          </span>
-                        ) : null}
                       </span>
                     </button>
                   </li>
