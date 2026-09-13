@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LazyMotion, domAnimation, m, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { WEB_SIDEBAR, RN_SIDEBAR, type Platform } from "./sidebar-items";
 import { FeedbackDialog } from "./feedback-dialog";
 
@@ -77,8 +77,19 @@ export function DocsSidebar({
   const pathname = usePathname();
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
-  // Platform is derived from the URL — React Native docs live under
-  // /docs/react-native; everything else is Web.
+  const onClose = useEffectEvent(() => onCloseMobile());
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [mobileOpen]);
+
   const platform: Platform = pathname.startsWith("/docs/react-native")
     ? "react-native"
     : "web";
@@ -154,7 +165,7 @@ export function DocsSidebar({
         <button
           type="button"
           onClick={() => setFeedbackOpen(true)}
-          className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[var(--color-border)] px-3 py-2 text-xs text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-accent)]/30 hover:text-[var(--color-fg)]"
+          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-[var(--color-border)] px-3 py-2 text-xs text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-accent)]/30 hover:text-[var(--color-fg)]"
         >
           <svg
             width="14"
@@ -179,16 +190,22 @@ export function DocsSidebar({
   );
 
   return (
-    <LazyMotion features={domAnimation}>
-      {/* Desktop sidebar — collapsible */}
-      <m.aside
-        initial={false}
-        animate={{ width: desktopCollapsed ? 0 : 260 }}
-        transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="hidden md:flex h-screen flex-shrink-0 flex-col border-r border-dashed border-[var(--color-border)] bg-[var(--color-bg)] overflow-hidden"
+    <>
+      {/* Desktop sidebar — collapsible via CSS transition */}
+      <aside
+        id="docs-sidebar"
+        aria-hidden={desktopCollapsed}
+        inert={desktopCollapsed}
+        style={{
+          width: desktopCollapsed ? 0 : 260,
+          transition: "width 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        }}
+        className={`box-border max-md:hidden md:flex h-screen flex-shrink-0 flex-col border-dashed border-[var(--color-border)] bg-[var(--color-bg)] overflow-hidden ${
+          desktopCollapsed ? "border-r-0" : "border-r"
+        }`}
       >
         <div className="w-[260px] h-full">{sidebarContent}</div>
-      </m.aside>
+      </aside>
 
       {/* Mobile overlay */}
       <AnimatePresence>
@@ -212,17 +229,29 @@ export function DocsSidebar({
               }}
             />
             <m.aside
+              id="docs-sidebar-mobile"
+              aria-label="Documentation navigation"
               initial={{ x: -280 }}
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ duration: 0.3, ease: easeOutQuint }}
               className="fixed left-0 top-0 z-50 h-screen w-[280px] bg-[var(--color-bg)] border-r border-[var(--color-border)] md:hidden"
             >
+              <button
+                type="button"
+                onClick={onCloseMobile}
+                aria-label="Close navigation sidebar"
+                className="absolute right-3 top-3 z-10 inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-[var(--color-fg-muted)] transition-colors hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-fg)]"
+              >
+                <span aria-hidden="true" className="text-lg leading-none">
+                  ×
+                </span>
+              </button>
               {sidebarContent}
             </m.aside>
           </>
         )}
       </AnimatePresence>
-    </LazyMotion>
+    </>
   );
 }
