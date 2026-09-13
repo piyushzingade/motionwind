@@ -185,7 +185,7 @@ export function DocsSidebar({
         initial={false}
         animate={{ width: desktopCollapsed ? 0 : 260 }}
         transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="hidden md:flex h-screen flex-shrink-0 flex-col border-r border-dashed border-[var(--color-border)] bg-[var(--color-bg)] sticky top-0 overflow-hidden"
+        className="hidden md:flex h-screen flex-shrink-0 flex-col border-r border-dashed border-[var(--color-border)] bg-[var(--color-bg)] overflow-hidden"
       >
         <div className="w-[260px] h-full">{sidebarContent}</div>
       </m.aside>
