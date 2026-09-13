@@ -17,32 +17,14 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
   const { activeId, activeIndex, scrollPct, scrollDir, navRef, handleClick } =
     useTocObserver(items, itemEls);
 
-  const { listRef, ys, rows, listH } = useTocMeasure(items, mounted, itemEls);
+  const { listRef, rows, listH } = useTocMeasure(items, mounted, itemEls);
 
-  // One measured path drives the track, the progress fill, and the marker —
-  // lengths are analytic, so no DOM measuring round-trip can deadlock.
+  // One measured path drives the track and marker. Lengths are analytic, so
+  // no DOM measuring round-trip can deadlock.
   const { path, totalLength, centerDistances } = useMemo(
     () => generateIndicatorPath(items, rows),
     [items, rows],
   );
-
-  const tocProgress = useMemo(() => {
-    if (activeIndex < 0 || ys.length < 2) return 0;
-    if (scrollPct > 0.95) return 1;
-    const firstY = ys[0] ?? 0;
-    const lastY = ys[ys.length - 1] ?? 0;
-    const range = lastY - firstY;
-    if (range <= 0) return 0;
-    const activeY = ys[activeIndex] ?? firstY;
-    const raw = (activeY - firstY) / range;
-    return activeIndex === 0 ? Math.max(raw, 0.03) : raw;
-  }, [activeIndex, ys, scrollPct]);
-
-  const dashOff = scrollDir === "down" ? 0 : -(totalLength * tocProgress);
-  const dashLen =
-    scrollDir === "down"
-      ? totalLength * tocProgress
-      : totalLength * (1 - tocProgress);
 
   if (!items.length) return null;
 
@@ -58,20 +40,14 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
       <div className="toc-body">
         {showSpine && (
           <>
-            <TocSvg
-              listH={listH}
-              pathD={path}
-              totalLen={totalLength}
-              dashOff={dashOff}
-              dashLen={dashLen}
-              scrollDir={scrollDir}
-            />
+            <TocSvg listH={listH} pathD={path} />
             <TocIndicator
               path={path}
               totalLength={totalLength}
               centerDistances={centerDistances}
               activeIndex={activeIndex}
               height={listH}
+              scrollDirection={scrollDir}
             />
           </>
         )}
