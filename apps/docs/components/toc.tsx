@@ -38,8 +38,11 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
     return activeIndex === 0 ? Math.max(raw, 0.03) : raw;
   }, [activeIndex, ys, scrollPct]);
 
-  const dashOff =
-    totalLength > 0 ? totalLength * (1 - tocProgress) : totalLength;
+  const dashOff = scrollDir === "down" ? 0 : -(totalLength * tocProgress);
+  const dashLen =
+    scrollDir === "down"
+      ? totalLength * tocProgress
+      : totalLength * (1 - tocProgress);
 
   if (!items.length) return null;
 
@@ -60,6 +63,7 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
               pathD={path}
               totalLen={totalLength}
               dashOff={dashOff}
+              dashLen={dashLen}
               scrollDir={scrollDir}
             />
             <TocIndicator

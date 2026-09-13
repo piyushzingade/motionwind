@@ -5,12 +5,14 @@ export function TocSvg({
   pathD,
   totalLen,
   dashOff,
+  dashLen,
   scrollDir,
 }: {
   listH: number;
   pathD: string;
   totalLen: number;
   dashOff: number;
+  dashLen: number;
   scrollDir: "down" | "up";
 }) {
   return (
@@ -52,7 +54,7 @@ export function TocSvg({
           strokeLinejoin="round"
         />
       )}
-      {pathD && totalLen > 0 && (
+      {pathD && totalLen > 0 && dashLen > 0 && (
         <path
           d={pathD}
           fill="none"
@@ -60,7 +62,7 @@ export function TocSvg({
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          strokeDasharray={totalLen}
+          strokeDasharray={`${dashLen} ${totalLen}`}
           strokeDashoffset={dashOff}
           className="toc-path-fill"
         />
