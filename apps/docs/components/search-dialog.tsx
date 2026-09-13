@@ -223,7 +223,7 @@ export function SearchDialog() {
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]">
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 bg-[var(--color-bg)]/60 backdrop-blur-sm"
         onClick={() => setOpen(false)}
       />
       <div className="relative w-full max-w-lg mx-4 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl shadow-2xl overflow-hidden">

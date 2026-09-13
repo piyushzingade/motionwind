@@ -46,7 +46,7 @@ export function DocsHeader({
               new KeyboardEvent("keydown", { key: "k", ctrlKey: true }),
             );
           }}
-          className="inline-flex h-8 items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-2.5 text-xs text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)] hover:border-[var(--color-accent)]/20 cursor-pointer"
+          className="inline-flex h-8 items-center gap-2 rounded-lg px-2.5 text-xs text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)] hover:bg-[var(--color-surface-elevated)] cursor-pointer"
         >
           <svg
             width="14"
