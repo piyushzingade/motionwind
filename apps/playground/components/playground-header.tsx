@@ -62,15 +62,15 @@ export function PlaygroundHeader({
               ? "Star Motionwind on GitHub"
               : `Star Motionwind on GitHub, ${starCount} stars`
           }
-          className="control-press inline-flex h-7 items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-2.5 text-xs text-[var(--color-fg-muted)] no-underline transition-[border-color,color] duration-150 hover:border-[var(--color-accent)]/20 hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/45"
+          className="control-press inline-flex h-8 items-center gap-2 rounded-[10px] border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-3 text-[13px] text-[var(--color-fg-muted)] no-underline transition-[border-color,color] duration-150 hover:border-[var(--color-accent)]/20 hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/45"
         >
-          <GithubLogoIcon size={12} weight="fill" />
-          <StarIcon size={14} weight="fill" className="text-[#ffd700]" />
+          <GithubLogoIcon size={13} weight="fill" />
+          <StarIcon size={15} weight="fill" className="text-[#ffd700]" />
           <span>Star</span>
           {starCount !== null ? (
             <>
               <span
-                className="h-3 w-px bg-[var(--color-border)]"
+                className="h-4 w-px bg-[var(--color-border)]"
                 aria-hidden="true"
               />
               <span className="tabular-nums">{starCount}</span>
