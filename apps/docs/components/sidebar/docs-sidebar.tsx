@@ -88,7 +88,7 @@ export function DocsSidebar({
 
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
-  }, [mobileOpen]);
+  }, [mobileOpen]); // eslint-disable-line react-hooks/exhaustive-deps -- onClose is an Effect Event, intentionally excluded
 
   const platform: Platform = pathname.startsWith("/docs/react-native")
     ? "react-native"
