@@ -17,7 +17,7 @@ export function DocsHeader({
       <button
         type="button"
         onClick={onToggleSidebar}
-        className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)] hover:bg-[var(--color-surface-elevated)]"
+        className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)] hover:bg-[var(--color-surface-elevated)]"
         aria-label="Toggle sidebar"
       >
         <svg
