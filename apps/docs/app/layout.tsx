@@ -209,6 +209,7 @@ export default function RootLayout({
       </head>
       <body className={`${fontVars} antialiased`}>
         <RootProvider
+          search={{ enabled: false }}
           theme={{
             defaultTheme: "light",
             attribute: "class",
