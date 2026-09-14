@@ -9,6 +9,7 @@ export function TocSvg({ listH, pathD }: { listH: number; pathD: string }) {
           fill="none"
           stroke="var(--color-border)"
           strokeWidth="1.5"
+          strokeDasharray="1 5"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
