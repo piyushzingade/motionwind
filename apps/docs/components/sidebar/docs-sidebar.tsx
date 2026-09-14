@@ -104,7 +104,7 @@ export function DocsSidebar({
         <Link href="/" className="flex items-center gap-2.5 no-underline">
           <MotionwindHorizontalLogo className="h-10 w-44 shrink-0 text-[var(--color-fg)]" />
           <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-fg-muted)]/50 ml-0.5">
-            v0.1
+            v2.2
           </span>
         </Link>
       </div>
