@@ -1,70 +1,148 @@
 ---
 title: "Motionwind v2"
-description: "What is included in Motionwind v2.0.0, how packages are versioned, and how to upgrade safely."
+description: "What shipped in Motionwind v2.0.0, how packages are versioned, and how to upgrade safely."
 ---
 
 # Motionwind v2.0.0
 
-Motionwind v2 is the community release of the shared `animate-*` language. The
-public packages are synchronized at `2.0.0`; internal example and documentation
-applications keep their own private versions because they are not published to
-npm.
+Motionwind v2 is the community release of the shared `animate-*` utility
+language. All public packages are synchronized at version `2.0.0`.
+
+## What's new in v2
+
+### `motionwind-core` — the shared foundation
+
+A single package implements the parser, types, constants, syntax registry,
+configuration, plugins, presets, and adapter contracts. Every official package
+depends on it.
+
+### Typed configuration
+
+`motionwind.config.ts` provides:
+
+- **Duration tokens**: `animate-duration-fast` maps to `160ms`.
+- **Easing tokens**: `animate-ease-product` maps to a cubic-bezier curve.
+- **Spring tokens**: `animate-spring-responsive` maps to stiffness/damping.
+- **Presets**: `animate-preset-card-enter` expands to a full animation class
+  string.
+- **Strict mode**: Error on unknown classes in CI.
+- **Reduced motion**: `"user"`, `"always"`, or `"never"` policy.
+- **Plugins**: Extend with custom properties, presets, and diagnostics.
+
+### `mw.create(Component)`
+
+Wrap design-system components to use `animate-*` classes without changing the
+lowercase host-element compiler path:
+
+```tsx
+const MotionButton = mw.create(Button);
+<MotionButton className="animate-hover:scale-105">Save</MotionButton>;
+```
+
+### `create-motionwind` CLI
+
+A single CLI with four commands:
+
+| Command   | Purpose                                           |
+| --------- | ------------------------------------------------- |
+| `init`    | Detect framework, install packages, create config |
+| `doctor`  | Verify setup, check dependencies, run diagnostics |
+| `migrate` | Apply source code migrations                      |
+| `add`     | Install presets from the registry                 |
+
+### Data-driven syntax registry
+
+The same registry powers parsing, editor completions, formatting, linting,
+Studio, MCP, and AI tools. Adding a new gesture or property updates the entire
+ecosystem.
+
+### Packed-artifact testing
+
+CI installs the same tarballs intended for npm into starter applications for
+Next.js, React/Vite, Vue/Vite, Nuxt, vanilla, and Expo. Tests validate the
+actual published packages, not workspace links.
 
 ## Support tiers
 
-| Tier | Targets | Commitment |
-|---|---|---|
-| Stable | React, Next.js, React/Vite, Vue, Nuxt, vanilla JavaScript | Release and compatibility gates must pass before publishing. |
-| Beta | React Native and Expo | The supported subset is tested; capability gaps produce diagnostics. |
-| Community | Future Svelte, Solid, Astro, and third-party adapters | Maintainer-owned until they meet the official-adapter promotion policy. |
+| Tier      | Frameworks                                     | Commitment                                        |
+| --------- | ---------------------------------------------- | ------------------------------------------------- |
+| Stable    | React, Next.js, React/Vite, Vue, Nuxt, vanilla | Release gates must pass before publishing         |
+| Beta      | React Native, Expo                             | Supported subset tested; gaps produce diagnostics |
+| Community | Svelte, Solid, Astro, third-party adapters     | Maintainer-owned until promotion policy is met    |
 
-## What changed
+## What changed from v1
 
-- `motionwind-core` is the single parser, type, constants, registry, config,
-  plugin, preset, and adapter-contract implementation.
-- `motionwind.config.ts` adds typed duration, easing, spring, and preset tokens,
-  strict diagnostics, reduced-motion policy, plugins, and an adapter target.
-- `animate-preset-{name}` ships reusable interactions such as `button-press`,
-  `dialog-enter`, `list-stagger`, and `page-reveal`.
-- `mw.create(Component)` animates design-system components without changing the
-  lowercase host-element compiler behavior.
-- `create-motionwind` can initialize, diagnose, migrate, and install presets.
-- The ESLint, Prettier, VS Code, MCP, playground, compiler, and adapters read
-  one data-driven syntax registry.
-- Packed-artifact tests install the same tarballs intended for npm into Next.js,
-  React/Vite, Vue/Vite, Nuxt, vanilla, and Expo starter applications.
+| Area           | v1                    | v2                                                    |
+| -------------- | --------------------- | ----------------------------------------------------- |
+| Core           | Per-framework parsers | Single `motionwind-core` parser                       |
+| Config         | Minimal or none       | Typed `motionwind.config.ts` with tokens/presets      |
+| Presets        | None                  | `animate-preset-{name}` for reusable interactions     |
+| Design systems | Custom wrappers       | `mw.create(Component)` typed API                      |
+| CLI            | Basic init            | `init`, `doctor`, `migrate`, `add`                    |
+| Tooling        | Per-framework         | Single registry powers ESLint, Prettier, VS Code, MCP |
+| Testing        | Workspace links       | Packed npm tarballs in starter apps                   |
 
-Motionwind remains focused on the common 80% of interface animation. Use Motion
-or the platform API directly for imperative timelines, custom gesture
-recognizers, and adapter capabilities marked as unsupported.
+## How to upgrade
 
-## Upgrade from an earlier release
-
-The existing `animate-*` syntax and unscoped package names are preserved.
+### 1. Preview changes
 
 ```bash
-# Preview changes without writing or installing anything
 npx create-motionwind@2 init --dry-run
+```
 
-# Apply supported source migrations, then inspect the diff
+### 2. Apply migrations
+
+```bash
 npx create-motionwind@2 migrate src --write
+```
 
-# Verify dependencies and integration files
+This applies supported source code migrations and shows the diff.
+
+### 3. Add `motionwind-core` if needed
+
+If your project imports `defineConfig`, extension helpers, parser types, or the
+registry, add:
+
+```bash
+npm install motionwind-core@2
+```
+
+The CLI does this automatically.
+
+### 4. Verify
+
+```bash
 npx create-motionwind@2 doctor
 ```
 
-Add `motionwind-core@2` to direct dependencies when your project imports
-`defineConfig`, extension helpers, parser types, or the definition registry.
-The framework initializer does this automatically.
+### 5. Pass config to runtime components
 
-For React runtime components or React Native, pass the same config through
-`MotionwindProvider`. Build integrations receive the config in their plugin or
-wrapper call. See [Configuration](/docs/configuration) for exact examples.
+For React or React Native runtime trees:
+
+```tsx
+import { MotionwindProvider } from "motionwind-react";
+import motionwindConfig from "./motionwind.config";
+
+<MotionwindProvider config={motionwindConfig}>
+  <App />
+</MotionwindProvider>;
+```
 
 ## Compatibility policy
 
-`ParsedResult` is the Motion-first intermediate representation stabilized for
-v2. Breaking public behavior follows semantic versioning, canary releases,
-migration guidance, and at least two minor releases of deprecation before
-removal. See the live [Compatibility Matrix](/docs/compatibility) for the exact
-adapter contract.
+`ParsedResult` is the stable intermediate representation for v2. Breaking
+changes follow:
+
+- Semantic versioning
+- Canary releases for early testing
+- Migration guidance in changelogs
+- At least two minor releases of deprecation before removal
+
+## Versioning
+
+All public packages are released together at the same version number. Internal
+apps (docs, playground) keep their own private versions because they are not
+published to npm.
+
+Releases use Changesets for version management, generated changelogs, and npm
+provenance.
