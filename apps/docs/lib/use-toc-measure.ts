@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  useEffect,
+  useLayoutEffect,
   useState,
   useCallback,
   useRef,
@@ -14,30 +14,30 @@ export function useTocMeasure(
   mounted: boolean,
   itemEls: MutableRefObject<(HTMLLIElement | null)[]>,
 ) {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLUListElement | null>(null);
-  const [ys, setYs] = useState<number[]>([]);
   const [rows, setRows] = useState<RowMetrics[]>([]);
   const [listH, setListH] = useState(0);
 
   const measure = useCallback(() => {
+    const wrapper = wrapperRef.current;
     const list = listRef.current;
-    if (!list) return;
-    const lr = list.getBoundingClientRect();
-    setListH(list.offsetHeight);
-    const positions: number[] = [];
+    if (!wrapper || !list) return;
+    const originTop = wrapper.getBoundingClientRect().top;
+    const nextHeight = list.offsetHeight;
     const geometries: RowMetrics[] = [];
     for (let i = 0; i < items.length; i++) {
       const el = itemEls.current[i];
       if (el) {
         const r = el.getBoundingClientRect();
-        positions.push(r.top - lr.top + r.height / 2);
-        geometries.push({ top: r.top - lr.top, height: r.height });
+        geometries.push({ top: r.top - originTop, height: r.height });
       } else {
-        positions.push(0);
         geometries.push({ top: 0, height: 0 });
       }
     }
-    setYs(positions);
+    setListH((previous) =>
+      Math.abs(previous - nextHeight) < 0.5 ? previous : nextHeight,
+    );
     // Bail when nothing moved: the observer fires on our own re-render too,
     // and an unconditional setState would loop.
     setRows((prev) =>
@@ -52,11 +52,13 @@ export function useTocMeasure(
     );
   }, [items, itemEls]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!mounted) return;
-    const t = setTimeout(measure, 50);
+    measure();
     const ro = new ResizeObserver(measure);
+    const wrapper = wrapperRef.current;
     const list = listRef.current;
+    if (wrapper) ro.observe(wrapper);
     if (list) {
       // Observe children too: a late font or a resize can rewrap a heading,
       // which moves every row below it.
@@ -64,10 +66,9 @@ export function useTocMeasure(
       for (const child of Array.from(list.children)) ro.observe(child);
     }
     return () => {
-      clearTimeout(t);
       ro.disconnect();
     };
   }, [measure, mounted]);
 
-  return { listRef, ys, rows, listH };
+  return { wrapperRef, listRef, rows, listH };
 }

@@ -77,9 +77,34 @@
 
 /* ── Base styles ── */
 body {
-  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family:
+    var(--font-sans),
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Landing preview shell uses plain media queries so it remains authoritative
+   alongside Fumadocs' separately compiled Tailwind utility layer. */
+.landing-preview-wrap {
+  position: relative;
+  width: 100%;
+  height: 58dvh;
+  min-height: 430px;
+}
+
+@media (min-width: 1024px) {
+  .landing-preview-wrap {
+    position: absolute;
+    inset-block: 0;
+    right: 0;
+    width: 60%;
+    height: auto;
+    min-height: 0;
+  }
 }
 
 /* ── Scrollbar ── */
@@ -1077,5 +1102,31 @@ figure.shiki pre::-webkit-scrollbar {
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+/* ── Landing hero gutter ───────────────────────────────────────────── */
+/* Unlayered on purpose: fumadocs-ui/style.css ships a second precompiled
+   utilities layer after the app's own Tailwind build, so responsive Tailwind
+   overrides (lg:/xl:) lose to its base utilities for the same property.
+   Plain unlayered CSS always wins over layered CSS. */
+.landing-hero-pad {
+  padding-inline: 2rem;
+}
+@media (min-width: 640px) {
+  .landing-hero-pad {
+    padding-inline: 3rem;
+  }
+}
+@media (min-width: 1024px) {
+  .landing-hero-pad {
+    padding-inline-start: 7rem;
+    padding-inline-end: 3rem;
+  }
+}
+@media (min-width: 1280px) {
+  .landing-hero-pad {
+    padding-inline-start: 10rem;
+    padding-inline-end: 4rem;
   }
 }

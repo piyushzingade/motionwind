@@ -12,58 +12,35 @@ export function LogoDrawDemo() {
         key={key}
         width="180"
         height="180"
-        viewBox="0 0 100 100"
+        viewBox="0 0 120 120"
         fill="none"
         className="text-[var(--color-accent)]"
+        role="img"
+        aria-label="Hexagon mark drawing itself"
       >
         <motion.path
-          d="M50 5 L90 27.5 L90 72.5 L50 95 L10 72.5 L10 27.5 Z"
+          d="M60 10 L103 35 L103 85 L60 110 L17 85 L17 35 Z"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="2.5"
           strokeLinejoin="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration: 1.5, ease: "easeInOut" }}
-        />
-        <motion.path
-          d="M50 25 L70 50 L50 75 L30 50 Z"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8, ease: "easeInOut" }}
+          transition={{ duration: 1.4, ease: "easeInOut" }}
         />
         <motion.circle
-          cx="50"
-          cy="50"
-          r="4"
+          cx="60"
+          cy="60"
+          r="5"
           fill="currentColor"
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 1.6, type: "spring", stiffness: 400 }}
-        />
-        <motion.line
-          x1="50"
-          y1="25"
-          x2="50"
-          y2="5"
-          stroke="currentColor"
-          strokeWidth="1"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 0.4, delay: 1.8 }}
-        />
-        <motion.line
-          x1="50"
-          y1="75"
-          x2="50"
-          y2="95"
-          stroke="currentColor"
-          strokeWidth="1"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 0.4, delay: 2.0 }}
+          transition={{
+            delay: 1.1,
+            type: "spring",
+            stiffness: 400,
+            damping: 16,
+          }}
+          style={{ transformOrigin: "60px 60px" }}
         />
       </svg>
       <button onClick={() => setKey((k) => k + 1)} className="demo-btn">
