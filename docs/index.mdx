@@ -1,56 +1,199 @@
 ---
 title: "Introduction"
-description: "Motionwind v2 is a shared Motion utility language for React, Vue, JavaScript, and React Native."
+description: "Motionwind v2 — a shared utility language for web animations. Write animate-* classes, get Motion output at build time."
 ---
 
 # Motionwind v2
 
-Motionwind brings Motion's animation model to Tailwind-like `animate-*` utility
-classes. Write interaction and transition intent next to your styles; the
-selected adapter turns that shared language into Motion or Reanimated behavior.
+Motionwind is an animation utility language for web applications. It lets you
+write animation instructions as Tailwind-like CSS classes and converts them into
+framework-specific animation code at build time.
 
 ```tsx
+// You write this (Tailwind-like classes):
 <button className="animate-hover:scale-110 animate-tap:scale-90 animate-focus:scale-105 animate-spring">
   Hover, press, or focus me
 </button>
+
+// The compiler produces this (Motion component):
+<motion.button
+  whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.9 }}
+  whileFocus={{ scale: 1.05 }}
+  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+>
+  Hover, press, or focus me
+</motion.button>
 ```
 
-On the React compile-time path this becomes a `motion.button` with `whileHover`,
-`whileTap`, `whileFocus`, and `transition` props. The animation tokens disappear
-from `className`, ordinary CSS or Tailwind classes remain, and no runtime parser
-is shipped. Dynamic React/Vue classes, vanilla JavaScript, and React Native use
-explicit runtime adapters.
+No animation code ships in `className`. Ordinary CSS and Tailwind classes remain
+unchanged. The compiler adds the Motion import and `"use client"` directive
+automatically.
 
-## One language, four adapters
+## What Motionwind is
 
-Every official package uses the registry and `ParsedResult` intermediate
-representation from `motionwind-core`.
+- **A class-based syntax** for defining hover, tap, focus, scroll, drag, enter,
+  exit, and layout animations.
+- **A compile-time compiler** that transforms `animate-*` classes into Motion
+  props for React, Vue, or vanilla JavaScript.
+- **A runtime fallback** (`mw.*`) for dynamic class names that cannot be
+  compiled.
+- **A configuration system** (`motionwind.config.ts`) for animation tokens,
+  presets, strict diagnostics, and reduced-motion policy.
+- **A shared core** (`motionwind-core`) that all frameworks use — one parser,
+  one set of types, one intermediate representation (`ParsedResult`).
 
-| Target                     | Package                   | Status | Execution model                                     |
-| -------------------------- | ------------------------- | ------ | --------------------------------------------------- |
-| React, Next.js, React/Vite | `motionwind-react`        | Stable | Compile time by default; `mw.*` runtime fallback    |
-| Vue and Nuxt               | `motionwind-vue`          | Stable | Compile time by default; component runtime fallback |
-| Vanilla JavaScript         | `motionwind-vanilla`      | Stable | DOM runtime backed by Motion                        |
-| React Native and Expo      | `motionwind-react-native` | Beta   | `mw.*` runtime backed by Reanimated                 |
+## What Motionwind is not
 
-Use the [Compatibility Matrix](/docs/compatibility) before sharing a class across
-targets. Unsupported adapter features produce actionable diagnostics instead of
-being ignored silently.
+- It does not replace Motion. Use Motion directly for complex timelines,
+  imperative control, or custom motion values.
+- It does not require Tailwind CSS. The `animate-*` classes are independent.
+  Other CSS passes through untouched.
+- It does not add runtime overhead on the compile path. Static classes are
+  resolved at build time.
 
-## Why Motionwind
+## Supported frameworks
 
-### Familiar and colocated
+| Framework            | Package                   | Status | How it works                              |
+| -------------------- | ------------------------- | ------ | ----------------------------------------- |
+| React, Next.js, Vite | `motionwind-react`        | Stable | Babel/Vite/Next.js compile-time transform |
+| Vue, Nuxt            | `motionwind-vue`          | Stable | Template compile-time transform           |
+| Vanilla JavaScript   | `motionwind-vanilla`      | Stable | DOM runtime backed by Motion              |
+| React Native, Expo   | `motionwind-react-native` | Beta   | Runtime backed by Reanimated              |
 
-The grammar is predictable: `animate-{gesture}:{property}-{value}`. Hover, tap,
-focus, in-view, initial, enter, exit, and drag targets use the same property
-vocabulary, while duration, easing, spring, viewport, scroll, layout, and variant
-classes configure behavior.
+All frameworks share the same `animate-*` syntax. You can switch frameworks
+without rewriting animation classes.
 
-### Typed team conventions
+## The grammar
 
-`motionwind.config.ts` provides named duration, easing, and spring tokens,
-reusable presets, strict diagnostics, reduced-motion policy, plugins, and an
-adapter target.
+Every Motionwind class follows this pattern:
+
+```
+animate-{trigger}:{property}-{value}
+```
+
+**Triggers** (what causes the animation):
+
+| Trigger   | Meaning                           | Motion prop   |
+| --------- | --------------------------------- | ------------- |
+| `hover`   | Mouse/finger hovers over element  | `whileHover`  |
+| `tap`     | Mouse click or finger press       | `whileTap`    |
+| `focus`   | Element receives keyboard focus   | `whileFocus`  |
+| `inview`  | Element enters the viewport       | `whileInView` |
+| `drag`    | Element is being dragged          | `whileDrag`   |
+| `initial` | Starting state (before animation) | `initial`     |
+| `enter`   | Target state (after mount)        | `animate`     |
+| `exit`    | State when element unmounts       | `exit`        |
+
+**Properties** (what animates):
+
+| Property  | CSS/Transform             | Example values           |
+| --------- | ------------------------- | ------------------------ |
+| `scale`   | `transform: scale()`      | `105`, `90`, `[1,1.2,1]` |
+| `rotate`  | `transform: rotate()`     | `45`, `-10`              |
+| `x`       | `transform: translateX()` | `20`, `-100`             |
+| `y`       | `transform: translateY()` | `20`, `-100`             |
+| `opacity` | `opacity`                 | `0`, `100`, `50`         |
+| `blur`    | `filter: blur()`          | `4`, `10`                |
+
+**Transition** (how the animation runs):
+
+| Class                   | Effect                   |
+| ----------------------- | ------------------------ |
+| `animate-duration-200`  | Duration in milliseconds |
+| `animate-delay-100`     | Delay before starting    |
+| `animate-spring`        | Spring physics (default) |
+| `animate-spring-bouncy` | Bouncy spring preset     |
+| `animate-stiffness-300` | Spring stiffness         |
+| `animate-damping-20`    | Spring damping           |
+| `animate-ease-in-out`   | Easing function          |
+
+**Full examples:**
+
+```tsx
+// Button with hover scale, tap scale, spring transition
+<button className="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
+  Click me
+</button>
+
+// Fade-in element with stagger
+<div className="animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-300 animate-delay-100">
+  Appears after 100ms
+</div>
+
+// Scroll-triggered animation
+<section className="animate-inview:opacity-100 animate-inview:y-0 animate-initial:opacity-0 animate-initial:y-20 animate-once">
+  Fades in when scrolled into view
+</section>
+```
+
+## How the compiler works
+
+When you write:
+
+```tsx
+<button className="px-4 py-2 animate-hover:scale-110 animate-tap:scale-95 animate-duration-200">
+  Click me
+</button>
+```
+
+The compiler:
+
+1. **Reads** the `className` string at build time.
+2. **Extracts** `animate-hover:scale-110`, `animate-tap:scale-95`,
+   `animate-duration-200`.
+3. **Removes** those animation tokens from `className` (leaving `px-4 py-2`).
+4. **Changes** `<button>` to `<motion.button>`.
+5. **Adds** `whileHover={{ scale: 1.1 }}`, `whileTap={{ scale: 0.95 }}`,
+   `transition={{ duration: 0.2 }}`.
+6. **Injects** `import { motion } from "motion/react"` and `"use client"`.
+
+The result is a standard Motion component. No runtime parser ships to the
+browser.
+
+## Dynamic class names
+
+Static classes are compiled. Dynamic animation values need the runtime:
+
+```tsx
+// Static — compiled (no runtime overhead)
+<button className="animate-hover:scale-110">Static</button>
+
+// Mixed — animation token compiled, CSS is dynamic
+<button className={`animate-hover:scale-110 ${active ? "is-active" : ""}`}>
+  Mixed
+</button>
+
+// Dynamic animation — use mw.* runtime
+<mw.button className={`animate-hover:scale-${large ? "120" : "105"}`}>
+  Dynamic
+</mw.button>
+```
+
+`mw.*` components parse `animate-*` classes at runtime and pass the result to
+Motion. Use them when the animation token or value is computed from props or
+state.
+
+## Design-system components
+
+Wrap your own components with `mw.create()`:
+
+```tsx
+import { mw } from "motionwind-react";
+import { Button } from "./button";
+
+const MotionButton = mw.create(Button);
+
+<MotionButton className="animate-hover:scale-105 animate-tap:scale-95">
+  Save
+</MotionButton>;
+```
+
+The wrapped component must forward its ref and className to a DOM element.
+
+## Configuration
+
+Create `motionwind.config.ts` at your project root:
 
 ```ts
 import { defineConfig } from "motionwind-core";
@@ -60,34 +203,57 @@ export default defineConfig({
   strict: true,
   reducedMotion: "user",
   tokens: {
-    durations: { fast: 160 },
+    durations: { fast: 160, deliberate: 480 },
+    easings: { product: [0.22, 1, 0.36, 1] },
     springs: { responsive: { stiffness: 420, damping: 28 } },
+  },
+  presets: {
+    "card-enter":
+      "animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-deliberate",
   },
 });
 ```
 
-### Motion-first, not Motion-replacing
+Tokens become classes: `animate-duration-fast`, `animate-ease-product`,
+`animate-spring-responsive`, `animate-preset-card-enter`.
 
-Motionwind is intentionally designed for the common 80% of UI animation. Keep
-using direct Motion APIs for complex timelines, imperative control, custom
-motion values, or framework features outside an adapter's declared capability
-set. The two approaches can coexist in the same application.
+## Packages
 
-## Core syntax
+| Package                      | Purpose                                            | Tier   |
+| ---------------------------- | -------------------------------------------------- | ------ |
+| `motionwind-core`            | Parser, types, config, registry, plugin contracts  | Stable |
+| `motionwind-react`           | React runtime + Babel, Vite, Next.js integrations  | Stable |
+| `motionwind-vue`             | Vue components + Vite integration                  | Stable |
+| `motionwind-vanilla`         | JavaScript runtime                                 | Stable |
+| `motionwind-react-native`    | Expo/React Native runtime                          | Beta   |
+| `motionwind-unplugin`        | Vite, Rollup, webpack, Rspack, esbuild layer       | Stable |
+| `create-motionwind`          | Init, doctor, migrate, preset CLI                  | Stable |
+| `eslint-plugin-motionwind`   | Lint diagnostics                                   | Stable |
+| `prettier-plugin-motionwind` | Auto-formatting                                    | Stable |
+| `motionwind-mcp`             | AI/LLM tools (validation, explanation, generation) | Stable |
 
-- Gestures: `animate-hover:`, `animate-tap:`, `animate-focus:`,
-  `animate-inview:`, `animate-drag:`, `animate-initial:`, `animate-enter:`, and
-  `animate-exit:`.
-- Properties: transforms such as `scale`, `rotate`, `x`, and `y`; visual values
-  such as `opacity`; dimensions; colors; and adapter-specific SVG properties.
-- Transitions: `animate-duration-*`, `animate-ease-*`, `animate-spring`, spring
-  physics, delays, repeats, and stagger settings.
-- Reuse: `animate-preset-{name}` and named variant definitions.
+## Compatibility
 
-## Start here
+CI validates every framework against the same syntax corpus. Unsupported
+features produce actionable diagnostics, never silent failures.
 
-- [What's new in v2.0.0](/docs/v2)
-- [Install Motionwind](/docs/installation)
-- [Choose a framework](/docs/frameworks)
-- [Configure tokens and presets](/docs/configuration)
-- [Read the compatibility contract](/docs/compatibility)
+| Framework           | Tier   | Gestures | Scroll  | Layout      | Drag        | Variants    | SVG     | Reduced motion | SSR  |
+| ------------------- | ------ | -------- | ------- | ----------- | ----------- | ----------- | ------- | -------------- | ---- |
+| Next.js             | Stable | Pass     | Pass    | Pass        | Pass        | Pass        | Pass    | Pass           | Pass |
+| React + Vite        | Stable | Pass     | Pass    | Pass        | Pass        | Pass        | Pass    | Pass           | N/A  |
+| Vue + Vite          | Stable | Pass     | Warning | Pass        | Pass        | Pass        | Pass    | Pass           | N/A  |
+| Nuxt                | Stable | Pass     | Warning | Pass        | Pass        | Pass        | Pass    | Pass           | Pass |
+| Vanilla JavaScript  | Stable | Pass     | Pass    | Unsupported | Unsupported | Unsupported | Pass    | Pass           | N/A  |
+| Expo / React Native | Beta   | Beta     | Beta    | Warning     | Warning     | Beta        | Warning | Pass           | N/A  |
+
+"Warning" means the adapter detects the syntax, explains the gap, and leaves
+direct Motion or platform APIs available.
+
+## Quick links
+
+- [Installation](/docs/installation) — set up Motionwind in your project
+- [Getting Started](/docs/getting-started) — understand compile-time vs runtime
+- [Syntax Reference](/docs/syntax) — complete class reference
+- [Configuration](/docs/configuration) — tokens, presets, strict mode
+- [API Reference](/docs/api) — `parseMotionClasses`, `mw.*`, `mw.create`
+- [v2 Changelog](/docs/v2) — what changed, how to upgrade
