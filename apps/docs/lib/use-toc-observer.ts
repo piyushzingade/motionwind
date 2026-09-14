@@ -19,63 +19,26 @@ export function useTocObserver(
   const [activeIndex, setActiveIndex] = useState(-1);
   const [scrollPct, setScrollPct] = useState(0);
   const mounted = useMounted();
-  const [scrollDir, setScrollDir] = useState<"down" | "up">("down");
-
   const navRef = useRef<HTMLElement>(null);
-  const lastScrollTop = useRef(0);
-  const headingOffsets = useRef<number[]>([]);
 
-  /* Scroll progress and active heading share one deterministic reading line. */
+  /* Adapted from EvilCharts: observe headings inside our custom scroller. */
   useEffect(() => {
     const container = getScrollContainer();
     if (!container || !items.length || !mounted) return;
 
     let frame = 0;
-
-    const measure = () => {
-      const containerTop = container.getBoundingClientRect().top;
-      headingOffsets.current = items.map((item) => {
-        const heading = document.getElementById(item.url.slice(1));
-        if (!heading) return Number.POSITIVE_INFINITY;
-        return (
-          heading.getBoundingClientRect().top -
-          containerTop +
-          container.scrollTop
-        );
-      });
-    };
+    const itemIds = items.map((item) => item.url.slice(1));
 
     const update = () => {
       const scrollTop = container.scrollTop;
       const scrollH = container.scrollHeight - container.clientHeight;
       setScrollPct(scrollH > 0 ? Math.min(scrollTop / scrollH, 1) : 0);
 
-      const delta = scrollTop - lastScrollTop.current;
-      if (Math.abs(delta) > 2) {
-        setScrollDir(delta > 0 ? "down" : "up");
-      }
-      lastScrollTop.current = scrollTop;
-
-      let nextIndex = 0;
       if (scrollH > 0 && scrollTop >= scrollH - 1) {
-        nextIndex = items.length - 1;
-      } else {
-        const readingLine =
-          scrollTop + Math.min(112, container.clientHeight * 0.25);
-        for (let i = 0; i < headingOffsets.current.length; i++) {
-          if ((headingOffsets.current[i] ?? Infinity) <= readingLine) {
-            nextIndex = i;
-          } else {
-            break;
-          }
-        }
+        const nextIndex = items.length - 1;
+        setActiveIndex(nextIndex);
+        setActiveId(itemIds[nextIndex] ?? "");
       }
-
-      const nextId = items[nextIndex]?.url.slice(1) ?? "";
-      setActiveIndex((current) =>
-        current === nextIndex ? current : nextIndex,
-      );
-      setActiveId((current) => (current === nextId ? current : nextId));
     };
 
     const requestUpdate = () => {
@@ -83,24 +46,30 @@ export function useTocObserver(
       frame = requestAnimationFrame(update);
     };
 
-    const resizeObserver = new ResizeObserver(() => {
-      measure();
-      requestUpdate();
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const nextIndex = itemIds.indexOf(entry.target.id);
+          if (nextIndex < 0) continue;
+          setActiveId(entry.target.id);
+          setActiveIndex(nextIndex);
+        }
+      },
+      { root: container, rootMargin: "0px 0px -60% 0px" },
+    );
+    for (const id of itemIds) {
+      const heading = document.getElementById(id);
+      if (heading) observer.observe(heading);
+    }
 
-    measure();
     update();
-    resizeObserver.observe(container);
-    const article = container.querySelector(".docs-page");
-    if (article) resizeObserver.observe(article);
     container.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
 
     return () => {
       cancelAnimationFrame(frame);
-      resizeObserver.disconnect();
+      observer.disconnect();
       container.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
     };
   }, [items, mounted]);
 
@@ -153,7 +122,6 @@ export function useTocObserver(
     activeId,
     activeIndex,
     scrollPct,
-    scrollDir,
     navRef,
     itemEls,
     handleClick,

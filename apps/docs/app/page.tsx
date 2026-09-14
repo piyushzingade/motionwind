@@ -32,10 +32,27 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DocsHome() {
-  return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
-      <Hero />
-    </div>
-  );
+export const revalidate = 3600;
+
+async function getGithubStars(): Promise<number | null> {
+  try {
+    const response = await fetch(
+      "https://api.github.com/repos/piyushzingade/motionwind",
+      {
+        next: { revalidate: 3600 },
+        headers: { Accept: "application/vnd.github+json" },
+      },
+    );
+    if (!response.ok) return null;
+    const data = (await response.json()) as { stargazers_count?: number };
+    return typeof data.stargazers_count === "number"
+      ? data.stargazers_count
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+export default async function DocsHome() {
+  return <Hero starCount={await getGithubStars()} />;
 }

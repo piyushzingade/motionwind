@@ -14,10 +14,14 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
   const mounted = useMounted();
   const itemEls = useRef<(HTMLLIElement | null)[]>([]);
 
-  const { activeId, activeIndex, scrollPct, scrollDir, navRef, handleClick } =
+  const { activeId, activeIndex, scrollPct, navRef, handleClick } =
     useTocObserver(items, itemEls);
 
-  const { listRef, rows, listH } = useTocMeasure(items, mounted, itemEls);
+  const { wrapperRef, listRef, rows, listH } = useTocMeasure(
+    items,
+    mounted,
+    itemEls,
+  );
 
   // One measured path drives the track and marker. Lengths are analytic, so
   // no DOM measuring round-trip can deadlock.
@@ -37,7 +41,7 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
         <span className="toc-header-pct">{Math.round(scrollPct * 100)}%</span>
       </div>
 
-      <div className="toc-body">
+      <div ref={wrapperRef} className="toc-body">
         {showSpine && (
           <>
             <TocSvg listH={listH} pathD={path} />
@@ -47,7 +51,6 @@ export function TableOfContents({ items }: { items: TOCItem[] }) {
               centerDistances={centerDistances}
               activeIndex={activeIndex}
               height={listH}
-              scrollDirection={scrollDir}
             />
           </>
         )}
