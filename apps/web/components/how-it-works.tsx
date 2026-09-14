@@ -19,19 +19,16 @@ const outputCode = generateMotionCode(
 
 const STEPS = [
   {
-    number: "01",
     title: "Write classes",
     body: "Use Tailwind-like animation utilities directly where the interaction lives.",
     code: "animate-hover:scale-105",
   },
   {
-    number: "02",
     title: "Compile to props",
     body: "The transform separates animation intent from static styling during build.",
     code: "whileHover={{ scale: 1.05 }}",
   },
   {
-    number: "03",
     title: "Ship interaction",
     body: "Users get Motion components, not a class parser running in the browser.",
     code: "runtime parser: none",
@@ -42,7 +39,7 @@ export function HowItWorks() {
   return (
     <section
       id="how"
-      className="section-anchor relative px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
+      className="section-anchor relative px-4 py-16 sm:px-6 sm:py-22 lg:py-24"
     >
       <div className="mx-auto max-w-7xl">
         <Reveal>
@@ -57,29 +54,22 @@ export function HowItWorks() {
           </div>
         </Reveal>
 
-        {/* Steps — vertical numbered list */}
         <Reveal y={18}>
-          <div className="mb-6 grid gap-4 sm:grid-cols-3">
-            {STEPS.map((step, i) => (
+          <div className="border-y border-border">
+            {STEPS.map((step) => (
               <div
-                key={step.number}
-                className="relative rounded-2xl border border-border bg-surface-elevated p-5 transition-colors hover:border-accent/25"
+                key={step.title}
+                className="flex flex-col gap-4 border-b border-border py-6 last:border-b-0 md:flex-row md:items-start md:justify-between"
               >
-                <div className="mb-4 flex items-center gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/10 font-[family-name:var(--font-mono)] text-xs font-semibold text-accent">
-                    {step.number}
-                  </span>
-                  {i < STEPS.length - 1 && (
-                    <div className="absolute left-[calc(50%+24px)] top-9 hidden h-px w-[calc(100%-48px)] bg-gradient-to-r from-border to-transparent sm:block" />
-                  )}
+                <div className="max-w-xl">
+                  <h3 className="text-lg font-semibold tracking-[-0.02em] text-fg">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-fg-muted">
+                    {step.body}
+                  </p>
                 </div>
-                <h3 className="text-[15px] font-semibold text-fg">
-                  {step.title}
-                </h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-fg-muted">
-                  {step.body}
-                </p>
-                <code className="mt-4 block truncate rounded-lg bg-code-bg px-3 py-2 font-[family-name:var(--font-mono)] text-[11px] text-accent/80">
+                <code className="w-full shrink-0 rounded-md border border-border bg-code-bg px-3 py-2 font-[family-name:var(--font-mono)] text-[11px] text-accent/80 md:w-64">
                   {step.code}
                 </code>
               </div>
@@ -87,10 +77,9 @@ export function HowItWorks() {
           </div>
         </Reveal>
 
-        {/* Code comparison — full width */}
         <Reveal y={22} delay={0.06}>
-          <div className="overflow-hidden rounded-2xl border border-border bg-surface-elevated shadow-[0_32px_80px_-60px_var(--color-shadow)]">
-            <div className="grid md:grid-cols-2">
+          <div className="mt-8 overflow-hidden rounded-xl border border-border bg-surface-elevated">
+            <div className="flex flex-col md:flex-row">
               <CodePanel
                 title="Source"
                 filename="component.tsx"
@@ -119,7 +108,7 @@ function CodePanel({
   code: string;
 }) {
   return (
-    <div className="min-w-0 border-t border-border-subtle first:border-t-0 md:border-l md:border-t-0 md:first:border-l-0">
+    <div className="min-w-0 flex-1 border-t border-border-subtle first:border-t-0 md:border-l md:border-t-0 md:first:border-l-0">
       <div className="flex items-center justify-between border-b border-border-subtle px-5 py-3">
         <span className="text-sm font-semibold text-fg">{title}</span>
         <span className="font-[family-name:var(--font-mono)] text-[10px] text-code-muted">

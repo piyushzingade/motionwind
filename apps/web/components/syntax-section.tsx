@@ -35,7 +35,7 @@ export function SyntaxSection() {
   return (
     <section
       id="syntax"
-      className="section-anchor relative px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
+      className="section-anchor relative px-4 py-16 sm:px-6 sm:py-22 lg:py-24"
     >
       <div className="mx-auto max-w-7xl">
         <Reveal>
@@ -50,58 +50,54 @@ export function SyntaxSection() {
           </div>
         </Reveal>
 
-        {/* Centered code breakdown */}
         <Reveal y={18}>
-          <div className="mx-auto mb-8 max-w-2xl rounded-2xl border border-border bg-surface-elevated p-6 sm:p-8">
-            <code className="mb-8 block rounded-xl border border-border-subtle bg-code-bg px-5 py-4 font-[family-name:var(--font-mono)] text-base text-fg sm:text-lg">
-              <span className="text-code-muted">animate-</span>
-              <span className="text-accent">hover</span>
-              <span className="text-code-muted">:</span>
-              <span className="text-accent">scale</span>
-              <span className="text-code-muted">-</span>
-              <span className="text-accent">105</span>
-            </code>
+          <div className="overflow-hidden rounded-xl border border-border bg-surface-elevated">
+            <div className="border-b border-border-subtle px-5 py-5 sm:px-6">
+              <code className="block overflow-x-auto whitespace-nowrap font-[family-name:var(--font-mono)] text-base text-fg sm:text-lg">
+                <span className="text-code-muted">animate-</span>
+                <span className="text-accent">hover</span>
+                <span className="text-code-muted">:</span>
+                <span className="text-accent">scale</span>
+                <span className="text-code-muted">-</span>
+                <span className="text-accent">105</span>
+              </code>
+            </div>
 
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="divide-y divide-border-subtle">
               {PARTS.map((part) => (
                 <div
                   key={part.label}
-                  className="rounded-xl border border-border-subtle bg-surface px-4 py-3.5"
+                  className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-sm font-semibold text-fg">
+                  <div>
+                    <h3 className="text-sm font-semibold text-fg">
                       {part.label}
-                    </span>
-                    <code className="rounded-md bg-accent/10 px-2 py-0.5 font-[family-name:var(--font-mono)] text-[11px] text-accent">
-                      {part.value}
-                    </code>
+                    </h3>
+                    <p className="mt-1 text-xs leading-relaxed text-code-muted">
+                      {part.examples}
+                    </p>
                   </div>
-                  <p className="mt-2 text-xs leading-relaxed text-code-muted">
-                    {part.examples}
-                  </p>
+                  <code className="w-fit rounded-md border border-border bg-code-bg px-2.5 py-1 font-[family-name:var(--font-mono)] text-[11px] text-accent">
+                    {part.value}
+                  </code>
                 </div>
               ))}
             </div>
           </div>
         </Reveal>
 
-        {/* Prefix mapping — horizontal grid */}
         <Reveal y={22} delay={0.06}>
-          <div className="rounded-2xl border border-border bg-surface-elevated">
+          <div className="mt-6 rounded-xl border border-border bg-surface-elevated">
             <div className="border-b border-border-subtle px-6 py-4">
               <h3 className="text-sm font-semibold text-fg">
                 Prefixes map to Motion props
               </h3>
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4">
-              {GESTURES.map((g, i) => (
+            <div className="divide-y divide-border-subtle">
+              {GESTURES.map((g) => (
                 <div
                   key={g.prefix}
-                  className={`flex items-center justify-between gap-3 border-b border-border-subtle px-5 py-3.5 sm:last:border-b-0 ${
-                    i % 4 < 3 ? "lg:border-r" : ""
-                  } ${i % 2 === 0 ? "sm:border-r lg:border-r-0" : ""} ${
-                    i % 4 < 3 ? "lg:border-r" : ""
-                  }`}
+                  className="flex items-center justify-between gap-3 px-5 py-3.5"
                 >
                   <code className="font-[family-name:var(--font-mono)] text-[12px] text-accent">
                     {g.prefix}
