@@ -54,12 +54,12 @@ automatically.
 
 ## Supported frameworks
 
-| Framework               | Package                      | Status   | How it works                           |
-| ----------------------- | ---------------------------- | -------- | -------------------------------------- |
-| React, Next.js, Vite    | `motionwind-react`           | Stable   | Babel/Vite/Next.js compile-time transform |
-| Vue, Nuxt               | `motionwind-vue`             | Stable   | Template compile-time transform        |
-| Vanilla JavaScript      | `motionwind-vanilla`         | Stable   | DOM runtime backed by Motion           |
-| React Native, Expo      | `motionwind-react-native`    | Beta     | Runtime backed by Reanimated           |
+| Framework            | Package                   | Status | How it works                              |
+| -------------------- | ------------------------- | ------ | ----------------------------------------- |
+| React, Next.js, Vite | `motionwind-react`        | Stable | Babel/Vite/Next.js compile-time transform |
+| Vue, Nuxt            | `motionwind-vue`          | Stable | Template compile-time transform           |
+| Vanilla JavaScript   | `motionwind-vanilla`      | Stable | DOM runtime backed by Motion              |
+| React Native, Expo   | `motionwind-react-native` | Beta   | Runtime backed by Reanimated              |
 
 All frameworks share the same `animate-*` syntax. You can switch frameworks
 without rewriting animation classes.
@@ -74,39 +74,39 @@ animate-{trigger}:{property}-{value}
 
 **Triggers** (what causes the animation):
 
-| Trigger    | Meaning                              | Motion prop   |
-| ---------- | ------------------------------------ | ------------- |
-| `hover`    | Mouse/finger hovers over element     | `whileHover`  |
-| `tap`      | Mouse click or finger press          | `whileTap`    |
-| `focus`    | Element receives keyboard focus      | `whileFocus`  |
-| `inview`   | Element enters the viewport          | `whileInView` |
-| `drag`     | Element is being dragged             | `whileDrag`   |
-| `initial`  | Starting state (before animation)    | `initial`     |
-| `enter`    | Target state (after mount)           | `animate`     |
-| `exit`     | State when element unmounts          | `exit`        |
+| Trigger   | Meaning                           | Motion prop   |
+| --------- | --------------------------------- | ------------- |
+| `hover`   | Mouse/finger hovers over element  | `whileHover`  |
+| `tap`     | Mouse click or finger press       | `whileTap`    |
+| `focus`   | Element receives keyboard focus   | `whileFocus`  |
+| `inview`  | Element enters the viewport       | `whileInView` |
+| `drag`    | Element is being dragged          | `whileDrag`   |
+| `initial` | Starting state (before animation) | `initial`     |
+| `enter`   | Target state (after mount)        | `animate`     |
+| `exit`    | State when element unmounts       | `exit`        |
 
 **Properties** (what animates):
 
-| Property  | CSS/Transform            | Example values         |
-| --------- | ------------------------ | ---------------------- |
-| `scale`   | `transform: scale()`     | `105`, `90`, `[1,1.2,1]` |
-| `rotate`  | `transform: rotate()`    | `45`, `-10`            |
-| `x`       | `transform: translateX()`| `20`, `-100`           |
-| `y`       | `transform: translateY()`| `20`, `-100`           |
-| `opacity` | `opacity`                | `0`, `100`, `50`       |
-| `blur`    | `filter: blur()`         | `4`, `10`              |
+| Property  | CSS/Transform             | Example values           |
+| --------- | ------------------------- | ------------------------ |
+| `scale`   | `transform: scale()`      | `105`, `90`, `[1,1.2,1]` |
+| `rotate`  | `transform: rotate()`     | `45`, `-10`              |
+| `x`       | `transform: translateX()` | `20`, `-100`             |
+| `y`       | `transform: translateY()` | `20`, `-100`             |
+| `opacity` | `opacity`                 | `0`, `100`, `50`         |
+| `blur`    | `filter: blur()`          | `4`, `10`                |
 
 **Transition** (how the animation runs):
 
-| Class                    | Effect                    |
-| ------------------------ | ------------------------- |
-| `animate-duration-200`   | Duration in milliseconds  |
-| `animate-delay-100`      | Delay before starting     |
-| `animate-spring`         | Spring physics (default)  |
-| `animate-spring-bouncy`  | Bouncy spring preset      |
-| `animate-stiffness-300`  | Spring stiffness          |
-| `animate-damping-20`     | Spring damping            |
-| `animate-ease-in-out`    | Easing function           |
+| Class                   | Effect                   |
+| ----------------------- | ------------------------ |
+| `animate-duration-200`  | Duration in milliseconds |
+| `animate-delay-100`     | Delay before starting    |
+| `animate-spring`        | Spring physics (default) |
+| `animate-spring-bouncy` | Bouncy spring preset     |
+| `animate-stiffness-300` | Spring stiffness         |
+| `animate-damping-20`    | Spring damping           |
+| `animate-ease-in-out`   | Easing function          |
 
 **Full examples:**
 
@@ -186,7 +186,7 @@ const MotionButton = mw.create(Button);
 
 <MotionButton className="animate-hover:scale-105 animate-tap:scale-95">
   Save
-</MotionButton>
+</MotionButton>;
 ```
 
 The wrapped component must forward its ref and className to a DOM element.
@@ -219,32 +219,32 @@ Tokens become classes: `animate-duration-fast`, `animate-ease-product`,
 
 ## Packages
 
-| Package                                                   | Purpose                                            | Tier   |
-| --------------------------------------------------------- | -------------------------------------------------- | ------ |
-| `motionwind-core`                                         | Parser, types, config, registry, plugin contracts  | Stable |
-| `motionwind-react`                                        | React runtime + Babel, Vite, Next.js integrations  | Stable |
-| `motionwind-vue`                                          | Vue components + Vite integration                  | Stable |
-| `motionwind-vanilla`                                      | JavaScript runtime                                 | Stable |
-| `motionwind-react-native`                                 | Expo/React Native runtime                          | Beta   |
-| `motionwind-unplugin`                                     | Vite, Rollup, webpack, Rspack, esbuild layer       | Stable |
-| `create-motionwind`                                       | Init, doctor, migrate, preset CLI                  | Stable |
-| `eslint-plugin-motionwind`                                | Lint diagnostics                                   | Stable |
-| `prettier-plugin-motionwind`                              | Auto-formatting                                    | Stable |
-| `motionwind-mcp`                                          | AI/LLM tools (validation, explanation, generation) | Stable |
+| Package                      | Purpose                                            | Tier   |
+| ---------------------------- | -------------------------------------------------- | ------ |
+| `motionwind-core`            | Parser, types, config, registry, plugin contracts  | Stable |
+| `motionwind-react`           | React runtime + Babel, Vite, Next.js integrations  | Stable |
+| `motionwind-vue`             | Vue components + Vite integration                  | Stable |
+| `motionwind-vanilla`         | JavaScript runtime                                 | Stable |
+| `motionwind-react-native`    | Expo/React Native runtime                          | Beta   |
+| `motionwind-unplugin`        | Vite, Rollup, webpack, Rspack, esbuild layer       | Stable |
+| `create-motionwind`          | Init, doctor, migrate, preset CLI                  | Stable |
+| `eslint-plugin-motionwind`   | Lint diagnostics                                   | Stable |
+| `prettier-plugin-motionwind` | Auto-formatting                                    | Stable |
+| `motionwind-mcp`             | AI/LLM tools (validation, explanation, generation) | Stable |
 
 ## Compatibility
 
 CI validates every framework against the same syntax corpus. Unsupported
 features produce actionable diagnostics, never silent failures.
 
-| Framework           | Tier   | Gestures | Scroll  | Layout      | Drag        | Variants    | SVG     | Reduced motion | SSR    |
-| ------------------- | ------ | -------- | ------- | ----------- | ----------- | ----------- | ------- | -------------- | ------ |
-| Next.js             | Stable | Pass     | Pass    | Pass        | Pass        | Pass        | Pass    | Pass           | Pass   |
-| React + Vite        | Stable | Pass     | Pass    | Pass        | Pass        | Pass        | Pass    | Pass           | N/A    |
-| Vue + Vite          | Stable | Pass     | Warning | Pass        | Pass        | Pass        | Pass    | Pass           | N/A    |
-| Nuxt                | Stable | Pass     | Warning | Pass        | Pass        | Pass        | Pass    | Pass           | Pass   |
-| Vanilla JavaScript  | Stable | Pass     | Pass    | Unsupported | Unsupported | Unsupported | Pass    | Pass           | N/A    |
-| Expo / React Native | Beta   | Beta     | Beta    | Warning     | Warning     | Beta        | Warning | Pass           | N/A    |
+| Framework           | Tier   | Gestures | Scroll  | Layout      | Drag        | Variants    | SVG     | Reduced motion | SSR  |
+| ------------------- | ------ | -------- | ------- | ----------- | ----------- | ----------- | ------- | -------------- | ---- |
+| Next.js             | Stable | Pass     | Pass    | Pass        | Pass        | Pass        | Pass    | Pass           | Pass |
+| React + Vite        | Stable | Pass     | Pass    | Pass        | Pass        | Pass        | Pass    | Pass           | N/A  |
+| Vue + Vite          | Stable | Pass     | Warning | Pass        | Pass        | Pass        | Pass    | Pass           | N/A  |
+| Nuxt                | Stable | Pass     | Warning | Pass        | Pass        | Pass        | Pass    | Pass           | Pass |
+| Vanilla JavaScript  | Stable | Pass     | Pass    | Unsupported | Unsupported | Unsupported | Pass    | Pass           | N/A  |
+| Expo / React Native | Beta   | Beta     | Beta    | Warning     | Warning     | Beta        | Warning | Pass           | N/A  |
 
 "Warning" means the adapter detects the syntax, explains the gap, and leaves
 direct Motion or platform APIs available.

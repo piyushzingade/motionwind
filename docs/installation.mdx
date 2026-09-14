@@ -112,7 +112,10 @@ contain `animate-` for fast builds.
 // vite.config.ts
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import { createMotionwindTransform, MotionwindPlugin } from "motionwind-vue/vite";
+import {
+  createMotionwindTransform,
+  MotionwindPlugin,
+} from "motionwind-vue/vite";
 import motionwindConfig from "./motionwind.config";
 
 export default defineConfig({
@@ -196,19 +199,19 @@ import { mw } from "motionwind-react-native";
 
 <mw.Pressable className="animate-tap:scale-90 animate-spring">
   <mw.Text>Test Motionwind</mw.Text>
-</mw.Pressable>
+</mw.Pressable>;
 ```
 
 ## Troubleshooting
 
-| Problem | Cause | Fix |
-|---------|-------|-----|
-| Animations don't play | Build integration not added | Run `npx create-motionwind@2 doctor` to check |
-| `ReferenceError: motion is not defined` | Missing Motion dependency | Run `npm install motion` (or `motion-v` for Vue) |
-| Unknown class warnings | Typo or missing token | Check spelling; run `npx create-motionwind@2 doctor` |
-| React Native: animations crash | Reanimated Babel plugin missing | Enable Reanimated in `babel.config.js` and clear Metro cache |
-| Vite plugin error | Plugin order wrong | motionwind plugin must come before the React plugin |
-| Dynamic classes not animating | Using regular `<button>` instead of `mw.button` | Use `mw.*` for dynamic class names |
+| Problem                                 | Cause                                           | Fix                                                          |
+| --------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------ |
+| Animations don't play                   | Build integration not added                     | Run `npx create-motionwind@2 doctor` to check                |
+| `ReferenceError: motion is not defined` | Missing Motion dependency                       | Run `npm install motion` (or `motion-v` for Vue)             |
+| Unknown class warnings                  | Typo or missing token                           | Check spelling; run `npx create-motionwind@2 doctor`         |
+| React Native: animations crash          | Reanimated Babel plugin missing                 | Enable Reanimated in `babel.config.js` and clear Metro cache |
+| Vite plugin error                       | Plugin order wrong                              | motionwind plugin must come before the React plugin          |
+| Dynamic classes not animating           | Using regular `<button>` instead of `mw.button` | Use `mw.*` for dynamic class names                           |
 
 ## Tailwind CSS is optional
 

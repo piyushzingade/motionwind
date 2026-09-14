@@ -68,7 +68,10 @@ export default defineConfig({
 // vite.config.ts
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import { createMotionwindTransform, MotionwindPlugin } from "motionwind-vue/vite";
+import {
+  createMotionwindTransform,
+  MotionwindPlugin,
+} from "motionwind-vue/vite";
 import motionwindConfig from "./motionwind.config";
 
 export default defineConfig({
@@ -180,7 +183,7 @@ import { mw } from "motionwind-react";
 // Dynamic — animation value comes from a prop
 <mw.button className={`animate-hover:scale-${large ? "120" : "105"}`}>
   Dynamic
-</mw.button>
+</mw.button>;
 ```
 
 `mw.*` parses `animate-*` classes at runtime and passes the result to Motion.
@@ -198,7 +201,7 @@ const MotionButton = mw.create(Button);
 
 <MotionButton className="animate-hover:scale-105 animate-tap:scale-95">
   Save
-</MotionButton>
+</MotionButton>;
 ```
 
 The wrapped component must forward its ref and className to a DOM element.
@@ -211,9 +214,9 @@ The CLI creates `motionwind.config.ts` at your project root:
 import { defineConfig } from "motionwind-core";
 
 export default defineConfig({
-  adapter: "react",       // or "vue", "vanilla", "react-native"
-  strict: true,           // error on unknown classes in CI
-  reducedMotion: "user",  // respect OS preference (recommended)
+  adapter: "react", // or "vue", "vanilla", "react-native"
+  strict: true, // error on unknown classes in CI
+  reducedMotion: "user", // respect OS preference (recommended)
   tokens: {
     durations: { fast: 160, deliberate: 480 },
     springs: { responsive: { stiffness: 420, damping: 28 } },
@@ -230,14 +233,14 @@ Tokens become classes: `animate-duration-fast`, `animate-spring-responsive`,
 
 ## When to use classes vs Motion directly
 
-| Use `animate-*` classes for               | Use Motion directly for                    |
-| ------------------------------------------ | ------------------------------------------ |
-| Hover, tap, focus effects                  | Complex sequenced timelines                |
-| Mount/unmount transitions                  | Imperative `animate()` calls               |
-| Scroll-triggered animations                | Custom `useMotionValue` / `useSpring`      |
-| Layout animations                          | SVG path animations                        |
-| Drag interactions                          | Gesture recognizers beyond hover/tap/focus |
-| Variants and stagger                       | Physics-based custom animations            |
+| Use `animate-*` classes for | Use Motion directly for                    |
+| --------------------------- | ------------------------------------------ |
+| Hover, tap, focus effects   | Complex sequenced timelines                |
+| Mount/unmount transitions   | Imperative `animate()` calls               |
+| Scroll-triggered animations | Custom `useMotionValue` / `useSpring`      |
+| Layout animations           | SVG path animations                        |
+| Drag interactions           | Gesture recognizers beyond hover/tap/focus |
+| Variants and stagger        | Physics-based custom animations            |
 
 Both approaches coexist in the same application.
 

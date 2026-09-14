@@ -39,7 +39,7 @@ export default defineConfig({
 Which framework you're using. Determines how the compiler and runtime behave.
 
 ```ts
-adapter: "react" | "vue" | "vanilla" | "react-native"
+adapter: "react" | "vue" | "vanilla" | "react-native";
 ```
 
 ### `strict`
@@ -48,7 +48,7 @@ When `true`, unknown animation classes and invalid syntax produce errors
 instead of warnings. Recommended for CI.
 
 ```ts
-strict: true
+strict: true;
 ```
 
 What `strict` catches:
@@ -63,14 +63,14 @@ What `strict` catches:
 Controls what happens when the user's OS prefers reduced motion.
 
 ```ts
-reducedMotion: "user" | "always" | "never"
+reducedMotion: "user" | "always" | "never";
 ```
 
-| Value     | Behavior                                              |
-| --------- | ----------------------------------------------------- |
-| `"user"`  | Respect the OS `prefers-reduced-motion` setting       |
-| `"always"`| Always disable animations regardless of OS preference |
-| `"never"` | Never reduce motion regardless of OS preference       |
+| Value      | Behavior                                              |
+| ---------- | ----------------------------------------------------- |
+| `"user"`   | Respect the OS `prefers-reduced-motion` setting       |
+| `"always"` | Always disable animations regardless of OS preference |
+| `"never"`  | Never reduce motion regardless of OS preference       |
 
 **Always use `"user"` unless you have a documented reason to override it.**
 
@@ -98,7 +98,9 @@ Usage:
 
 ```html
 <button class="animate-hover:scale-105 animate-duration-fast">Fast</button>
-<article class="animate-enter:opacity-100 animate-duration-deliberate">Slow</article>
+<article class="animate-enter:opacity-100 animate-duration-deliberate">
+  Slow
+</article>
 ```
 
 ### Easing tokens
@@ -137,7 +139,9 @@ tokens: {
 Usage:
 
 ```html
-<button class="animate-hover:scale-105 animate-spring-responsive">Responsive</button>
+<button class="animate-hover:scale-105 animate-spring-responsive">
+  Responsive
+</button>
 <div class="animate-tap:scale-95 animate-spring-bouncy">Bouncy</div>
 ```
 
@@ -194,7 +198,10 @@ export default defineConfig({
 
 ```ts
 // vite.config.ts
-import { createMotionwindTransform, MotionwindPlugin } from "motionwind-vue/vite";
+import {
+  createMotionwindTransform,
+  MotionwindPlugin,
+} from "motionwind-vue/vite";
 import motionwindConfig from "./motionwind.config";
 
 export default defineConfig({
@@ -223,7 +230,7 @@ import motionwindConfig from "./motionwind.config";
 
 <MotionwindProvider config={motionwindConfig}>
   <App />
-</MotionwindProvider>
+</MotionwindProvider>;
 ```
 
 ## Plugins
@@ -289,18 +296,17 @@ export default defineConfig({
   presets: {
     "card-enter":
       "animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-deliberate",
-    "button-press":
-      "animate-tap:scale-95 animate-spring-responsive",
+    "button-press": "animate-tap:scale-95 animate-spring-responsive",
   },
 });
 ```
 
 This gives you these classes:
 
-| Class                          | Resolves to                                   |
-| ------------------------------ | --------------------------------------------- |
-| `animate-duration-fast`        | `transition.duration: 0.16`                   |
-| `animate-ease-product`         | `transition.ease: [0.22, 1, 0.36, 1]`        |
-| `animate-spring-responsive`    | `transition: { type: "spring", stiffness: 420, damping: 28 }` |
-| `animate-preset-card-enter`    | Fades in from opacity 0 with deliberate timing |
-| `animate-preset-button-press`  | Scales to 95% with responsive spring           |
+| Class                         | Resolves to                                                   |
+| ----------------------------- | ------------------------------------------------------------- |
+| `animate-duration-fast`       | `transition.duration: 0.16`                                   |
+| `animate-ease-product`        | `transition.ease: [0.22, 1, 0.36, 1]`                         |
+| `animate-spring-responsive`   | `transition: { type: "spring", stiffness: 420, damping: 28 }` |
+| `animate-preset-card-enter`   | Fades in from opacity 0 with deliberate timing                |
+| `animate-preset-button-press` | Scales to 95% with responsive spring                          |

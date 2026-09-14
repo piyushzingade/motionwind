@@ -1,21 +1,205 @@
 ---
-title: "v2 compatibility"
+title: "v2 Compatibility"
 description: "The tested Motionwind v2 support matrix for every official framework and capability."
 ---
 
-Motionwind v2 treats compatibility as executable data. CI validates this table against each adapter's exported capability contract and installs every starter from packed npm artifacts.
+# Compatibility Matrix
 
-| Framework           | Tier   | Gestures | Scroll  | Layout      | Drag        | Variants    | SVG     | Reduced motion | SSR / hydration |
-| ------------------- | ------ | -------- | ------- | ----------- | ----------- | ----------- | ------- | -------------- | --------------- |
-| Next.js             | Stable | Pass     | Pass    | Pass        | Pass        | Pass        | Pass    | Pass           | Pass            |
-| React + Vite        | Stable | Pass     | Pass    | Pass        | Pass        | Pass        | Pass    | Pass           | N/A             |
-| Vue + Vite          | Stable | Pass     | Warning | Pass        | Pass        | Pass        | Pass    | Pass           | N/A             |
-| Nuxt                | Stable | Pass     | Warning | Pass        | Pass        | Pass        | Pass    | Pass           | Pass            |
-| Vanilla JavaScript  | Stable | Pass     | Pass    | Unsupported | Unsupported | Unsupported | Pass    | Pass           | N/A             |
-| Expo / React Native | Beta   | Beta     | Beta    | Warning     | Warning     | Beta        | Warning | Pass           | N/A             |
+Motionwind v2 treats compatibility as executable data. CI validates this table
+against each adapter's exported capability contract and installs every starter
+from packed npm artifacts.
 
-“Warning” means the adapter detects the syntax, explains the capability gap, and leaves direct Motion or platform APIs available. It never means silently ignored. The canonical source is [`fixtures/compatibility-matrix.json`](https://github.com/piyushzingade/motionwind/blob/main/fixtures/compatibility-matrix.json).
+## Support matrix
 
-The golden suite covers hover, tap, focus and keyboard access, enter/exit, in-view, scroll linkage, drag, layout, variants, SVG paths, presets, strict diagnostics, reduced motion, SSR output, hydration, source maps, tree shaking, and bundle budgets. Framework jobs install and build Next.js, React/Vite, Vue/Vite, Nuxt, vanilla, and Expo from the exact tarballs intended for npm. Their browser scenarios are read from the same matrix, assert declared scale values instead of merely checking for a transform, and fail on runtime, console, hydration, high-severity, or critical security errors.
+| Framework           | Tier   | Gestures | Scroll  | Layout      | Drag        | Variants    | SVG     | Reduced motion | SSR  |
+| ------------------- | ------ | -------- | ------- | ----------- | ----------- | ----------- | ------- | -------------- | ---- |
+| Next.js             | Stable | Pass     | Pass    | Pass        | Pass        | Pass        | Pass    | Pass           | Pass |
+| React + Vite        | Stable | Pass     | Pass    | Pass        | Pass        | Pass        | Pass    | Pass           | N/A  |
+| Vue + Vite          | Stable | Pass     | Warning | Pass        | Pass        | Pass        | Pass    | Pass           | N/A  |
+| Nuxt                | Stable | Pass     | Warning | Pass        | Pass        | Pass        | Pass    | Pass           | Pass |
+| Vanilla JavaScript  | Stable | Pass     | Pass    | Unsupported | Unsupported | Unsupported | Pass    | Pass           | N/A  |
+| Expo / React Native | Beta   | Beta     | Beta    | Warning     | Warning     | Beta        | Warning | Pass           | N/A  |
 
-React Native remains beta: v2 supports the shared parser, presets, plugins, timing adaptation, variants, scroll context, and reduced motion. Drag, layout transitions, in-view orchestration, and SVG report actionable warnings and require direct platform APIs until their adapter fixtures reach parity.
+## What the statuses mean
+
+### Pass
+
+The feature is fully supported. CI runs automated tests against the actual
+published package. The adapter compiles `animate-*` classes into the correct
+Motion or platform API calls.
+
+### Warning
+
+The adapter **detects** the syntax and **explains** the capability gap. It
+never silently ignores unsupported classes. You can still use the feature, but
+you'll need to use the direct Motion or platform API for full control.
+
+Example: Vue + Vite scroll animations show a warning because the template
+transform doesn't fully support scroll-linked animations. Use
+`useScroll()` from Motion directly.
+
+### Beta
+
+The feature works but has known limitations or gaps. It's tested but not
+guaranteed to be stable. Use in production with caution.
+
+Example: React Native gesture support is in beta — basic hover, tap, and focus
+work, but advanced gesture recognizers may need direct Reanimated APIs.
+
+### Unsupported
+
+The adapter does not implement this feature. The `animate-*` syntax is
+detected, but no output is generated. Use the direct platform API instead.
+
+Example: Vanilla JavaScript doesn't support layout animations because it
+doesn't have a component model. Use Motion's `layout` prop directly.
+
+## Capability details
+
+### Gestures
+
+Hover, tap, focus, in-view, drag, initial, enter, and exit triggers.
+
+| Framework           | Status | Notes                                                     |
+| ------------------- | ------ | --------------------------------------------------------- |
+| Next.js             | Pass   | Full support via compile-time transform                   |
+| React + Vite        | Pass   | Full support via compile-time transform                   |
+| Vue + Vite          | Pass   | Full support via template transform                       |
+| Nuxt                | Pass   | Full support via template transform                       |
+| Vanilla JavaScript  | Pass   | Runtime parsing via DOM observer                          |
+| Expo / React Native | Beta   | Basic gestures work; advanced recognizers need Reanimated |
+
+### Scroll
+
+Scroll-linked animations that respond to scroll position.
+
+| Framework           | Status  | Notes                                           |
+| ------------------- | ------- | ----------------------------------------------- |
+| Next.js             | Pass    | Full support                                    |
+| React + Vite        | Pass    | Full support                                    |
+| Vue + Vite          | Warning | Template transform doesn't fully support scroll |
+| Nuxt                | Warning | Same as Vue + Vite                              |
+| Vanilla JavaScript  | Pass    | Runtime parsing via scroll listener             |
+| Expo / React Native | Beta    | Basic scroll context works                      |
+
+### Layout
+
+Animate position and size changes when layout shifts.
+
+| Framework           | Status      | Notes                                   |
+| ------------------- | ----------- | --------------------------------------- |
+| Next.js             | Pass        | Full support                            |
+| React + Vite        | Pass        | Full support                            |
+| Vue + Vite          | Pass        | Full support                            |
+| Nuxt                | Pass        | Full support                            |
+| Vanilla JavaScript  | Unsupported | No component model; use Motion directly |
+| Expo / React Native | Warning     | Detects syntax, explains gap            |
+
+### Drag
+
+Drag gestures with constraints, elastic bounce, and momentum.
+
+| Framework           | Status      | Notes                          |
+| ------------------- | ----------- | ------------------------------ |
+| Next.js             | Pass        | Full support                   |
+| React + Vite        | Pass        | Full support                   |
+| Vue + Vite          | Pass        | Full support                   |
+| Nuxt                | Pass        | Full support                   |
+| Vanilla JavaScript  | Unsupported | Use Motion's drag API directly |
+| Expo / React Native | Warning     | Detects syntax, explains gap   |
+
+### Variants
+
+Named animation states with stagger and orchestration.
+
+| Framework           | Status      | Notes                                    |
+| ------------------- | ----------- | ---------------------------------------- |
+| Next.js             | Pass        | Full support                             |
+| React + Vite        | Pass        | Full support                             |
+| Vue + Vite          | Pass        | Full support                             |
+| Nuxt                | Pass        | Full support                             |
+| Vanilla JavaScript  | Unsupported | No variant system; use direct animations |
+| Expo / React Native | Beta        | Basic variants work                      |
+
+### SVG
+
+Animate SVG path drawing, transforms, and attributes.
+
+| Framework           | Status  | Notes                        |
+| ------------------- | ------- | ---------------------------- |
+| Next.js             | Pass    | Full support                 |
+| React + Vite        | Pass    | Full support                 |
+| Vue + Vite          | Pass    | Full support                 |
+| Nuxt                | Pass    | Full support                 |
+| Vanilla JavaScript  | Pass    | Runtime parsing              |
+| Expo / React Native | Warning | Detects syntax, explains gap |
+
+### Reduced motion
+
+Respects `prefers-reduced-motion` OS setting.
+
+| Framework | Status | Notes                         |
+| --------- | ------ | ----------------------------- |
+| All       | Pass   | Supported across all adapters |
+
+### SSR / Hydration
+
+Server-side rendering and hydration compatibility.
+
+| Framework           | Status | Notes            |
+| ------------------- | ------ | ---------------- |
+| Next.js             | Pass   | Full support     |
+| React + Vite        | N/A    | Client-side only |
+| Vue + Vite          | N/A    | Client-side only |
+| Nuxt                | Pass   | Full support     |
+| Vanilla JavaScript  | N/A    | Client-side only |
+| Expo / React Native | N/A    | Not applicable   |
+
+## The golden suite
+
+CI runs these tests against every framework:
+
+- Hover, tap, focus, and keyboard access
+- Enter/exit transitions
+- In-view (scroll-triggered) animations
+- Scroll-linked animations
+- Drag gestures
+- Layout animations
+- Variants and stagger
+- SVG path drawing
+- Presets
+- Strict diagnostics
+- Reduced motion policy
+- SSR output and hydration
+- Source maps
+- Tree shaking
+- Bundle size budgets
+
+Framework jobs install and build from the exact tarballs intended for npm. Browser
+scenarios assert declared scale values (not just checking for a transform) and
+fail on runtime, console, hydration, or security errors.
+
+## React Native status
+
+React Native is in beta. v2 supports:
+
+- Shared parser and presets
+- Plugins and configuration
+- Timing adaptation
+- Variants and scroll context
+- Reduced motion
+
+Not yet supported (use direct APIs):
+
+- Drag gestures
+- Layout transitions
+- In-view orchestration
+- SVG animations
+
+These produce actionable warnings, not silent failures.
+
+## Source of truth
+
+The canonical source is
+[`fixtures/compatibility-matrix.json`](https://github.com/piyushzingade/motionwind/blob/main/fixtures/compatibility-matrix.json).
+CI validates this file against each adapter's exported capability contract.
