@@ -3,20 +3,34 @@ title: "Installation"
 description: "Install Motionwind v2 in Next.js, React/Vite, Vue/Nuxt, vanilla JavaScript, or React Native/Expo."
 ---
 
-# Install Motionwind v2
+# Installation
 
-The initializer detects your framework and package manager, installs the
-published v2 adapter and peers, creates `motionwind.config.ts`, and only edits a
-build file when it can do so safely.
+Motionwind supports all major web frameworks. The CLI auto-detects your setup
+and installs the right packages.
+
+## Quick install
 
 ```bash
-npx create-motionwind@2 init --dry-run
 npx create-motionwind@2 init
 ```
 
-Detection covers Next.js, React/Vite, Vue/Vite, Nuxt, vanilla JavaScript, React
-Native, and Expo with npm, pnpm, Yarn, or Bun. Use an explicit target when
-auto-detection is not possible:
+This command:
+
+1. Detects your framework (Next.js, React, Vue, Nuxt, vanilla, Expo).
+2. Detects your package manager (npm, pnpm, Yarn, Bun).
+3. Installs the adapter package and its dependencies.
+4. Creates `motionwind.config.ts` with sensible defaults.
+5. Modifies your build config (Vite, Next.js, etc.) if it can do so safely.
+
+Preview what it would do without writing anything:
+
+```bash
+npx create-motionwind@2 init --dry-run
+```
+
+## Explicit framework targets
+
+If auto-detection fails or you want to be explicit:
 
 ```bash
 npx create-motionwind@2 init --framework=next
@@ -26,38 +40,149 @@ npx create-motionwind@2 init --framework=vanilla
 npx create-motionwind@2 init --framework=react-native
 ```
 
-The command preserves existing Vite, Next.js, and Babel configuration it cannot
-merge reliably and prints the exact manual snippet instead. `--dry-run` never
-writes files or installs dependencies.
+## Manual installation
 
-## Manual packages
+If you prefer to install packages yourself:
 
-| Target                | Install                                                                                                                   |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Next.js or React/Vite | `npm install motionwind-react@2 motion motionwind-core@2`                                                                 |
-| Vue/Vite or Nuxt      | `npm install motionwind-vue@2 motion-v @vueuse/core motionwind-core@2`                                                    |
-| Vanilla JavaScript    | `npm install motionwind-vanilla@2 motion motionwind-core@2`                                                               |
-| React Native or Expo  | `npm install motionwind-react-native@2 react-native-reanimated react-native-gesture-handler nativewind motionwind-core@2` |
+### React, Next.js, React + Vite
 
-Next, apply the integration for your target:
+```bash
+npm install motionwind-react@2 motion motionwind-core@2
+```
 
-- [React, Vite, and Next.js](/docs/frameworks/react)
-- [Vue and Nuxt](/docs/frameworks/vue)
-- [Vanilla JavaScript](/docs/frameworks/vanilla)
-- [React Native and Expo](/docs/react-native/installation)
+### Vue, Nuxt, Vue + Vite
 
-Tailwind CSS and NativeWind are styling integrations, not required for the
-`animate-*` parser itself. Non-animation classes pass through unchanged.
+```bash
+npm install motionwind-vue@2 motion-v @vueuse/core motionwind-core@2
+```
+
+### Vanilla JavaScript
+
+```bash
+npm install motionwind-vanilla@2 motion motionwind-core@2
+```
+
+### React Native, Expo
+
+```bash
+npm install motionwind-react-native@2 react-native-reanimated react-native-gesture-handler nativewind motionwind-core@2
+```
+
+## Framework integrations
+
+After installing packages, add the build integration for your framework.
+
+### Next.js
+
+```ts
+// next.config.mjs
+import { withMotionwind } from "motionwind-react/next";
+import motionwindConfig from "./motionwind.config";
+
+export default withMotionwind({}, motionwindConfig);
+```
+
+What `withMotionwind` does:
+
+- Adds a webpack rule that runs the motionwind Babel plugin before SWC.
+- Transforms `animate-*` classes in `.tsx` and `.jsx` files.
+- Adds `"use client"` and `import { motion } from "motion/react"` automatically.
+- Preserves your existing webpack config.
+
+### React + Vite
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import motionwind from "motionwind-react/vite";
+import motionwindConfig from "./motionwind.config";
+
+export default defineConfig({
+  plugins: [motionwind(motionwindConfig), react()],
+});
+```
+
+The plugin runs before `@vitejs/plugin-react`. It skips files that don't
+contain `animate-` for fast builds.
+
+### Vue + Vite
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import {
+  createMotionwindTransform,
+  MotionwindPlugin,
+} from "motionwind-vue/vite";
+import motionwindConfig from "./motionwind.config";
+
+export default defineConfig({
+  plugins: [
+    createMotionwindTransform(motionwindConfig),
+    vue(),
+    MotionwindPlugin(motionwindConfig),
+  ],
+});
+```
+
+Vue needs both the template transform and the plugin.
+
+### Nuxt
+
+Add the Nuxt module (the CLI does this automatically):
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ["motionwind-vue/nuxt"],
+});
+```
+
+Use the `<Motionwind>` component or `useMotionwind()` composable for dynamic
+class bindings.
+
+### Vanilla JavaScript
+
+```ts
+import { motionwind } from "motionwind-vanilla";
+import motionwindConfig from "./motionwind.config";
+
+motionwind({ config: motionwindConfig });
+```
+
+The vanilla runtime parses `animate-*` classes in the DOM and applies Motion
+animations directly.
+
+### React Native, Expo
+
+```tsx
+import { MotionwindProvider } from "motionwind-react-native";
+import motionwindConfig from "./motionwind.config";
+
+export default function App() {
+  return (
+    <MotionwindProvider config={motionwindConfig}>
+      <YourApp />
+    </MotionwindProvider>
+  );
+}
+```
+
+React Native uses `mw.*` runtime components backed by Reanimated.
 
 ## Verify the setup
 
-Run the diagnostic after installation:
+Run the diagnostic:
 
 ```bash
 npx create-motionwind@2 doctor
 ```
 
-On web, verify hover, pointer press, and keyboard focus:
+Test with a simple element:
+
+**Web:**
 
 ```html
 <button
@@ -67,7 +192,7 @@ On web, verify hover, pointer press, and keyboard focus:
 </button>
 ```
 
-On React Native, use a supported `mw.*` component and test a press interaction:
+**React Native:**
 
 ```tsx
 import { mw } from "motionwind-react-native";
@@ -77,5 +202,26 @@ import { mw } from "motionwind-react-native";
 </mw.Pressable>;
 ```
 
-If setup still fails, compare the project with the installable starter for the
-same framework and run `doctor` before filing an issue.
+## Troubleshooting
+
+| Problem                                 | Cause                                           | Fix                                                          |
+| --------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------ |
+| Animations don't play                   | Build integration not added                     | Run `npx create-motionwind@2 doctor` to check                |
+| `ReferenceError: motion is not defined` | Missing Motion dependency                       | Run `npm install motion` (or `motion-v` for Vue)             |
+| Unknown class warnings                  | Typo or missing token                           | Check spelling; run `npx create-motionwind@2 doctor`         |
+| React Native: animations crash          | Reanimated Babel plugin missing                 | Enable Reanimated in `babel.config.js` and clear Metro cache |
+| Vite plugin error                       | Plugin order wrong                              | motionwind plugin must come before the React plugin          |
+| Dynamic classes not animating           | Using regular `<button>` instead of `mw.button` | Use `mw.*` for dynamic class names                           |
+
+## Tailwind CSS is optional
+
+Motionwind's `animate-*` parser works independently of Tailwind CSS. The
+non-animation classes in your className pass through unchanged. You can use
+Motionwind with any CSS approach: Tailwind, CSS Modules, styled-components,
+or plain CSS.
+
+## Next steps
+
+- [Getting Started](/docs/getting-started) — understand how the compiler works
+- [Syntax Reference](/docs/syntax) — complete list of all classes
+- [Configuration](/docs/configuration) — tokens, presets, strict mode
