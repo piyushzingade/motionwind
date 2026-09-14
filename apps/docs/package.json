@@ -9,7 +9,9 @@
     "postinstall": "fumadocs-mdx",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
-    "check-types": "next typegen && tsc --noEmit"
+    "check-types": "next typegen && tsc --noEmit",
+    "test": "vitest run lib",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
@@ -37,6 +39,7 @@
     "eslint": "^9.39.1",
     "postcss": "^8.5.0",
     "tailwindcss": "^4.1.0",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "vitest": "^3.2.4"
   }
 }

@@ -19,6 +19,7 @@
       "name": "docs",
       "version": "0.1.0",
       "dependencies": {
+        "@phosphor-icons/react": "^2.1.10",
         "@repo/ui": "workspace:*",
         "@types/mdx": "^2.0.13",
         "@vercel/analytics": "^2.0.1",
@@ -44,6 +45,7 @@
         "postcss": "^8.5.0",
         "tailwindcss": "^4.1.0",
         "typescript": "5.9.2",
+        "vitest": "^3.2.4",
       },
     },
     "apps/native": {
