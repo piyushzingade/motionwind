@@ -663,6 +663,220 @@ figure.shiki pre::-webkit-scrollbar {
   margin-bottom: 0;
 }
 
+/* ── Docs page footer — rating + pagination ── */
+.docs-page-footer {
+  margin-top: 5rem;
+  padding-bottom: 1rem;
+}
+
+.docs-rating {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.875rem;
+  min-height: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+.docs-rating-title {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--color-fg);
+  letter-spacing: -0.015em;
+}
+
+.docs-rating-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.docs-rating-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  cursor: pointer;
+  border: 1px dotted var(--color-border);
+  border-radius: 0.625rem;
+  background: var(--color-surface-elevated);
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-fg);
+  box-shadow: 0 1px 0 var(--color-border-subtle);
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.docs-rating-button:hover {
+  border-color: color-mix(in srgb, var(--color-accent), transparent 55%);
+  color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.docs-rating-button:focus-visible {
+  outline: 2px dotted color-mix(in srgb, var(--color-accent), transparent 35%);
+  outline-offset: 3px;
+}
+
+.docs-rating-button:disabled {
+  cursor: progress;
+  opacity: 0.72;
+}
+
+.docs-rating-button[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--color-accent), transparent 35%);
+  background: color-mix(in srgb, var(--color-accent), transparent 92%);
+  color: var(--color-accent);
+}
+
+.docs-rating-button svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: 0 0 auto;
+  color: currentColor;
+}
+
+.docs-rating-note {
+  font-size: 0.8125rem;
+  color: var(--color-fg-muted);
+}
+
+.docs-pagination {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr) minmax(0, 1fr) 3.25rem;
+  align-items: center;
+  gap: 0.875rem;
+  border: 1px dotted var(--color-border-subtle);
+  border-radius: 0.875rem;
+  background: var(--color-surface);
+  padding: 0.25rem 0.875rem;
+}
+
+.docs-pagination-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-fg-muted);
+}
+
+.docs-pagination-arrow svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.docs-pagination-card {
+  display: flex;
+  min-width: 0;
+  min-height: 5rem;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px dotted var(--color-border);
+  border-radius: 0.625rem;
+  background: var(--color-surface-elevated);
+  padding: 1rem 1.125rem;
+  text-decoration: none;
+  box-shadow:
+    0 1px 0 var(--color-border-subtle),
+    0 0 0 3px color-mix(in srgb, var(--color-bg), transparent 35%);
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.docs-pagination-card:hover {
+  border-color: color-mix(in srgb, var(--color-accent), transparent 55%);
+  background: color-mix(in srgb, var(--color-surface-elevated), var(--color-accent) 3%);
+  transform: translateY(-1px);
+}
+
+.docs-pagination-card:focus-visible {
+  outline: 2px dotted color-mix(in srgb, var(--color-accent), transparent 35%);
+  outline-offset: 4px;
+}
+
+.docs-pagination-card-empty {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.docs-pagination-label {
+  margin-bottom: 0.3rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-fg-muted);
+}
+
+.docs-pagination-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--color-fg);
+  letter-spacing: -0.015em;
+}
+
+.docs-pagination-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 0.35rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--color-fg-muted);
+}
+
+@media (max-width: 760px) {
+  .docs-page-footer {
+    margin-top: 3.5rem;
+  }
+
+  .docs-rating {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .docs-pagination {
+    grid-template-columns: 2.25rem minmax(0, 1fr) 2.25rem;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .docs-pagination-card {
+    grid-column: 2;
+  }
+
+  .docs-pagination-card[data-direction="previous"] {
+    grid-row: 1;
+  }
+
+  .docs-pagination-card[data-direction="next"] {
+    grid-row: 2;
+  }
+
+  .docs-pagination-arrow:first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .docs-pagination-arrow:last-child {
+    grid-column: 3;
+    grid-row: 2;
+  }
+}
+
 /* ── Table of Contents — Organic Thread ── */
 
 .toc-header {
