@@ -148,7 +148,6 @@ const SEARCH_ITEMS: SearchItem[] = [
     url: "/docs/react-native/api-reference",
     section: "React Native",
   },
-  { title: "Syntax", url: "/docs/syntax", section: "Getting Started" },
   { title: "v2", url: "/docs/v2", section: "Reference" },
 ];
 
