@@ -2,6 +2,12 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence, Reorder } from "motion/react";
+import {
+  EyeIcon,
+  LightningIcon,
+  PenNibIcon,
+  RocketIcon,
+} from "@phosphor-icons/react";
 
 /* ── 1. Expandable Card ── */
 export function ExpandableCardDemo() {
@@ -96,10 +102,10 @@ export function ExpandableCardDemo() {
 
 /* ── 2. Shuffle List ── */
 const SHUFFLE_ITEMS = [
-  { id: "a", label: "Design", icon: "◆" },
-  { id: "b", label: "Develop", icon: "⚡" },
-  { id: "c", label: "Deploy", icon: "▲" },
-  { id: "d", label: "Monitor", icon: "◉" },
+  { id: "a", label: "Design", icon: PenNibIcon },
+  { id: "b", label: "Develop", icon: LightningIcon },
+  { id: "c", label: "Deploy", icon: RocketIcon },
+  { id: "d", label: "Monitor", icon: EyeIcon },
 ];
 
 export function ShuffleListDemo() {
@@ -122,8 +128,8 @@ export function ShuffleListDemo() {
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
             className="flex items-center gap-3 rounded-lg bg-[var(--color-surface-elevated)] border border-[var(--color-border)] px-4 py-2.5 text-[var(--color-fg)]"
           >
-            <span className="text-[var(--color-accent)] text-xs">
-              {item.icon}
+            <span className="text-[var(--color-accent)]">
+              <item.icon size={14} weight="fill" aria-hidden="true" />
             </span>
             <span className="text-sm font-medium">{item.label}</span>
           </motion.div>

@@ -36,9 +36,11 @@ export function NotificationStackDemo() {
 
   return (
     <div className="w-full max-w-xs">
-      <button onClick={add} className="demo-btn-primary mb-3">
-        Add Notification
-      </button>
+      <div className="mb-3 flex justify-center">
+        <button onClick={add} className="demo-btn-primary">
+          Add Notification
+        </button>
+      </div>
       <motion.div
         variants={notifContainer}
         animate="visible"

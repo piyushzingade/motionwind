@@ -2,12 +2,18 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
+import {
+  CircleIcon,
+  LightningIcon,
+  ShieldCheckIcon,
+  WindIcon,
+} from "@phosphor-icons/react";
 
 const cardData = [
-  { icon: "⚡", title: "Fast", desc: "Build-time transform" },
-  { icon: "◆", title: "Zero Runtime", desc: "No JS overhead" },
-  { icon: "▲", title: "Type Safe", desc: "Full IntelliSense" },
-  { icon: "◉", title: "Spring Physics", desc: "Natural motion" },
+  { icon: LightningIcon, title: "Fast", desc: "Build-time transform" },
+  { icon: CircleIcon, title: "Zero Runtime", desc: "No JS overhead" },
+  { icon: ShieldCheckIcon, title: "Type Safe", desc: "Full IntelliSense" },
+  { icon: WindIcon, title: "Spring Physics", desc: "Natural motion" },
 ];
 
 const gridContainer = {
@@ -52,7 +58,12 @@ export function StaggeredGridDemo() {
             variants={gridItem}
             className="rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border)] p-4"
           >
-            <span className="text-lg">{card.icon}</span>
+            <card.icon
+              size={18}
+              weight="fill"
+              className="text-[var(--color-accent)]"
+              aria-hidden="true"
+            />
             <p className="text-[var(--color-accent)] font-semibold text-xs mt-2">
               {card.title}
             </p>

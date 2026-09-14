@@ -1,6 +1,5 @@
 "use client";
 
-import { CodeIcon } from "@phosphor-icons/react";
 import { animate, cubicBezier, motion, useReducedMotion } from "motion/react";
 import {
   useEffect,
@@ -30,7 +29,7 @@ import { WaveformDemo } from "@/components/demos/waveform-demo";
 
 type StageCard = {
   id: string;
-  title: string;
+  label: string;
   x: number;
   y: number;
   width: number;
@@ -44,7 +43,7 @@ const H = 350;
 const CARDS: StageCard[] = [
   {
     id: "checkbox",
-    title: "animated-checkbox.tsx",
+    label: "Checkbox",
     x: 30,
     y: 30,
     width: W,
@@ -53,7 +52,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "notifications",
-    title: "notification-stack.tsx",
+    label: "Notifications",
     x: 510,
     y: 30,
     width: W,
@@ -62,7 +61,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "sidebar",
-    title: "collapsible-sidebar.tsx",
+    label: "Sidebar",
     x: 990,
     y: 30,
     width: W,
@@ -71,7 +70,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "stagger",
-    title: "staggered-grid.tsx",
+    label: "Feature grid",
     x: 1470,
     y: 30,
     width: W,
@@ -80,7 +79,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "states",
-    title: "multi-state.tsx",
+    label: "Multi state",
     x: 30,
     y: 550,
     width: W,
@@ -89,7 +88,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "form",
-    title: "orchestrated-form.tsx",
+    label: "Form",
     x: 510,
     y: 550,
     width: W,
@@ -98,7 +97,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "tabs",
-    title: "shared-layout-tabs.tsx",
+    label: "Tabs",
     x: 990,
     y: 550,
     width: W,
@@ -107,7 +106,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "grid",
-    title: "grid-layout.tsx",
+    label: "Grid",
     x: 1470,
     y: 550,
     width: W,
@@ -116,7 +115,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "shuffle",
-    title: "shuffle-list.tsx",
+    label: "Shuffle list",
     x: 30,
     y: 1070,
     width: W,
@@ -125,7 +124,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "progress",
-    title: "circular-progress.tsx",
+    label: "Progress ring",
     x: 510,
     y: 1070,
     width: W,
@@ -134,7 +133,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "logo",
-    title: "logo-draw.tsx",
+    label: "Logo draw",
     x: 990,
     y: 1070,
     width: W,
@@ -143,7 +142,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "chart",
-    title: "animated-chart.tsx",
+    label: "Chart",
     x: 1470,
     y: 1070,
     width: W,
@@ -152,7 +151,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "pulse",
-    title: "pulse-rings.tsx",
+    label: "Pulse rings",
     x: 30,
     y: 1590,
     width: W,
@@ -161,7 +160,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "waveform",
-    title: "waveform-bars.tsx",
+    label: "Waveform",
     x: 510,
     y: 1590,
     width: W,
@@ -170,7 +169,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "orbit",
-    title: "orbit-dots.tsx",
+    label: "Orbit",
     x: 990,
     y: 1590,
     width: W,
@@ -179,7 +178,7 @@ const CARDS: StageCard[] = [
   },
   {
     id: "blob",
-    title: "morph-blob.tsx",
+    label: "Blob",
     x: 1470,
     y: 1590,
     width: W,
@@ -230,7 +229,7 @@ function PreviewCard({
 }) {
   return (
     <motion.article
-      className="absolute flex flex-col overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-1.5 shadow-[0_18px_55px_var(--color-shadow)]"
+      className="absolute flex flex-col overflow-hidden rounded-xl border border-[var(--color-border)] bg-transparent p-1.5"
       style={{
         left: card.x,
         top: card.y,
@@ -259,10 +258,9 @@ function PreviewCard({
       data-stage-card={card.id}
       data-active={active}
     >
-      <div className="flex h-9 shrink-0 items-center gap-3 px-2">
-        <span className="flex min-w-0 items-center gap-2 font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-fg-muted)]">
-          <CodeIcon size={14} className="shrink-0" aria-hidden="true" />
-          <span className="truncate">{card.title}</span>
+      <div className="flex h-9 shrink-0 items-center px-2">
+        <span className="truncate text-xs font-medium text-[var(--color-fg-muted)]">
+          {card.label}
         </span>
       </div>
       <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-5">
