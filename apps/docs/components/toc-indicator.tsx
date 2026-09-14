@@ -77,6 +77,7 @@ export function TocIndicator({
               fill="none"
               stroke="white"
               strokeWidth="1.5"
+              strokeDasharray="1 5"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -123,7 +124,7 @@ export function TocIndicator({
       ) : null}
       <motion.div
         data-testid="toc-marker"
-        className="absolute left-0 top-0 size-[7px] rounded-[1.5px] bg-[var(--color-accent)]"
+        className="absolute left-0 top-0 size-[9px] rounded-[2px] border border-dotted border-[var(--color-accent)] bg-[var(--color-bg)]"
         style={{
           offsetPath,
           offsetDistance,

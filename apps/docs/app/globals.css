@@ -1130,3 +1130,131 @@ figure.shiki pre::-webkit-scrollbar {
     padding-inline-end: 4rem;
   }
 }
+
+/* ── Dotted UI system ─────────────────────────────────────────────── */
+/* Unlayered and near the end so it wins over Tailwind/Fumadocs utility
+   output while preserving existing border widths, colors, and radii. */
+:where(
+    .docs-content-wrapper,
+    .docs-prose,
+    .toc-sidebar,
+    .landing-preview-wrap,
+    [role="dialog"],
+    [data-radix-popper-content-wrapper]
+  )
+  :where(
+    [class*="border"],
+    button,
+    a,
+    kbd,
+    input,
+    textarea,
+    select,
+    table,
+    th,
+    td,
+    figure,
+    pre,
+    code,
+    blockquote
+  ) {
+  border-style: dotted !important;
+}
+
+.docs-prose blockquote {
+  border-style: dotted !important;
+}
+
+.docs-prose hr {
+  height: 0;
+  border-top: 1px dotted var(--color-border);
+  background: none;
+}
+
+.toc-header,
+.toc-link,
+.rn-code-panel,
+.rn-code-panel-header,
+figure.shiki,
+figure.shiki > div:first-child button,
+.demo-btn,
+.demo-btn-primary,
+[data-stage-card],
+[data-stage-card] > div,
+[data-fd-sidebar],
+[data-active="true"],
+[class*="border"] {
+  border-style: dotted !important;
+}
+
+button:has(> svg),
+a:has(> svg),
+span:has(> svg),
+kbd:has(> svg) {
+  border-style: dotted !important;
+}
+
+button:has(> svg):not([class*="border"]),
+a:has(> svg):not([class*="border"]),
+span:has(> svg):not([class*="border"]),
+kbd:has(> svg):not([class*="border"]) {
+  border: 1px dotted color-mix(in srgb, var(--color-border), transparent 20%);
+  border-radius: 0.5rem;
+}
+
+button > svg :is(path, line, rect, circle, ellipse, polyline, polygon),
+a > svg :is(path, line, rect, circle, ellipse, polyline, polygon),
+span > svg :is(path, line, rect, circle, ellipse, polyline, polygon),
+kbd > svg :is(path, line, rect, circle, ellipse, polyline, polygon) {
+  stroke-dasharray: 1.5 2.5;
+  stroke-linecap: round;
+}
+
+.toc-svg path {
+  stroke-dasharray: 1 5;
+  stroke-linecap: round;
+}
+
+[data-testid="toc-marker"] {
+  box-shadow: 0 0 0 3px var(--color-bg);
+}
+
+/* Hide component scrollbars while preserving scroll and keyboard access. */
+:where(
+  .docs-content-wrapper,
+  .toc-sidebar,
+  .docs-prose table,
+  .docs-prose .table-wrapper,
+  figure.shiki,
+  figure.shiki pre,
+  .demo-container,
+  [role="dialog"],
+  [role="dialog"] *,
+  [class*="overflow-auto"],
+  [class*="overflow-x-auto"],
+  [class*="overflow-y-auto"],
+  [class*="overflow-scroll"]
+) {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+:where(
+  .docs-content-wrapper,
+  .toc-sidebar,
+  .docs-prose table,
+  .docs-prose .table-wrapper,
+  figure.shiki,
+  figure.shiki pre,
+  .demo-container,
+  [role="dialog"],
+  [role="dialog"] *,
+  [class*="overflow-auto"],
+  [class*="overflow-x-auto"],
+  [class*="overflow-y-auto"],
+  [class*="overflow-scroll"]
+)::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
