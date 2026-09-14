@@ -34,13 +34,13 @@ const TOP_EXAMPLE_IDS = [
   "parallax-scroll",
 ] as const;
 
-const CATEGORY_FILTERS: { id: Category; label: string; icon: string }[] = [
-  { id: "top", label: "All", icon: "◈" },
-  { id: "interaction", label: "Interaction", icon: "◉" },
-  { id: "entrance", label: "Entrance", icon: "↗" },
-  { id: "layout", label: "Layout", icon: "⊞" },
-  { id: "loading", label: "Loading", icon: "◌" },
-  { id: "scroll", label: "Scroll", icon: "↕" },
+const CATEGORY_FILTERS: { id: Category; label: string }[] = [
+  { id: "top", label: "All" },
+  { id: "interaction", label: "Interaction" },
+  { id: "entrance", label: "Entrance" },
+  { id: "layout", label: "Layout" },
+  { id: "loading", label: "Loading" },
+  { id: "scroll", label: "Scroll" },
 ];
 
 const TAG_BY_RECIPE: Record<string, string> = {
@@ -97,18 +97,11 @@ export function DemoCards() {
   return (
     <section
       id="demos"
-      className="section-anchor relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28 lg:py-32"
+      className="section-anchor relative overflow-hidden px-4 py-16 sm:px-6 sm:py-22 lg:py-24"
     >
       <div className="mx-auto max-w-7xl">
-        {/* ── Header ── */}
         <Reveal>
           <div className="mb-12 max-w-2xl sm:mb-14">
-            <div className="mb-4 flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/20 bg-accent/8 px-3 py-1 font-[family-name:var(--font-mono)] text-[11px] text-accent">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
-                Interactive demos
-              </span>
-            </div>
             <h2 className="text-balance text-3xl font-semibold tracking-[-0.035em] text-fg sm:text-4xl md:text-5xl">
               The examples are the API.
             </h2>
@@ -119,7 +112,6 @@ export function DemoCards() {
           </div>
         </Reveal>
 
-        {/* ── Filters ── */}
         <Reveal y={14}>
           <div className="mb-8 flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             {CATEGORY_FILTERS.map((filter) => (
@@ -128,16 +120,14 @@ export function DemoCards() {
                 type="button"
                 aria-pressed={category === filter.id}
                 onClick={() => setCategory(filter.id)}
-                className="shrink-0 cursor-pointer rounded-full border border-border bg-surface-elevated px-4 py-2 text-xs font-medium text-fg-muted transition-all hover:border-accent/30 hover:text-fg active:scale-[0.97] aria-pressed:border-accent/40 aria-pressed:bg-accent/10 aria-pressed:text-accent aria-pressed:shadow-[0_0_12px_-4px_var(--accent-glow)]"
+                className="shrink-0 cursor-pointer rounded-full border border-border bg-surface-elevated px-4 py-2 text-xs font-medium text-fg-muted transition-colors hover:border-accent/30 hover:text-fg active:scale-[0.97] aria-pressed:border-accent/40 aria-pressed:bg-accent/10 aria-pressed:text-accent"
               >
-                <span className="mr-1.5 opacity-60">{filter.icon}</span>
                 {filter.label}
               </button>
             ))}
           </div>
         </Reveal>
 
-        {/* ── Preview grid ── */}
         <Reveal y={18}>
           <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {visibleRecipes.map((recipe) => (
@@ -147,16 +137,14 @@ export function DemoCards() {
                 onClick={() => setActiveId(recipe.id)}
                 className={`group relative cursor-pointer overflow-hidden rounded-2xl border bg-surface-elevated text-left transition-all duration-200 ${
                   recipe.id === activeRecipe.id
-                    ? "border-accent/40 shadow-[0_0_24px_-6px_var(--accent-glow)]"
-                    : "border-border hover:border-accent/25 hover:shadow-[0_12px_40px_-12px_var(--color-shadow)]"
+                    ? "border-accent/45"
+                    : "border-border hover:border-accent/25"
                 }`}
               >
-                {/* Preview area */}
                 <div className="studio-checker flex h-32 items-center justify-center overflow-hidden p-4 sm:h-36">
                   <MiniRecipePreview recipe={recipe} />
                 </div>
 
-                {/* Card footer */}
                 <div className="border-t border-border-subtle px-3.5 py-2.5">
                   <div className="flex items-center justify-between gap-2">
                     <span className="truncate text-[13px] font-medium text-fg">
@@ -168,18 +156,15 @@ export function DemoCards() {
                   </div>
                 </div>
 
-                {/* Active indicator */}
                 {recipe.id === activeRecipe.id && (
-                  <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 h-px bg-accent" />
                 )}
               </button>
             ))}
           </div>
         </Reveal>
 
-        {/* ── Showcase ── */}
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
-          {/* Main preview */}
           <Reveal y={22}>
             <RecipeShowcase
               recipe={activeRecipe}
@@ -187,7 +172,6 @@ export function DemoCards() {
             />
           </Reveal>
 
-          {/* Recipe list */}
           <Reveal y={22} delay={0.06}>
             <div className="grid max-h-[680px] gap-2.5 overflow-y-auto pr-1 scrollbar-thin">
               {visibleRecipes.map((recipe) => (
@@ -206,8 +190,6 @@ export function DemoCards() {
   );
 }
 
-/* ── Showcase ── */
-
 function RecipeShowcase({
   recipe,
   generatedCode,
@@ -218,8 +200,7 @@ function RecipeShowcase({
   const classSnippet = `<${getRecipeTag(recipe)} className="${recipe.classes}">`;
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-border bg-surface-elevated shadow-[0_32px_80px_-60px_var(--color-shadow)]">
-      {/* Header */}
+    <article className="overflow-hidden rounded-2xl border border-border bg-surface-elevated">
       <div className="border-b border-border-subtle p-5 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -241,12 +222,10 @@ function RecipeShowcase({
         </p>
       </div>
 
-      {/* Preview */}
       <div className="studio-checker flex min-h-[320px] items-center justify-center overflow-hidden p-8">
         <RecipePreview recipe={recipe} />
       </div>
 
-      {/* Code output */}
       <div className="grid border-t border-border-subtle lg:grid-cols-2">
         <CodeBlock title="Motionwind classes" code={classSnippet} />
         <CodeBlock title="Generated Motion output" code={generatedCode} />
@@ -254,8 +233,6 @@ function RecipeShowcase({
     </article>
   );
 }
-
-/* ── Recipe Tile ── */
 
 function RecipeTile({
   recipe,
@@ -273,7 +250,7 @@ function RecipeTile({
       onClick={onClick}
       className={`group cursor-pointer rounded-xl border p-3.5 text-left transition-all duration-150 active:scale-[0.98] ${
         active
-          ? "border-accent/40 bg-accent/8 shadow-[0_0_16px_-4px_var(--accent-glow)]"
+          ? "border-accent/40 bg-accent/8"
           : "border-border bg-surface-elevated hover:border-accent/25"
       }`}
     >
@@ -299,8 +276,6 @@ function RecipeTile({
   );
 }
 
-/* ── Code Block ── */
-
 function CodeBlock({ title, code }: { title: string; code: string }) {
   return (
     <div className="min-w-0 border-t border-border-subtle p-4 first:border-t-0 lg:border-l lg:border-t-0 lg:first:border-l-0">
@@ -313,8 +288,6 @@ function CodeBlock({ title, code }: { title: string; code: string }) {
     </div>
   );
 }
-
-/* ── Previews ── */
 
 function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
   switch (recipe.id) {
@@ -355,7 +328,7 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
     case "menu-pop":
       return (
         <mw.div
-          className={`${recipe.classes} w-64 rounded-xl border border-border bg-surface-elevated p-2 shadow-[0_20px_60px_-40px_var(--color-shadow)]`}
+          className={`${recipe.classes} w-64 rounded-xl border border-border bg-surface-elevated p-2`}
         >
           {["Copy classes", "Open in playground", "View docs"].map((item) => (
             <div
@@ -468,7 +441,7 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
         <div className="relative flex h-32 items-end justify-center">
           <button className={buttonSkin()}>Hover target</button>
           <mw.div
-            className={`${recipe.classes} absolute bottom-16 rounded-lg border border-border bg-surface-elevated px-3 py-2 text-xs text-fg shadow-[0_20px_60px_-40px_var(--color-shadow)]`}
+            className={`${recipe.classes} absolute bottom-16 rounded-lg border border-border bg-surface-elevated px-3 py-2 text-xs text-fg`}
           >
             Motionwind tooltip
           </mw.div>
@@ -514,8 +487,6 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       );
   }
 }
-
-/* ── Mini Previews ── */
 
 function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
   switch (recipe.id) {
@@ -622,8 +593,6 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
   }
 }
 
-/* ── Tab Indicator Preview ── */
-
 function TabIndicatorPreview({ recipe }: { recipe: MotionwindRecipe }) {
   const [active, setActive] = useState("Preview");
   const tabs = ["Preview", "Classes", "Output"];
@@ -651,8 +620,6 @@ function TabIndicatorPreview({ recipe }: { recipe: MotionwindRecipe }) {
   );
 }
 
-/* ── Helpers ── */
-
 function getRecipeTag(recipe: MotionwindRecipe) {
   return TAG_BY_RECIPE[recipe.id] ?? "div";
 }
@@ -669,5 +636,5 @@ function buttonSkin() {
 }
 
 function panelSkin() {
-  return "rounded-2xl border border-border bg-surface-elevated p-5 shadow-[0_24px_80px_-54px_var(--color-shadow)]";
+  return "rounded-2xl border border-border bg-surface-elevated p-5";
 }
