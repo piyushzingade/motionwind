@@ -1,197 +1,62 @@
 ---
 title: "Getting Started"
-description: "Step-by-step guide to using Motionwind — from first class to production deployment."
+description: "Understand Motionwind v2's shared parser, compile-time path, and explicit runtime fallback."
 ---
 
 # Getting Started
 
-This guide walks you through using Motionwind in a real project. By the end
-you'll have animated components working with zero runtime parser overhead.
+Motionwind v2 turns Tailwind-like `animate-*` classes into Motion-first animation
+data. React and Vue use compile-time transforms by default. Vanilla JavaScript
+and React Native use framework-specific runtime adapters, and React/Vue expose
+runtime components for dynamic classes.
 
-## Step 1: Install
+## The compile-time path
 
-Run the initializer. It detects your framework, installs packages, and creates
-`motionwind.config.ts`:
-
-```bash
-npx create-motionwind@2 init
-```
-
-Preview changes first with `--dry-run`:
-
-```bash
-npx create-motionwind@2 init --dry-run
-```
-
-If auto-detection fails, specify your framework:
-
-```bash
-npx create-motionwind@2 init --framework=next      # Next.js
-npx create-motionwind@2 init --framework=react      # React + Vite
-npx create-motionwind@2 init --framework=vue        # Vue + Vite
-npx create-motionwind@2 init --framework=vanilla    # Vanilla JS
-npx create-motionwind@2 init --framework=react-native  # Expo / React Native
-```
-
-## Step 2: Add the build integration
-
-Each framework has a specific integration. The CLI does this automatically, but
-here's the manual setup:
-
-**Next.js** — wrap your config:
-
-```ts
-// next.config.mjs
-import { withMotionwind } from "motionwind-react/next";
-import motionwindConfig from "./motionwind.config";
-
-export default withMotionwind({}, motionwindConfig);
-```
-
-**React + Vite** — add the plugin:
-
-```ts
-// vite.config.ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import motionwind from "motionwind-react/vite";
-import motionwindConfig from "./motionwind.config";
-
-export default defineConfig({
-  plugins: [motionwind(motionwindConfig), react()],
-});
-```
-
-**Vue + Vite** — add the transform and plugin:
-
-```ts
-// vite.config.ts
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import {
-  createMotionwindTransform,
-  MotionwindPlugin,
-} from "motionwind-vue/vite";
-import motionwindConfig from "./motionwind.config";
-
-export default defineConfig({
-  plugins: [
-    createMotionwindTransform(motionwindConfig),
-    vue(),
-    MotionwindPlugin(motionwindConfig),
-  ],
-});
-```
-
-**Vanilla JavaScript** — call the initializer:
-
-```ts
-import { motionwind } from "motionwind-vanilla";
-import motionwindConfig from "./motionwind.config";
-
-motionwind({ config: motionwindConfig });
-```
-
-**React Native** — wrap your app with the provider:
+Write animation classes beside ordinary styling classes:
 
 ```tsx
-import { MotionwindProvider } from "motionwind-react-native";
-import motionwindConfig from "./motionwind.config";
-
-export default function App() {
-  return (
-    <MotionwindProvider config={motionwindConfig}>
-      <YourApp />
-    </MotionwindProvider>
-  );
-}
-```
-
-## Step 3: Write your first animation
-
-Add `animate-*` classes to any element:
-
-```tsx
-<button className="animate-hover:scale-110 animate-tap:scale-90 animate-spring">
-  Hover or press me
-</button>
-```
-
-That's it. The compiler transforms this into a Motion component with
-`whileHover`, `whileTap`, and `transition` props. No animation code stays in
-`className`.
-
-## Step 4: Verify
-
-Run the diagnostic to confirm everything is wired up:
-
-```bash
-npx create-motionwind@2 doctor
-```
-
-Test hover, tap, and focus in your browser:
-
-```html
-<button
-  class="animate-hover:scale-110 animate-tap:scale-90 animate-focus:scale-105 animate-spring"
->
-  Test Motionwind
-</button>
-```
-
-## How the compile path works
-
-When you write:
-
-```tsx
-<button className="px-4 py-2 animate-hover:scale-110 animate-tap:scale-95">
+<button className="px-4 py-2 animate-hover:scale-110 animate-tap:scale-95 animate-focus:scale-105 animate-duration-200">
   Click me
 </button>
 ```
 
-The build step:
+In React, the compiler removes only the animation tokens, changes the host
+element to `motion.button`, adds `whileHover`, `whileTap`, `whileFocus`, and
+`transition` props, and preserves `px-4 py-2`. It injects the Motion import and,
+when needed in Next.js, the client boundary.
 
-1. Finds `animate-hover:scale-110` and `animate-tap:scale-95` in the className.
-2. Removes those tokens (leaving `px-4 py-2`).
-3. Changes `<button>` to `<motion.button>`.
-4. Adds `whileHover={{ scale: 1.1 }}` and `whileTap={{ scale: 0.95 }}`.
-5. Injects `import { motion } from "motion/react"` and `"use client"`.
+Vue follows the same model through its template transform. Both paths use the
+same `motionwind-core` parser as the runtime adapters and developer tools.
 
-The result is a standard Motion component. No parser runs in the browser.
+## Static and dynamic classes
 
-## Static vs dynamic classes
-
-**Static classes** (string literals, template literals with known values) are
-compiled at build time:
+Static string literals and template literals containing statically discoverable
+`animate-*` tokens are compiled. A value assembled entirely at runtime cannot be
+known during the build:
 
 ```tsx
-// Compiled — no runtime overhead
+// Compiled
 <button className="animate-hover:scale-110">Static</button>
 
-// Also compiled — the animation token is static, CSS is dynamic
+// Static animation token is compiled; the ordinary expression remains dynamic
 <button className={`animate-hover:scale-110 ${active ? "is-active" : ""}`}>
   Mixed
 </button>
-```
 
-**Dynamic classes** (animation values computed at runtime) need the `mw.*`
-runtime:
-
-```tsx
-import { mw } from "motionwind-react";
-
-// Dynamic — animation value comes from a prop
+// Use mw.* when the animation value itself is dynamic
 <mw.button className={`animate-hover:scale-${large ? "120" : "105"}`}>
-  Dynamic
-</mw.button>;
+  Dynamic animation
+</mw.button>
 ```
 
-`mw.*` parses `animate-*` classes at runtime and passes the result to Motion.
-Use it only when the animation token or value is truly dynamic.
+Import React runtime elements from `motionwind-react`. Vue uses `<Motionwind>`,
+`mw.*`, or `useMotionwind` for dynamic `:class` values.
 
-## Working with design-system components
+## Host and design-system components
 
-Wrap your own components with `mw.create()`:
+Lowercase host elements remain the fastest compile-time path. In React v2,
+simple uppercase components can be compiled through Motion's component bridge,
+and the explicit typed API is preferred for reusable design-system components:
 
 ```tsx
 import { mw } from "motionwind-react";
@@ -204,50 +69,26 @@ const MotionButton = mw.create(Button);
 </MotionButton>;
 ```
 
-The wrapped component must forward its ref and className to a DOM element.
+The wrapped component must forward its ref and relevant props to a DOM element.
+Use `mw.create` when that contract should be visible and type-checked.
 
-## Configuration basics
+## Configuration and accessibility
 
-The CLI creates `motionwind.config.ts` at your project root:
+Create tokens and presets in `motionwind.config.ts`, set `strict: true` in CI,
+and keep `reducedMotion: "user"` unless your application has a documented reason
+to override the operating-system preference. Runtime adapters receive the config
+through their initializer, plugin, or `MotionwindProvider`.
 
-```ts
-import { defineConfig } from "motionwind-core";
+Do not place a generated Motion prop and a manual prop such as `whileHover` on
+the same element. The ESLint plugin reports duplicate gesture properties and
+unknown classes.
 
-export default defineConfig({
-  adapter: "react", // or "vue", "vanilla", "react-native"
-  strict: true, // error on unknown classes in CI
-  reducedMotion: "user", // respect OS preference (recommended)
-  tokens: {
-    durations: { fast: 160, deliberate: 480 },
-    springs: { responsive: { stiffness: 420, damping: 28 } },
-  },
-  presets: {
-    "card-enter":
-      "animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-deliberate",
-  },
-});
-```
+## Choose the right level
 
-Tokens become classes: `animate-duration-fast`, `animate-spring-responsive`,
-`animate-preset-card-enter`.
+Use classes for common gestures, mount transitions, scroll reveals, layout,
+drag, and variants where the selected adapter supports them. Use Motion directly
+for complex orchestration, imperative timelines, or any feature marked “direct
+API” in the [Compatibility Matrix](/docs/compatibility).
 
-## When to use classes vs Motion directly
-
-| Use `animate-*` classes for | Use Motion directly for                    |
-| --------------------------- | ------------------------------------------ |
-| Hover, tap, focus effects   | Complex sequenced timelines                |
-| Mount/unmount transitions   | Imperative `animate()` calls               |
-| Scroll-triggered animations | Custom `useMotionValue` / `useSpring`      |
-| Layout animations           | SVG path animations                        |
-| Drag interactions           | Gesture recognizers beyond hover/tap/focus |
-| Variants and stagger        | Physics-based custom animations            |
-
-Both approaches coexist in the same application.
-
-## Next steps
-
-- [Syntax Reference](/docs/syntax) — complete list of gestures, properties,
-  and transitions
-- [Configuration](/docs/configuration) — tokens, presets, strict mode
-- [Framework Setup](/docs/framework-setup) — integration details per framework
-- [API Reference](/docs/api) — `parseMotionClasses`, `mw.*`, `mw.create`
+Next: [install v2](/docs/installation), define [configuration](/docs/configuration),
+then explore the [syntax registry](/docs/syntax).

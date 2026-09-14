@@ -1,307 +1,45 @@
 ---
-title: "Framework Setup"
-description: "Complete integration guide for every supported framework — Next.js, React, Vue, Nuxt, vanilla JS, and React Native."
+title: "Framework Setup Reference"
+description: "Canonical Motionwind v2 integration entry points and troubleshooting."
 ---
 
-# Framework Setup
-
-Each framework has a specific integration. This page shows the exact setup for
-each one.
-
-## Next.js
-
-### Install
-
-```bash
-npx create-motionwind@2 init --framework=next
-```
-
-Or manually:
-
-```bash
-npm install motionwind-react@2 motion motionwind-core@2
-```
-
-### Configure
-
-```ts
-// next.config.mjs
-import { withMotionwind } from "motionwind-react/next";
-import motionwindConfig from "./motionwind.config";
-
-export default withMotionwind({}, motionwindConfig);
-```
-
-### How it works
-
-`withMotionwind` wraps your Next.js config and adds a webpack rule that runs
-the motionwind Babel plugin before SWC. This means:
-
-1. `.tsx` and `.jsx` files are scanned for `animate-*` classes.
-2. Static tokens are transformed into Motion props.
-3. `"use client"` and `import { motion } from "motion/react"` are added
-   automatically.
-4. Your existing webpack config is preserved.
-
-### Turbopack
-
-`withMotionwind` also supports Turbopack. The same config works for both
-webpack and Turbopack builds.
-
-### Server Components
-
-Files with `animate-*` classes automatically get `"use client"` injected. If
-you have a server component that imports a client component with animations,
-the boundary is handled automatically.
-
-## React + Vite
-
-### Install
-
-```bash
-npx create-motionwind@2 init --framework=react
-```
-
-Or manually:
-
-```bash
-npm install motionwind-react@2 motion motionwind-core@2
-```
-
-### Configure
-
-```ts
-// vite.config.ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import motionwind from "motionwind-react/vite";
-import motionwindConfig from "./motionwind.config";
-
-export default defineConfig({
-  plugins: [motionwind(motionwindConfig), react()],
-});
-```
-
-**Important**: The motionwind plugin must come before `@vitejs/plugin-react`.
-
-### How it works
-
-The plugin registers a `transform` hook with `enforce: "pre"`. For every
-`.jsx` or `.tsx` file containing `animate-`:
-
-1. The file is passed through the motionwind Babel plugin.
-2. Static classes are transformed into Motion props.
-3. Source maps are preserved for debugging.
-
-Files without `animate-` are skipped entirely (fast string check).
-
-## Vue + Vite
-
-### Install
-
-```bash
-npx create-motionwind@2 init --framework=vue
-```
-
-Or manually:
-
-```bash
-npm install motionwind-vue@2 motion-v @vueuse/core motionwind-core@2
-```
-
-### Configure
-
-```ts
-// vite.config.ts
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import {
-  createMotionwindTransform,
-  MotionwindPlugin,
-} from "motionwind-vue/vite";
-import motionwindConfig from "./motionwind.config";
-
-export default defineConfig({
-  plugins: [
-    createMotionwindTransform(motionwindConfig),
-    vue(),
-    MotionwindPlugin(motionwindConfig),
-  ],
-});
-```
-
-Vue needs **both** the template transform and the plugin.
-
-### Dynamic classes in Vue
-
-For dynamic `:class` bindings, use the `<Motionwind>` component or
-`useMotionwind()` composable:
-
-```vue
-<template>
-  <Motionwind :class="dynamicClasses" />
-</template>
-
-<script setup>
-import { Motionwind } from "motionwind-vue";
-import { ref } from "vue";
-
-const dynamicClasses = ref("animate-hover:scale-105 animate-spring");
-</script>
-```
-
-## Nuxt
-
-### Install
-
-```bash
-npx create-motionwind@2 init --framework=vue
-```
-
-The CLI detects Nuxt and adds the module automatically.
-
-### Configure
-
-```ts
-// nuxt.config.ts
-export default defineNuxtConfig({
-  modules: ["motionwind-vue/nuxt"],
-});
-```
-
-### Dynamic classes in Nuxt
-
-Use the globally registered `<Motionwind>` component:
-
-```vue
-<template>
-  <Motionwind :class="dynamicClasses" />
-</template>
-
-<script setup>
-const dynamicClasses = ref("animate-hover:scale-105 animate-spring");
-</script>
-```
-
-## Vanilla JavaScript
-
-### Install
-
-```bash
-npx create-motionwind@2 init --framework=vanilla
-```
-
-Or manually:
-
-```bash
-npm install motionwind-vanilla@2 motion motionwind-core@2
-```
-
-### Configure
-
-```ts
-import { motionwind } from "motionwind-vanilla";
-import motionwindConfig from "./motionwind.config";
-
-motionwind({ config: motionwindConfig });
-```
-
-### How it works
-
-The vanilla runtime:
-
-1. Observes the DOM for elements with `animate-*` classes.
-2. Parses classes at runtime using `parseMotionClasses()`.
-3. Applies Motion animations directly to DOM elements.
-
-No build step is required. Works with any bundler or no bundler at all.
-
-### Limitations
-
-Vanilla JavaScript doesn't support:
-
-- Layout animations (no component model)
-- Drag gestures (use Motion directly)
-- Variants (use direct animations)
-
-## React Native, Expo
-
-### Install
-
-```bash
-npx create-motionwind@2 init --framework=react-native
-```
-
-Or manually:
-
-```bash
-npm install motionwind-react-native@2 react-native-reanimated react-native-gesture-handler nativewind motionwind-core@2
-```
-
-### Configure
-
-```tsx
-import { MotionwindProvider } from "motionwind-react-native";
-import motionwindConfig from "./motionwind.config";
-
-export default function App() {
-  return (
-    <MotionwindProvider config={motionwindConfig}>
-      <YourApp />
-    </MotionwindProvider>
-  );
-}
-```
-
-### Babel setup
-
-Reanimated's Babel plugin must be enabled:
-
-```js
-// babel.config.js
-module.exports = {
-  presets: ["babel-preset-expo"],
-  plugins: ["react-native-reanimated/plugin"],
-};
-```
-
-After changing Babel config, clear Metro cache:
-
-```bash
-npx react-native start --reset-cache
-```
-
-### Using `mw.*` components
-
-React Native uses runtime components backed by Reanimated:
-
-```tsx
-import { mw } from "motionwind-react-native";
-
-<mw.Pressable className="animate-tap:scale-90 animate-spring">
-  <mw.Text>Press me</mw.Text>
-</mw.Pressable>;
-```
-
-### Limitations
-
-React Native (beta) doesn't fully support:
-
-- Drag gestures (use Reanimated directly)
-- Layout transitions (use Reanimated directly)
-- In-view orchestration (use ScrollView + Reanimated)
-- SVG animations (use react-native-svg + Reanimated)
-
-These produce warnings, not silent failures.
+# Framework Setup Reference
+
+Use the dedicated guide rather than copying an integration from another
+framework:
+
+| Target                | Setup                                                 | Runtime                   |
+| --------------------- | ----------------------------------------------------- | ------------------------- |
+| Next.js or React/Vite | [React guide](/docs/frameworks/react)                 | `motion/react`            |
+| Vue/Vite or Nuxt      | [Vue guide](/docs/frameworks/vue)                     | `motion-v`                |
+| Browser JavaScript    | [Vanilla guide](/docs/frameworks/vanilla)             | `motion`                  |
+| React Native or Expo  | [React Native guide](/docs/react-native/installation) | `react-native-reanimated` |
+
+All v2 integrations consume `motionwind.config.ts`. The React Vite plugin and
+Next wrapper receive it directly; Vue's configured transform and plugin share
+it; vanilla receives it as `motionwind({ config })`; React and React Native
+runtime trees receive it through `MotionwindProvider`.
 
 ## Troubleshooting
 
-| Problem                     | Fix                                                     |
-| --------------------------- | ------------------------------------------------------- |
-| Animations don't play       | Run `npx create-motionwind@2 doctor`                    |
-| Vite: plugin error          | motionwind plugin must come before React plugin         |
-| Vue: animations missing     | Ensure both transform and plugin are added              |
-| Nuxt: component not found   | Check `modules: ["motionwind-vue/nuxt"]` in nuxt.config |
-| React Native: crash         | Enable Reanimated Babel plugin, clear Metro cache       |
-| Dynamic classes not working | Use `mw.*` components for dynamic class names           |
-| Unknown class warnings      | Check spelling; run `npx create-motionwind@2 doctor`    |
+Run the diagnostic from the application root:
+
+```bash
+npx create-motionwind@2 doctor
+```
+
+Common causes:
+
+- The React Vite plugin must run before `@vitejs/plugin-react`.
+- Vue/Vite needs both the template transform and `MotionwindPlugin`.
+- Nuxt uses the globally registered `<Motionwind>` component path.
+- Reanimated's Babel plugin must be enabled for React Native and Metro's cache
+  must be cleared after changing Babel configuration.
+- Dynamic animation values need the runtime API; the compiler cannot infer a
+  token constructed entirely at runtime.
+- A strict capability error means the selected adapter does not implement that
+  behavior. Use the direct Motion or platform API shown in the compatibility
+  guide instead of suppressing the warning.
+
+The starter applications under `starters/` are installable reference projects,
+and CI builds them from packed package artifacts rather than workspace links.

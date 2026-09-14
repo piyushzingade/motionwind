@@ -3,15 +3,7 @@ title: "Configuration"
 description: "Define animation tokens, presets, diagnostics, reduced-motion policy, plugins, and the adapter target in one typed file."
 ---
 
-# Configuration
-
-Motionwind uses a single configuration file at your project root. It defines
-animation tokens, reusable presets, strict diagnostics, and accessibility
-policy.
-
-## The config file
-
-Create `motionwind.config.ts` at your project root:
+Create `motionwind.config.ts` at the project root:
 
 ```ts
 import { defineConfig } from "motionwind-core";
@@ -32,161 +24,23 @@ export default defineConfig({
 });
 ```
 
-## Configuration options
-
-### `adapter`
-
-Which framework you're using. Determines how the compiler and runtime behave.
-
-```ts
-adapter: "react" | "vue" | "vanilla" | "react-native";
-```
-
-### `strict`
-
-When `true`, unknown animation classes and invalid syntax produce errors
-instead of warnings. Recommended for CI.
-
-```ts
-strict: true;
-```
-
-What `strict` catches:
-
-- Unknown gesture prefixes (e.g., `animate-invalid:scale-105`)
-- Unknown property names (e.g., `animate-hover:invalid-prop`)
-- Invalid extension syntax
-- Unknown preset names
-
-### `reducedMotion`
-
-Controls what happens when the user's OS prefers reduced motion.
-
-```ts
-reducedMotion: "user" | "always" | "never";
-```
-
-| Value      | Behavior                                              |
-| ---------- | ----------------------------------------------------- |
-| `"user"`   | Respect the OS `prefers-reduced-motion` setting       |
-| `"always"` | Always disable animations regardless of OS preference |
-| `"never"`  | Never reduce motion regardless of OS preference       |
-
-**Always use `"user"` unless you have a documented reason to override it.**
-
-## Tokens
-
-Tokens are named values you reference in classes. They keep your animation
-vocabulary consistent across the codebase.
-
-### Duration tokens
-
-Map short names to millisecond values:
-
-```ts
-tokens: {
-  durations: {
-    fast: 160,        // animate-duration-fast → 160ms
-    normal: 240,      // animate-duration-normal → 240ms
-    deliberate: 480,  // animate-duration-deliberate → 480ms
-    slow: 720,        // animate-duration-slow → 720ms
-  },
-}
-```
-
-Usage:
+Tokens and presets become classes:
 
 ```html
-<button class="animate-hover:scale-105 animate-duration-fast">Fast</button>
-<article class="animate-enter:opacity-100 animate-duration-deliberate">
-  Slow
-</article>
+<button
+  class="animate-hover:scale-105 animate-duration-fast animate-ease-product"
+/>
+<article class="animate-preset-card-enter" />
+<button class="animate-spring-responsive animate-tap:scale-95" />
 ```
 
-### Easing tokens
-
-Map names to cubic-bezier curves or easing functions:
-
-```ts
-tokens: {
-  easings: {
-    product: [0.22, 1, 0.36, 1],    // custom cubic-bezier
-    "ease-in-out": "ease-in-out",    // named easing
-  },
-}
-```
-
-Usage:
-
-```html
-<div class="animate-hover:x-10 animate-ease-product">Custom easing</div>
-```
-
-### Spring tokens
-
-Map names to spring physics configurations:
-
-```ts
-tokens: {
-  springs: {
-    responsive: { stiffness: 420, damping: 28 },  // fast response
-    bouncy: { stiffness: 300, damping: 10 },       // bouncy feel
-    gentle: { stiffness: 120, damping: 20 },       // gentle settle
-  },
-}
-```
-
-Usage:
-
-```html
-<button class="animate-hover:scale-105 animate-spring-responsive">
-  Responsive
-</button>
-<div class="animate-tap:scale-95 animate-spring-bouncy">Bouncy</div>
-```
-
-## Presets
-
-Presets are reusable animation classes defined as a string of `animate-*`
-tokens:
-
-```ts
-presets: {
-  "card-enter":
-    "animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-deliberate",
-  "button-press":
-    "animate-tap:scale-95 animate-spring-responsive",
-  "list-stagger":
-    "animate-initial:opacity-0 animate-initial:y-10 animate-enter:opacity-100 animate-enter:y-0 animate-stagger-50",
-}
-```
-
-Usage:
-
-```html
-<article class="animate-preset-card-enter">Fades in on mount</article>
-<button class="animate-preset-button-press">Presses on tap</button>
-```
-
-## Passing config to frameworks
-
-Each framework receives the config differently.
-
-### Next.js
-
-```ts
-// next.config.mjs
-import { withMotionwind } from "motionwind-react/next";
-import motionwindConfig from "./motionwind.config";
-
-export default withMotionwind({}, motionwindConfig);
-```
-
-### React + Vite
+Pass the config to the integration for the target framework. For example:
 
 ```ts
 // vite.config.ts
-import { motionwind } from "motionwind-react/vite";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import motionwind from "motionwind-react/vite";
 import motionwindConfig from "./motionwind.config";
 
 export default defineConfig({
@@ -194,119 +48,33 @@ export default defineConfig({
 });
 ```
 
-### Vue + Vite
+The other adapters receive the same object through their supported entry point:
 
 ```ts
-// vite.config.ts
-import {
-  createMotionwindTransform,
-  MotionwindPlugin,
-} from "motionwind-vue/vite";
-import motionwindConfig from "./motionwind.config";
+// Next.js
+export default withMotionwind(nextConfig, motionwindConfig);
 
-export default defineConfig({
-  plugins: [
-    createMotionwindTransform(motionwindConfig),
-    vue(),
-    MotionwindPlugin(motionwindConfig),
-  ],
-});
-```
+// Vue/Vite
+createMotionwindTransform(motionwindConfig);
+createApp(App).use(MotionwindPlugin, motionwindConfig);
 
-### Vanilla JavaScript
-
-```ts
-import { motionwind } from "motionwind-vanilla";
-import motionwindConfig from "./motionwind.config";
-
+// Vanilla JavaScript
 motionwind({ config: motionwindConfig });
 ```
 
-### React Native / Expo
+React and React Native runtime components use a provider:
 
 ```tsx
-import { MotionwindProvider } from "motionwind-react-native";
-import motionwindConfig from "./motionwind.config";
-
 <MotionwindProvider config={motionwindConfig}>
   <App />
-</MotionwindProvider>;
+</MotionwindProvider>
 ```
 
-## Plugins
+`strict: true` promotes unknown presets and invalid extension syntax from
+warnings to error diagnostics. CI, lint, MCP, and custom build integrations can
+fail on those diagnostics; runtime adapters expose the same errors through
+`ParsedResult.diagnostics`.
+`reducedMotion` accepts `"user"`, `"always"`, or `"never"`; applications should
+normally use `"user"`.
 
-Plugins extend Motionwind with custom properties, presets, and diagnostics:
-
-```ts
-import { defineMotionwindPlugin } from "motionwind-core";
-
-const myPlugin = defineMotionwindPlugin({
-  name: "my-plugin",
-  version: "1.0.0",
-  core: ">=2 <3",
-  presets: {
-    "my-enter": "animate-enter:opacity-100 animate-duration-fast",
-  },
-  definitions: [
-    {
-      id: "my.custom",
-      category: "property",
-      label: "custom-",
-      snippet: "custom-${1:100}",
-      description: "A custom property.",
-    },
-  ],
-});
-```
-
-Add plugins to your config:
-
-```ts
-export default defineConfig({
-  adapter: "react",
-  plugins: [myPlugin],
-});
-```
-
-## Full example
-
-Here's a complete config for a React project:
-
-```ts
-import { defineConfig } from "motionwind-core";
-
-export default defineConfig({
-  adapter: "react",
-  strict: true,
-  reducedMotion: "user",
-  tokens: {
-    durations: {
-      fast: 160,
-      normal: 240,
-      deliberate: 480,
-    },
-    easings: {
-      product: [0.22, 1, 0.36, 1],
-    },
-    springs: {
-      responsive: { stiffness: 420, damping: 28 },
-      bouncy: { stiffness: 300, damping: 10 },
-    },
-  },
-  presets: {
-    "card-enter":
-      "animate-initial:opacity-0 animate-enter:opacity-100 animate-duration-deliberate",
-    "button-press": "animate-tap:scale-95 animate-spring-responsive",
-  },
-});
-```
-
-This gives you these classes:
-
-| Class                         | Resolves to                                                   |
-| ----------------------------- | ------------------------------------------------------------- |
-| `animate-duration-fast`       | `transition.duration: 0.16`                                   |
-| `animate-ease-product`        | `transition.ease: [0.22, 1, 0.36, 1]`                         |
-| `animate-spring-responsive`   | `transition: { type: "spring", stiffness: 420, damping: 28 }` |
-| `animate-preset-card-enter`   | Fades in from opacity 0 with deliberate timing                |
-| `animate-preset-button-press` | Scales to 95% with responsive spring                          |
+Motionwind ships reviewed presets including `animate-preset-button-press`, `animate-preset-dialog-enter`, `animate-preset-list-stagger`, and `animate-preset-page-reveal`.
