@@ -87,6 +87,32 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Clickable controls should always advertise interactivity. */
+:where(
+  a[href],
+  button:not(:disabled),
+  summary,
+  label[for],
+  select:not(:disabled),
+  input[type="button"]:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  input[type="reset"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="link"]:not([aria-disabled="true"]),
+  [role="menuitem"]:not([aria-disabled="true"]),
+  [role="option"]:not([aria-disabled="true"]),
+  [role="tab"]:not([aria-disabled="true"])
+) {
+  cursor: pointer;
+}
+
+:where(button, select, input, [role="button"], [role="link"], [role="menuitem"], [role="option"], [role="tab"]):disabled,
+:where([aria-disabled="true"]) {
+  cursor: not-allowed;
+}
+
 /* Landing preview shell uses plain media queries so it remains authoritative
    alongside Fumadocs' separately compiled Tailwind utility layer. */
 .landing-preview-wrap {
