@@ -1484,6 +1484,45 @@ kbd > svg :is(path, line, rect, circle, ellipse, polyline, polygon) {
   border: 1px dotted var(--color-border) !important;
 }
 
+/* Filled action buttons should read as solid controls; reserve dotted borders
+   for outline/ghost buttons and surrounding component frames. */
+:where(
+  button,
+  a
+):where(
+  [class*="bg-[var(--color-accent)]"],
+  [class*="bg-fd-primary"],
+  [class*="bg-\\[#c8ff2e\\]"],
+  [class*="bg-\\[#4d7c0f\\]"],
+  .demo-btn-primary
+) {
+  border-style: solid !important;
+}
+
+:where(
+  button,
+  a
+):where(
+  [class*="bg-[var(--color-accent)]"],
+  [class*="bg-fd-primary"],
+  [class*="bg-\\[#c8ff2e\\]"],
+  [class*="bg-\\[#4d7c0f\\]"],
+  .demo-btn-primary
+):not([class*="border"]) {
+  border-color: transparent !important;
+}
+
+/* Search results and compact nav lists should not look like separated cards. */
+[role="dialog"] a,
+[role="dialog"] a:has(> svg),
+.toc-sidebar a,
+.toc-sidebar a:has(> svg),
+[data-fd-sidebar] a,
+[data-fd-sidebar] a:has(> svg) {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
 /* Hide component scrollbars while preserving scroll and keyboard access. */
 :where(
   .docs-content-wrapper,
