@@ -9,6 +9,19 @@ import {
 import { generateMotionCode } from "motionwind-react/tooling";
 import { highlightCode } from "../lib/highlight";
 import { Reveal } from "./reveal";
+import {
+  ButtonPressMini,
+  MagneticButtonMini,
+  PageRevealMini,
+  AccordionRevealMini,
+  SortableItemMini,
+  DragReorderMini,
+  FlipCardMini,
+  CardHoverMini,
+  DrawerMini,
+  TooltipPopMini,
+  ParallaxScrollMini,
+} from "./demos/mini-previews";
 
 type Category = "top" | MotionwindRecipe["category"];
 
@@ -106,14 +119,15 @@ export function DemoCards() {
               The examples are the API.
             </h2>
             <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg">
-              A wall of real previews first, then the exact class string and
-              generated Motion output when you want to inspect the details.
+              Every recipe below renders live. Select one to inspect its exact
+              class string and the Motion code it compiles to — then hover, tap,
+              drag, and scroll the preview itself.
             </p>
           </div>
         </Reveal>
 
         <Reveal y={14}>
-          <div className="mb-8 flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          <div className="mb-8 flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             {CATEGORY_FILTERS.map((filter) => (
               <button
                 key={filter.id}
@@ -125,6 +139,9 @@ export function DemoCards() {
                 {filter.label}
               </button>
             ))}
+            <span className="ml-auto shrink-0 pl-3 font-[family-name:var(--font-mono)] text-[11px] tabular-nums text-code-muted">
+              {visibleRecipes.length} of {recipes.length}
+            </span>
           </div>
         </Reveal>
 
@@ -141,7 +158,7 @@ export function DemoCards() {
                     : "border-border hover:border-accent/25"
                 }`}
               >
-                <div className="studio-checker flex h-32 items-center justify-center overflow-hidden p-4 sm:h-36">
+                <div className="flex h-32 items-center justify-center overflow-hidden bg-surface p-4 sm:h-36">
                   <MiniRecipePreview recipe={recipe} />
                 </div>
 
@@ -222,8 +239,15 @@ function RecipeShowcase({
         </p>
       </div>
 
-      <div className="studio-checker flex min-h-[320px] items-center justify-center overflow-hidden p-8">
-        <RecipePreview recipe={recipe} />
+      <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden bg-surface p-8">
+        <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-elevated px-2.5 py-1 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider text-code-muted">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+          </span>
+          Live
+        </span>
+        <RecipePreview key={recipe.id} recipe={recipe} />
       </div>
 
       <div className="grid border-t border-border-subtle lg:grid-cols-2">
@@ -582,6 +606,28 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
           <mw.div className={`${recipe.classes} h-12 rounded-lg bg-border`} />
         </div>
       );
+    case "button-press":
+      return <ButtonPressMini recipe={recipe} />;
+    case "magnetic-button":
+      return <MagneticButtonMini recipe={recipe} />;
+    case "page-reveal":
+      return <PageRevealMini recipe={recipe} />;
+    case "accordion-reveal":
+      return <AccordionRevealMini recipe={recipe} />;
+    case "sortable-item":
+      return <SortableItemMini recipe={recipe} />;
+    case "drag-reorder":
+      return <DragReorderMini recipe={recipe} />;
+    case "flip-card":
+      return <FlipCardMini recipe={recipe} />;
+    case "card-hover":
+      return <CardHoverMini recipe={recipe} />;
+    case "drawer":
+      return <DrawerMini recipe={recipe} />;
+    case "tooltip-pop":
+      return <TooltipPopMini recipe={recipe} />;
+    case "parallax-scroll":
+      return <ParallaxScrollMini recipe={recipe} />;
     default:
       return (
         <mw.div
