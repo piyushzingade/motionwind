@@ -116,15 +116,15 @@ export function DrawerMini({ recipe }: { recipe: MotionwindRecipe }) {
 
 export function TooltipPopMini({ recipe }: { recipe: MotionwindRecipe }) {
   return (
-    <div className="relative flex h-24 items-end justify-center">
-      <span className="cursor-pointer rounded-lg bg-accent px-3 py-1.5 text-[10px] font-semibold text-accent-fg">
-        Target
-      </span>
+    <div className="flex flex-col items-center gap-2">
       <mw.div
-        className={`${recipe.classes} absolute bottom-10 rounded-md border border-border bg-surface-elevated px-2 py-1 text-[10px] text-fg`}
+        className={`${recipe.classes} rounded-lg border border-border bg-surface-elevated px-3 py-1.5 text-[10px] text-fg shadow-lg`}
       >
         Tooltip
       </mw.div>
+      <span className="cursor-pointer rounded-lg bg-accent px-3 py-1.5 text-[10px] font-semibold text-accent-fg">
+        Target
+      </span>
     </div>
   );
 }
