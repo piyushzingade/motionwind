@@ -116,10 +116,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <Script
+        {/* Plain script tag: next/script + beforeInteractive inside <head>
+            triggers "script tag while rendering" errors in Next 16 — JSON-LD
+            needs none of next/script's loading behavior. */}
+        <script
           id="ld-json"
           type="application/ld+json"
-          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",

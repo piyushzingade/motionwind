@@ -5,7 +5,7 @@
 with an explicit runtime fallback for dynamic classes and React Native.
 
 <p>
-  <a href="https://mintlify.com/oss">
+  <a href="https://www.mintlify.com/oss-program">
     <img src="https://img.shields.io/badge/Sponsored%20by-Mintlify%20OSS%20Program-18E299?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIuMjY0IDMuNDM0SDYuNjkwNkM2LjI1NzQgMy40MzQgNS44NjQgMy42OTUgNS41ODIgNC4wNzJMMy41NDQgNi44MTZDMy4yMzYgNy4yMzIgMy4wNzIgNy43NDQgMy4wNzIgOC4yNzJWMTcuMzQ0QzMuMDcyIDE3Ljg3MiAzLjIzNiAxOC4zODQgMy41NDQgMTguOEw1LjU4MiAyMS41NDRDNS44NjQgMjEuOTIgNi4yNTcyIDIyLjE4NCA2LjY5MDYgMjIuMTg0SDEyLjI2NEMxMi42OTc0IDIyLjE4NCAxMy4wOSAyMS45MiAxMy4zNzIgMjEuNTQ0TDE1LjQxIDE4LjhDMTUuNzE4IDE4LjM4NCAxNS44ODIgMTcuODcyIDE1Ljg4MiAxNy4zNDRWOC4yNzJDMTUuODgyIDcuNzQ0IDE1LjcxOCA3LjIzMiAxNS40MSA2LjgxNkwxMy4zNzIgNC4wNzJDMTMuMDkgMy42OTUgMTIuNjk3NCAzLjQzNCAxMi4yNjQgMy40MzRaIiBmaWxsPSIjMThFMjk5Ii8+PC9zdmc+&labelColor=transparent&color=transparent"
     alt="Sponsored by Mintlify OSS Program"
   />
@@ -73,13 +73,13 @@ supported Node versions, and adapter test suites.
 
 Motionwind is free and open source thanks to our sponsors.
 
-### [Mintlify OSS Program](https://mintlify.com/oss)
+### [Mintlify OSS Program](https://www.mintlify.com/oss-program)
 
-Motionwind is proudly sponsored by the [Mintlify OSS Program](https://mintlify.com/oss),
+Motionwind is proudly sponsored by the [Mintlify OSS Program](https://www.mintlify.com/oss-program),
 supporting open-source developer tools. Thank you for backing motionwind!
 
 <p>
-  <a href="https://mintlify.com/oss">
+  <a href="https://www.mintlify.com/oss-program">
     <img src="https://img.shields.io/badge/Sponsored%20by-Mintlify%20OSS%20Program-18E299?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIuMjY0IDMuNDM0SDYuNjkwNkM2LjI1NzQgMy40MzQgNS44NjQgMy42OTUgNS41ODIgNC4wNzJMMy41NDQgNi44MTZDMy4yMzYgNy4yMzIgMy4wNzIgNy43NDQgMy4wNzIgOC4yNzJWMTcuMzQ0QzMuMDcyIDE3Ljg3MiAzLjIzNiAxOC4zODQgMy41NDQgMTguOEw1LjU4MiAyMS41NDRDNS44NjQgMjEuOTIgNi4yNTcyIDIyLjE4NCA2LjY5MDYgMjIuMTg0SDEyLjI2NEMxMi42OTc0IDIyLjE4NCAxMy4wOSAyMS45MiAxMy4zNzIgMjEuNTQ0TDE1LjQxIDE4LjhDMTUuNzE4IDE4LjM4NCAxNS44ODIgMTcuODcyIDE1Ljg4MiAxNy4zNDRWOC4yNzJDMTUuODgyIDcuNzQ0IDE1LjcxOCA3LjIzMiAxNS40MSA2LjgxNkwxMy4zNzIgNC4wNzJDMTMuMDkgMy42OTUgMTIuNjk3NCAzLjQzNCAxMi4yNjQgMy40MzRaIiBmaWxsPSIjMThFMjk5Ii8+PC9zdmc+&labelColor=transparent&color=transparent"
     alt="Sponsored by Mintlify OSS Program"
   />

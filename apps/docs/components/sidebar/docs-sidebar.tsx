@@ -112,7 +112,7 @@ export function DocsSidebar({
             motionwind
           </span>
           <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-fg-muted)]/50 ml-0.5">
-            v0.1
+            v2.2
           </span>
         </Link>
       </div>
