@@ -16,6 +16,7 @@ import {
 import { MOTIONWIND_RECIPES } from "motionwind-react";
 import type { MotionwindRecipe } from "motionwind-react";
 import type { StudioState } from "@/lib/types";
+import { MintlifyBadge } from "@repo/ui/mintlify-badge";
 import { FeedbackDialog } from "./feedback-dialog";
 import { RECIPE_SCENE_ICONS } from "./playground/recipe-preview";
 
@@ -185,6 +186,9 @@ function SidebarContent({
           <ChatCircleDotsIcon size={15} />
           Send Feedback
         </button>
+        <div className="mt-3 flex justify-center">
+          <MintlifyBadge />
+        </div>
       </div>
     </div>
   );

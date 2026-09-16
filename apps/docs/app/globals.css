@@ -219,14 +219,12 @@ body {
 }
 
 .docs-prose h2 {
-  font-family: var(--font-display), serif;
-  font-style: italic;
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--color-fg);
   margin-top: 3rem;
   margin-bottom: 1.25rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .docs-prose h3 {
@@ -235,6 +233,7 @@ body {
   color: var(--color-fg);
   margin-top: 2.25rem;
   margin-bottom: 0.875rem;
+  letter-spacing: -0.02em;
 }
 
 .docs-prose h4 {
@@ -243,6 +242,7 @@ body {
   color: var(--color-fg);
   margin-top: 1.75rem;
   margin-bottom: 0.625rem;
+  letter-spacing: -0.01em;
 }
 
 .docs-prose p {
