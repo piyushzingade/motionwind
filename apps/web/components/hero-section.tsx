@@ -4,9 +4,8 @@ import { useMemo } from "react";
 import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
 import { mw } from "motionwind-react";
 import { generateMotionCode } from "motionwind-react/tooling";
-import { OssProgramBadge } from "@repo/ui/oss-program-badge";
+import { MintlifyBadge } from "@repo/ui/mintlify-badge";
 import { highlightCode } from "../lib/highlight";
-import { MintlifyLogo } from "./mintlify-logo";
 
 const easeOutQuint: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
@@ -44,9 +43,7 @@ export function HeroSection() {
               transition={{ duration: 0.5, ease: easeOutQuint }}
               className="inline-flex"
             >
-              <OssProgramBadge
-                brand={<MintlifyLogo className="h-3 w-auto" />}
-              />
+              <MintlifyBadge />
             </m.div>
 
             <m.h1
