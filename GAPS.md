@@ -1,258 +1,290 @@
-# Motionwind Feature Gaps vs Motion
+# Motionwind Feature Gaps vs Motion 13
 
-Feature comparison with [Motion](https://github.com/motiondivision/motion) — what's missing and what can be added.
+Engineering tracker comparing Motionwind with
+[Motion](https://github.com/motiondivision/motion). This is not user-facing
+documentation or a release promise. It records what Motionwind already supports,
+what needs verification, and what Motion 13.4 introduces that may be worth
+adding.
 
----
+Sources checked:
 
-## Layout Animations
-
-Motionwind has no equivalent for layout-based animations.
-
-| Motion API | Description | Priority |
-|---|---|---|
-| `layout` | Auto-animates position/size changes using FLIP technique | High |
-| `layoutId` | Shared element transitions between components | High |
-| `LayoutGroup` | Coordinate layout animations across sibling components | Medium |
-| `layoutScroll` | Correct layout measurement in scrollable containers | Low |
-| `layoutRoot` | Correct layout measurement in fixed containers | Low |
-| `layoutAnchor` | Custom transform origin for layout animations | Low |
-
-**Possible class syntax:**
-```
-animate-layout
-animate-layout-id:my-element
-```
+- Current repo on `feat/docs-landing-and-toc`
+- `motion@13.4.0`
+- `motion-v@2.4.4`
+- Motion changelog and upgrade guides
 
 ---
 
-## SVG Animation
+## Current status: no longer gaps
 
-No SVG-specific animation classes exist.
+The original gap list was written before the v2 docs/parser work. These items
+are now implemented or documented in this branch and should be treated as
+verification-only work unless tests prove otherwise.
 
-| Motion API | Description | Priority |
-|---|---|---|
-| `pathLength` | Draw-on effect for SVG paths (0-1 progress) | High |
-| `pathSpacing` | Spacing along SVG path | Low |
-| `pathOffset` | Offset along SVG path | Low |
-| Path morphing | Animate between similar SVG shapes | Medium |
-| `viewBox` animation | Pan/zoom SVG viewBox | Low |
-| `attrX`, `attrY` | Animate SVG attributes directly | Low |
-| SVG filters | Animate `feTurbulence`, `feDisplacementMap` | Low |
-
-**Possible class syntax:**
-```
-animate-enter:pathLength-100
-animate-duration-1000
-```
+| Area                        | Current Motionwind support                                                                                                                                           | Follow-up                                                         |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Layout basics               | `animate-layout`, `animate-layout-position`, `animate-layout-size`, `animate-layout-preserve`, `animate-layout-id-*`, `animate-layout-scroll`, `animate-layout-root` | Verify docs, parser, codegen, Vue, and React runtime stay aligned |
+| SVG path drawing            | `path-length-*`, `path-offset-*`, `path-spacing-*`, plus bracket syntax like `[pathLength=1]`                                                                        | Keep SVG docs and compatibility matrix accurate                   |
+| Drag basics                 | `animate-drag-both`, axis drag, elastic, momentum, snap-to-origin, direction lock, pixel constraints                                                                 | Add missing Motion 13 per-axis snap support                       |
+| Repeat controls             | `animate-repeat-*`, `animate-repeat-reverse`, `animate-repeat-mirror`, `animate-repeat-delay-*`                                                                      | Confirm sequence-specific behavior remains direct Motion-only     |
+| Scroll-linked React/runtime | `animate-scroll:*`, axis, offset, container support in React runtime path                                                                                            | Vue remains warning-level; React Native remains beta              |
+| Reduced motion config       | `reducedMotion: "user" \| "always" \| "never"` via config/provider                                                                                                   | Keep docs clear on class-level vs global policy                   |
+| Exit prop generation        | `animate-exit:*` compiles to Motion `exit`; `MotionwindPresence` re-exports `AnimatePresence`                                                                        | Continue documenting wrapper requirement                          |
 
 ---
 
-## Drag System
+## Package upgrade audit
 
-Motionwind has basic drag but missing constraints and events.
+Motionwind packages and starters currently target Motion 12-era dependencies in
+multiple places. Before adding new Motion 13-specific syntax, verify dependency
+compatibility.
 
-| Motion API | Description | Priority |
-|---|---|---|
-| `dragConstraints` | Limit drag to a container or ref | High |
-| `dragConstraints={{ top, left, right, bottom }}` | Pixel-based constraints | High |
-| `dragDirectionLock` | Lock to single axis automatically | Medium |
-| `onDragStart` | Callback when drag starts | High |
-| `onDrag` | Callback during drag | High |
-| `onDragEnd` | Callback when drag ends | High |
-| `useDragControls()` | Imperative drag start/stop | Medium |
-| `snapToCursor` | Snap element to cursor on drag start | Low |
+| Package         | Latest checked | Current repo usage                                                        | Priority |
+| --------------- | -------------- | ------------------------------------------------------------------------- | -------- |
+| `motion`        | `13.4.0`       | Apps/starters/package dev deps use `^12.12.1`; peers allow `^11 \|\| ^12` | High     |
+| `framer-motion` | `13.4.0`       | Not a direct dependency, but users may migrate from it                    | Low      |
+| `motion-v`      | `2.4.4`        | Vue package/starters use `^1.7.x`; peer allows `>=0.11.0`                 | High     |
 
-**Possible class syntax:**
-```
-animate-drag-x animate-drag-constrain-parent
-```
+Recommended audit:
 
-Events would need a runtime API or callback props.
+1. Bump internal app/starter/dev dependencies to latest compatible Motion 13.
+2. Decide whether package peer ranges should become `^12 || ^13` or stay broad.
+3. Run packed starter compatibility checks.
+4. Verify Vue/Nuxt with `motion-v@2.4.4`, especially CJS/ESM packaging.
 
 ---
 
-## Value System
+## Motion 13 React compatibility
 
-Motionwind has no reactive value primitives.
+### `MotionConfig isValidProp`
 
-| Motion API | Description | Priority |
-|---|---|---|
-| `useMotionValue()` | Reactive animation values (bypass React render) | Medium |
-| `useTransform()` | Map/chain values (input ranges to output ranges) | Medium |
-| `useSpring()` | Spring-attached motion value | Low |
-| `useVelocity()` | Track velocity of another value | Low |
-| `useScroll()` | Scroll position as motion value | Medium |
-| `useInView()` | Boolean viewport intersection state | Low |
-| `useMotionValueEvent()` | Subscribe to motion value changes | Low |
+Motion 13 removed the optional `@emotion/is-prop-valid` dependency and expects
+users of styled-components/emotion to inject prop filtering explicitly through
+`MotionConfig isValidProp`.
 
-These are imperative APIs — may not fit the class-based model. Could be exposed as companion hooks.
+| Need                                                                    | Priority | Recommended Motionwind action           |
+| ----------------------------------------------------------------------- | -------- | --------------------------------------- |
+| Document behavior for styled wrappers passed to `mw.create()`           | High     | Add docs note and example               |
+| Confirm `MotionwindProvider` passes through `MotionConfig` safely       | High     | Add React runtime test                  |
+| Decide whether MotionwindProvider should expose `isValidProp` in config | Medium   | Prefer pass-through prop only if needed |
 
----
+Suggested docs example:
 
-## Scroll System
+```tsx
+import isPropValid from "@emotion/is-prop-valid";
+import { MotionwindProvider } from "motionwind-react";
 
-Motionwind has `animate-inview` but missing scroll-linked animations.
-
-| Motion API | Description | Priority |
-|---|---|---|
-| `useScroll()` | Scroll position + progress as motion value | Medium |
-| Scroll-linked values | Map scroll progress to element properties | Medium |
-| Parallax | Scroll-driven position offset | Medium |
-| Horizontal scroll | Sticky container + scroll mapping | Low |
-| Custom scroll containers | Measure within a specific scrollable element | Low |
-| `ScrollTimeline` | Native browser scroll animation (no JS per frame) | Low |
-
-**Possible class syntax:**
-```
-animate-scroll:y-[0,-200] animate-scroll-linked
+<MotionwindProvider config={config} motionConfig={{ isValidProp }}>
+  <App />
+</MotionwindProvider>;
 ```
 
----
-
-## Easing Functions
-
-Motionwind has basic easing — Motion has more named curves.
-
-| Motion Easing | Description | Priority |
-|---|---|---|
-| `anticipate` | Pull back before moving forward | Medium |
-| `backIn`, `backOut`, `backInOut` | Overshoot easing | Medium |
-| `circIn`, `circOut`, `circInOut` | Circular easing | Low |
-| Custom JS functions | Pass easing function as value | Low |
-
-**Possible class syntax:**
-```
-animate-ease-anticipate
-animate-ease-back-in-out
-```
+This API does not exist today; treat it as a proposal unless implemented.
 
 ---
 
-## Timeline / Sequencing
+## View transitions
 
-Motionwind explicitly excludes imperative timelines. Consider if worth adding.
+Motion 12.41 added `animateView`, and Motion 13.4 added React `AnimateView` for
+React 19.3 view transitions.
 
-| Motion API | Description | Priority |
-|---|---|---|
-| `animate()` sequence | Chain multiple animations with timing | Low |
-| Labels (`"<"`, `"+0.5"`) | Relative and absolute scheduling | Low |
-| `.pause()`, `.play()`, `.stop()` | Playback controls | Low |
-| `.then()` | Promise-based completion | Low |
+| Motion API                  | Description                                   | Priority | Motionwind direction                     |
+| --------------------------- | --------------------------------------------- | -------- | ---------------------------------------- |
+| `animateView`               | JavaScript View Transition API orchestration  | Medium   | Document direct Motion usage first       |
+| `AnimateView`               | React wrapper for React 19.3 `ViewTransition` | Medium   | Track until React 19.3 is stable in repo |
+| View transition class hooks | `.class(name)` tags transition layers         | Low      | Direct Motion escape hatch               |
 
-This is a design philosophy decision. Motionwind targets common UI animation, not complex timelines.
-
----
-
-## Animation Controls
-
-No imperative playback control in Motionwind.
-
-| Motion API | Description | Priority |
-|---|---|---|
-| `.pause()` | Pause running animation | Low |
-| `.play()` | Resume paused animation | Low |
-| `.stop()` | Stop animation | Low |
-| `.cancel()` | Cancel and reset | Low |
-| `.complete()` | Jump to end | Low |
-| `.time` | Get/set current time | Low |
-| `.speed` | Get/set playback speed | Low |
+Do not add class syntax yet. View transitions span route/page state and are not a
+simple element animation token.
 
 ---
 
-## Components
+## Layout additions from Motion 12.36+
 
-Motion has components Motionwind doesn't.
+Motion added axis-locked layout animations and a custom layout anchor.
 
-| Motion API | Description | Priority |
-|---|---|---|
-| `Reorder` | Drag-to-reorder lists | Medium |
-| `AnimatePresence` | Exit animations (keep in DOM during removal) | High |
-| `MotionConfig` | Global defaults (transition, reducedMotion) | Medium |
+| Motion API     | Description                              | Priority | Possible syntax                   |
+| -------------- | ---------------------------------------- | -------- | --------------------------------- |
+| `layout="x"`   | Animate layout changes on x axis only    | High     | `animate-layout-x`                |
+| `layout="y"`   | Animate layout changes on y axis only    | High     | `animate-layout-y`                |
+| `layoutAnchor` | Custom anchor point for projection boxes | Medium   | `animate-layout-anchor-[0.5,0.5]` |
 
-**Note:** `AnimatePresence` is critical — `animate-exit:` classes may not work without it.
+Implementation notes:
 
-**Possible class syntax for AnimatePresence:**
-```
-// Maybe not class-based — needs wrapper component
-```
-
----
-
-## Reduced Motion
-
-Motion handles reduced motion at library level. Motionwind uses design tokens.
-
-| Motion Approach | Motionwind Approach |
-|---|---|
-| `MotionConfig reducedMotion="user"` | Design tokens (`0ms` instant) |
-| Disables transforms automatically | Manual token configuration |
-| Persists opacity/color transitions | Relies on CSS |
-
-**Gap:** No library-level reduced motion policy. Users must configure tokens manually.
-
-**Possible addition:**
-```ts
-// motionwind.config.ts
-export default defineConfig({
-  reducedMotion: "user" | "always" | "never"
-});
-```
+- Extend `LayoutConfig.layout` to include `"x"` and `"y"`.
+- Add parser, registry, codegen, React Babel/runtime, Vue props, docs, and tests.
+- Treat `layoutAnchor` as experimental until exact Motion type/value shape is
+  confirmed.
 
 ---
 
-## Other Features
+## Drag additions from Motion 12.36+
 
-| Motion API | Description | Priority |
-|---|---|---|
-| CSS variable animation | Animate `--custom-prop` | Low |
-| Arc motion paths | Curved motion trajectories | Low |
-| Three.js / WebGL | 3D animation support | Low |
-| `stagger()` | Distribute delays across elements | Low |
-| `spring()` | Standalone spring generator | Low |
+Motion allows `dragSnapToOrigin` to be scoped per axis.
 
----
+| Motion API             | Description                | Priority | Possible syntax       |
+| ---------------------- | -------------------------- | -------- | --------------------- |
+| `dragSnapToOrigin="x"` | Snap x axis back to origin | Medium   | `animate-drag-snap-x` |
+| `dragSnapToOrigin="y"` | Snap y axis back to origin | Medium   | `animate-drag-snap-y` |
 
-## Priority Summary
+Current `animate-drag-snap` maps to boolean `dragSnapToOrigin`. Add per-axis
+syntax without changing existing behavior.
 
-### Must Have (High Priority)
-- [ ] `layout` — FLIP animations
-- [ ] `layoutId` — shared element transitions
-- [ ] `AnimatePresence` — exit animations wrapper
-- [ ] `dragConstraints` — limit drag area
-- [ ] Drag events (`onDragStart`, `onDrag`, `onDragEnd`)
-- [ ] SVG `pathLength` — draw-on effect
-
-### Should Have (Medium Priority)
-- [ ] `LayoutGroup` — coordinate layout across components
-- [ ] `useMotionValue()` / `useTransform()` — reactive values
-- [ ] `useScroll()` — scroll-linked animations
-- [ ] Parallax classes
-- [ ] `MotionConfig` — global defaults
-- [ ] `Reorder` — drag-to-reorder
-- [ ] Named easings (`anticipate`, `backIn`, etc.)
-- [ ] `dragDirectionLock`
-
-### Nice to Have (Low Priority)
-- [ ] `layoutScroll` / `layoutRoot`
-- [ ] SVG path morphing
-- [ ] `viewBox` animation
-- [ ] Arc motion paths
-- [ ] Timeline sequencing
-- [ ] Imperative playback controls
-- [ ] Three.js support
-- [ ] CSS variable animation
-- [ ] `stagger()` utility
-- [ ] `snapToCursor`
+Drag callbacks and `useDragControls()` remain direct Motion APIs; class syntax
+should not invent callback wiring.
 
 ---
 
-## What Motionwind Already Does Better
+## Curved motion and transition paths
 
-- [x] Zero runtime for static classes (compile-time)
-- [x] Tailwind-familiar syntax
-- [x] Broader framework support (React, Vue, Vanilla, React Native)
-- [x] Richer tooling (ESLint, Prettier, CLI, MCP, Studio)
-- [x] Simpler SSR (no hydration mismatch)
-- [x] Config tokens and presets
-- [x] Recipe registry
-- [x] Design system integration via `mw.create()`
+Motion 12.40 added `transition.path` and `arc()` for arc motion.
+
+| Motion API        | Description               | Priority | Motionwind direction             |
+| ----------------- | ------------------------- | -------- | -------------------------------- |
+| `transition.path` | Drive values along a path | Medium   | Docs/direct Motion first         |
+| `arc()`           | Generate arc trajectories | Medium   | Consider helper export or recipe |
+
+Suggested first step: add examples in advanced-effects docs and recipe registry,
+not parser syntax. Curved motion usually needs coordinates, layout context, and
+runtime values.
+
+---
+
+## Effects and non-DOM subjects
+
+Motion 13.2 added `animate.addEffect()` and `createEffect` options for driving
+non-DOM subjects. The Motion docs also expose effect utilities.
+
+| Motion API            | Description                               | Priority | Motionwind direction             |
+| --------------------- | ----------------------------------------- | -------- | -------------------------------- |
+| `animate.addEffect()` | Register custom effect targets            | Low      | Direct Motion escape hatch       |
+| `createEffect`        | Custom effect with `test`, `read`, `step` | Low      | Direct Motion escape hatch       |
+| `styleEffect`         | Render Motion values to styles            | Low      | Companion docs                   |
+| `attrEffect`          | Render Motion values to attributes        | Low      | Useful for SVG docs              |
+| `propEffect`          | Render Motion values to object props      | Low      | Direct Motion escape hatch       |
+| `svgEffect`           | SVG-specific value rendering              | Low      | Compare with current SVG support |
+
+These APIs do not fit static class compilation well. Document how to combine
+them with Motionwind-generated static animation props.
+
+---
+
+## Motion values and hooks
+
+Motionwind should continue to support static class workflows, but users still
+need Motion values for cursor followers, scroll math, physics, and continuous
+interaction.
+
+| Motion API                            | Current status                                    | Priority |
+| ------------------------------------- | ------------------------------------------------- | -------- |
+| `useMotionValue()` / `motionValue()`  | Direct Motion API                                 | Medium   |
+| `useTransform()` / `transformValue()` | Direct Motion API                                 | Medium   |
+| `useSpring()` / `springValue()`       | Direct Motion API                                 | Medium   |
+| `useVelocity()`                       | Direct Motion API                                 | Low      |
+| `useMotionValueEvent()`               | Direct Motion API                                 | Low      |
+| `useScroll()`                         | Direct API plus React scroll-linked class runtime | Medium   |
+
+Recommended Motionwind action:
+
+- Improve docs that show mixed usage: Motionwind classes for discrete states,
+  Motion hooks for continuous values.
+- Avoid class syntax for arbitrary Motion value graphs until a concrete product
+  need appears.
+
+---
+
+## Reorder
+
+Motion 13.1 improved `Reorder` with multidimensional reorder, automatic axis
+detection, and RTL support.
+
+| Feature                               | Priority | Motionwind direction                                        |
+| ------------------------------------- | -------- | ----------------------------------------------------------- |
+| `Reorder.Group` / `Reorder.Item` docs | Medium   | Direct Motion API with Motionwind classes on child controls |
+| Multidimensional reorder              | Medium   | Example/demo only                                           |
+| Automatic axis detection              | Low      | Mention in docs after Motion 13 upgrade                     |
+| RTL support                           | Low      | Compatibility note                                          |
+
+Do not wrap `Reorder` in class syntax yet. It is a structural component API.
+
+---
+
+## Color and value type support
+
+Motion 12.37 added support for modern color types and improved scroll offset
+hardware acceleration.
+
+| Feature                                         | Priority | Motionwind direction                        |
+| ----------------------------------------------- | -------- | ------------------------------------------- |
+| `oklch`, `oklab`, `lab`, `lch` colors           | Medium   | Add parser/docs tests for bracket values    |
+| `color()`, `color-mix()`, `light-dark()`        | Medium   | Verify arbitrary values pass through safely |
+| Scroll offsets `"start"` / `"end"` acceleration | Low      | Docs note only                              |
+
+Motionwind already supports arbitrary value syntax for color-like properties.
+The gap is test coverage and examples.
+
+---
+
+## Advanced integrations
+
+Motion 13.2 added `motion/three` and `motion/vgpu`.
+
+| Integration                  | Priority | Motionwind direction                           |
+| ---------------------------- | -------- | ---------------------------------------------- |
+| `motion/three`               | Low      | Direct Motion escape hatch                     |
+| `motion/vgpu`                | Low      | Direct Motion escape hatch                     |
+| Three.js/WebGPU class syntax | Very low | Out of scope unless a dedicated adapter exists |
+
+Motionwind should not claim support here. Add docs saying these are direct
+Motion APIs that can coexist with Motionwind in the same app.
+
+---
+
+## Updated priority summary
+
+### Must have
+
+- [ ] Audit and test `motion@13.4.0` across apps, starters, and packages.
+- [ ] Audit and test `motion-v@2.4.4` across Vue/Nuxt package and starters.
+- [ ] Document Motion 13 `MotionConfig isValidProp` implications for
+      `mw.create()` and styled wrappers.
+- [ ] Add `animate-layout-x` and `animate-layout-y`.
+- [ ] Add per-axis `animate-drag-snap-x` / `animate-drag-snap-y`.
+
+### Should have
+
+- [ ] Decide whether `layoutAnchor` gets parser syntax or remains direct Motion.
+- [ ] Add advanced docs for `animateView` / `AnimateView`.
+- [ ] Add recipe/docs examples for `transition.path` and `arc()`.
+- [ ] Add modern color parser/docs test coverage.
+- [ ] Refresh Reorder docs for Motion 13 behavior.
+
+### Nice to have
+
+- [ ] Document `animate.addEffect()` and effect utilities as direct Motion
+      escape hatches.
+- [ ] Add mixed Motion-value examples for cursor, scroll, and physics patterns.
+- [ ] Document `motion/three` and `motion/vgpu` as out-of-scope integrations.
+- [ ] Consider helper recipes for arc motion and view-transition-like patterns.
+
+---
+
+## What Motionwind already does better
+
+- [x] Zero runtime for static classes via compile-time transforms.
+- [x] Tailwind-familiar syntax for common Motion props.
+- [x] Multi-framework support across React, Vue, Vanilla, and React Native.
+- [x] Tooling ecosystem: ESLint, Prettier, CLI, MCP, VS Code, Studio.
+- [x] Config tokens, presets, and plugin hooks.
+- [x] Recipe registry and code generation helpers.
+- [x] Compatibility matrix and starter verification flow.
+
+---
+
+## Guardrails
+
+- Prefer direct Motion escape hatches for structural APIs: `Reorder`,
+  `AnimatePresence`, `AnimateView`, effects, Three.js, and WebGPU.
+- Add class syntax only when the mapping is deterministic and adapter-friendly.
+- Keep every new token in sync across parser, registry, codegen, adapters, docs,
+  fixture corpus, ESLint, Prettier, VS Code, MCP, and compatibility data.
