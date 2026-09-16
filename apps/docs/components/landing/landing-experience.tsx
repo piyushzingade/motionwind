@@ -185,7 +185,7 @@ export function LandingExperience() {
               <span
                 key={`${word}-${index}`}
                 data-story-word
-                className={`mr-[0.24em] inline-block ${reduceMotion ? "opacity-100" : "opacity-10"}`}
+                className="mr-[0.24em] inline-block opacity-10 motion-reduce:opacity-100"
               >
                 {word}
               </span>
