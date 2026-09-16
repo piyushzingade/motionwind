@@ -12,7 +12,7 @@ export function PlaygroundPage({ starCount }: { starCount: number | null }) {
   const studio = useStudioState();
   const { editor, updateEditor, replay } = studio;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [desktopCollapsed, setDesktopCollapsed] = useState(false);
+  const [desktopCollapsed, setDesktopCollapsed] = useState(true);
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {

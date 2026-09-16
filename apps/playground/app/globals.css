@@ -1203,14 +1203,6 @@ figure.shiki pre::-webkit-scrollbar {
 }
 
 /* ── Studio timeline ───────────────────────────────────────────────── */
-@keyframes studio-playhead {
-  from {
-    transform: translateX(8px);
-  }
-  to {
-    transform: translateX(calc(100cqw - 16px));
-  }
-}
 .studio-timeline {
   container-type: inline-size;
 }
@@ -1224,12 +1216,9 @@ figure.shiki pre::-webkit-scrollbar {
   );
 }
 .studio-playhead {
-  animation-name: studio-playhead;
-  animation-timing-function: linear;
-  animation-fill-mode: both;
+  will-change: transform;
 }
 .studio-playhead[data-reduced-motion="true"] {
-  animation: none;
   transform: translateX(calc(100cqw - 16px));
 }
 
@@ -1421,10 +1410,6 @@ figure.shiki pre::-webkit-scrollbar {
   .palette-overlay,
   .palette-content,
   .feedback-spinner,
-  .studio-playhead {
-    animation: none;
-  }
-
   .control-press,
   .studio-range::-webkit-slider-thumb {
     transition: none;
