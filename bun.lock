@@ -105,6 +105,7 @@
       "name": "web",
       "version": "0.1.0",
       "dependencies": {
+        "@phosphor-icons/react": "^2.1.10",
         "@repo/ui": "workspace:*",
         "@vercel/analytics": "^2.0.1",
         "motion": "^12.12.1",
