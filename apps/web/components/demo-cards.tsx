@@ -1,13 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CodeIcon } from "@phosphor-icons/react";
 import {
   MOTIONWIND_RECIPES,
   mw,
   type MotionwindRecipe,
 } from "motionwind-react";
 import { Reveal } from "./reveal";
+import { ComponentPreviewCard } from "./component-preview-card";
 
 const TOP_EXAMPLE_IDS = [
   "button-press",
@@ -62,38 +62,12 @@ export function DemoCards() {
         <Reveal y={18}>
           <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {recipes.map((recipe, index) => (
-              <article
+              <ComponentPreviewCard
                 key={recipe.id}
-                className="group relative flex h-[308.5px] flex-col overflow-hidden rounded-xl border border-border bg-surface-elevated p-6 text-left shadow-[0_24px_80px_-56px_var(--color-shadow)] transition-[border-color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:border-accent/25"
-              >
-                <div className="mb-4 flex items-center justify-between gap-3 px-1">
-                  <span className="flex min-w-0 items-center gap-2 font-[family-name:var(--font-mono)] text-[10px] tracking-wide text-code-muted">
-                    <CodeIcon
-                      className="size-3.5 shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span className="truncate">{recipe.id}.tsx</span>
-                  </span>
-                  <span className="shrink-0 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider text-code-muted">
-                    {recipe.category}
-                  </span>
-                </div>
-
-                <div className="studio-checker flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-lg border border-border-subtle p-4">
-                  <div
-                    className="web-component-loop"
-                    style={{ animationDelay: `${(index % 3) * 180}ms` }}
-                  >
-                    <MiniRecipePreview recipe={recipe} />
-                  </div>
-                </div>
-
-                <div className="mt-4 border-t border-border-subtle px-1 pt-3">
-                  <span className="truncate text-[13px] font-medium text-fg">
-                    {recipe.name}
-                  </span>
-                </div>
-              </article>
+                title={recipe.name}
+                animationDelay={(index % 3) * 180}
+                preview={<MiniRecipePreview recipe={recipe} />}
+              />
             ))}
           </div>
         </Reveal>
