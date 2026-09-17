@@ -19,7 +19,7 @@ export function ComponentPreviewCard({
           {title}
         </span>
       </div>
-      <div className="studio-checker flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-lg border border-border bg-surface p-5">
+      <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-lg border border-border bg-surface p-5">
         <div
           className="web-component-loop"
           style={{ animationDelay: `${animationDelay}ms` }}
