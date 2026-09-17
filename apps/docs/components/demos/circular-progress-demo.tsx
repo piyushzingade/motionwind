@@ -40,7 +40,6 @@ export function CircularProgressDemo() {
             strokeWidth="6"
             strokeLinecap="round"
             strokeDasharray={circumference}
-            initial={{ strokeDashoffset: circumference * (1 - progress / 100) }}
             animate={{ strokeDashoffset: circumference * (1 - progress / 100) }}
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           />
