@@ -1,7 +1,6 @@
 import { Header } from "../components/header";
 import { HeroSection } from "../components/hero-section";
 import { DemoCards } from "../components/demo-cards";
-import { HowItWorks } from "../components/how-it-works";
 import { GetStartedSection } from "../components/get-started-section";
 import { Footer } from "../components/footer";
 
@@ -13,9 +12,6 @@ export default function Home() {
 
       <div className="section-divider mx-auto max-w-7xl" />
       <DemoCards />
-
-      <div className="section-divider mx-auto max-w-7xl" />
-      <HowItWorks />
 
       <div className="section-divider mx-auto max-w-7xl" />
       <GetStartedSection />
