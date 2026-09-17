@@ -35,7 +35,7 @@ export function HeroSection() {
         <div className="surface-grid" aria-hidden="true" />
         <div className="surface-glow" aria-hidden="true" />
 
-        <div className="relative mx-auto grid min-h-[calc(88dvh-3.5rem)] max-w-7xl items-center gap-8 py-14 sm:py-16 lg:min-h-[700px] lg:grid-cols-[0.92fr_1.08fr] lg:py-18">
+        <div className="relative mx-auto grid min-h-[calc(88dvh-3.5rem)] max-w-[1120px] items-center gap-8 py-14 sm:py-16 lg:min-h-[700px] lg:grid-cols-[0.92fr_1.08fr] lg:py-18">
           <div className="max-w-2xl">
             <m.div
               variants={fadeUp}

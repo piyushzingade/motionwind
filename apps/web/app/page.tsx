@@ -10,10 +10,10 @@ export default function Home() {
       <Header />
       <HeroSection />
 
-      <div className="section-divider mx-auto max-w-7xl" />
+      <div className="section-divider mx-auto max-w-[1120px]" />
       <DemoCards />
 
-      <div className="section-divider mx-auto max-w-7xl" />
+      <div className="section-divider mx-auto max-w-[1120px]" />
       <GetStartedSection />
 
       <Footer />
