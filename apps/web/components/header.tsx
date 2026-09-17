@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { GithubLogoIcon, StarIcon } from "@phosphor-icons/react";
+import { MotionwindLogo } from "./motionwind-logo";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV_ITEMS = [
@@ -30,10 +32,11 @@ export async function Header() {
         <div className="flex items-center gap-6">
           <Link
             href="/"
-            className="group flex cursor-pointer items-center gap-2.5"
+            className="group flex cursor-pointer items-center gap-2"
             aria-label="Motionwind home"
           >
-            <span className="font-display text-xl italic tracking-[-0.02em] text-fg transition-colors group-hover:text-fg">
+            <MotionwindLogo className="size-5 text-accent" />
+            <span className="font-sans text-[15px] font-semibold tracking-[-0.03em] text-fg transition-colors">
               motionwind
             </span>
           </Link>
@@ -69,14 +72,16 @@ export async function Header() {
             className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-border bg-surface-elevated px-2.5 text-xs text-fg-muted transition-colors hover:border-accent/20 hover:text-fg"
           >
             <span>GitHub</span>
-            <svg
+            <GithubLogoIcon
               aria-hidden="true"
-              viewBox="0 0 16 16"
-              className="h-3.5 w-3.5 text-accent"
-              fill="currentColor"
-            >
-              <path d="M8 1.35 9.98 5.4l4.47.65-3.23 3.14.76 4.44L8 11.53l-3.98 2.1.76-4.44-3.23-3.14 4.47-.65L8 1.35Z" />
-            </svg>
+              className="size-3.5 text-fg-muted"
+              weight="fill"
+            />
+            <StarIcon
+              aria-hidden="true"
+              className="size-3.5 text-accent"
+              weight="fill"
+            />
             {starCount !== null && (
               <>
                 <span className="h-3 w-px bg-border" />

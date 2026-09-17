@@ -32,7 +32,6 @@ export function HeroSection() {
   return (
     <LazyMotion features={domAnimation}>
       <section className="relative overflow-hidden px-4 sm:px-6">
-        <div className="surface-grid" aria-hidden="true" />
         <div className="surface-glow" aria-hidden="true" />
 
         <div className="relative mx-auto grid min-h-[calc(88dvh-3.5rem)] max-w-[1120px] items-center gap-8 py-14 sm:py-16 lg:min-h-[700px] lg:grid-cols-[0.92fr_1.08fr] lg:py-18">
@@ -118,16 +117,7 @@ export function HeroSection() {
                   />
                 </div>
 
-                <div className="studio-checker flex min-h-[220px] flex-col justify-between gap-5 p-5">
-                  <div>
-                    <div className="font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
-                      live preview
-                    </div>
-                    <p className="mt-2 max-w-48 text-sm leading-relaxed text-fg-muted">
-                      The component stays semantic while Motion receives real
-                      hover and tap props.
-                    </p>
-                  </div>
+                <div className="flex min-h-[220px] flex-col justify-between gap-5 bg-surface p-5">
                   <div className="flex items-center justify-center py-4">
                     <mw.button
                       className={heroClasses}
