@@ -32,14 +32,14 @@ export async function Header() {
 
   return (
     <header className="sticky top-0 z-200 bg-bg/85 backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
-      <div className="mx-auto flex h-14 max-w-[1120px] items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-14 max-w-[1120px] items-center justify-between px-0">
         <div className="flex items-center gap-6">
           <Link
             href="/"
             className="group flex cursor-pointer items-center gap-2"
             aria-label="Motionwind home"
           >
-            <MotionwindHorizontalLogo className="h-7 w-28 text-fg" />
+            <MotionwindHorizontalLogo className="h-9 w-36 text-fg" />
           </Link>
           <nav
             className="hidden md:flex items-center gap-1"
