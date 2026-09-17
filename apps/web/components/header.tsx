@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { GithubLogoIcon, StarIcon } from "@phosphor-icons/react";
+// NOTE: async Server Component — icons must come from the SSR build.
+// The main entry calls createContext/forwardRef at module scope, which
+// resolves against react-server here and crashes the build (same convention
+// as the docs landing hero).
+import { GithubLogoIcon, StarIcon } from "@phosphor-icons/react/dist/ssr";
 import { MotionwindLogo } from "./motionwind-logo";
 import { ThemeToggle } from "./theme-toggle";
 
