@@ -15,23 +15,12 @@ type Category = "top" | MotionwindRecipe["category"];
 const TOP_EXAMPLE_IDS = [
   "button-press",
   "dialog-enter",
-  "page-reveal",
   "loading-orbit",
   "menu-pop",
   "accordion-reveal",
   "tab-indicator",
   "toast-enter",
-  "sortable-item",
   "svg-line-loader",
-  "scroll-progress",
-  "flip-card",
-  "magnetic-button",
-  "drawer",
-  "tooltip-pop",
-  "skeleton-pulse",
-  "card-hover",
-  "drag-reorder",
-  "parallax-scroll",
 ] as const;
 
 const CATEGORY_FILTERS: { id: Category; label: string }[] = [
@@ -99,7 +88,7 @@ export function DemoCards() {
       id="demos"
       className="section-anchor relative overflow-hidden px-4 py-16 sm:px-6 sm:py-22 lg:py-24"
     >
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[1120px]">
         <Reveal>
           <div className="mb-12 max-w-2xl sm:mb-14">
             <h2 className="text-balance text-3xl font-semibold tracking-[-0.035em] text-fg sm:text-4xl md:text-5xl">
@@ -129,23 +118,28 @@ export function DemoCards() {
         </Reveal>
 
         <Reveal y={18}>
-          <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {visibleRecipes.map((recipe) => (
+          <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {visibleRecipes.map((recipe, index) => (
               <button
                 key={recipe.id}
                 type="button"
                 onClick={() => setActiveId(recipe.id)}
-                className={`group relative cursor-pointer overflow-hidden rounded-2xl border bg-surface-elevated text-left transition-all duration-200 ${
+                className={`group relative flex h-[308.5px] cursor-pointer flex-col overflow-hidden rounded-2xl border bg-surface-elevated p-6 text-left transition-[border-color,background-color,transform] duration-200 ${
                   recipe.id === activeRecipe.id
                     ? "border-accent/45"
                     : "border-border hover:border-accent/25"
                 }`}
               >
-                <div className="studio-checker flex h-32 items-center justify-center overflow-hidden p-4 sm:h-36">
-                  <MiniRecipePreview recipe={recipe} />
+                <div className="studio-checker flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-xl">
+                  <div
+                    className="web-component-loop"
+                    style={{ animationDelay: `${(index % 3) * 180}ms` }}
+                  >
+                    <MiniRecipePreview recipe={recipe} />
+                  </div>
                 </div>
 
-                <div className="border-t border-border-subtle px-3.5 py-2.5">
+                <div className="mt-5 border-t border-border-subtle pt-4">
                   <div className="flex items-center justify-between gap-2">
                     <span className="truncate text-[13px] font-medium text-fg">
                       {recipe.name}

@@ -632,6 +632,30 @@ body {
   }
 }
 
+@keyframes component-preview-loop {
+  0%,
+  100% {
+    opacity: 0.82;
+    transform: translateY(4px) scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1);
+  }
+}
+
+.web-component-loop {
+  animation: component-preview-loop 3.8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .web-component-loop {
+    animation: none;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-glow {
     animation: none;
