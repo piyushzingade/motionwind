@@ -4,7 +4,7 @@ import Link from "next/link";
 // resolves against react-server here and crashes the build (same convention
 // as the docs landing hero).
 import { GithubLogoIcon, StarIcon } from "@phosphor-icons/react/dist/ssr";
-import { MotionwindLogo } from "./motionwind-logo";
+import { MotionwindLogo } from "@repo/ui/motionwind-logo";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV_ITEMS = [

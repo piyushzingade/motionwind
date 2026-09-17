@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MotionwindLogo } from "./motionwind-logo";
+import { MotionwindLogo } from "@repo/ui/motionwind-logo";
 
 export function Footer() {
   return (

@@ -79,6 +79,7 @@
       "dependencies": {
         "@phosphor-icons/react": "^2.1.10",
         "@radix-ui/react-dialog": "^1.1.23",
+        "@repo/ui": "workspace:*",
         "@vercel/analytics": "^2.0.1",
         "motion": "^12.12.1",
         "motionwind-react": "*",

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
+    "@repo/ui": "workspace:*",
     "@radix-ui/react-dialog": "^1.1.23",
     "@vercel/analytics": "^2.0.1",
     "motion": "^12.12.1",
