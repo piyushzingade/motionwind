@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { CodeIcon } from "@phosphor-icons/react";
 import {
   MOTIONWIND_RECIPES,
   mw,
@@ -52,8 +53,8 @@ export function DemoCards() {
               The examples are the API.
             </h2>
             <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg">
-              A wall of real previews first, then the exact class string and
-              generated Motion output when you want to inspect the details.
+              Nine focused previews, each showing one motion pattern you can
+              author beside the element.
             </p>
           </div>
         </Reveal>
@@ -63,9 +64,22 @@ export function DemoCards() {
             {recipes.map((recipe, index) => (
               <article
                 key={recipe.id}
-                className="group relative flex h-[308.5px] flex-col overflow-hidden rounded-2xl border border-border bg-surface-elevated p-6 text-left transition-[border-color,background-color,transform] duration-200 hover:border-accent/25"
+                className="group relative flex h-[308.5px] flex-col overflow-hidden rounded-xl border border-border bg-surface-elevated p-6 text-left shadow-[0_24px_80px_-56px_var(--color-shadow)] transition-[border-color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:border-accent/25"
               >
-                <div className="studio-checker flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-xl">
+                <div className="mb-4 flex items-center justify-between gap-3 px-1">
+                  <span className="flex min-w-0 items-center gap-2 font-[family-name:var(--font-mono)] text-[10px] tracking-wide text-code-muted">
+                    <CodeIcon
+                      className="size-3.5 shrink-0"
+                      aria-hidden="true"
+                    />
+                    <span className="truncate">{recipe.id}.tsx</span>
+                  </span>
+                  <span className="shrink-0 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider text-code-muted">
+                    {recipe.category}
+                  </span>
+                </div>
+
+                <div className="studio-checker flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-lg border border-border-subtle p-4">
                   <div
                     className="web-component-loop"
                     style={{ animationDelay: `${(index % 3) * 180}ms` }}
@@ -74,15 +88,10 @@ export function DemoCards() {
                   </div>
                 </div>
 
-                <div className="mt-5 border-t border-border-subtle pt-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="truncate text-[13px] font-medium text-fg">
-                      {recipe.name}
-                    </span>
-                    <span className="shrink-0 rounded-md bg-surface px-2 py-0.5 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-wider text-code-muted">
-                      {recipe.category}
-                    </span>
-                  </div>
+                <div className="mt-4 border-t border-border-subtle px-1 pt-3">
+                  <span className="truncate text-[13px] font-medium text-fg">
+                    {recipe.name}
+                  </span>
                 </div>
               </article>
             ))}
