@@ -4,8 +4,6 @@ import { ThemeToggle } from "./theme-toggle";
 const NAV_ITEMS = [
   { label: "Demos", href: "#demos" },
   { label: "How", href: "#how" },
-  { label: "Features", href: "#features" },
-  { label: "Syntax", href: "#syntax" },
 ];
 
 async function getStarCount(): Promise<number | null> {

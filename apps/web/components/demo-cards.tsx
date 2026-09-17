@@ -10,8 +10,6 @@ import { generateMotionCode } from "motionwind-react/tooling";
 import { highlightCode } from "../lib/highlight";
 import { Reveal } from "./reveal";
 
-type Category = "top" | MotionwindRecipe["category"];
-
 const TOP_EXAMPLE_IDS = [
   "button-press",
   "dialog-enter",
@@ -22,15 +20,6 @@ const TOP_EXAMPLE_IDS = [
   "toast-enter",
   "svg-line-loader",
 ] as const;
-
-const CATEGORY_FILTERS: { id: Category; label: string }[] = [
-  { id: "top", label: "All" },
-  { id: "interaction", label: "Interaction" },
-  { id: "entrance", label: "Entrance" },
-  { id: "layout", label: "Layout" },
-  { id: "loading", label: "Loading" },
-  { id: "scroll", label: "Scroll" },
-];
 
 const TAG_BY_RECIPE: Record<string, string> = {
   "button-press": "button",
@@ -52,27 +41,16 @@ export function DemoCards() {
     [],
   );
 
-  const [category, setCategory] = useState<Category>("top");
-  const visibleRecipes = useMemo(
-    () =>
-      category === "top"
-        ? recipes
-        : recipes.filter((recipe) => recipe.category === category),
-    [category, recipes],
-  );
-
   const [activeId, setActiveId] = useState(recipes[0]?.id ?? "");
 
   useEffect(() => {
-    if (!visibleRecipes.some((recipe) => recipe.id === activeId)) {
-      setActiveId(visibleRecipes[0]?.id ?? "");
+    if (!recipes.some((recipe) => recipe.id === activeId)) {
+      setActiveId(recipes[0]?.id ?? "");
     }
-  }, [activeId, visibleRecipes]);
+  }, [activeId, recipes]);
 
   const activeRecipe =
-    visibleRecipes.find((recipe) => recipe.id === activeId) ??
-    visibleRecipes[0] ??
-    recipes[0]!;
+    recipes.find((recipe) => recipe.id === activeId) ?? recipes[0]!;
 
   const generatedCode = useMemo(
     () =>
@@ -101,25 +79,9 @@ export function DemoCards() {
           </div>
         </Reveal>
 
-        <Reveal y={14}>
-          <div className="mb-8 flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-            {CATEGORY_FILTERS.map((filter) => (
-              <button
-                key={filter.id}
-                type="button"
-                aria-pressed={category === filter.id}
-                onClick={() => setCategory(filter.id)}
-                className="shrink-0 cursor-pointer rounded-full border border-border bg-surface-elevated px-4 py-2 text-xs font-medium text-fg-muted transition-colors hover:border-accent/30 hover:text-fg active:scale-[0.97] aria-pressed:border-accent/40 aria-pressed:bg-accent/10 aria-pressed:text-accent"
-              >
-                {filter.label}
-              </button>
-            ))}
-          </div>
-        </Reveal>
-
         <Reveal y={18}>
           <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {visibleRecipes.map((recipe, index) => (
+            {recipes.map((recipe, index) => (
               <button
                 key={recipe.id}
                 type="button"
@@ -168,7 +130,7 @@ export function DemoCards() {
 
           <Reveal y={22} delay={0.06}>
             <div className="grid max-h-[680px] gap-2.5 overflow-y-auto pr-1 scrollbar-thin">
-              {visibleRecipes.map((recipe) => (
+              {recipes.map((recipe) => (
                 <RecipeTile
                   key={recipe.id}
                   recipe={recipe}
