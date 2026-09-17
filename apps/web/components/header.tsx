@@ -39,7 +39,7 @@ export async function Header() {
             className="group flex cursor-pointer items-center gap-2"
             aria-label="Motionwind home"
           >
-            <MotionwindHorizontalLogo className="h-9 w-36 text-fg" />
+            <MotionwindHorizontalLogo className="h-11 w-44 text-fg" />
           </Link>
           <nav
             className="hidden md:flex items-center gap-1"
