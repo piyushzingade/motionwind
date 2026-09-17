@@ -4,7 +4,7 @@ import Link from "next/link";
 // resolves against react-server here and crashes the build (same convention
 // as the docs landing hero).
 import { GithubLogoIcon, StarIcon } from "@phosphor-icons/react/dist/ssr";
-import { MotionwindLogo } from "@repo/ui/motionwind-logo";
+import { MotionwindHorizontalLogo } from "@repo/ui/motionwind-logo";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV_ITEMS = [
@@ -39,10 +39,7 @@ export async function Header() {
             className="group flex cursor-pointer items-center gap-2"
             aria-label="Motionwind home"
           >
-            <MotionwindLogo className="size-5 text-accent" />
-            <span className="font-sans text-[15px] font-semibold tracking-[-0.03em] text-fg transition-colors">
-              motionwind
-            </span>
+            <MotionwindHorizontalLogo className="h-7 w-28 text-fg" />
           </Link>
           <nav
             className="hidden md:flex items-center gap-1"
