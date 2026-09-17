@@ -1,213 +1,19 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import {
-  BellIcon,
-  CaretDownIcon,
-  CheckIcon,
-  CodeIcon,
-  GearSixIcon,
-  LightningIcon,
-  PlusIcon,
-  SparkleIcon,
-} from "@phosphor-icons/react";
+import { CodeIcon } from "@phosphor-icons/react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useReducedMotion } from "motion/react";
+import { AnimatedCheckboxDemo } from "@/components/demos/animated-checkbox-demo";
+import { CircularProgressDemo } from "@/components/demos/circular-progress-demo";
+import { SharedLayoutTabsDemo } from "@/components/demos/layout-demos";
+import { StaggeredGridDemo } from "@/components/demos/staggered-grid-demo";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const frameworks = ["React", "Vue", "JavaScript", "React Native"];
-
-const loopCards = [
-  { title: "staggered-grid.tsx", variant: "staggered" },
-  { title: "svg-checkbox.tsx", variant: "checkbox" },
-  { title: "circular-progress.tsx", variant: "progress" },
-  { title: "pulse-ring.tsx", variant: "pulse" },
-  { title: "shared-tabs.tsx", variant: "tabs" },
-  { title: "notification.tsx", variant: "notification" },
-  { title: "accordion.tsx", variant: "accordion" },
-  { title: "magnetic-button.tsx", variant: "button" },
-  { title: "loading-dots.tsx", variant: "loading" },
-] as const;
-
-function LoopingPreview({
-  variant,
-}: {
-  variant: (typeof loopCards)[number]["variant"];
-}) {
-  if (variant === "staggered") {
-    return (
-      <div className="grid w-full max-w-[210px] grid-cols-2 gap-2">
-        {[LightningIcon, SparkleIcon, GearSixIcon, PlusIcon].map(
-          (Icon, index) => (
-            <div
-              key={index}
-              className="landing-loop-stagger rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-3"
-              style={{ animationDelay: `${index * 160}ms` }}
-            >
-              <Icon
-                size={16}
-                weight="fill"
-                className="text-[var(--color-accent)]"
-                aria-hidden="true"
-              />
-              <span className="mt-2 block text-[11px] font-semibold text-[var(--color-fg)]">
-                {["Fast", "Fluid", "Typed", "Ready"][index]}
-              </span>
-            </div>
-          ),
-        )}
-      </div>
-    );
-  }
-
-  if (variant === "checkbox") {
-    return (
-      <div className="flex flex-col gap-3 text-xs font-medium text-[var(--color-fg-muted)]">
-        {["Design", "Develop", "Ship"].map((label, index) => (
-          <div key={label} className="flex items-center gap-3">
-            <span
-              className="landing-loop-check flex size-7 items-center justify-center rounded-lg border-2 border-[var(--color-accent)]/60"
-              style={{ animationDelay: `${index * 220}ms` }}
-            >
-              <CheckIcon size={15} weight="bold" aria-hidden="true" />
-            </span>
-            {label}
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  if (variant === "progress") {
-    return (
-      <div className="flex flex-col items-center gap-4">
-        <div className="landing-loop-progress relative size-28 rounded-full p-[7px]">
-          <div className="flex size-full items-center justify-center rounded-full bg-[var(--color-bg)] font-mono text-lg font-bold text-[var(--color-accent)]">
-            72%
-          </div>
-        </div>
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-fg-muted)]">
-          Build complete
-        </span>
-      </div>
-    );
-  }
-
-  if (variant === "pulse") {
-    return (
-      <div className="relative flex size-36 items-center justify-center">
-        {[
-          "landing-loop-pulse-a",
-          "landing-loop-pulse-b",
-          "landing-loop-pulse-c",
-        ].map((className) => (
-          <span
-            key={className}
-            className={`absolute size-full rounded-full border border-[var(--color-accent)]/55 ${className}`}
-          />
-        ))}
-        <span className="relative size-4 rounded-full bg-[var(--color-accent)]" />
-      </div>
-    );
-  }
-
-  if (variant === "tabs") {
-    return (
-      <div className="w-full max-w-[230px] rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-1">
-        <div className="relative grid grid-cols-3 gap-1">
-          <span className="landing-loop-tab absolute inset-y-0 left-0 w-1/3 rounded-lg bg-[var(--color-accent)]" />
-          {["Overview", "Motion", "Tokens"].map((label) => (
-            <span
-              key={label}
-              className="relative z-10 px-2 py-2 text-center text-[10px] font-semibold text-[var(--color-fg-muted)] first:text-[var(--color-accent-fg)]"
-            >
-              {label}
-            </span>
-          ))}
-        </div>
-        <div className="mt-4 space-y-2 px-2 pb-2">
-          <span className="block h-2 w-4/5 rounded-full bg-[var(--color-border)]" />
-          <span className="block h-2 w-3/5 rounded-full bg-[var(--color-border)]" />
-        </div>
-      </div>
-    );
-  }
-
-  if (variant === "notification") {
-    return (
-      <div className="landing-loop-notification flex w-full max-w-[230px] items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-3">
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[var(--color-accent)]/15 text-[var(--color-accent)]">
-          <BellIcon size={16} weight="fill" aria-hidden="true" />
-        </span>
-        <span className="min-w-0">
-          <strong className="block truncate text-xs text-[var(--color-fg)]">
-            Animation ready
-          </strong>
-          <small className="block truncate text-[10px] text-[var(--color-fg-muted)]">
-            Compiled in the build
-          </small>
-        </span>
-      </div>
-    );
-  }
-
-  if (variant === "accordion") {
-    return (
-      <div className="w-full max-w-[230px] space-y-2">
-        {["What changes?", "Where it runs?", "How it ships?"].map(
-          (label, index) => (
-            <div
-              key={label}
-              className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-3 py-2"
-            >
-              <div className="flex items-center justify-between text-xs font-semibold text-[var(--color-fg)]">
-                <span>{label}</span>
-                <CaretDownIcon
-                  size={14}
-                  className={`landing-loop-caret ${index === 0 ? "text-[var(--color-accent)]" : "text-[var(--color-fg-muted)]"}`}
-                  aria-hidden="true"
-                />
-              </div>
-              <div
-                className={`landing-loop-panel text-[10px] leading-5 text-[var(--color-fg-muted)] ${index === 0 ? "landing-loop-panel-active" : ""}`}
-              >
-                Only the class changes. The intent stays close to the element.
-              </div>
-            </div>
-          ),
-        )}
-      </div>
-    );
-  }
-
-  if (variant === "button") {
-    return (
-      <div className="flex flex-col items-center gap-4">
-        <div className="landing-loop-button rounded-xl bg-[var(--color-accent)] px-5 py-3 text-xs font-bold text-[var(--color-accent-fg)]">
-          Animate this
-        </div>
-        <span className="font-mono text-[10px] text-[var(--color-fg-muted)]">
-          whileHover: scale-105
-        </span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex items-end gap-2">
-      {[0, 1, 2, 3].map((index) => (
-        <span
-          key={index}
-          className="landing-loop-dot h-3 w-3 rounded-full bg-[var(--color-accent)]"
-          style={{ animationDelay: `${index * 140}ms` }}
-        />
-      ))}
-    </div>
-  );
-}
 
 function PreviewFrame({
   title,
@@ -215,13 +21,13 @@ function PreviewFrame({
   children,
 }: {
   title: string;
-  className?: string;
+  className: string;
   children: ReactNode;
 }) {
   return (
     <article
       data-showcase-card
-      className={`relative aspect-square overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-2 shadow-[0_24px_80px_var(--color-shadow)] ${className ?? ""}`}
+      className={`relative min-h-[320px] overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-2 shadow-[0_24px_80px_var(--color-shadow)] ${className}`}
     >
       <div className="flex h-10 items-center px-2">
         <span className="flex min-w-0 items-center gap-2 font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-fg-muted)]">
@@ -262,10 +68,14 @@ export function LandingExperience() {
           })
           .fromTo(
             card,
-            { opacity: 0.18, y: 80 },
-            { opacity: 1, y: 0, duration: 0.45, ease: "none" },
+            { opacity: 0.18, scale: 0.86, y: 80 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: "none" },
           )
-          .to(card, { opacity: 0.24, y: -34, duration: 0.25 }, 0.75);
+          .to(
+            card,
+            { opacity: 0.24, scale: 0.96, y: -34, duration: 0.25 },
+            0.75,
+          );
 
         const visual = card.querySelector<HTMLElement>("[data-preview-visual]");
         if (visual) {
@@ -321,20 +131,43 @@ export function LandingExperience() {
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto mb-16 max-w-3xl text-center md:mb-24">
             <h2 className="text-4xl font-semibold tracking-[-0.045em] text-[var(--color-fg)] sm:text-5xl md:text-6xl">
-              Nine components. One motion language.
+              Four demos. One motion language.
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-[var(--color-fg-muted)]">
-              A compact field guide to the interactions you can author with a
-              class beside the element.
+              The essentials are visible at a glance: entrance, SVG drawing,
+              progress, and shared layout. No abstract showcase pieces.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {loopCards.map(({ title, variant }) => (
-              <PreviewFrame key={title} title={title}>
-                <LoopingPreview variant={variant} />
-              </PreviewFrame>
-            ))}
+          <div className="grid grid-flow-dense grid-cols-1 gap-5 lg:grid-cols-12 lg:grid-rows-2 lg:auto-rows-[270px]">
+            <PreviewFrame
+              title="staggered-entrance.tsx"
+              className="lg:col-span-6 lg:row-span-2 lg:min-h-[560px]"
+            >
+              <div className="[&_button]:hidden">
+                <StaggeredGridDemo />
+              </div>
+            </PreviewFrame>
+            <PreviewFrame
+              title="svg-checkbox.tsx"
+              className="lg:col-span-3 lg:row-span-1"
+            >
+              <AnimatedCheckboxDemo />
+            </PreviewFrame>
+            <PreviewFrame
+              title="circular-progress.tsx"
+              className="lg:col-span-3 lg:row-span-2 lg:min-h-[560px]"
+            >
+              <div className="[&_button]:hidden">
+                <CircularProgressDemo />
+              </div>
+            </PreviewFrame>
+            <PreviewFrame
+              title="shared-layout-tabs.tsx"
+              className="lg:col-span-3 lg:row-span-1"
+            >
+              <SharedLayoutTabsDemo />
+            </PreviewFrame>
           </div>
         </div>
       </section>

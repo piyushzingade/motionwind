@@ -59,7 +59,7 @@ export function Hero({ starCount }: { starCount: number | null }) {
           </h1>
           <p className="mt-8 max-w-2xl text-base leading-7 text-[var(--color-fg-muted)] sm:text-lg sm:leading-8">
             Tailwind-like animation classes for React, Vue, JavaScript, and
-            React Native. Compiled into Motion before your app reaches users.
+            React Native—compiled into Motion before your app reaches users.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
