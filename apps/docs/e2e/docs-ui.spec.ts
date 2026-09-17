@@ -9,10 +9,10 @@ test("landing page keeps four focused chapters and demos", async ({ page }) => {
     }),
   ).toBeVisible();
   await expect(page.locator("[data-landing-section]")).toHaveCount(4);
-  await expect(page.locator("[data-showcase-card]")).toHaveCount(4);
-  await expect(page.locator("[data-preview-visual][inert]")).toHaveCount(4);
+  await expect(page.locator("[data-showcase-card]")).toHaveCount(9);
+  await expect(page.locator("[data-preview-visual][inert]")).toHaveCount(9);
   await expect(
-    page.getByText("Four demos. One motion language."),
+    page.getByText("Nine components. One motion language."),
   ).toBeVisible();
 });
 
@@ -40,7 +40,7 @@ test("reduced motion keeps showcase cards static", async ({ page }) => {
   await page.goto("/");
 
   const cards = page.locator("[data-showcase-card]");
-  await expect(cards).toHaveCount(4);
+  await expect(cards).toHaveCount(9);
   for (const card of await cards.all()) {
     await expect(card).toHaveCSS("transform", "none");
     await expect(card).toHaveCSS("opacity", "1");
