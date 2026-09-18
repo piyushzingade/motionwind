@@ -34,8 +34,8 @@ export function HeroSection() {
       <section className="relative overflow-hidden px-4 sm:px-6">
         <div className="surface-glow" aria-hidden="true" />
 
-        <div className="relative mx-auto grid min-h-[calc(88dvh-3.5rem)] max-w-[1120px] items-center gap-8 py-14 sm:py-16 lg:min-h-[700px] lg:grid-cols-[0.92fr_1.08fr] lg:py-18">
-          <div className="max-w-2xl">
+        <div className="relative mx-auto flex min-h-[calc(100dvh-3.5rem)] max-w-[1120px] flex-col items-center justify-center py-20 sm:py-24 lg:py-28">
+          <div className="flex w-full max-w-5xl flex-col items-center text-center">
             <m.div
               variants={fadeUp}
               initial="hidden"
@@ -53,7 +53,7 @@ export function HeroSection() {
               initial="hidden"
               animate="show"
               transition={{ duration: 0.5, delay: 0.06, ease: easeOutQuint }}
-              className="mt-8 max-w-[11ch] text-balance text-5xl font-semibold tracking-[-0.04em] text-fg sm:text-6xl lg:text-7xl"
+              className="mt-8 max-w-5xl text-balance text-[clamp(3.6rem,7vw,7.5rem)] font-semibold leading-[0.92] tracking-[-0.065em] text-fg"
             >
               Motion as utility classes.
             </m.h1>
@@ -63,7 +63,7 @@ export function HeroSection() {
               initial="hidden"
               animate="show"
               transition={{ duration: 0.5, delay: 0.13, ease: easeOutQuint }}
-              className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg"
+              className="mt-7 max-w-2xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg"
             >
               Write animation intent in className. Motionwind compiles it into
               Motion props before your app ships.
@@ -74,7 +74,7 @@ export function HeroSection() {
               initial="hidden"
               animate="show"
               transition={{ duration: 0.5, delay: 0.2, ease: easeOutQuint }}
-              className="mt-8 flex flex-wrap gap-3"
+              className="mt-9 flex flex-wrap justify-center gap-3"
             >
               <a
                 href="https://www.motionwind.xyz/docs"
@@ -96,10 +96,10 @@ export function HeroSection() {
             initial="hidden"
             animate="show"
             transition={{ duration: 0.6, delay: 0.16, ease: easeOutQuint }}
-            className="relative"
+            className="relative mt-16 w-full max-w-[1040px] lg:ml-16"
           >
             <div className="overflow-hidden rounded-[1.4rem] border border-border bg-surface-elevated shadow-[0_28px_90px_-56px_var(--color-shadow)]">
-              <div className="grid gap-0 lg:grid-cols-[minmax(0,1.32fr)_minmax(220px,0.68fr)]">
+              <div className="grid gap-0 lg:grid-cols-[minmax(0,1.36fr)_minmax(260px,0.64fr)]">
                 <div className="grid min-w-0 gap-3 border-b border-border-subtle bg-surface/70 p-3 lg:border-b-0 lg:border-r">
                   <CodePane
                     title="className"
