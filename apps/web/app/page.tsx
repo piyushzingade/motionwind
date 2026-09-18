@@ -13,7 +13,6 @@ export default function Home() {
       <div className="section-divider mx-auto max-w-[1120px]" />
       <DemoCards />
 
-      <div className="section-divider mx-auto max-w-[1120px]" />
       <GetStartedSection />
 
       <Footer />

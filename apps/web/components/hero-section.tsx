@@ -99,16 +99,23 @@ export function HeroSection() {
             className="relative mt-16 w-full max-w-[1040px] lg:ml-16"
           >
             <div className="overflow-hidden rounded-[1.4rem] border border-border bg-surface-elevated shadow-[0_28px_90px_-56px_var(--color-shadow)]">
+              <div className="flex h-12 items-center justify-between border-b border-border-subtle px-5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
+                <span>motionwind / compile</span>
+                <span className="flex items-center gap-2 normal-case tracking-normal text-accent">
+                  <span className="size-1.5 rounded-full bg-accent" />
+                  ready
+                </span>
+              </div>
               <div className="grid gap-0 lg:grid-cols-[minmax(0,1.36fr)_minmax(260px,0.64fr)]">
-                <div className="grid min-w-0 gap-3 border-b border-border-subtle bg-surface/70 p-3 lg:border-b-0 lg:border-r">
+                <div className="grid min-w-0 gap-4 border-b border-border-subtle bg-surface/70 p-4 lg:border-b-0 lg:border-r lg:p-5">
                   <CodePane
                     title="className"
                     code={`<button className="${heroClasses}">\n  Ship interaction\n</button>`}
                     expanded
                   />
-                  <div className="flex items-center justify-between px-1 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
+                  <div className="flex items-center justify-between border-y border-border-subtle px-1 py-2 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
                     <span>compile step</span>
-                    <span>Motion props</span>
+                    <span className="text-fg-muted">Motion props</span>
                   </div>
                   <CodePane
                     title="generated output"
@@ -117,8 +124,12 @@ export function HeroSection() {
                   />
                 </div>
 
-                <div className="flex min-h-[220px] flex-col justify-between gap-5 bg-surface p-5">
-                  <div className="flex items-center justify-center py-4">
+                <div className="flex min-h-[300px] flex-col justify-between gap-8 bg-surface p-5 lg:p-7">
+                  <div className="flex items-center justify-between font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
+                    <span>live result</span>
+                    <span className="text-fg-muted">react</span>
+                  </div>
+                  <div className="flex flex-1 items-center justify-center py-4">
                     <mw.button
                       className={heroClasses}
                       data-demo-ready={!reduceMotion}
@@ -130,7 +141,7 @@ export function HeroSection() {
                     {["hover", "tap", "spring", "build"].map((item) => (
                       <span
                         key={item}
-                        className="rounded-md border border-border bg-surface-elevated px-2.5 py-2 text-center font-[family-name:var(--font-mono)] text-[10px] text-code-muted"
+                        className="rounded-lg border border-border-subtle bg-surface-elevated px-2.5 py-2.5 text-center font-[family-name:var(--font-mono)] text-[10px] text-code-muted"
                       >
                         {item}
                       </span>
