@@ -44,7 +44,7 @@ export function HeroSection() {
               className="inline-flex"
             >
               <OssProgramBadge
-                brand={<MintlifyLogo className="h-3 w-auto" />}
+                brand={<MintlifyLogo className="h-3.5 w-auto" />}
               />
             </m.div>
 
