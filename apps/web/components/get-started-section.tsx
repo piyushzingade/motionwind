@@ -29,14 +29,13 @@ export function GetStartedSection() {
       id="start"
       className="section-anchor relative overflow-hidden px-4 py-24 sm:px-6 md:py-32 lg:py-40"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-border" />
-      <div className="mx-auto grid max-w-[1120px] gap-14 lg:grid-cols-[0.76fr_1.24fr] lg:items-start lg:gap-24">
+      <div className="mx-auto grid max-w-[1120px] gap-14 lg:grid-cols-[0.68fr_1.32fr] lg:items-start lg:gap-20">
         <Reveal>
           <div className="max-w-xl">
             <p className="mb-6 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-accent">
               Start building
             </p>
-            <h2 className="text-balance text-4xl font-semibold leading-[1.04] tracking-[-0.045em] sm:text-5xl md:text-6xl">
+            <h2 className="max-w-[8ch] text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.05em] sm:text-5xl md:text-6xl">
               Up and running in{" "}
               <em className="font-display font-normal italic text-accent">
                 30 seconds
@@ -57,7 +56,7 @@ export function GetStartedSection() {
         </Reveal>
 
         <Reveal y={20}>
-          <div className="overflow-hidden rounded-2xl border border-border bg-surface-elevated shadow-[0_24px_70px_-48px_var(--color-shadow)]">
+          <div className="overflow-hidden rounded-2xl border border-border bg-surface-elevated shadow-[0_24px_70px_-48px_var(--color-shadow)] lg:mt-8">
             <div className="flex items-center justify-between border-b border-border-subtle px-5 py-4 sm:px-6">
               <div className="flex items-center gap-2 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.16em] text-code-muted">
                 <TerminalWindowIcon

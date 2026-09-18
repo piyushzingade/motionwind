@@ -53,7 +53,7 @@ export function Footer() {
           </div>
           <div
             aria-hidden="true"
-            className="pointer-events-none -mb-3 mt-14 select-none whitespace-nowrap text-[clamp(5rem,15vw,12rem)] font-semibold leading-[0.72] tracking-[-0.09em] text-fg/[0.055]"
+            className="pointer-events-none -mb-3 mt-14 select-none whitespace-nowrap text-[clamp(5rem,15vw,12rem)] font-semibold leading-[0.72] tracking-[-0.09em] text-accent/[0.1]"
           >
             MOTIONWIND
           </div>
