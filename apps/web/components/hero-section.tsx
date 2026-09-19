@@ -127,7 +127,7 @@ export function HeroSection() {
                   />
                 </div>
 
-                <div className="flex min-h-[300px] flex-col justify-between gap-8 rounded-b-xl bg-surface-elevated p-5 lg:rounded-bl-none lg:rounded-r-xl lg:p-7">
+                <div className="m-3 flex min-h-[300px] flex-col justify-between gap-8 rounded-xl border border-border-subtle bg-surface-elevated p-5 lg:p-7">
                   <div className="flex items-center justify-between font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
                     <span>live result</span>
                     <span className="text-fg-muted">react</span>
