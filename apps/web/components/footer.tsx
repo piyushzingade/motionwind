@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { CaretDownIcon } from "@phosphor-icons/react";
-import { MotionwindHorizontalLogo } from "@repo/ui/motionwind-logo";
+import { MotionwindLogo } from "@repo/ui/motionwind-logo";
+import { LegalLinks } from "@repo/ui/legal-links";
 import { DownloadCTA } from "./download-cta";
 
 export function Footer() {
@@ -10,18 +10,18 @@ export function Footer() {
     <footer className="px-4 pb-8 pt-16 sm:px-6 md:px-8 sm:pb-10 md:pt-20">
       <div className="mx-auto max-w-[1120px] pt-6">
         <DownloadCTA className="mx-auto mb-16" />
-        <div className="flex flex-col gap-8 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-6">
+        <div className="flex flex-col gap-8 md:grid md:grid-cols-[1fr_auto] md:items-center md:gap-6">
           <Link
             href="/"
             aria-label="Motionwind home"
             className="inline-flex items-center gap-3 text-fg transition-opacity hover:opacity-70"
           >
-            <MotionwindHorizontalLogo className="h-7 w-[126px]" />
+            <MotionwindLogo className="h-8 w-11 text-accent" />
             <span className="text-sm text-fg-muted">© 2026</span>
           </Link>
           <nav
             aria-label="Footer navigation"
-            className="flex flex-wrap items-center justify-start gap-x-6 gap-y-3 text-sm text-fg-muted md:justify-center"
+            className="flex flex-wrap items-center justify-start gap-x-6 gap-y-3 text-sm text-fg-muted md:justify-self-end"
           >
             <Link
               href="https://play.motionwind.xyz"
@@ -48,11 +48,8 @@ export function Footer() {
               npm
             </a>
           </nav>
-          <div className="inline-flex items-center gap-1 text-sm text-fg-muted md:justify-self-end">
-            <span>EN</span>
-            <CaretDownIcon size={14} aria-hidden="true" />
-          </div>
         </div>
+        <LegalLinks className="mt-8 text-xs text-fg-muted md:justify-center" />
       </div>
     </footer>
   );
