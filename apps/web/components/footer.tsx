@@ -10,7 +10,7 @@ export function Footer() {
     <footer className="px-4 pb-8 pt-16 sm:px-6 md:px-8 sm:pb-10 md:pt-20">
       <div className="mx-auto max-w-[1120px] pt-6">
         <DownloadCTA className="mx-auto mb-16" />
-        <div className="flex flex-col gap-8 md:grid md:grid-cols-[1fr_auto] md:items-center md:gap-6">
+        <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between md:gap-10">
           <Link
             href="/"
             aria-label="Motionwind home"
@@ -21,7 +21,7 @@ export function Footer() {
           </Link>
           <nav
             aria-label="Footer navigation"
-            className="flex flex-wrap items-center justify-start gap-x-6 gap-y-3 text-sm text-fg-muted md:justify-self-end"
+            className="flex flex-wrap items-center justify-start gap-x-6 gap-y-3 text-sm text-fg-muted md:whitespace-nowrap"
           >
             <Link
               href="https://play.motionwind.xyz"
@@ -54,8 +54,8 @@ export function Footer() {
               Contact
             </a>
           </nav>
+          <LegalLinks className="text-xs text-fg-muted md:whitespace-nowrap" />
         </div>
-        <LegalLinks className="mt-8 text-xs text-fg-muted md:justify-center" />
       </div>
     </footer>
   );
