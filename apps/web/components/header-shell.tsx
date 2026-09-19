@@ -80,7 +80,7 @@ export function HeaderShell({ starCount }: HeaderShellProps) {
                 href={item.href}
                 target={item.href.startsWith("http") ? "_blank" : undefined}
                 rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="cursor-pointer rounded-full px-4 py-2 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg-muted transition-colors duration-200 hover:bg-surface hover:text-fg"
+                className="cursor-pointer rounded-full px-4 py-2 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg transition-colors duration-200 hover:bg-surface hover:text-fg"
               >
                 {item.label}
               </a>
@@ -89,7 +89,7 @@ export function HeaderShell({ starCount }: HeaderShellProps) {
               href="https://www.motionwind.xyz/docs"
               target="_blank"
               rel="noopener noreferrer"
-              className="cursor-pointer rounded-full px-4 py-2 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg-muted transition-colors duration-200 hover:bg-surface hover:text-fg"
+              className="cursor-pointer rounded-full px-4 py-2 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg transition-colors duration-200 hover:bg-surface hover:text-fg"
             >
               Docs
             </a>
