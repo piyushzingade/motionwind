@@ -11,9 +11,7 @@ export function Footer() {
         <MotionwindHorizontalLogo className="mb-12 h-6 w-28 text-fg" />
         <h2 className="max-w-5xl text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.06em] sm:text-6xl md:text-8xl">
           Ship motion that{" "}
-          <em className="font-display font-normal italic text-accent">
-            matters
-          </em>
+          <em className="font-sans font-normal italic text-accent">matters</em>
         </h2>
         <p className="mt-7 max-w-md text-pretty text-base leading-relaxed text-fg-muted sm:text-lg">
           Motion as utility classes, compiled for the frameworks you ship.

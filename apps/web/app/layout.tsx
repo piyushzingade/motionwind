@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Providers } from "./providers";
 import "./globals.css";
-
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  variable: "--font-display",
-  display: "swap",
-});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -163,7 +157,7 @@ export default function RootLayout({
         ) : null}
       </head>
       <body
-        className={`${instrumentSerif.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <Providers>
           {children}

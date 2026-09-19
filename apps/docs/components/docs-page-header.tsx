@@ -28,7 +28,7 @@ export function DocsPageHeader({
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: easeOutQuint, delay: 0.05 }}
-          className="font-[family-name:var(--font-display)] text-3xl italic text-[var(--color-fg)] sm:text-4xl tracking-tight"
+          className="font-sans text-3xl italic text-[var(--color-fg)] sm:text-4xl tracking-tight"
         >
           {title}
         </m.h1>

@@ -19,7 +19,6 @@
   --color-code-header: var(--color-code-header);
   --color-code-border: var(--color-code-border);
   --color-code-muted: var(--color-code-muted);
-  --font-display: var(--font-display);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 }
@@ -536,10 +535,6 @@ body {
 }
 
 /* ── Shared landing utilities ─────────────────────────────────────── */
-.font-display {
-  font-family: var(--font-display), Georgia, serif;
-}
-
 .spec-label {
   font-family: var(--font-mono), monospace;
   font-size: 11px;

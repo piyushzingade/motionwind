@@ -35,7 +35,7 @@ export function GetStartedSection() {
             </p>
             <h2 className="mx-auto max-w-4xl text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.055em] sm:text-6xl md:text-7xl">
               Up and running in{" "}
-              <em className="font-display font-normal italic text-accent">
+              <em className="font-sans font-normal italic text-accent">
                 30 seconds
               </em>
             </h2>
