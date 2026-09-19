@@ -57,7 +57,7 @@ export async function Header() {
             rel="noopener noreferrer"
             aria-label="Open Motionwind on GitHub"
             title="Open Motionwind on GitHub"
-            className="inline-flex size-12 cursor-pointer items-center justify-center rounded-full border border-border bg-surface-elevated text-fg-muted shadow-[0_16px_40px_-24px_var(--color-shadow)] transition-colors hover:border-accent/20 hover:text-fg"
+            className="inline-flex h-12 min-w-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-border bg-surface-elevated px-3 text-fg-muted shadow-[0_16px_40px_-24px_var(--color-shadow)] transition-colors hover:border-accent/20 hover:text-fg"
           >
             <GithubIcon className="size-5 text-fg" />
             <span aria-hidden="true" className="h-5 w-px bg-border" />
