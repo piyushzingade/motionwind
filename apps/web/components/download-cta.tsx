@@ -11,8 +11,7 @@ export function DownloadCTA({ className = "" }: DownloadCTAProps) {
       aria-labelledby="download-cta-title"
       className={`relative aspect-[4/3] w-full max-w-[760px] overflow-hidden rounded-[28px] sm:aspect-[16/9] ${className}`}
       style={{
-        backgroundColor:
-          "color-mix(in srgb, var(--color-accent) 12%, var(--color-bg))",
+        backgroundColor: "#ffffff",
       }}
     >
       <div
@@ -46,7 +45,7 @@ export function DownloadCTA({ className = "" }: DownloadCTAProps) {
         </p>
         <Link
           href="https://www.motionwind.xyz/docs/getting-started"
-          className="mt-8 inline-flex min-h-11 items-center gap-2 rounded-[14px] bg-fg px-5 py-3 text-sm font-medium text-bg transition-[transform,opacity] duration-200 hover:opacity-85 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="mt-8 inline-flex min-h-11 items-center gap-2 rounded-[14px] bg-[#0a0a0f] px-5 py-3 text-sm font-medium text-white transition-[transform,opacity] duration-200 hover:opacity-85 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           Start building
           <ArrowUpRightIcon size={16} weight="bold" aria-hidden="true" />
