@@ -6,23 +6,23 @@ import { ArrowUpRightIcon } from "@phosphor-icons/react";
 export function Footer() {
   return (
     <footer className="relative overflow-hidden px-4 py-32 sm:px-6 md:py-40">
-      <div className="relative mx-auto flex min-h-[520px] max-w-[1120px] flex-col items-center justify-center text-center">
-        <h2 className="relative z-10 max-w-5xl text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.06em] sm:text-6xl md:text-8xl">
+      <div className="relative mx-auto flex min-h-[700px] max-w-[1120px] flex-col items-center justify-start pt-20 text-center sm:pt-28 md:min-h-[760px] md:pt-32">
+        <h2 className="relative z-10 max-w-5xl text-balance text-6xl font-semibold leading-[0.94] tracking-[-0.065em] sm:text-7xl md:text-8xl lg:text-[clamp(5rem,8vw,8.5rem)]">
           Ship motion that <span className="text-accent">matters</span>
         </h2>
-        <p className="relative z-10 mt-7 max-w-md text-pretty text-base leading-relaxed text-fg-muted sm:text-lg">
+        <p className="relative z-10 mt-8 max-w-md text-pretty text-base leading-relaxed text-fg-muted sm:text-lg">
           Motion as utility classes, compiled for the frameworks you ship.
         </p>
         <Link
           href="https://www.motionwind.xyz/docs/getting-started"
-          className="relative z-10 mt-9 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-accent-fg transition-[background-color,transform] duration-200 hover:bg-accent-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="relative z-10 mt-10 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-accent-fg transition-[background-color,transform] duration-200 hover:bg-accent-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           Start building
           <ArrowUpRightIcon size={16} weight="bold" aria-hidden="true" />
         </Link>
         <nav
           aria-label="Footer navigation"
-          className="relative z-10 mt-20 flex flex-wrap justify-center gap-x-10 gap-y-4 text-sm text-code-muted"
+          className="relative z-10 mt-28 flex flex-wrap justify-center gap-x-10 gap-y-4 text-sm text-code-muted"
         >
           <Link
             href="https://play.motionwind.xyz"
@@ -56,10 +56,6 @@ export function Footer() {
           >
             MOTIONWIND
           </h1>
-        </div>
-        <div className="relative z-10 mt-auto flex w-full justify-between text-left font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.14em] text-code-muted">
-          <span>Built with Motion and Tailwind CSS</span>
-          <span>MIT licensed</span>
         </div>
       </div>
     </footer>
