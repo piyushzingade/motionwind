@@ -19,7 +19,7 @@ export function DownloadCTA({ className = "" }: DownloadCTAProps) {
         className="pointer-events-none absolute inset-x-[-18%] bottom-[-20%] h-[82%] rounded-[50%] blur-[24px]"
         style={{
           background:
-            "radial-gradient(ellipse at center, var(--cta-glow-start) 0%, var(--cta-glow-mid) 30%, var(--cta-glow-soft) 58%, transparent 82%)",
+            "radial-gradient(ellipse at center, var(--cta-glow-start) 0%, var(--cta-glow-mid) 27%, var(--cta-glow-soft) 52%, transparent 78%)",
         }}
       />
       <div

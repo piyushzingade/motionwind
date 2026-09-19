@@ -45,9 +45,9 @@
   --color-dot-grid: rgba(86, 107, 47, 0.045);
   --color-demo-glow: rgba(86, 107, 47, 0.045);
   --color-demo-grid-line: rgba(86, 107, 47, 0.055);
-  --cta-glow-start: rgba(86, 107, 47, 0.28);
-  --cta-glow-mid: rgba(86, 107, 47, 0.18);
-  --cta-glow-soft: rgba(86, 107, 47, 0.08);
+  --cta-glow-start: color-mix(in srgb, var(--color-accent) 52%, white);
+  --cta-glow-mid: color-mix(in srgb, var(--color-accent) 38%, white);
+  --cta-glow-soft: color-mix(in srgb, var(--color-accent) 20%, transparent);
   --accent-glow: rgba(86, 107, 47, 0.24);
   --code-bg: #f3f3ec;
   --code-comment: #8f9288;
