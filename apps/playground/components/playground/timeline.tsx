@@ -1,6 +1,12 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { ClockIcon } from "@phosphor-icons/react";
 import { useReducedMotion } from "motion/react";
 
@@ -9,19 +15,97 @@ export function Timeline({
   delay,
   replayKey,
   reduceMotion,
+  playing,
+  onPlayingChange,
+  onTimeChange,
+  onComplete,
 }: {
   duration: number;
   delay: number;
   replayKey: number;
   reduceMotion: boolean;
+  playing: boolean;
+  onPlayingChange: (playing: boolean) => void;
+  onTimeChange: (time: number) => void;
+  onComplete: () => void;
 }) {
   const total = Math.max(duration + delay, 1);
   const systemReducedMotion = useReducedMotion();
   const shouldReduceMotion = reduceMotion || systemReducedMotion;
   const delayPercent = (delay / total) * 100;
+  const [elapsed, setElapsed] = useState(0);
+  const elapsedRef = useRef(0);
+  const frameRef = useRef<number | null>(null);
+
+  const updateElapsed = useCallback(
+    (nextElapsed: number) => {
+      const next = Math.min(Math.max(nextElapsed, 0), total);
+      elapsedRef.current = next;
+      setElapsed(next);
+    },
+    [total],
+  );
+
+  useEffect(() => {
+    updateElapsed(shouldReduceMotion ? total : 0);
+    onTimeChange(shouldReduceMotion ? total : 0);
+    onPlayingChange(!shouldReduceMotion);
+  }, [
+    onPlayingChange,
+    onTimeChange,
+    replayKey,
+    shouldReduceMotion,
+    total,
+    updateElapsed,
+  ]);
+
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+
+    if (!playing) {
+      onTimeChange(elapsedRef.current);
+      return;
+    }
+
+    const startedAt = performance.now() - elapsedRef.current;
+    const tick = (now: number) => {
+      const next = Math.min(now - startedAt, total);
+      updateElapsed(next);
+      if (next >= total) {
+        onTimeChange(total);
+        onComplete();
+        return;
+      }
+      frameRef.current = window.requestAnimationFrame(tick);
+    };
+
+    frameRef.current = window.requestAnimationFrame(tick);
+    return () => {
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+      }
+    };
+  }, [
+    onComplete,
+    onTimeChange,
+    playing,
+    shouldReduceMotion,
+    total,
+    updateElapsed,
+  ]);
+
+  const progress = elapsed / total;
+  const elapsedLabel = `${Math.round(elapsed)}ms`;
+
+  function seek(nextElapsed: number) {
+    updateElapsed(nextElapsed);
+    onTimeChange(nextElapsed);
+    onPlayingChange(false);
+    if (nextElapsed >= total) onComplete();
+  }
 
   return (
-    <div className="border-t border-dashed border-[var(--color-border)] px-4 py-3.5">
+    <div className="border-t border-[var(--color-border-subtle)] px-4 py-4 sm:px-5">
       <div className="mb-2.5 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-[11px] font-medium text-[var(--color-fg)]">
           <ClockIcon size={14} className="text-[var(--color-fg-muted)]" />
@@ -29,12 +113,14 @@ export function Timeline({
         </div>
         <div className="flex items-center gap-3 font-[family-name:var(--font-mono)] text-[9px] tabular-nums text-[var(--color-fg-muted)]">
           {delay > 0 ? <span>Delay {delay}ms</span> : null}
-          <span>Duration {duration}ms</span>
-          <span className="text-[var(--color-fg)]">Total {total}ms</span>
+          <span className="hidden sm:inline">Duration {duration}ms</span>
+          <span className="text-[var(--color-fg)]">
+            {elapsedLabel} / {total}ms
+          </span>
         </div>
       </div>
       <div
-        className="studio-timeline relative h-10 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)]"
+        className="studio-timeline group relative h-12 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]"
         data-testid="timeline"
         style={{ "--delay-percent": `${delayPercent}%` } as CSSProperties}
       >
@@ -52,18 +138,30 @@ export function Timeline({
         />
         <div
           key={replayKey}
-          className="studio-playhead absolute inset-y-0 z-10 w-px bg-[var(--color-accent)]"
+          className="studio-playhead absolute inset-y-0 left-0 z-10 w-px bg-[var(--color-accent)] shadow-[0_0_12px_var(--acid-glow)]"
           data-reduced-motion={shouldReduceMotion ? "true" : "false"}
           data-testid="timeline-playhead"
-          style={{ animationDuration: `${total}ms` }}
+          style={{
+            transform: `translateX(calc((100cqw - 16px) * ${progress}))`,
+          }}
         />
         <div
-          className="absolute bottom-2 left-2 h-1 rounded-full bg-[var(--color-accent)]/70"
+          className="absolute bottom-2 left-2 right-2 h-1 origin-left rounded-full bg-[var(--color-accent)]/80"
           style={{
-            left: `max(8px, ${delayPercent}%)`,
-            right: "8px",
+            transform: `scaleX(${progress})`,
           }}
           aria-hidden="true"
+        />
+        <input
+          className="absolute inset-0 z-20 h-full w-full cursor-ew-resize opacity-0"
+          type="range"
+          min={0}
+          max={total}
+          step={1}
+          value={Math.round(elapsed)}
+          aria-label="Timeline scrubber"
+          aria-valuetext={elapsedLabel}
+          onChange={(event) => seek(Number(event.target.value))}
         />
       </div>
     </div>
