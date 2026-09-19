@@ -10,7 +10,7 @@ type FluidOrbProps = HTMLAttributes<HTMLDivElement> & {
 
 export function FluidOrb({
   size = 240,
-  color = "#c8ff2e",
+  color,
   className,
   style,
   ...props

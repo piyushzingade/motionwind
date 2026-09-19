@@ -50,7 +50,7 @@ export function Footer() {
             npm
           </a>
         </nav>
-        <MotionwindFluidText color="#c8ff2e" />
+        <MotionwindFluidText />
       </div>
     </footer>
   );

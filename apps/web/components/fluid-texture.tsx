@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type FluidTextureProps = React.HTMLAttributes<HTMLCanvasElement> & {
   color?: string;
@@ -101,12 +101,36 @@ function hexToRgb(hex: string): [number, number, number] {
 }
 
 export function FluidTexture({
-  color = "#c8ff2e",
+  color,
   maskText,
   className,
   ...props
 }: FluidTextureProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [resolvedColor, setResolvedColor] = useState(color ?? "#566B2F");
+
+  useEffect(() => {
+    if (color) {
+      setResolvedColor(color);
+      return;
+    }
+
+    const updateThemeColor = () => {
+      const accent = getComputedStyle(document.documentElement)
+        .getPropertyValue("--color-accent")
+        .trim();
+      setResolvedColor(accent || "#566B2F");
+    };
+
+    updateThemeColor();
+    const observer = new MutationObserver(updateThemeColor);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, [color]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -148,7 +172,10 @@ export function FluidTexture({
       gl.getUniformLocation(program, "u_has_mask"),
       maskText ? 1 : 0,
     );
-    gl.uniform3f(gl.getUniformLocation(program, "u_color"), ...hexToRgb(color));
+    gl.uniform3f(
+      gl.getUniformLocation(program, "u_color"),
+      ...hexToRgb(resolvedColor),
+    );
 
     const maskCanvas = document.createElement("canvas");
     const maskContext = maskCanvas.getContext("2d");
@@ -215,7 +242,7 @@ export function FluidTexture({
       gl.deleteShader(fragment);
       gl.deleteTexture(textMask);
     };
-  }, [color, maskText]);
+  }, [maskText, resolvedColor]);
 
   return (
     <canvas

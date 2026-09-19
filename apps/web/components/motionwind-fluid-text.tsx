@@ -10,7 +10,7 @@ type MotionwindFluidTextProps = {
 
 export function MotionwindFluidText({
   text = "MOTIONWIND",
-  color = "#22c55e",
+  color,
   className,
 }: MotionwindFluidTextProps) {
   return (
