@@ -47,6 +47,12 @@ export function Footer() {
             >
               npm
             </a>
+            <a
+              href="mailto:piyushzingade@gmail.com"
+              className="cursor-pointer transition-colors hover:text-fg"
+            >
+              Contact
+            </a>
           </nav>
         </div>
         <LegalLinks className="mt-8 text-xs text-fg-muted md:justify-center" />
