@@ -4,7 +4,10 @@ import { GithubIcon } from "@repo/ui/github-icon";
 import { MotionwindHorizontalLogo } from "@repo/ui/motionwind-logo";
 import { ThemeToggle } from "./theme-toggle";
 
-const NAV_ITEMS = [{ label: "Demos", href: "#demos" }];
+const NAV_ITEMS = [
+  { label: "Demos", href: "#demos" },
+  { label: "Playground", href: "https://play.motionwind.xyz" },
+];
 
 export async function Header() {
   return (
@@ -26,6 +29,12 @@ export async function Header() {
               <a
                 key={item.label}
                 href={item.href}
+                target={item.href.startsWith("http") ? "_blank" : undefined}
+                rel={
+                  item.href.startsWith("http")
+                    ? "noopener noreferrer"
+                    : undefined
+                }
                 className="cursor-pointer rounded-full px-4 py-2 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg-muted transition-colors hover:bg-surface hover:text-fg"
               >
                 {item.label}
