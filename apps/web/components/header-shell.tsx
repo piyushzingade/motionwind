@@ -4,10 +4,7 @@ import Link from "next/link";
 import { m, useReducedMotion } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
 import { GithubIcon } from "@repo/ui/github-icon";
-import {
-  MotionwindHorizontalLogo,
-  MotionwindLogo,
-} from "@repo/ui/motionwind-logo";
+import { MotionwindHorizontalLogo } from "@repo/ui/motionwind-logo";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV_ITEMS = [
@@ -52,7 +49,7 @@ export function HeaderShell({ starCount }: HeaderShellProps) {
     <header className="sticky top-4 z-200 px-4 sm:px-6 lg:px-8">
       <m.div
         layout
-        animate={{ maxWidth: isScrolled ? 820 : 1440 }}
+        animate={{ maxWidth: isScrolled ? 720 : 1440 }}
         transition={transition}
         className={`relative mx-auto flex h-14 w-full items-center justify-between transition-[gap] duration-200 ${isScrolled ? "gap-1" : "gap-3"}`}
       >
@@ -62,28 +59,7 @@ export function HeaderShell({ starCount }: HeaderShellProps) {
             aria-label="Motionwind home"
             className={`group flex h-12 cursor-pointer items-center rounded-full border border-border bg-surface-elevated transition-[padding,opacity] duration-200 hover:opacity-70 ${isScrolled ? "px-2" : "px-5 shadow-[0_16px_40px_-24px_var(--color-shadow)]"}`}
           >
-            {isScrolled ? (
-              <m.span
-                key="mark"
-                layout
-                initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={transition}
-                className="flex h-8 w-10 items-center justify-center text-fg"
-              >
-                <MotionwindLogo className="h-8 w-10" />
-              </m.span>
-            ) : (
-              <m.span
-                key="wordmark"
-                layout
-                initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={transition}
-              >
-                <MotionwindHorizontalLogo className="h-8 w-32 text-fg sm:h-9 sm:w-36" />
-              </m.span>
-            )}
+            <MotionwindHorizontalLogo className="h-8 w-32 text-fg sm:h-9 sm:w-36" />
           </Link>
           <nav
             className={`absolute left-1/2 hidden -translate-x-1/2 items-center rounded-full border border-border bg-surface-elevated shadow-[0_16px_40px_-24px_var(--color-shadow)] transition-[gap,padding] duration-200 md:flex ${isScrolled ? "gap-0 px-1.5 py-1" : "gap-1 px-3 py-2"}`}
