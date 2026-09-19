@@ -1,47 +1,25 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   MOTIONWIND_RECIPES,
   mw,
   type MotionwindRecipe,
 } from "motionwind-react";
-import { generateMotionCode } from "motionwind-react/tooling";
-import { highlightCode } from "../lib/highlight";
 import { Reveal } from "./reveal";
-
-type Category = "top" | MotionwindRecipe["category"];
+import { ComponentPreviewCard } from "./component-preview-card";
 
 const TOP_EXAMPLE_IDS = [
   "button-press",
   "dialog-enter",
-  "page-reveal",
   "loading-orbit",
   "menu-pop",
   "accordion-reveal",
   "tab-indicator",
   "toast-enter",
-  "sortable-item",
   "svg-line-loader",
-  "scroll-progress",
-  "flip-card",
-  "magnetic-button",
-  "drawer",
-  "tooltip-pop",
-  "skeleton-pulse",
   "card-hover",
-  "drag-reorder",
-  "parallax-scroll",
 ] as const;
-
-const CATEGORY_FILTERS: { id: Category; label: string }[] = [
-  { id: "top", label: "All" },
-  { id: "interaction", label: "Interaction" },
-  { id: "entrance", label: "Entrance" },
-  { id: "layout", label: "Layout" },
-  { id: "loading", label: "Loading" },
-  { id: "scroll", label: "Scroll" },
-];
 
 const TAG_BY_RECIPE: Record<string, string> = {
   "button-press": "button",
@@ -63,239 +41,48 @@ export function DemoCards() {
     [],
   );
 
-  const [category, setCategory] = useState<Category>("top");
-  const visibleRecipes = useMemo(
-    () =>
-      category === "top"
-        ? recipes
-        : recipes.filter((recipe) => recipe.category === category),
-    [category, recipes],
-  );
-
-  const [activeId, setActiveId] = useState(recipes[0]?.id ?? "");
-
-  useEffect(() => {
-    if (!visibleRecipes.some((recipe) => recipe.id === activeId)) {
-      setActiveId(visibleRecipes[0]?.id ?? "");
-    }
-  }, [activeId, visibleRecipes]);
-
-  const activeRecipe =
-    visibleRecipes.find((recipe) => recipe.id === activeId) ??
-    visibleRecipes[0] ??
-    recipes[0]!;
-
-  const generatedCode = useMemo(
-    () =>
-      generateMotionCode(getRecipeTag(activeRecipe), activeRecipe.classes, {
-        text: getRecipeText(activeRecipe),
-        target: "react",
-      }),
-    [activeRecipe],
-  );
-
   return (
     <section
       id="demos"
       className="section-anchor relative overflow-hidden px-4 py-16 sm:px-6 sm:py-22 lg:py-24"
     >
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[1120px]">
         <Reveal>
           <div className="mb-12 max-w-2xl sm:mb-14">
             <h2 className="text-balance text-3xl font-semibold tracking-[-0.035em] text-fg sm:text-4xl md:text-5xl">
               The examples are the API.
             </h2>
             <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg">
-              A wall of real previews first, then the exact class string and
-              generated Motion output when you want to inspect the details.
+              Nine focused previews, each showing one motion pattern you can
+              author beside the element.
             </p>
           </div>
         </Reveal>
 
-        <Reveal y={14}>
-          <div className="mb-8 flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-            {CATEGORY_FILTERS.map((filter) => (
-              <button
-                key={filter.id}
-                type="button"
-                aria-pressed={category === filter.id}
-                onClick={() => setCategory(filter.id)}
-                className="shrink-0 cursor-pointer rounded-full border border-border bg-surface-elevated px-4 py-2 text-xs font-medium text-fg-muted transition-colors hover:border-accent/30 hover:text-fg active:scale-[0.97] aria-pressed:border-accent/40 aria-pressed:bg-accent/10 aria-pressed:text-accent"
-              >
-                {filter.label}
-              </button>
-            ))}
-          </div>
-        </Reveal>
-
         <Reveal y={18}>
-          <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {visibleRecipes.map((recipe) => (
-              <button
+          <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {recipes.map((recipe, index) => (
+              <ComponentPreviewCard
                 key={recipe.id}
-                type="button"
-                onClick={() => setActiveId(recipe.id)}
-                className={`group relative cursor-pointer overflow-hidden rounded-2xl border bg-surface-elevated text-left transition-all duration-200 ${
-                  recipe.id === activeRecipe.id
-                    ? "border-accent/45"
-                    : "border-border hover:border-accent/25"
-                }`}
-              >
-                <div className="studio-checker flex h-32 items-center justify-center overflow-hidden p-4 sm:h-36">
-                  <MiniRecipePreview recipe={recipe} />
-                </div>
-
-                <div className="border-t border-border-subtle px-3.5 py-2.5">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="truncate text-[13px] font-medium text-fg">
-                      {recipe.name}
-                    </span>
-                    <span className="shrink-0 rounded-md bg-surface px-2 py-0.5 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-wider text-code-muted">
-                      {recipe.category}
-                    </span>
-                  </div>
-                </div>
-
-                {recipe.id === activeRecipe.id && (
-                  <div className="absolute inset-x-0 bottom-0 h-px bg-accent" />
-                )}
-              </button>
+                title={recipe.name}
+                animationDelay={(index % 3) * 180}
+                preview={<MiniRecipePreview recipe={recipe} />}
+              />
             ))}
           </div>
         </Reveal>
-
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
-          <Reveal y={22}>
-            <RecipeShowcase
-              recipe={activeRecipe}
-              generatedCode={generatedCode}
-            />
-          </Reveal>
-
-          <Reveal y={22} delay={0.06}>
-            <div className="grid max-h-[680px] gap-2.5 overflow-y-auto pr-1 scrollbar-thin">
-              {visibleRecipes.map((recipe) => (
-                <RecipeTile
-                  key={recipe.id}
-                  recipe={recipe}
-                  active={recipe.id === activeRecipe.id}
-                  onClick={() => setActiveId(recipe.id)}
-                />
-              ))}
-            </div>
-          </Reveal>
-        </div>
       </div>
     </section>
   );
 }
 
-function RecipeShowcase({
-  recipe,
-  generatedCode,
-}: {
-  recipe: MotionwindRecipe;
-  generatedCode: string;
-}) {
-  const classSnippet = `<${getRecipeTag(recipe)} className="${recipe.classes}">`;
-
-  return (
-    <article className="overflow-hidden rounded-2xl border border-border bg-surface-elevated">
-      <div className="border-b border-border-subtle p-5 sm:p-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <div className="mb-2 flex items-center gap-2">
-              <span className="rounded-md bg-accent/10 px-2 py-0.5 font-[family-name:var(--font-mono)] text-[10px] font-medium text-accent">
-                {recipe.category}
-              </span>
-              <span className="rounded-md border border-border bg-surface px-2 py-0.5 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
-                {recipe.adapters.join(" / ")}
-              </span>
-            </div>
-            <h3 className="text-2xl font-semibold tracking-[-0.025em] text-fg">
-              {recipe.name}
-            </h3>
-          </div>
-        </div>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-fg-muted">
-          {recipe.description}
-        </p>
-      </div>
-
-      <div className="studio-checker flex min-h-[320px] items-center justify-center overflow-hidden p-8">
-        <RecipePreview recipe={recipe} />
-      </div>
-
-      <div className="grid border-t border-border-subtle lg:grid-cols-2">
-        <CodeBlock title="Motionwind classes" code={classSnippet} />
-        <CodeBlock title="Generated Motion output" code={generatedCode} />
-      </div>
-    </article>
-  );
-}
-
-function RecipeTile({
-  recipe,
-  active,
-  onClick,
-}: {
-  recipe: MotionwindRecipe;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={`group cursor-pointer rounded-xl border p-3.5 text-left transition-all duration-150 active:scale-[0.98] ${
-        active
-          ? "border-accent/40 bg-accent/8"
-          : "border-border bg-surface-elevated hover:border-accent/25"
-      }`}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <span className="text-[13px] font-medium text-fg">{recipe.name}</span>
-        <span
-          className={`shrink-0 rounded-md px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-[9px] ${
-            active
-              ? "bg-accent/15 text-accent"
-              : "bg-surface text-code-muted group-hover:text-accent"
-          }`}
-        >
-          {recipe.category}
-        </span>
-      </div>
-      <span className="mt-1.5 block text-xs leading-relaxed text-code-muted line-clamp-2">
-        {recipe.description}
-      </span>
-      <code className="mt-2.5 block truncate rounded-md bg-code-bg px-2.5 py-1.5 font-[family-name:var(--font-mono)] text-[10px] text-accent/70">
-        {recipe.classes}
-      </code>
-    </button>
-  );
-}
-
-function CodeBlock({ title, code }: { title: string; code: string }) {
-  return (
-    <div className="min-w-0 border-t border-border-subtle p-4 first:border-t-0 lg:border-l lg:border-t-0 lg:first:border-l-0">
-      <div className="mb-2.5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider text-code-muted">
-        {title}
-      </div>
-      <pre className="max-h-[260px] overflow-auto rounded-xl border border-border-subtle bg-code-bg p-3 font-[family-name:var(--font-mono)] text-[11px] leading-5">
-        <code>{highlightCode(code)}</code>
-      </pre>
-    </div>
-  );
-}
-
-function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
+function _RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
   switch (recipe.id) {
     case "button-press":
     case "magnetic-button":
       return (
         <mw.button className={`${recipe.classes} ${buttonSkin()}`}>
-          {getRecipeText(recipe)}
+          {_getRecipeText(recipe)}
         </mw.button>
       );
     case "dialog-enter":
@@ -482,7 +269,7 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
     default:
       return (
         <mw.div className={`${recipe.classes} ${buttonSkin()}`}>
-          {getRecipeText(recipe)}
+          {_getRecipeText(recipe)}
         </mw.div>
       );
   }
@@ -620,11 +407,11 @@ function TabIndicatorPreview({ recipe }: { recipe: MotionwindRecipe }) {
   );
 }
 
-function getRecipeTag(recipe: MotionwindRecipe) {
+function _getRecipeTag(recipe: MotionwindRecipe) {
   return TAG_BY_RECIPE[recipe.id] ?? "div";
 }
 
-function getRecipeText(recipe: MotionwindRecipe) {
+function _getRecipeText(recipe: MotionwindRecipe) {
   if (recipe.id === "button-press") return "Press me";
   if (recipe.id === "magnetic-button") return "Magnetic";
   if (recipe.id === "card-hover") return "Preview card";

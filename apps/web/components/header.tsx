@@ -1,12 +1,4 @@
-import Link from "next/link";
-import { ThemeToggle } from "./theme-toggle";
-
-const NAV_ITEMS = [
-  { label: "Demos", href: "#demos" },
-  { label: "How", href: "#how" },
-  { label: "Features", href: "#features" },
-  { label: "Syntax", href: "#syntax" },
-];
+import { HeaderShell } from "./header-shell";
 
 async function getStarCount(): Promise<number | null> {
   try {
@@ -14,6 +6,7 @@ async function getStarCount(): Promise<number | null> {
       "https://api.github.com/repos/piyushzingade/motionwind",
       { next: { revalidate: 3600 } },
     );
+    if (!response.ok) return null;
     const data = (await response.json()) as { stargazers_count?: unknown };
     return typeof data.stargazers_count === "number"
       ? data.stargazers_count
@@ -26,68 +19,5 @@ async function getStarCount(): Promise<number | null> {
 export async function Header() {
   const starCount = await getStarCount();
 
-  return (
-    <header className="sticky top-0 z-200 bg-bg/85 backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
-      <div className="mx-auto max-w-7xl flex items-center justify-between h-14 px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-6">
-          <Link
-            href="/"
-            className="group flex cursor-pointer items-center gap-2.5"
-            aria-label="Motionwind home"
-          >
-            <span className="font-display text-xl italic tracking-[-0.02em] text-fg transition-colors group-hover:text-fg">
-              motionwind
-            </span>
-          </Link>
-          <nav
-            className="hidden md:flex items-center gap-1"
-            aria-label="Main navigation"
-          >
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="cursor-pointer rounded-md px-3 py-1.5 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg-muted transition-colors hover:bg-surface hover:text-fg"
-              >
-                {item.label}
-              </a>
-            ))}
-            <a
-              href="https://www.motionwind.xyz/docs"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cursor-pointer rounded-md px-3 py-1.5 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg-muted transition-colors hover:bg-surface hover:text-fg"
-            >
-              Docs
-            </a>
-          </nav>
-        </div>
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <Link
-            href="https://github.com/piyushzingade/motionwind"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-border bg-surface-elevated px-2.5 text-xs text-fg-muted transition-colors hover:border-accent/20 hover:text-fg"
-          >
-            <span>GitHub</span>
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 16 16"
-              className="h-3.5 w-3.5 text-accent"
-              fill="currentColor"
-            >
-              <path d="M8 1.35 9.98 5.4l4.47.65-3.23 3.14.76 4.44L8 11.53l-3.98 2.1.76-4.44-3.23-3.14 4.47-.65L8 1.35Z" />
-            </svg>
-            {starCount !== null && (
-              <>
-                <span className="h-3 w-px bg-border" />
-                <span>{starCount}</span>
-              </>
-            )}
-          </Link>
-        </div>
-      </div>
-    </header>
-  );
+  return <HeaderShell starCount={starCount} />;
 }
