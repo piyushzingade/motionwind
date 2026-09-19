@@ -49,10 +49,10 @@ export function Footer() {
             npm
           </a>
         </nav>
-        <div className="pointer-events-none absolute bottom-[-2rem] left-1/2 z-0 -translate-x-1/2 select-none leading-none">
+        <div className="pointer-events-none absolute bottom-[-1rem] left-1/2 z-0 -translate-x-1/2 select-none leading-none">
           <h1
             aria-hidden="true"
-            className="whitespace-nowrap text-[8rem] font-black tracking-[-0.06em] text-fg/[0.07] [mask-image:linear-gradient(to_bottom,black_20%,transparent_100%)] sm:text-[11rem] md:text-[15rem] lg:text-[19rem] xl:text-[23rem] [-webkit-mask-image:linear-gradient(to_bottom,black_20%,transparent_100%)]"
+            className="fluid-wordmark whitespace-nowrap text-[6rem] font-black tracking-[-0.06em] sm:text-[9rem] md:text-[12rem] lg:text-[15rem] xl:text-[18rem]"
           >
             MOTIONWIND
           </h1>
