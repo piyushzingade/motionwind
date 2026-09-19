@@ -3,7 +3,9 @@
 import { useState } from "react";
 import {
   ArrowUpRightIcon,
+  AtomIcon,
   BracketsCurlyIcon,
+  CodeIcon,
   CheckIcon,
   CopyIcon,
   LightningIcon,
@@ -29,19 +31,19 @@ export function GetStartedSection() {
       id="start"
       className="section-anchor relative overflow-hidden px-4 py-24 sm:px-6 md:py-32 lg:py-40"
     >
-      <div className="mx-auto grid max-w-[1120px] gap-14 lg:grid-cols-[0.68fr_1.32fr] lg:items-start lg:gap-20">
+      <div className="mx-auto flex max-w-[1120px] flex-col items-center gap-12">
         <Reveal>
-          <div className="max-w-xl">
+          <div className="max-w-3xl text-center">
             <p className="mb-6 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-accent">
               Start building
             </p>
-            <h2 className="max-w-[8ch] text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.05em] sm:text-5xl md:text-6xl">
+            <h2 className="mx-auto max-w-4xl text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.055em] sm:text-6xl md:text-7xl">
               Up and running in{" "}
               <em className="font-display font-normal italic text-accent">
                 30 seconds
               </em>
             </h2>
-            <p className="mt-6 max-w-md text-pretty text-base leading-relaxed text-fg-muted sm:text-lg">
+            <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg">
               Add the package, wrap your framework config, and start writing
               motion classes.
             </p>
@@ -56,7 +58,7 @@ export function GetStartedSection() {
         </Reveal>
 
         <Reveal y={20}>
-          <div className="overflow-hidden rounded-xl border border-border bg-surface lg:mt-8">
+          <div className="w-full max-w-4xl overflow-hidden rounded-xl border border-border bg-surface">
             <div className="flex items-center justify-between border-b border-border-subtle px-5 py-4 sm:px-6">
               <div className="flex items-center gap-2 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.16em] text-code-muted">
                 <TerminalWindowIcon
@@ -93,7 +95,7 @@ export function GetStartedSection() {
                 )}
               </button>
             </div>
-            <div className="grid gap-px bg-border-subtle sm:grid-cols-2">
+            <div className="grid-flow-dense grid gap-3 bg-surface p-4 sm:grid-cols-2 sm:p-5">
               <FrameworkCard
                 name="Next.js"
                 filename="next.config.js"
@@ -112,6 +114,37 @@ export function GetStartedSection() {
                     {"\n"}
                     <span className="text-accent/80">export default</span>{" "}
                     withMotionwind(config)
+                  </>
+                }
+              />
+              <FrameworkCard
+                name="React"
+                filename="motionwind.config.ts"
+                icon={<AtomIcon size={16} weight="bold" aria-hidden="true" />}
+                code={
+                  <>
+                    <span className="text-accent/80">import</span> motionwind{" "}
+                    <span className="text-accent/80">from</span>{" "}
+                    <span className="syntax-string">
+                      {'"motionwind/react"'}
+                    </span>
+                    {"\n"}
+                    <span className="text-accent/80">export default</span>{" "}
+                    motionwind()
+                  </>
+                }
+              />
+              <FrameworkCard
+                name="Vue"
+                filename="vite.config.ts"
+                icon={<CodeIcon size={16} weight="bold" aria-hidden="true" />}
+                code={
+                  <>
+                    <span className="text-accent/80">import</span> motionwind{" "}
+                    <span className="text-accent/80">from</span>{" "}
+                    <span className="syntax-string">{'"motionwind/vue"'}</span>
+                    {"\n"}
+                    plugins: [motionwind()]
                   </>
                 }
               />
