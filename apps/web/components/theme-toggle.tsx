@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes";
 import { useMounted } from "../lib/use-mounted";
 
-export function ThemeToggle() {
+export function ThemeToggle({ className = "" }: { className?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
   const mounted = useMounted();
 
@@ -11,7 +11,7 @@ export function ThemeToggle() {
     return (
       <button
         type="button"
-        className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-border-subtle bg-surface-elevated text-fg-muted"
+        className={`inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-border-subtle bg-surface-elevated text-fg-muted ${className}`}
         aria-label="Toggle theme"
       >
         <span className="h-3.5 w-3.5" />
@@ -25,7 +25,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-border-subtle bg-surface-elevated text-fg-muted transition-colors hover:border-accent/20 hover:text-fg active:scale-[0.96]"
+      className={`inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-border-subtle bg-surface-elevated text-fg-muted transition-colors hover:border-accent/20 hover:text-fg active:scale-[0.96] ${className}`}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDark ? (
