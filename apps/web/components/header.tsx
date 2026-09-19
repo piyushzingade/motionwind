@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StarIcon } from "@phosphor-icons/react/dist/ssr";
 import { GithubIcon } from "@repo/ui/github-icon";
 import { MotionwindHorizontalLogo } from "@repo/ui/motionwind-logo";
 import { ThemeToggle } from "./theme-toggle";
@@ -50,6 +51,11 @@ export async function Header() {
             className="inline-flex size-12 cursor-pointer items-center justify-center rounded-full border border-border bg-surface-elevated text-fg-muted shadow-[0_16px_40px_-24px_var(--color-shadow)] transition-colors hover:border-accent/20 hover:text-fg"
           >
             <GithubIcon className="size-5 text-fg" />
+            <StarIcon
+              aria-hidden="true"
+              className="size-4 text-[#f5c84b]"
+              weight="fill"
+            />
           </Link>
           <div className="flex size-12 items-center justify-center rounded-full border border-border bg-surface-elevated shadow-[0_16px_40px_-24px_var(--color-shadow)]">
             <ThemeToggle className="size-8 rounded-full border-0 bg-transparent shadow-none" />
