@@ -4,7 +4,7 @@ import Link from "next/link";
 import { m, useReducedMotion } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
 import { GithubIcon } from "@repo/ui/github-icon";
-import { MotionwindHorizontalLogo } from "@repo/ui/motionwind-logo";
+import { MotionwindLogo } from "@repo/ui/motionwind-logo";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV_ITEMS = [
@@ -67,7 +67,10 @@ export function HeaderShell({ starCount }: HeaderShellProps) {
               aria-label="Motionwind home"
               className="group flex h-12 cursor-pointer items-center rounded-full border border-border bg-surface-elevated px-5 shadow-[0_16px_40px_-24px_var(--color-shadow)] transition-opacity duration-200 hover:opacity-70"
             >
-              <MotionwindHorizontalLogo className="h-8 w-32 text-fg sm:h-9 sm:w-36" />
+              <MotionwindLogo className="h-6 w-8 text-accent" />
+              <span className="ml-2 text-sm font-semibold tracking-tight text-fg">
+                motionwind
+              </span>
             </Link>
           </m.div>
           <nav
