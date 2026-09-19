@@ -45,7 +45,7 @@ export function Footer() {
               href="https://www.npmjs.com/package/motionwind-react"
               className="cursor-pointer transition-colors hover:text-fg"
             >
-              npm
+              NPM
             </a>
             <a
               href="mailto:piyushzingade@gmail.com"
