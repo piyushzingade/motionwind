@@ -7,10 +7,7 @@ import { GithubLogoIcon, StarIcon } from "@phosphor-icons/react/dist/ssr";
 import { MotionwindHorizontalLogo } from "@repo/ui/motionwind-logo";
 import { ThemeToggle } from "./theme-toggle";
 
-const NAV_ITEMS = [
-  { label: "Demos", href: "#demos" },
-  { label: "How", href: "#how" },
-];
+const NAV_ITEMS = [{ label: "Demos", href: "#demos" }];
 
 async function getStarCount(): Promise<number | null> {
   try {
@@ -32,7 +29,7 @@ export async function Header() {
 
   return (
     <header className="sticky top-4 z-200 px-4 sm:px-6">
-      <div className="mx-auto flex h-14 max-w-[1120px] items-center justify-between gap-3">
+      <div className="relative mx-auto flex h-14 max-w-[1120px] items-center justify-between gap-3">
         <div className="flex min-w-0 items-center">
           <Link
             href="/"
@@ -42,7 +39,7 @@ export async function Header() {
             <MotionwindHorizontalLogo className="h-8 w-32 text-fg sm:h-9 sm:w-36" />
           </Link>
           <nav
-            className="ml-4 hidden items-center gap-1 rounded-full border border-border bg-surface-elevated px-3 py-2 shadow-[0_16px_40px_-24px_var(--color-shadow)] md:flex"
+            className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 rounded-full border border-border bg-surface-elevated px-3 py-2 shadow-[0_16px_40px_-24px_var(--color-shadow)] md:flex"
             aria-label="Main navigation"
           >
             {NAV_ITEMS.map((item) => (
@@ -79,7 +76,7 @@ export async function Header() {
             />
             <StarIcon
               aria-hidden="true"
-              className="size-4 text-accent"
+              className="size-4 text-[#f5c84b]"
               weight="fill"
             />
             {starCount !== null && (
