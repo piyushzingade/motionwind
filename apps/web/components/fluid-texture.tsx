@@ -107,7 +107,7 @@ export function FluidTexture({
   ...props
 }: FluidTextureProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [resolvedColor, setResolvedColor] = useState(color ?? "#D0F754");
+  const [resolvedColor, setResolvedColor] = useState(color ?? "#C9FF33");
 
   useEffect(() => {
     if (color) {
@@ -119,7 +119,7 @@ export function FluidTexture({
       const accent = getComputedStyle(document.documentElement)
         .getPropertyValue("--color-accent")
         .trim();
-      setResolvedColor(accent || "#D0F754");
+      setResolvedColor(accent || "#C9FF33");
     };
 
     updateThemeColor();

@@ -27,9 +27,9 @@
   --color-bg: #fbfbfb;
   --color-fg: #18181a;
   --color-fg-muted: #66666d;
-  --color-accent: #d0f754;
-  --color-accent-hover: #d0f754;
-  --color-accent-fg: #0a0a0f;
+  --color-accent: #4d7c0f;
+  --color-accent-hover: #3f6212;
+  --color-accent-fg: #ffffff;
   --color-border: #e3e3e5;
   --color-border-subtle: #efeff1;
   --color-surface: #f5f5f6;
@@ -39,15 +39,15 @@
   --color-code-header: #efeff1;
   --color-code-border: #e1e1e4;
   --color-code-muted: #9a9a9a;
-  --color-selection: rgba(208, 247, 84, 0.12);
-  --color-dot-grid: rgba(208, 247, 84, 0.06);
-  --color-demo-glow: rgba(208, 247, 84, 0.06);
-  --color-demo-grid-line: rgba(208, 247, 84, 0.07);
-  --acid-glow: rgba(208, 247, 84, 0.35);
+  --color-selection: rgba(77, 124, 15, 0.12);
+  --color-dot-grid: rgba(77, 124, 15, 0.06);
+  --color-demo-glow: rgba(77, 124, 15, 0.06);
+  --color-demo-grid-line: rgba(77, 124, 15, 0.07);
+  --acid-glow: rgba(77, 124, 15, 0.35);
 
   /* Fumadocs overrides */
-  --color-fd-primary: #d0f754 !important;
-  --color-fd-primary-foreground: #0a0a0f !important;
+  --color-fd-primary: #c7ff2d !important;
+  --color-fd-primary-foreground: #1a1a1a !important;
 }
 
 /* Dark theme */
@@ -55,8 +55,8 @@
   --color-bg: #0b0b0c;
   --color-fg: #f0f0f1;
   --color-fg-muted: #929299;
-  --color-accent: #d0f754;
-  --color-accent-hover: #d0f754;
+  --color-accent: #c8ff2e;
+  --color-accent-hover: #b8ef1e;
   --color-accent-fg: #0b0b0c;
   --color-border: #29292c;
   --color-border-subtle: #1c1c1f;
@@ -65,16 +65,16 @@
   --color-shadow: rgba(0, 0, 0, 0.5);
   --color-code-bg: #0e0e10;
   --color-code-header: #151518;
-  --color-code-border: rgba(208, 247, 84, 0.06);
+  --color-code-border: rgba(200, 255, 46, 0.06);
   --color-code-muted: #6f6f78;
-  --color-selection: rgba(208, 247, 84, 0.18);
-  --color-dot-grid: rgba(208, 247, 84, 0.03);
-  --color-demo-glow: rgba(208, 247, 84, 0.04);
-  --color-demo-grid-line: rgba(208, 247, 84, 0.04);
-  --acid-glow: rgba(208, 247, 84, 0.35);
+  --color-selection: rgba(200, 255, 46, 0.18);
+  --color-dot-grid: rgba(200, 255, 46, 0.03);
+  --color-demo-glow: rgba(200, 255, 46, 0.04);
+  --color-demo-grid-line: rgba(200, 255, 46, 0.04);
+  --acid-glow: rgba(200, 255, 46, 0.35);
 
   /* Fumadocs overrides */
-  --color-fd-primary: #d0f754 !important;
+  --color-fd-primary: #c8ff2e !important;
   --color-fd-primary-foreground: #0a0a0f !important;
 }
 
@@ -481,8 +481,8 @@ figure.shiki pre::-webkit-scrollbar {
 /* Center text + icons inside demo content boxes (baseline reset). */
 .demo-container div[class*="bg-fd-primary"],
 .demo-container button[class*="bg-fd-primary"],
-.demo-container div[class*="bg-\\[#D0F754\\]"],
-.demo-container div[class*="bg-\\[#D0F754\\]\\/"] {
+.demo-container div[class*="bg-\\[#c8ff2e\\]"],
+.demo-container div[class*="bg-\\[#c8ff2e\\]\\/"] {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -832,7 +832,7 @@ figure.shiki pre::-webkit-scrollbar {
 .rn-phone-light span,
 .rn-phone-light div {
   color: #171717 !important;
-  border-color: rgba(208, 247, 84, 0.18) !important;
+  border-color: rgba(77, 124, 15, 0.18) !important;
 }
 .rn-phone-light .rn-anim-fadeSlideUp,
 .rn-phone-light .rn-anim-fadeIn,
@@ -916,11 +916,11 @@ figure.shiki pre::-webkit-scrollbar {
 
 /* animate-* classes — accent color both modes */
 .rn-hl-animate {
-  color: #D0F754;
+  color: #4d7c0f;
   font-weight: 500;
 }
 .dark .rn-hl-animate {
-  color: #D0F754;
+  color: #c8ff2e;
 }
 
 /* Comments */
