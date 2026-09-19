@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import { STAGES } from "@/lib/types";
 import type { StudioController } from "@/lib/use-studio-state";
 import { useGeneratedCode } from "@/lib/use-generated-code";
@@ -12,6 +13,7 @@ import {
   DeviceMobileIcon,
   DeviceTabletIcon,
   LinkIcon,
+  PauseIcon,
   PlayIcon,
   PulseIcon,
   SlidersHorizontalIcon,
@@ -53,9 +55,41 @@ export function PlaygroundStudio({ studio }: { studio: StudioController }) {
     recipeSupportsTarget,
   } = useGeneratedCode(editor);
 
+  const total = Math.max(duration + delay, 1);
+  const [playing, setPlaying] = useState(!reduceMotion);
+  const [playbackComplete, setPlaybackComplete] = useState(false);
+  const [playbackTime, setPlaybackTime] = useState(0);
+
+  const restart = useCallback(() => {
+    setPlaybackTime(0);
+    setPlaybackComplete(false);
+    setPlaying(!reduceMotion);
+    replay();
+  }, [reduceMotion, replay]);
+
+  const completePlayback = useCallback(() => {
+    setPlaybackTime(total);
+    setPlaybackComplete(true);
+    setPlaying(false);
+  }, [total]);
+
+  useEffect(() => {
+    setPlaybackTime(0);
+    setPlaybackComplete(false);
+    setPlaying(!reduceMotion);
+  }, [replayKey, reduceMotion]);
+
+  function togglePlayback() {
+    if (playbackComplete || playbackTime >= total) {
+      restart();
+      return;
+    }
+    setPlaying((current) => !current);
+  }
+
   return (
-    <div className="mx-auto w-full max-w-[1480px] p-3 sm:p-5 lg:p-6">
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 sm:px-4">
+    <div className="mx-auto w-full max-w-[1540px] p-3 sm:p-5 lg:p-6">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]/90 px-3 py-2.5 shadow-[0_12px_35px_var(--color-shadow)] sm:px-4">
         <div
           className="flex rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] p-0.5"
           aria-label="Preview size"
@@ -91,11 +125,22 @@ export function PlaygroundStudio({ studio }: { studio: StudioController }) {
           </button>
           <button
             type="button"
-            onClick={replay}
-            className="control-press inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-2.5 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.08em] text-[var(--color-fg-muted)] transition-[border-color,color,background-color] duration-150 hover:border-[var(--color-accent)]/30 hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/45"
+            onClick={togglePlayback}
+            aria-label={
+              playing
+                ? "Pause preview"
+                : playbackComplete
+                  ? "Replay preview"
+                  : "Play preview"
+            }
+            className="control-press inline-flex h-8 min-w-[78px] cursor-pointer items-center justify-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-2.5 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.08em] text-[var(--color-fg-muted)] transition-[border-color,color,background-color] duration-150 ease-out hover:border-[var(--color-accent)]/30 hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/45"
           >
-            <PlayIcon size={13} weight="fill" />
-            Replay
+            {playing ? (
+              <PauseIcon size={13} weight="fill" />
+            ) : (
+              <PlayIcon size={13} weight="fill" />
+            )}
+            {playing ? "Pause" : playbackComplete ? "Replay" : "Play"}
           </button>
           <button
             type="button"
@@ -124,9 +169,9 @@ export function PlaygroundStudio({ studio }: { studio: StudioController }) {
         </div>
       </div>
 
-      <div className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,1fr)_340px]">
-        <section className="min-w-0 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
-          <div className="flex h-11 items-center justify-between border-b border-dashed border-[var(--color-border)] px-4">
+      <div className="grid min-w-0 gap-3">
+        <section className="min-w-0 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[0_18px_60px_var(--color-shadow)]">
+          <div className="flex h-12 items-center justify-between border-b border-[var(--color-border-subtle)] px-4 sm:px-5">
             <div className="flex items-center gap-2 text-xs font-medium">
               <PlayIcon
                 size={14}
@@ -146,6 +191,8 @@ export function PlaygroundStudio({ studio }: { studio: StudioController }) {
             stage={stage}
             reduceMotion={reduceMotion}
             replayKey={replayKey}
+            playing={playing}
+            playbackTime={playbackTime}
             recipe={activeRecipe}
           />
           <Timeline
@@ -153,18 +200,22 @@ export function PlaygroundStudio({ studio }: { studio: StudioController }) {
             delay={delay}
             replayKey={replayKey}
             reduceMotion={reduceMotion}
+            playing={playing}
+            onPlayingChange={setPlaying}
+            onTimeChange={setPlaybackTime}
+            onComplete={completePlayback}
           />
         </section>
 
-        <aside className="min-w-0 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
-          <div className="flex h-11 items-center gap-2 border-b border-dashed border-[var(--color-border)] px-4 text-xs font-medium">
+        <section className="min-w-0 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+          <div className="flex h-11 items-center gap-2 border-b border-[var(--color-border-subtle)] px-4 text-xs font-medium">
             <SlidersHorizontalIcon
               size={14}
               className="text-[var(--color-accent)]"
             />
             Properties
           </div>
-          <div className="grid gap-5 p-4">
+          <div className="grid gap-5 p-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-7 xl:px-5 xl:py-4">
             <RangeControl
               id="duration"
               label="Duration"
@@ -181,7 +232,7 @@ export function PlaygroundStudio({ studio }: { studio: StudioController }) {
                     `animate-duration-${value}`,
                   ),
                 });
-                replay();
+                restart();
               }}
             />
             <RangeControl
@@ -200,7 +251,7 @@ export function PlaygroundStudio({ studio }: { studio: StudioController }) {
                     `animate-delay-${value}`,
                   ),
                 });
-                replay();
+                restart();
               }}
             />
             <RangeControl
@@ -218,7 +269,7 @@ export function PlaygroundStudio({ studio }: { studio: StudioController }) {
                     `animate-stiffness-${value}`,
                   ),
                 });
-                replay();
+                restart();
               }}
             />
             <RangeControl
@@ -235,15 +286,15 @@ export function PlaygroundStudio({ studio }: { studio: StudioController }) {
                     `animate-damping-${value}`,
                   ),
                 });
-                replay();
+                restart();
               }}
             />
           </div>
-        </aside>
+        </section>
       </div>
 
       <div className="mt-3 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
-        <div className="flex h-11 items-center gap-2 border-b border-dashed border-[var(--color-border)] px-4 text-xs font-medium">
+        <div className="flex h-11 items-center gap-2 border-b border-[var(--color-border-subtle)] px-4 text-xs font-medium">
           <CodeIcon size={14} className="text-[var(--color-accent)]" />
           Editor and output
         </div>

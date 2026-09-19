@@ -1,11 +1,11 @@
 import Link from "next/link";
+import { GithubIcon } from "@repo/ui/github-icon";
+import { MotionwindHorizontalLogo } from "@repo/ui/motionwind-logo";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV_ITEMS = [
   { label: "Demos", href: "#demos" },
-  { label: "How", href: "#how" },
-  { label: "Features", href: "#features" },
-  { label: "Syntax", href: "#syntax" },
+  { label: "Playground", href: "https://play.motionwind.xyz" },
 ];
 
 async function getStarCount(): Promise<number | null> {
@@ -14,6 +14,7 @@ async function getStarCount(): Promise<number | null> {
       "https://api.github.com/repos/piyushzingade/motionwind",
       { next: { revalidate: 3600 } },
     );
+    if (!response.ok) return null;
     const data = (await response.json()) as { stargazers_count?: unknown };
     return typeof data.stargazers_count === "number"
       ? data.stargazers_count
@@ -27,27 +28,31 @@ export async function Header() {
   const starCount = await getStarCount();
 
   return (
-    <header className="sticky top-0 z-200 bg-bg/85 backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
-      <div className="mx-auto max-w-7xl flex items-center justify-between h-14 px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-6">
+    <header className="sticky top-4 z-200 px-4 sm:px-6">
+      <div className="relative mx-auto flex h-14 max-w-[1120px] items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center">
           <Link
             href="/"
-            className="group flex cursor-pointer items-center gap-2.5"
+            className="group flex h-12 cursor-pointer items-center rounded-full border border-border bg-surface-elevated px-5 shadow-[0_16px_40px_-24px_var(--color-shadow)] transition-colors hover:border-accent/30"
             aria-label="Motionwind home"
           >
-            <span className="font-display text-xl italic tracking-[-0.02em] text-fg transition-colors group-hover:text-fg">
-              motionwind
-            </span>
+            <MotionwindHorizontalLogo className="h-8 w-32 text-fg sm:h-9 sm:w-36" />
           </Link>
           <nav
-            className="hidden md:flex items-center gap-1"
+            className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 rounded-full border border-border bg-surface-elevated px-3 py-2 shadow-[0_16px_40px_-24px_var(--color-shadow)] md:flex"
             aria-label="Main navigation"
           >
             {NAV_ITEMS.map((item) => (
               <a
                 key={item.label}
                 href={item.href}
-                className="cursor-pointer rounded-md px-3 py-1.5 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg-muted transition-colors hover:bg-surface hover:text-fg"
+                target={item.href.startsWith("http") ? "_blank" : undefined}
+                rel={
+                  item.href.startsWith("http")
+                    ? "noopener noreferrer"
+                    : undefined
+                }
+                className="cursor-pointer rounded-full px-4 py-2 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg-muted transition-colors hover:bg-surface hover:text-fg"
               >
                 {item.label}
               </a>
@@ -56,36 +61,34 @@ export async function Header() {
               href="https://www.motionwind.xyz/docs"
               target="_blank"
               rel="noopener noreferrer"
-              className="cursor-pointer rounded-md px-3 py-1.5 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg-muted transition-colors hover:bg-surface hover:text-fg"
+              className="cursor-pointer rounded-full px-4 py-2 font-[family-name:var(--font-mono)] text-xs tracking-wide text-fg-muted transition-colors hover:bg-surface hover:text-fg"
             >
               Docs
             </a>
           </nav>
         </div>
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
+        <div className="flex shrink-0 items-center gap-3">
           <Link
             href="https://github.com/piyushzingade/motionwind"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-border bg-surface-elevated px-2.5 text-xs text-fg-muted transition-colors hover:border-accent/20 hover:text-fg"
+            aria-label="Open Motionwind on GitHub"
+            title="Open Motionwind on GitHub"
+            className="inline-flex h-12 min-w-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-border bg-surface-elevated px-3 text-fg-muted shadow-[0_16px_40px_-24px_var(--color-shadow)] transition-colors hover:border-accent/20 hover:text-fg"
           >
-            <span>GitHub</span>
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 16 16"
-              className="h-3.5 w-3.5 text-accent"
-              fill="currentColor"
-            >
-              <path d="M8 1.35 9.98 5.4l4.47.65-3.23 3.14.76 4.44L8 11.53l-3.98 2.1.76-4.44-3.23-3.14 4.47-.65L8 1.35Z" />
-            </svg>
+            <GithubIcon className="size-5 text-fg" />
             {starCount !== null && (
               <>
-                <span className="h-3 w-px bg-border" />
-                <span>{starCount}</span>
+                <span aria-hidden="true" className="h-5 w-px bg-border" />
+                <span className="font-[family-name:var(--font-mono)] text-xs tabular-nums text-fg-muted">
+                  {starCount}
+                </span>
               </>
             )}
           </Link>
+          <div className="flex size-12 items-center justify-center rounded-full border border-border bg-surface-elevated shadow-[0_16px_40px_-24px_var(--color-shadow)]">
+            <ThemeToggle className="size-8 rounded-full border-0 bg-transparent shadow-none" />
+          </div>
         </div>
       </div>
     </header>

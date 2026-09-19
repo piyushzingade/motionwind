@@ -19,7 +19,6 @@
   --color-code-header: var(--color-code-header);
   --color-code-border: var(--color-code-border);
   --color-code-muted: var(--color-code-muted);
-  --font-display: var(--font-display);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 }
@@ -102,7 +101,12 @@ html,
 body {
   background-color: var(--color-bg);
   color: var(--color-fg);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family:
+    var(--font-sans),
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -536,10 +540,6 @@ body {
 }
 
 /* ── Shared landing utilities ─────────────────────────────────────── */
-.font-display {
-  font-family: var(--font-display), Georgia, serif;
-}
-
 .spec-label {
   font-family: var(--font-mono), monospace;
   font-size: 11px;
@@ -553,8 +553,7 @@ body {
   font-size: 11px;
   letter-spacing: 0.1em;
   color: var(--color-accent);
-  border: 1px solid
-    color-mix(in srgb, var(--color-accent) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
   background: color-mix(in srgb, var(--color-accent) 7%, transparent);
   border-radius: 999px;
   padding: 2px 8px;
@@ -629,6 +628,30 @@ body {
 @keyframes marquee-scroll {
   to {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes component-preview-loop {
+  0%,
+  100% {
+    opacity: 0.82;
+    transform: translateY(4px) scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1);
+  }
+}
+
+.web-component-loop {
+  animation: component-preview-loop 3.8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .web-component-loop {
+    animation: none;
+    transform: none;
   }
 }
 

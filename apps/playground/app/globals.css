@@ -18,7 +18,6 @@
   --color-code-header: var(--color-code-header);
   --color-code-border: var(--color-code-border);
   --color-code-muted: var(--color-code-muted);
-  --font-display: var(--font-display);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 }
@@ -213,7 +212,7 @@ body {
 }
 
 .docs-prose h2 {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-sans), sans-serif;
   font-style: italic;
   font-size: 1.5rem;
   font-weight: 600;
@@ -695,7 +694,7 @@ figure.shiki pre::-webkit-scrollbar {
 }
 
 .toc-header-label {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-sans), sans-serif;
   font-style: italic;
   font-size: 0.8125rem;
   color: var(--color-fg);
@@ -1203,14 +1202,6 @@ figure.shiki pre::-webkit-scrollbar {
 }
 
 /* ── Studio timeline ───────────────────────────────────────────────── */
-@keyframes studio-playhead {
-  from {
-    transform: translateX(8px);
-  }
-  to {
-    transform: translateX(calc(100cqw - 16px));
-  }
-}
 .studio-timeline {
   container-type: inline-size;
 }
@@ -1224,12 +1215,9 @@ figure.shiki pre::-webkit-scrollbar {
   );
 }
 .studio-playhead {
-  animation-name: studio-playhead;
-  animation-timing-function: linear;
-  animation-fill-mode: both;
+  will-change: transform;
 }
 .studio-playhead[data-reduced-motion="true"] {
-  animation: none;
   transform: translateX(calc(100cqw - 16px));
 }
 
@@ -1421,10 +1409,6 @@ figure.shiki pre::-webkit-scrollbar {
   .palette-overlay,
   .palette-content,
   .feedback-spinner,
-  .studio-playhead {
-    animation: none;
-  }
-
   .control-press,
   .studio-range::-webkit-slider-thumb {
     transition: none;

@@ -1,6 +1,6 @@
 "use client";
 
-import { type ComponentType, type ReactNode } from "react";
+import { type ComponentType, type ReactNode, useEffect, useRef } from "react";
 import { CheckerboardIcon } from "@phosphor-icons/react";
 import { MotionConfig, useReducedMotion } from "motion/react";
 import { mw } from "motionwind-react";
@@ -23,6 +23,8 @@ export function PreviewStage({
   stage,
   reduceMotion,
   replayKey,
+  playing,
+  playbackTime,
   recipe,
 }: {
   tag: string;
@@ -31,6 +33,8 @@ export function PreviewStage({
   stage: StageSize;
   reduceMotion: boolean;
   replayKey: number;
+  playing: boolean;
+  playbackTime: number;
   recipe: MotionwindRecipe | undefined;
 }) {
   const Preview = (MwComponent[tag] ??
@@ -41,10 +45,25 @@ export function PreviewStage({
   const stageWidth = STAGES.find(({ id }) => id === stage)?.width ?? 400;
   const systemReducedMotion = useReducedMotion();
   const shouldReduceMotion = reduceMotion || systemReducedMotion;
+  const viewportRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      const animations = viewportRef.current?.getAnimations({ subtree: true });
+      animations?.forEach((animation) => {
+        animation.currentTime = playbackTime;
+        if (playing && !shouldReduceMotion) animation.play();
+        else animation.pause();
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [playbackTime, playing, replayKey, shouldReduceMotion]);
 
   return (
     <div className="studio-checker flex min-h-[360px] items-center justify-center overflow-auto p-3 sm:p-5">
       <div
+        ref={viewportRef}
         className={`relative flex min-h-[300px] max-w-full items-center justify-center overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] shadow-[0_18px_55px_var(--color-shadow)] ${shouldReduceMotion ? "" : "transition-[width] duration-200 ease-[cubic-bezier(0.645,0.045,0.355,1)]"}`}
         style={{ width: stageWidth }}
         data-testid="preview-viewport"
