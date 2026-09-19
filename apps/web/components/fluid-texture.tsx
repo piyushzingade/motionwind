@@ -101,7 +101,7 @@ function hexToRgb(hex: string): [number, number, number] {
 }
 
 export function FluidTexture({
-  color = "#22c55e",
+  color = "#c8ff2e",
   maskText,
   className,
   ...props
