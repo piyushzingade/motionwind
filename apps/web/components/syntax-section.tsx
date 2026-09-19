@@ -53,7 +53,7 @@ export function SyntaxSection() {
         <Reveal y={18}>
           <div className="overflow-hidden rounded-xl border border-border bg-surface-elevated">
             <div className="border-b border-border-subtle px-5 py-5 sm:px-6">
-              <code className="block overflow-x-auto whitespace-nowrap font-[family-name:var(--font-mono)] text-base text-fg sm:text-lg">
+              <code className="code-scrollbar-hidden block overflow-x-auto whitespace-nowrap font-[family-name:var(--font-mono)] text-base text-fg sm:text-lg">
                 <span className="text-code-muted">animate-</span>
                 <span className="text-accent">hover</span>
                 <span className="text-code-muted">:</span>

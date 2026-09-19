@@ -175,7 +175,7 @@ function CodePane({
         {title}
       </div>
       <pre
-        className={`overflow-auto px-3 py-4 font-[family-name:var(--font-mono)] text-[11px] leading-5 ${expanded ? "max-h-56" : "max-h-40"}`}
+        className={`code-scrollbar-hidden overflow-auto px-3 py-4 font-[family-name:var(--font-mono)] text-[11px] leading-5 ${expanded ? "max-h-56" : "max-h-40"}`}
       >
         <code>{highlightCode(code)}</code>
       </pre>

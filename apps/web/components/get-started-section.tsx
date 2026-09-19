@@ -182,7 +182,7 @@ function FrameworkCard({
           {filename}
         </span>
       </div>
-      <pre className="overflow-x-auto px-4 py-4 font-[family-name:var(--font-mono)] text-[12px] leading-6 code-dim">
+      <pre className="code-scrollbar-hidden overflow-x-auto px-4 py-4 font-[family-name:var(--font-mono)] text-[12px] leading-6 code-dim">
         <code>{code}</code>
       </pre>
     </article>

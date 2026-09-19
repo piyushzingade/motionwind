@@ -115,7 +115,7 @@ function CodePanel({
           {filename}
         </span>
       </div>
-      <pre className="max-h-[360px] overflow-auto p-5 font-[family-name:var(--font-mono)] text-[11px] leading-6">
+      <pre className="code-scrollbar-hidden max-h-[360px] overflow-auto p-5 font-[family-name:var(--font-mono)] text-[11px] leading-6">
         <code>{highlightCode(code)}</code>
       </pre>
     </div>

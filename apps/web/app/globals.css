@@ -155,6 +155,17 @@ body {
   scrollbar-color: var(--color-border) transparent;
 }
 
+.code-scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.code-scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
 /* ── Noise grain overlay (subtle, dark only) ──────────────────────── */
 .dark .grain::before {
   content: "";
