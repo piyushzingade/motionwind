@@ -9,7 +9,7 @@ export function DownloadCTA({ className = "" }: DownloadCTAProps) {
   return (
     <section
       aria-labelledby="download-cta-title"
-      className={`relative aspect-square w-full max-w-[760px] overflow-hidden rounded-[28px] ${className}`}
+      className={`relative aspect-[4/3] w-full max-w-[760px] overflow-hidden rounded-[28px] sm:aspect-[16/9] ${className}`}
       style={{
         backgroundColor:
           "color-mix(in srgb, var(--color-accent) 12%, var(--color-bg))",
@@ -35,13 +35,13 @@ export function DownloadCTA({ className = "" }: DownloadCTAProps) {
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-8 text-center sm:px-12">
         <h2
           id="download-cta-title"
-          className="text-balance text-[clamp(2rem,5vw,3.4rem)] font-semibold leading-[1.05] tracking-[-0.045em] text-fg"
+          className="text-balance text-[clamp(2rem,5vw,3.4rem)] font-semibold leading-[1.05] tracking-[-0.045em] text-black"
         >
           Ship motion that matters.
           <br />
           Start building today.
         </h2>
-        <p className="mt-5 max-w-md text-pretty text-sm leading-relaxed text-fg-muted sm:text-base">
+        <p className="mt-5 max-w-md text-pretty text-sm leading-relaxed text-black/65 sm:text-base">
           Motion as utility classes, compiled for the frameworks you ship.
         </p>
         <Link
