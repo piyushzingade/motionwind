@@ -69,7 +69,7 @@ export function HeaderShell({ starCount }: HeaderShellProps) {
             >
               <MotionwindLogo className="h-6 w-8 text-accent" />
               <span className="ml-2 text-sm font-semibold tracking-tight text-fg">
-                motionwind
+                Motionwind
               </span>
             </Link>
           </m.div>
