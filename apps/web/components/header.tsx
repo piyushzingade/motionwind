@@ -31,15 +31,15 @@ export async function Header() {
   const starCount = await getStarCount();
 
   return (
-    <header className="sticky top-0 z-200 bg-bg/85 backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
-      <div className="mx-auto flex h-14 max-w-[1120px] items-center justify-between px-0">
+    <header className="sticky top-4 z-200 px-4 sm:px-6">
+      <div className="mx-auto flex h-14 max-w-[1120px] items-center justify-between rounded-2xl border border-border bg-bg/85 px-4 shadow-[0_16px_40px_-24px_var(--color-shadow)] backdrop-blur-xl sm:px-5">
         <div className="flex items-center gap-6">
           <Link
             href="/"
             className="group flex cursor-pointer items-center gap-2"
             aria-label="Motionwind home"
           >
-            <MotionwindHorizontalLogo className="h-11 w-44 text-fg" />
+            <MotionwindHorizontalLogo className="h-9 w-36 text-fg sm:h-11 sm:w-44" />
           </Link>
           <nav
             className="hidden md:flex items-center gap-1"
