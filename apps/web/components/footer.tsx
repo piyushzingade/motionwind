@@ -5,7 +5,7 @@ import { ArrowUpRightIcon } from "@phosphor-icons/react";
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden px-4 py-32 sm:px-6 md:py-40">
+    <footer className="relative overflow-hidden px-4 pb-0 pt-32 sm:px-6 md:pt-40">
       <div className="relative mx-auto flex min-h-[700px] max-w-[1120px] flex-col items-center justify-start pt-20 text-center sm:pt-28 md:min-h-[760px] md:pt-32">
         <h2 className="relative z-10 max-w-5xl text-balance text-6xl font-semibold leading-[0.94] tracking-[-0.065em] sm:text-7xl md:text-8xl lg:text-[clamp(5rem,8vw,8.5rem)]">
           Ship motion that <span className="text-accent">matters</span>
@@ -49,7 +49,7 @@ export function Footer() {
             npm
           </a>
         </nav>
-        <div className="pointer-events-none absolute bottom-[-1rem] left-1/2 z-0 -translate-x-1/2 select-none leading-none">
+        <div className="pointer-events-none absolute bottom-0 left-1/2 z-0 -translate-x-1/2 select-none leading-none">
           <h1
             aria-hidden="true"
             className="fluid-wordmark whitespace-nowrap text-[6rem] font-black tracking-[-0.06em] sm:text-[9rem] md:text-[12rem] lg:text-[15rem] xl:text-[18rem]"
