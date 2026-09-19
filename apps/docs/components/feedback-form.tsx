@@ -102,7 +102,7 @@ export function FeedbackForm({
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
               </div>
-              <h2 className="font-[family-name:var(--font-display)] text-[15px] italic tracking-tight text-[var(--color-fg)]">
+              <h2 className="font-sans text-[15px] italic tracking-tight text-[var(--color-fg)]">
                 Send Feedback
               </h2>
             </div>

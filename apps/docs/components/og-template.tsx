@@ -75,7 +75,7 @@ export function OgTemplate({
           width: "30%",
           height: "2px",
           background:
-            "linear-gradient(90deg, transparent, #c8ff2e, transparent)",
+            "linear-gradient(90deg, transparent, #C9FF33, transparent)",
         }}
       />
 
@@ -98,18 +98,18 @@ export function OgTemplate({
           height={40}
           style={{ marginBottom: 32 }}
         >
-          <polygon points="123,182 403,182 396,218 116,218" fill="#c8ff2e" />
+          <polygon points="123,182 403,182 396,218 116,218" fill="#C9FF33" />
           <polygon
             points="181,238 401,238 394,274 174,274"
-            fill="#c8ff2e"
+            fill="#C9FF33"
             opacity="0.75"
           />
           <polygon
             points="239,294 399,294 392,330 232,330"
-            fill="#c8ff2e"
+            fill="#C9FF33"
             opacity="0.52"
           />
-          <polygon points="415,188 439,200 415,212" fill="#c8ff2e" />
+          <polygon points="415,188 439,200 415,212" fill="#C9FF33" />
         </svg>
 
         {eyebrow && (
@@ -118,7 +118,7 @@ export function OgTemplate({
               display: "flex",
               fontSize: 22,
               fontWeight: 600,
-              color: "#c8ff2e",
+              color: "#C9FF33",
               textTransform: "uppercase",
               letterSpacing: "0.16em",
               marginBottom: 18,

@@ -1,18 +1,11 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "fumadocs-ui/style.css";
 import "./globals.css";
-
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -104,9 +97,7 @@ export const metadata: Metadata = {
   },
 };
 
-const fontVars = [instrumentSerif, inter, jetbrainsMono]
-  .map((f) => f.variable)
-  .join(" ");
+const fontVars = [inter, jetbrainsMono].map((f) => f.variable).join(" ");
 
 export default function RootLayout({
   children,
