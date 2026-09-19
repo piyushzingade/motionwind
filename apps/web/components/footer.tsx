@@ -49,10 +49,10 @@ export function Footer() {
             npm
           </a>
         </nav>
-        <div className="absolute -bottom-[5%] left-0 z-0 w-full leading-none select-none sm:-bottom-[15%]">
+        <div className="absolute -bottom-[3%] left-0 z-0 w-full leading-none select-none sm:-bottom-[8%]">
           <h1
             aria-hidden="true"
-            className="pointer-events-none text-center whitespace-nowrap text-[20vw] font-black tracking-[-0.08em] text-accent/[0.09] sm:text-[18vw] md:text-[16vw] lg:text-[15vw]"
+            className="pointer-events-none text-center whitespace-nowrap text-[14vw] font-black tracking-[-0.08em] text-accent/[0.09] sm:text-[12vw] md:text-[11vw] lg:text-[10vw]"
           >
             MOTIONWIND
           </h1>
