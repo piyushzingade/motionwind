@@ -49,9 +49,9 @@ export function HeaderShell({ starCount }: HeaderShellProps) {
     <header className="sticky top-4 z-200 px-4 sm:px-6 lg:px-8">
       <m.div
         layout
-        animate={{ maxWidth: isScrolled ? 720 : 1440 }}
+        animate={{ maxWidth: isScrolled ? 640 : 1120 }}
         transition={transition}
-        className={`relative mx-auto flex h-14 w-full items-center justify-between transition-[gap] duration-200 ${isScrolled ? "gap-1" : "gap-3"}`}
+        className={`relative mx-auto flex h-14 w-full items-center justify-between transition-[gap] duration-200 ${isScrolled ? "gap-0" : "gap-3"}`}
       >
         <m.div layout className="flex min-w-0 items-center">
           <Link
@@ -62,7 +62,7 @@ export function HeaderShell({ starCount }: HeaderShellProps) {
             <MotionwindHorizontalLogo className="h-8 w-32 text-fg sm:h-9 sm:w-36" />
           </Link>
           <nav
-            className={`absolute left-1/2 hidden -translate-x-1/2 items-center rounded-full border border-border bg-surface-elevated shadow-[0_16px_40px_-24px_var(--color-shadow)] transition-[gap,padding] duration-200 md:flex ${isScrolled ? "gap-0 px-1.5 py-1" : "gap-1 px-3 py-2"}`}
+            className={`absolute left-1/2 hidden -translate-x-1/2 items-center rounded-full border border-border bg-surface-elevated shadow-[0_16px_40px_-24px_var(--color-shadow)] transition-[gap,padding] duration-200 md:flex ${isScrolled ? "gap-0 px-1 py-1" : "gap-1 px-3 py-2"}`}
             aria-label="Main navigation"
           >
             {NAV_ITEMS.map((item) => (
@@ -71,7 +71,7 @@ export function HeaderShell({ starCount }: HeaderShellProps) {
                 href={item.href}
                 target={item.href.startsWith("http") ? "_blank" : undefined}
                 rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className={`cursor-pointer rounded-full font-[family-name:var(--font-mono)] tracking-wide text-fg-muted transition-[padding,background-color,color] duration-200 hover:bg-surface hover:text-fg ${isScrolled ? "px-3 py-1.5 text-[11px]" : "px-4 py-2 text-xs"}`}
+                className={`cursor-pointer rounded-full font-[family-name:var(--font-mono)] tracking-wide text-fg-muted transition-[padding,background-color,color] duration-200 hover:bg-surface hover:text-fg ${isScrolled ? "px-2.5 py-1.5 text-[11px]" : "px-4 py-2 text-xs"}`}
               >
                 {item.label}
               </a>
@@ -80,7 +80,7 @@ export function HeaderShell({ starCount }: HeaderShellProps) {
               href="https://www.motionwind.xyz/docs"
               target="_blank"
               rel="noopener noreferrer"
-              className={`cursor-pointer rounded-full font-[family-name:var(--font-mono)] tracking-wide text-fg-muted transition-[padding,background-color,color] duration-200 hover:bg-surface hover:text-fg ${isScrolled ? "px-3 py-1.5 text-[11px]" : "px-4 py-2 text-xs"}`}
+              className={`cursor-pointer rounded-full font-[family-name:var(--font-mono)] tracking-wide text-fg-muted transition-[padding,background-color,color] duration-200 hover:bg-surface hover:text-fg ${isScrolled ? "px-2.5 py-1.5 text-[11px]" : "px-4 py-2 text-xs"}`}
             >
               Docs
             </a>
