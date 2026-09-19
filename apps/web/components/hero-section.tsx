@@ -102,7 +102,7 @@ export function HeroSection() {
             className="relative mt-16 w-full max-w-[1040px] lg:ml-16"
           >
             <div className="overflow-hidden rounded-xl border border-border bg-surface">
-              <div className="flex h-12 items-center justify-between border-b border-border-subtle px-5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
+              <div className="flex items-center justify-between px-5 py-4 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
                 <span>motionwind / compile</span>
                 <span className="flex items-center gap-2 normal-case tracking-normal text-accent">
                   <span className="size-1.5 rounded-full bg-accent" />
