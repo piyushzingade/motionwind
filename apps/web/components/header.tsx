@@ -3,7 +3,8 @@ import Link from "next/link";
 // The main entry calls createContext/forwardRef at module scope, which
 // resolves against react-server here and crashes the build (same convention
 // as the docs landing hero).
-import { GithubLogoIcon, StarIcon } from "@phosphor-icons/react/dist/ssr";
+import { StarIcon } from "@phosphor-icons/react/dist/ssr";
+import { GithubIcon } from "@repo/ui/github-icon";
 import { MotionwindHorizontalLogo } from "@repo/ui/motionwind-logo";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -69,11 +70,7 @@ export async function Header() {
             className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-full border border-border bg-surface-elevated px-5 text-sm text-fg-muted shadow-[0_16px_40px_-24px_var(--color-shadow)] transition-colors hover:border-accent/20 hover:text-fg"
           >
             <span>GitHub</span>
-            <GithubLogoIcon
-              aria-hidden="true"
-              className="size-4 text-fg-muted"
-              weight="fill"
-            />
+            <GithubIcon className="size-5 text-fg" />
             <StarIcon
               aria-hidden="true"
               className="size-4 text-[#f5c84b]"
