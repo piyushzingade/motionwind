@@ -60,6 +60,7 @@ export async function Header() {
             className="inline-flex size-12 cursor-pointer items-center justify-center rounded-full border border-border bg-surface-elevated text-fg-muted shadow-[0_16px_40px_-24px_var(--color-shadow)] transition-colors hover:border-accent/20 hover:text-fg"
           >
             <GithubIcon className="size-5 text-fg" />
+            <span aria-hidden="true" className="h-5 w-px bg-border" />
             <StarIcon
               aria-hidden="true"
               className="size-4 text-[#f5c84b]"
