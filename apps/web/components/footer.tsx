@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowUpRightIcon } from "@phosphor-icons/react";
-import { FluidOrb } from "./fluid-orb";
+import { MotionwindFluidText } from "./motionwind-fluid-text";
 
 export function Footer() {
   return (
@@ -50,20 +50,7 @@ export function Footer() {
             npm
           </a>
         </nav>
-        <div className="pointer-events-none absolute bottom-0 left-1/2 z-0 flex -translate-x-1/2 translate-y-[20%] items-center whitespace-nowrap select-none text-[clamp(5rem,15vw,14rem)] font-black leading-none tracking-[-0.075em] text-fg/[0.07]">
-          <span aria-hidden="true">M</span>
-          <span
-            aria-hidden="true"
-            className="mx-[0.02em] inline-flex h-[0.72em] w-[0.72em] shrink-0 overflow-hidden rounded-full align-middle"
-          >
-            <FluidOrb size="100%" color="#22c55e" className="size-full" />
-          </span>
-          <span aria-hidden="true">TIONWIND</span>
-        </div>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[38%] bg-gradient-to-b from-transparent to-bg"
-        />
+        <MotionwindFluidText color="#22c55e" />
       </div>
     </footer>
   );
