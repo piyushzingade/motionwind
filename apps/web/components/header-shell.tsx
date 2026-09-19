@@ -58,7 +58,7 @@ export function HeaderShell({ starCount }: HeaderShellProps) {
         layout
         animate={{ maxWidth: 1120 }}
         transition={transition}
-        className="relative mx-auto flex h-14 w-full items-center justify-between gap-3 rounded-full border border-border-subtle bg-surface/90 px-2 shadow-[0_18px_50px_-30px_var(--color-shadow)] backdrop-blur-md"
+        className="relative mx-auto flex h-14 w-full items-center justify-between gap-3"
       >
         <m.div layout className="flex min-w-0 items-center">
           <m.div animate={{ x: compactOffset }} transition={transition}>
