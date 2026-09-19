@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
 import { mw } from "motionwind-react";
 import { generateMotionCode } from "motionwind-react/tooling";
+import { ArrowRightIcon, ArrowUpRightIcon } from "@phosphor-icons/react";
 import { OssProgramBadge } from "@repo/ui/oss-program-badge";
 import { highlightCode } from "../lib/highlight";
 import { MintlifyLogo } from "./mintlify-logo";
@@ -78,15 +79,17 @@ export function HeroSection() {
             >
               <a
                 href="https://www.motionwind.xyz/docs"
-                className="inline-flex cursor-pointer items-center rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-[var(--color-accent-fg)] transition-colors hover:bg-accent-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-[var(--color-accent-fg)] transition-colors hover:bg-accent-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
                 Read docs
+                <ArrowUpRightIcon size={16} weight="bold" aria-hidden="true" />
               </a>
               <a
                 href="https://play.motionwind.xyz"
-                className="inline-flex cursor-pointer items-center rounded-lg border border-border bg-surface-elevated px-5 py-3 text-sm font-semibold text-fg transition-colors hover:border-accent/30 hover:bg-surface active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-surface-elevated px-5 py-3 text-sm font-semibold text-fg transition-colors hover:border-accent/30 hover:bg-surface active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
                 Open playground
+                <ArrowRightIcon size={16} weight="bold" aria-hidden="true" />
               </a>
             </m.div>
           </div>

@@ -47,7 +47,7 @@ export function GetStartedSection() {
             </p>
             <a
               href="https://www.motionwind.xyz/docs/getting-started"
-              className="mt-8 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg bg-fg px-5 py-3 text-sm font-semibold text-bg transition-[background-color,transform] duration-150 ease-out hover:bg-fg-muted active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="mt-8 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-md bg-fg px-5 py-3 text-sm font-semibold text-bg transition-[background-color,transform] duration-150 ease-out hover:bg-fg-muted active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               Read the guide
               <ArrowUpRightIcon size={16} weight="bold" aria-hidden="true" />
@@ -56,7 +56,7 @@ export function GetStartedSection() {
         </Reveal>
 
         <Reveal y={20}>
-          <div className="overflow-hidden rounded-2xl border border-border bg-surface-elevated shadow-[0_24px_70px_-48px_var(--color-shadow)] lg:mt-8">
+          <div className="overflow-hidden rounded-xl border border-border bg-surface lg:mt-8">
             <div className="flex items-center justify-between border-b border-border-subtle px-5 py-4 sm:px-6">
               <div className="flex items-center gap-2 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.16em] text-code-muted">
                 <TerminalWindowIcon
@@ -79,7 +79,7 @@ export function GetStartedSection() {
                 type="button"
                 onClick={copyCommand}
                 aria-label={copied ? "Command copied" : "Copy install command"}
-                className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-border text-code-muted transition-[background-color,color,transform] duration-150 ease-out hover:bg-surface hover:text-fg active:scale-[0.96] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-md border border-border text-code-muted transition-[background-color,color,transform] duration-150 ease-out hover:bg-surface-elevated hover:text-fg active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
                 {copied ? (
                   <CheckIcon
@@ -151,7 +151,7 @@ function FrameworkCard({
   code: React.ReactNode;
 }) {
   return (
-    <article className="min-w-0 flex-1 overflow-hidden rounded-xl border border-border bg-surface-elevated text-left">
+    <article className="min-w-0 flex-1 overflow-hidden rounded-lg border border-border bg-surface-elevated text-left">
       <div className="flex items-center gap-2 border-b border-border-subtle px-4 py-3">
         <span className="flex h-5 w-5 items-center justify-center rounded-md border border-border text-fg-muted">
           {icon}

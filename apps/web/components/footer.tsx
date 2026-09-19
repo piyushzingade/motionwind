@@ -1,17 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import { MotionwindHorizontalLogo } from "@repo/ui/motionwind-logo";
 
 export function Footer() {
   return (
     <footer className="px-4 py-20 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-[1120px]">
-        <div className="relative min-h-[440px] overflow-hidden rounded-[2rem] border border-accent/30 bg-surface-elevated px-7 pb-7 pt-8 shadow-[0_28px_100px_-64px_var(--color-shadow)] sm:px-10 sm:pb-9 sm:pt-10 lg:px-14 lg:pb-10 lg:pt-12">
+        <div className="relative min-h-[390px] overflow-hidden rounded-xl border border-border bg-surface px-7 pb-7 pt-8 sm:px-10 sm:pb-9 sm:pt-10 lg:px-12 lg:pb-9 lg:pt-10">
           <div className="relative z-10 flex flex-col gap-8">
             <div className="flex flex-col gap-7 md:flex-row md:items-start md:justify-between">
               <div className="max-w-sm">
-                <MotionwindHorizontalLogo className="h-5 w-24 text-fg" />
+                <MotionwindHorizontalLogo className="h-6 w-28 text-fg" />
                 <p className="mt-5 max-w-xs text-sm leading-relaxed text-fg-muted">
                   Motion as utility classes, compiled for the frameworks you
                   ship.
@@ -46,14 +47,15 @@ export function Footer() {
             </div>
             <Link
               href="https://www.motionwind.xyz/docs/getting-started"
-              className="inline-flex w-fit cursor-pointer items-center rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-accent-fg shadow-[0_14px_30px_-18px_var(--accent-glow)] transition-[background-color,transform] duration-200 hover:bg-accent-hover active:translate-y-px"
+              className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-accent-fg transition-[background-color,transform] duration-200 hover:bg-accent-hover active:translate-y-px"
             >
               Start building
+              <ArrowUpRightIcon size={16} weight="bold" aria-hidden="true" />
             </Link>
           </div>
           <div
             aria-hidden="true"
-            className="pointer-events-none -mb-3 mt-16 select-none whitespace-nowrap text-[clamp(5rem,15vw,12rem)] font-semibold leading-[0.72] tracking-[-0.09em] text-accent/[0.1]"
+            className="pointer-events-none -mb-2 mt-14 select-none whitespace-nowrap text-[clamp(5rem,15vw,12rem)] font-semibold leading-[0.72] tracking-[-0.09em] text-accent/[0.1]"
           >
             MOTIONWIND
           </div>
