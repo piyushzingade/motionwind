@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { StarIcon } from "@phosphor-icons/react/dist/ssr";
 import { GithubIcon } from "@repo/ui/github-icon";
 import { MotionwindHorizontalLogo } from "@repo/ui/motionwind-logo";
 import { ThemeToggle } from "./theme-toggle";
@@ -9,7 +8,25 @@ const NAV_ITEMS = [
   { label: "Playground", href: "https://play.motionwind.xyz" },
 ];
 
+async function getStarCount(): Promise<number | null> {
+  try {
+    const response = await fetch(
+      "https://api.github.com/repos/piyushzingade/motionwind",
+      { next: { revalidate: 3600 } },
+    );
+    if (!response.ok) return null;
+    const data = (await response.json()) as { stargazers_count?: unknown };
+    return typeof data.stargazers_count === "number"
+      ? data.stargazers_count
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function Header() {
+  const starCount = await getStarCount();
+
   return (
     <header className="sticky top-4 z-200 px-4 sm:px-6">
       <div className="relative mx-auto flex h-14 max-w-[1120px] items-center justify-between gap-3">
@@ -60,12 +77,14 @@ export async function Header() {
             className="inline-flex h-12 min-w-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-border bg-surface-elevated px-3 text-fg-muted shadow-[0_16px_40px_-24px_var(--color-shadow)] transition-colors hover:border-accent/20 hover:text-fg"
           >
             <GithubIcon className="size-5 text-fg" />
-            <span aria-hidden="true" className="h-5 w-px bg-border" />
-            <StarIcon
-              aria-hidden="true"
-              className="size-4 text-[#f5c84b]"
-              weight="fill"
-            />
+            {starCount !== null && (
+              <>
+                <span aria-hidden="true" className="h-5 w-px bg-border" />
+                <span className="font-[family-name:var(--font-mono)] text-xs tabular-nums text-fg-muted">
+                  {starCount}
+                </span>
+              </>
+            )}
           </Link>
           <div className="flex size-12 items-center justify-center rounded-full border border-border bg-surface-elevated shadow-[0_16px_40px_-24px_var(--color-shadow)]">
             <ThemeToggle className="size-8 rounded-full border-0 bg-transparent shadow-none" />
