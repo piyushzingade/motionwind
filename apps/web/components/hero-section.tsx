@@ -98,7 +98,7 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.16, ease: easeOutQuint }}
             className="relative mt-16 w-full max-w-[1040px] lg:ml-16"
           >
-            <div className="overflow-hidden rounded-[1.4rem] border border-border bg-surface-elevated shadow-[0_28px_90px_-56px_var(--color-shadow)]">
+            <div className="overflow-hidden rounded-xl border border-border bg-surface">
               <div className="flex h-12 items-center justify-between border-b border-border-subtle px-5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
                 <span>motionwind / compile</span>
                 <span className="flex items-center gap-2 normal-case tracking-normal text-accent">
@@ -107,7 +107,7 @@ export function HeroSection() {
                 </span>
               </div>
               <div className="grid gap-0 lg:grid-cols-[minmax(0,1.36fr)_minmax(260px,0.64fr)]">
-                <div className="grid min-w-0 gap-4 border-b border-border-subtle bg-surface/70 p-4 lg:border-b-0 lg:border-r lg:p-5">
+                <div className="grid min-w-0 gap-4 border-b border-border-subtle bg-surface p-4 lg:border-b-0 lg:border-r lg:p-5">
                   <CodePane
                     title="className"
                     code={`<button className="${heroClasses}">\n  Ship interaction\n</button>`}
@@ -124,7 +124,7 @@ export function HeroSection() {
                   />
                 </div>
 
-                <div className="flex min-h-[300px] flex-col justify-between gap-8 bg-surface p-5 lg:p-7">
+                <div className="flex min-h-[300px] flex-col justify-between gap-8 bg-surface-elevated p-5 lg:p-7">
                   <div className="flex items-center justify-between font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
                     <span>live result</span>
                     <span className="text-fg-muted">react</span>
@@ -141,7 +141,7 @@ export function HeroSection() {
                     {["hover", "tap", "spring", "build"].map((item) => (
                       <span
                         key={item}
-                        className="rounded-lg border border-border-subtle bg-surface-elevated px-2.5 py-2.5 text-center font-[family-name:var(--font-mono)] text-[10px] text-code-muted"
+                        className="rounded-lg border border-border-subtle bg-surface px-2.5 py-2.5 text-center font-[family-name:var(--font-mono)] text-[10px] text-code-muted transition-colors duration-200 hover:border-border hover:text-fg"
                       >
                         {item}
                       </span>
@@ -167,12 +167,12 @@ function CodePane({
   expanded?: boolean;
 }) {
   return (
-    <div className="min-w-0 rounded-lg border border-border-subtle bg-code-bg">
+    <div className="min-w-0 rounded-lg border border-border-subtle bg-surface-elevated">
       <div className="border-b border-border-subtle px-3 py-2 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
         {title}
       </div>
       <pre
-        className={`overflow-auto px-3 py-3 font-[family-name:var(--font-mono)] text-[11px] leading-5 ${expanded ? "max-h-56" : "max-h-40"}`}
+        className={`overflow-auto px-3 py-4 font-[family-name:var(--font-mono)] text-[11px] leading-5 ${expanded ? "max-h-56" : "max-h-40"}`}
       >
         <code>{highlightCode(code)}</code>
       </pre>
