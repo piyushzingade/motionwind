@@ -65,7 +65,7 @@
   "peerDependencies": {
     "@vueuse/core": ">=10.0.0",
     "vue": "^3.3.0",
-    "motion-v": ">=0.11.0"
+    "motion-v": "^2.0.0"
   },
   "dependencies": {
     "motionwind-core": "^2.0.0"
@@ -76,7 +76,7 @@
     "@vueuse/core": "^14.0.0",
     "@vue/compiler-core": "^3.5.13",
     "eslint": "^9.39.1",
-    "motion-v": "^1.7.2",
+    "motion-v": "^2.4.4",
     "tsup": "^8.5.0",
     "typescript": "5.9.2",
     "vitest": "^3.2.1",

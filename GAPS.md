@@ -35,22 +35,23 @@ verification-only work unless tests prove otherwise.
 
 ## Package upgrade audit
 
-Motionwind packages and starters currently target Motion 12-era dependencies in
-multiple places. Before adding new Motion 13-specific syntax, verify dependency
-compatibility.
+Motionwind packages and starters now target Motion 13 for web runtimes and
+Motion Vue 2 for Vue. The class language remains intentionally conservative;
+Motion 13-only APIs still need explicit parser/codegen design before exposing
+new utility tokens.
 
-| Package         | Latest checked | Current repo usage                                                        | Priority |
-| --------------- | -------------- | ------------------------------------------------------------------------- | -------- |
-| `motion`        | `13.4.0`       | Apps/starters/package dev deps use `^12.12.1`; peers allow `^11 \|\| ^12` | High     |
-| `framer-motion` | `13.4.0`       | Not a direct dependency, but users may migrate from it                    | Low      |
-| `motion-v`      | `2.4.4`        | Vue package/starters use `^1.7.x`; peer allows `>=0.11.0`                 | High     |
+| Package         | Latest checked | Current repo usage                                     | Priority |
+| --------------- | -------------- | ------------------------------------------------------ | -------- |
+| `motion`        | `13.4.0`       | Apps and web packages use `^13.4.0`; peers allow 11–13 | Done     |
+| `framer-motion` | `13.4.0`       | Resolved transitively by `motion@13.4.0`               | Low      |
+| `motion-v`      | `2.4.4`        | Vue package uses `^2.4.4`; peers require Vue Motion 2  | Done     |
 
 Recommended audit:
 
-1. Bump internal app/starter/dev dependencies to latest compatible Motion 13.
-2. Decide whether package peer ranges should become `^12 || ^13` or stay broad.
-3. Run packed starter compatibility checks.
-4. Verify Vue/Nuxt with `motion-v@2.4.4`, especially CJS/ESM packaging.
+1. Run packed starter compatibility checks on the upgraded dependency graph.
+2. Verify Vue/Nuxt with `motion-v@2.4.4`, especially CJS/ESM packaging.
+3. Add explicit Motion 13-only utility syntax only after parser and runtime tests
+   define its cross-framework behavior.
 
 ---
 
