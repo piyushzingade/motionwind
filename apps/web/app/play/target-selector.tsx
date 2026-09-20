@@ -38,7 +38,7 @@ export function TargetSelector({
           <span>Production output</span>
           <span className="text-accent">{editor.target}</span>
         </div>
-        <pre className="max-h-[430px] overflow-auto rounded-lg border border-border-subtle bg-code-header p-3 font-mono text-[10px] leading-relaxed">
+        <pre className="code-scrollbar-hidden max-h-[430px] overflow-auto rounded-lg border border-border-subtle bg-code-header p-3 font-mono text-[10px] leading-relaxed">
           <code>{highlighted}</code>
         </pre>
       </div>

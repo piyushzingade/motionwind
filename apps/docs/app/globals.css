@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../../../packages/ui/src";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -18,7 +19,6 @@
   --color-code-header: var(--color-code-header);
   --color-code-border: var(--color-code-border);
   --color-code-muted: var(--color-code-muted);
-  --font-display: var(--font-display);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 }
@@ -28,8 +28,8 @@
   --color-bg: #fafaf9;
   --color-fg: #171717;
   --color-fg-muted: #64646e;
-  --color-accent: #4d7c0f;
-  --color-accent-hover: #3f6212;
+  --color-accent: #566b2f;
+  --color-accent-hover: #465827;
   --color-accent-fg: #ffffff;
   --color-border: #e4e4e0;
   --color-border-subtle: #f0f0ec;
@@ -40,12 +40,12 @@
   --color-code-header: #eeeee8;
   --color-code-border: #e0e0da;
   --color-code-muted: #9a9a9a;
-  --color-selection: rgba(77, 124, 15, 0.12);
-  --color-dot-grid: rgba(77, 124, 15, 0.06);
-  --color-demo-glow: rgba(77, 124, 15, 0.06);
+  --color-selection: rgba(86, 107, 47, 0.12);
+  --color-dot-grid: rgba(86, 107, 47, 0.06);
+  --color-demo-glow: rgba(86, 107, 47, 0.06);
 
   /* Fumadocs overrides */
-  --color-fd-primary: #c7ff2d !important;
+  --color-fd-primary: #566b2f !important;
   --color-fd-primary-foreground: #1a1a1a !important;
 }
 
@@ -54,8 +54,8 @@
   --color-bg: #0a0a0f;
   --color-fg: #f0f0f0;
   --color-fg-muted: #8a8a9a;
-  --color-accent: #c8ff2e;
-  --color-accent-hover: #b8ef1e;
+  --color-accent: #c9ff33;
+  --color-accent-hover: #b9ef23;
   --color-accent-fg: #0a0a0f;
   --color-border: #1e1e2a;
   --color-border-subtle: #141420;
@@ -64,14 +64,14 @@
   --color-shadow: rgba(0, 0, 0, 0.5);
   --color-code-bg: #0c0c14;
   --color-code-header: #12121c;
-  --color-code-border: rgba(200, 255, 46, 0.06);
+  --color-code-border: rgba(201, 255, 51, 0.06);
   --color-code-muted: #5a5a6a;
-  --color-selection: rgba(200, 255, 46, 0.18);
-  --color-dot-grid: rgba(200, 255, 46, 0.03);
-  --color-demo-glow: rgba(200, 255, 46, 0.04);
+  --color-selection: rgba(201, 255, 51, 0.18);
+  --color-dot-grid: rgba(201, 255, 51, 0.03);
+  --color-demo-glow: rgba(201, 255, 51, 0.04);
 
   /* Fumadocs overrides */
-  --color-fd-primary: #c8ff2e !important;
+  --color-fd-primary: #c9ff33 !important;
   --color-fd-primary-foreground: #0a0a0f !important;
 }
 
@@ -219,7 +219,7 @@ body {
 }
 
 .docs-prose h2 {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-sans), sans-serif;
   font-style: italic;
   font-size: 1.5rem;
   font-weight: 600;
@@ -679,7 +679,7 @@ figure.shiki pre::-webkit-scrollbar {
 }
 
 .toc-header-label {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-sans), sans-serif;
   font-style: italic;
   font-size: 0.8125rem;
   color: var(--color-fg);
@@ -881,11 +881,19 @@ figure.shiki pre::-webkit-scrollbar {
 
 /* animate-* classes — accent color both modes */
 .rn-hl-animate {
-  color: #4d7c0f;
+<<<<<<< HEAD
+  color: #566b2f;
   font-weight: 500;
 }
 .dark .rn-hl-animate {
-  color: #c8ff2e;
+  color: #c9ff33;
+=======
+  color: #566B2F;
+  font-weight: 500;
+}
+.dark .rn-hl-animate {
+  color: #C9FF33;
+>>>>>>> origin/codex/playground-ui-reliability
 }
 
 /* Comments */

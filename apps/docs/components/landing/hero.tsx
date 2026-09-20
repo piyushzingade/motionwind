@@ -6,6 +6,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { MotionStage } from "./motion-stage";
 import { MintlifyLogo } from "./mintlify-logo";
+import { OssProgramBadge } from "@repo/ui/oss-program-badge";
 
 const formatStars = (count: number) =>
   count >= 1000
@@ -17,12 +18,11 @@ export function Hero({ starCount }: { starCount: number | null }) {
     <main className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-[var(--color-bg)] lg:h-[100dvh]">
       <section className="landing-hero-pad relative z-10 flex shrink-0 flex-col justify-center pb-12 pt-20 lg:h-full lg:w-[44%] lg:min-w-[420px] lg:py-0">
         <div className="flex w-full max-w-[460px] flex-col gap-7">
-          <span className="inline-flex w-fit items-center gap-2.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-elevated)]/70 py-1.5 pl-4 pr-5 backdrop-blur-sm">
-            <span className="text-[11px] font-medium tracking-wide text-[var(--color-fg-muted)]">
-              Backed by
-            </span>
-            <MintlifyLogo className="h-3.5 w-auto text-[var(--color-fg)]" />
-          </span>
+          <OssProgramBadge
+            brand={
+              <MintlifyLogo className="h-3.5 w-auto text-[var(--color-fg)]" />
+            }
+          />
           <h1 className="max-w-[12ch] text-4xl font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--color-fg)] sm:text-5xl lg:text-[3.5rem]">
             Motion as utility classes.
           </h1>

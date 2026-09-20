@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { MOTIONWIND_RECIPES } from "motionwind-react";
-import { ThemeToggle } from "../../components/theme-toggle";
+import { ThemeToggle } from "@repo/ui/theme-toggle";
 import { useStudioState } from "./use-studio-state";
 import { useGeneratedCode } from "./use-generated-code";
 import { replaceClass } from "./utils";

@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import * as Dialog from "@radix-ui/react-dialog";
+import { MotionwindLogo } from "@repo/ui/motionwind-logo";
 import {
   ArrowsDownUpIcon,
   ArrowUpRightIcon,
@@ -130,14 +130,8 @@ function SidebarContent({
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex h-14 shrink-0 items-center justify-between border-b border-dashed border-[var(--color-border)] px-4">
         <div className="flex min-w-0 items-center gap-2.5">
-          <Image
-            src="/logo.svg"
-            alt="motionwind"
-            width={22}
-            height={22}
-            className="shrink-0"
-          />
-          <span className="truncate text-xl font-medium italic tracking-tight text-[var(--color-fg)]">
+          <MotionwindLogo className="h-4 w-7 shrink-0 text-[var(--color-accent)]" />
+          <span className="truncate font-[family-name:var(--font-sans)] text-[15px] font-semibold tracking-[-0.03em] text-[var(--color-fg)]">
             motionwind
           </span>
           <span className="ml-0.5 font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-fg-muted)]/50">

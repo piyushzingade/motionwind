@@ -1,47 +1,33 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   MOTIONWIND_RECIPES,
   mw,
   type MotionwindRecipe,
 } from "motionwind-react";
-import { generateMotionCode } from "motionwind-react/tooling";
-import { highlightCode } from "../lib/highlight";
+<<<<<<< HEAD
+import {
+  CaretDownIcon,
+  CheckCircleIcon,
+  MagnifyingGlassIcon,
+} from "@phosphor-icons/react";
+=======
+>>>>>>> origin/codex/playground-ui-reliability
 import { Reveal } from "./reveal";
-
-type Category = "top" | MotionwindRecipe["category"];
+import { ComponentPreviewCard } from "./component-preview-card";
 
 const TOP_EXAMPLE_IDS = [
   "button-press",
   "dialog-enter",
-  "page-reveal",
   "loading-orbit",
   "menu-pop",
   "accordion-reveal",
   "tab-indicator",
   "toast-enter",
-  "sortable-item",
   "svg-line-loader",
-  "scroll-progress",
-  "flip-card",
-  "magnetic-button",
-  "drawer",
-  "tooltip-pop",
-  "skeleton-pulse",
   "card-hover",
-  "drag-reorder",
-  "parallax-scroll",
 ] as const;
-
-const CATEGORY_FILTERS: { id: Category; label: string }[] = [
-  { id: "top", label: "All" },
-  { id: "interaction", label: "Interaction" },
-  { id: "entrance", label: "Entrance" },
-  { id: "layout", label: "Layout" },
-  { id: "loading", label: "Loading" },
-  { id: "scroll", label: "Scroll" },
-];
 
 const TAG_BY_RECIPE: Record<string, string> = {
   "button-press": "button",
@@ -63,239 +49,55 @@ export function DemoCards() {
     [],
   );
 
-  const [category, setCategory] = useState<Category>("top");
-  const visibleRecipes = useMemo(
-    () =>
-      category === "top"
-        ? recipes
-        : recipes.filter((recipe) => recipe.category === category),
-    [category, recipes],
-  );
-
-  const [activeId, setActiveId] = useState(recipes[0]?.id ?? "");
-
-  useEffect(() => {
-    if (!visibleRecipes.some((recipe) => recipe.id === activeId)) {
-      setActiveId(visibleRecipes[0]?.id ?? "");
-    }
-  }, [activeId, visibleRecipes]);
-
-  const activeRecipe =
-    visibleRecipes.find((recipe) => recipe.id === activeId) ??
-    visibleRecipes[0] ??
-    recipes[0]!;
-
-  const generatedCode = useMemo(
-    () =>
-      generateMotionCode(getRecipeTag(activeRecipe), activeRecipe.classes, {
-        text: getRecipeText(activeRecipe),
-        target: "react",
-      }),
-    [activeRecipe],
-  );
-
   return (
     <section
       id="demos"
-      className="section-anchor relative overflow-hidden px-4 py-16 sm:px-6 sm:py-22 lg:py-24"
+      className="section-anchor relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:py-20"
     >
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[1120px]">
         <Reveal>
-          <div className="mb-12 max-w-2xl sm:mb-14">
+          <div className="mb-10 max-w-2xl sm:mb-12">
             <h2 className="text-balance text-3xl font-semibold tracking-[-0.035em] text-fg sm:text-4xl md:text-5xl">
               The examples are the API.
             </h2>
             <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg">
-              A wall of real previews first, then the exact class string and
-              generated Motion output when you want to inspect the details.
+              Nine focused previews, each showing one motion pattern you can
+              author beside the element.
             </p>
           </div>
         </Reveal>
 
-        <Reveal y={14}>
-          <div className="mb-8 flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-            {CATEGORY_FILTERS.map((filter) => (
-              <button
-                key={filter.id}
-                type="button"
-                aria-pressed={category === filter.id}
-                onClick={() => setCategory(filter.id)}
-                className="shrink-0 cursor-pointer rounded-full border border-border bg-surface-elevated px-4 py-2 text-xs font-medium text-fg-muted transition-colors hover:border-accent/30 hover:text-fg active:scale-[0.97] aria-pressed:border-accent/40 aria-pressed:bg-accent/10 aria-pressed:text-accent"
-              >
-                {filter.label}
-              </button>
-            ))}
-          </div>
-        </Reveal>
-
         <Reveal y={18}>
-          <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {visibleRecipes.map((recipe) => (
-              <button
+          <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+<<<<<<< HEAD
+            {recipes.map((recipe) => (
+              <ComponentPreviewCard
                 key={recipe.id}
-                type="button"
-                onClick={() => setActiveId(recipe.id)}
-                className={`group relative cursor-pointer overflow-hidden rounded-2xl border bg-surface-elevated text-left transition-all duration-200 ${
-                  recipe.id === activeRecipe.id
-                    ? "border-accent/45"
-                    : "border-border hover:border-accent/25"
-                }`}
-              >
-                <div className="studio-checker flex h-32 items-center justify-center overflow-hidden p-4 sm:h-36">
-                  <MiniRecipePreview recipe={recipe} />
-                </div>
-
-                <div className="border-t border-border-subtle px-3.5 py-2.5">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="truncate text-[13px] font-medium text-fg">
-                      {recipe.name}
-                    </span>
-                    <span className="shrink-0 rounded-md bg-surface px-2 py-0.5 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-wider text-code-muted">
-                      {recipe.category}
-                    </span>
-                  </div>
-                </div>
-
-                {recipe.id === activeRecipe.id && (
-                  <div className="absolute inset-x-0 bottom-0 h-px bg-accent" />
-                )}
-              </button>
+                title={recipe.name}
+=======
+            {recipes.map((recipe, index) => (
+              <ComponentPreviewCard
+                key={recipe.id}
+                title={recipe.name}
+                animationDelay={(index % 3) * 180}
+>>>>>>> origin/codex/playground-ui-reliability
+                preview={<MiniRecipePreview recipe={recipe} />}
+              />
             ))}
           </div>
         </Reveal>
-
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
-          <Reveal y={22}>
-            <RecipeShowcase
-              recipe={activeRecipe}
-              generatedCode={generatedCode}
-            />
-          </Reveal>
-
-          <Reveal y={22} delay={0.06}>
-            <div className="grid max-h-[680px] gap-2.5 overflow-y-auto pr-1 scrollbar-thin">
-              {visibleRecipes.map((recipe) => (
-                <RecipeTile
-                  key={recipe.id}
-                  recipe={recipe}
-                  active={recipe.id === activeRecipe.id}
-                  onClick={() => setActiveId(recipe.id)}
-                />
-              ))}
-            </div>
-          </Reveal>
-        </div>
       </div>
     </section>
   );
 }
 
-function RecipeShowcase({
-  recipe,
-  generatedCode,
-}: {
-  recipe: MotionwindRecipe;
-  generatedCode: string;
-}) {
-  const classSnippet = `<${getRecipeTag(recipe)} className="${recipe.classes}">`;
-
-  return (
-    <article className="overflow-hidden rounded-2xl border border-border bg-surface-elevated">
-      <div className="border-b border-border-subtle p-5 sm:p-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <div className="mb-2 flex items-center gap-2">
-              <span className="rounded-md bg-accent/10 px-2 py-0.5 font-[family-name:var(--font-mono)] text-[10px] font-medium text-accent">
-                {recipe.category}
-              </span>
-              <span className="rounded-md border border-border bg-surface px-2 py-0.5 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
-                {recipe.adapters.join(" / ")}
-              </span>
-            </div>
-            <h3 className="text-2xl font-semibold tracking-[-0.025em] text-fg">
-              {recipe.name}
-            </h3>
-          </div>
-        </div>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-fg-muted">
-          {recipe.description}
-        </p>
-      </div>
-
-      <div className="studio-checker flex min-h-[320px] items-center justify-center overflow-hidden p-8">
-        <RecipePreview recipe={recipe} />
-      </div>
-
-      <div className="grid border-t border-border-subtle lg:grid-cols-2">
-        <CodeBlock title="Motionwind classes" code={classSnippet} />
-        <CodeBlock title="Generated Motion output" code={generatedCode} />
-      </div>
-    </article>
-  );
-}
-
-function RecipeTile({
-  recipe,
-  active,
-  onClick,
-}: {
-  recipe: MotionwindRecipe;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={`group cursor-pointer rounded-xl border p-3.5 text-left transition-all duration-150 active:scale-[0.98] ${
-        active
-          ? "border-accent/40 bg-accent/8"
-          : "border-border bg-surface-elevated hover:border-accent/25"
-      }`}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <span className="text-[13px] font-medium text-fg">{recipe.name}</span>
-        <span
-          className={`shrink-0 rounded-md px-1.5 py-0.5 font-[family-name:var(--font-mono)] text-[9px] ${
-            active
-              ? "bg-accent/15 text-accent"
-              : "bg-surface text-code-muted group-hover:text-accent"
-          }`}
-        >
-          {recipe.category}
-        </span>
-      </div>
-      <span className="mt-1.5 block text-xs leading-relaxed text-code-muted line-clamp-2">
-        {recipe.description}
-      </span>
-      <code className="mt-2.5 block truncate rounded-md bg-code-bg px-2.5 py-1.5 font-[family-name:var(--font-mono)] text-[10px] text-accent/70">
-        {recipe.classes}
-      </code>
-    </button>
-  );
-}
-
-function CodeBlock({ title, code }: { title: string; code: string }) {
-  return (
-    <div className="min-w-0 border-t border-border-subtle p-4 first:border-t-0 lg:border-l lg:border-t-0 lg:first:border-l-0">
-      <div className="mb-2.5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider text-code-muted">
-        {title}
-      </div>
-      <pre className="max-h-[260px] overflow-auto rounded-xl border border-border-subtle bg-code-bg p-3 font-[family-name:var(--font-mono)] text-[11px] leading-5">
-        <code>{highlightCode(code)}</code>
-      </pre>
-    </div>
-  );
-}
-
-function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
+function _RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
   switch (recipe.id) {
     case "button-press":
     case "magnetic-button":
       return (
         <mw.button className={`${recipe.classes} ${buttonSkin()}`}>
-          {getRecipeText(recipe)}
+          {_getRecipeText(recipe)}
         </mw.button>
       );
     case "dialog-enter":
@@ -482,7 +284,7 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
     default:
       return (
         <mw.div className={`${recipe.classes} ${buttonSkin()}`}>
-          {getRecipeText(recipe)}
+          {_getRecipeText(recipe)}
         </mw.div>
       );
   }
@@ -490,42 +292,114 @@ function RecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
 
 function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
   switch (recipe.id) {
+    case "button-press":
+      return (
+        <span
+          className={`${buttonSkin()} component-preview-press`}
+          aria-hidden="true"
+        >
+          Preview
+        </span>
+      );
     case "dialog-enter":
       return (
         <mw.div
-          className={`${recipe.classes} w-36 rounded-xl border border-border bg-surface-elevated p-3`}
+          className="component-preview-dialog w-48 rounded-xl border border-border bg-surface-elevated p-3 shadow-[0_12px_28px_-18px_var(--color-shadow)]"
         >
-          <div className="h-2.5 w-20 rounded-full bg-fg/20" />
-          <div className="mt-2 h-2 w-28 rounded-full bg-border" />
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[11px] font-semibold text-fg">
+              Quick actions
+            </span>
+            <span className="rounded border border-border-subtle px-1.5 py-0.5 text-[9px] text-code-muted">
+              esc
+            </span>
+          </div>
+          <div className="mt-3 flex items-center gap-2 rounded-md border border-border-subtle bg-surface px-2.5 py-2">
+            <MagnifyingGlassIcon
+              size={13}
+              weight="regular"
+              className="shrink-0 text-code-muted"
+              aria-hidden="true"
+            />
+            <span className="text-[10px] text-code-muted">Search commands</span>
+          </div>
+          <div className="mt-3 grid gap-1.5">
+            <div className="rounded-md bg-accent/10 px-2.5 py-1.5 text-[10px] text-accent">
+              Open playground
+            </div>
+            <div className="rounded-md px-2.5 py-1.5 text-[10px] text-fg-muted">
+              Read the docs
+            </div>
+          </div>
         </mw.div>
       );
     case "loading-orbit":
       return (
-        <mw.div
-          className={`${recipe.classes} flex h-12 w-12 items-center justify-center rounded-xl border border-accent/30 bg-accent/10`}
+        <div
+          className="component-preview-orbit relative flex size-48 items-center justify-center"
+          aria-hidden="true"
         >
-          <span className="h-4 w-4 rounded-full border-2 border-accent border-t-transparent" />
-        </mw.div>
+          <span className="component-preview-orbit-track component-preview-orbit-outer absolute size-42 rounded-full border border-accent/10">
+            <span className="absolute -top-1 left-1/2 size-2 -translate-x-1/2 rounded-full bg-accent/70" />
+          </span>
+          <span className="component-preview-orbit-track component-preview-orbit-middle absolute size-24 rounded-full border border-accent/20">
+            <span className="absolute -top-1 left-1/2 size-2.5 -translate-x-1/2 rounded-full bg-accent shadow-[0_0_10px_var(--color-accent)]" />
+          </span>
+          <span className="component-preview-orbit-track component-preview-orbit-inner absolute size-12 rounded-full border border-accent/30">
+            <span className="absolute -top-1 left-1/2 size-2 -translate-x-1/2 rounded-full bg-accent/80" />
+          </span>
+          <span className="size-2.5 rounded-full bg-accent/70 shadow-[0_0_14px_var(--color-accent)]" />
+        </div>
       );
     case "menu-pop":
       return (
         <mw.div
-          className={`${recipe.classes} grid w-36 gap-1.5 rounded-xl border border-border bg-surface-elevated p-2`}
+          className="component-preview-menu grid w-48 gap-2 rounded-xl border border-border bg-surface-elevated p-3"
         >
-          <span className="h-7 rounded-md bg-surface" />
-          <span className="h-7 rounded-md bg-accent/10" />
-          <span className="h-7 rounded-md bg-surface" />
+          <span className="component-preview-menu-item flex h-8 items-center rounded-md bg-surface px-3 text-[10px] text-fg-muted">
+            Open playground
+          </span>
+          <span className="component-preview-menu-item flex h-8 items-center rounded-md bg-accent/10 px-3 text-[10px] text-accent">
+            Read the docs
+          </span>
+          <span className="component-preview-menu-item flex h-8 items-center rounded-md bg-surface px-3 text-[10px] text-fg-muted">
+            Copy classes
+          </span>
         </mw.div>
+      );
+    case "accordion-reveal":
+      return (
+        <div className="component-preview-accordion w-56 overflow-hidden rounded-xl border border-border bg-surface-elevated">
+          <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
+            <span className="text-[11px] font-semibold text-fg">
+              Motion output
+            </span>
+            <span className="component-preview-accordion-chevron flex size-6 items-center justify-center rounded-md bg-accent/10 text-accent">
+              <CaretDownIcon size={13} weight="bold" aria-hidden="true" />
+            </span>
+          </div>
+          <div className="component-preview-accordion-content px-4 py-4">
+            <p className="text-[11px] leading-relaxed text-fg-muted">
+              Utility classes compile into Motion props.
+            </p>
+            <div className="mt-2 grid gap-1.5">
+              <span className="h-2 w-4/5 rounded-full bg-accent/30" />
+              <span className="h-2 w-3/5 rounded-full bg-border" />
+            </div>
+          </div>
+        </div>
       );
     case "tab-indicator":
       return (
-        <div className="flex rounded-xl border border-border bg-surface-elevated p-1.5">
-          {["A", "B", "C"].map((tab, index) => (
+        <div
+          className="component-preview-tabs relative flex w-48 rounded-xl border border-border bg-surface-elevated p-1.5"
+          aria-hidden="true"
+        >
+          <span className="component-preview-tab-indicator absolute inset-y-1.5 left-1.5 w-[calc((100%_-_0.75rem)_/_3)] rounded-lg bg-accent" />
+          {["A", "B", "C"].map((tab) => (
             <span
               key={tab}
-              className={`rounded-lg px-3 py-2 text-xs ${
-                index === 1 ? "bg-accent/10 text-accent" : "text-code-muted"
-              }`}
+              className="relative z-10 flex flex-1 items-center justify-center rounded-lg py-2 text-xs font-medium text-fg"
             >
               {tab}
             </span>
@@ -535,10 +409,27 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
     case "toast-enter":
       return (
         <mw.div
-          className={`${recipe.classes} w-40 rounded-xl border border-border bg-surface-elevated p-3`}
+          className="component-preview-toast w-48 rounded-xl border border-border bg-surface-elevated p-2.5 shadow-[0_12px_28px_-18px_var(--color-shadow)]"
         >
-          <div className="h-2.5 w-24 rounded-full bg-fg/20" />
-          <div className="mt-2 h-2 w-32 rounded-full bg-border" />
+          <div className="flex items-start gap-2.5">
+            <CheckCircleIcon
+              size={16}
+              weight="fill"
+              className="shrink-0 text-accent"
+              aria-hidden="true"
+            />
+            <div className="min-w-0">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[10px] font-semibold text-fg">
+                  Classes copied
+                </span>
+                <span className="text-[8px] text-code-muted">now</span>
+              </div>
+              <p className="mt-0.5 whitespace-nowrap text-[9px] leading-relaxed text-fg-muted">
+                Motion props are ready to paste.
+              </p>
+            </div>
+          </div>
         </mw.div>
       );
     case "svg-line-loader":
@@ -548,13 +439,14 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
           className="h-16 w-32 text-accent"
           aria-hidden="true"
         >
-          <mw.path
-            className={recipe.classes}
+          <path
+            className="component-preview-svg-line"
             d="M10 34 C32 6 52 6 60 34 S92 62 110 34"
             fill="none"
             stroke="currentColor"
             strokeWidth="5"
             strokeLinecap="round"
+            pathLength="1"
           />
         </svg>
       );
@@ -563,7 +455,7 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
         <div className="w-36">
           <div className="h-2 overflow-hidden rounded-full bg-border-subtle">
             <mw.div
-              className={`${recipe.classes} h-full origin-left rounded-full bg-accent`}
+              className="h-full origin-left rounded-full bg-accent"
             />
           </div>
           <div className="mt-3 grid gap-1.5">
@@ -575,17 +467,37 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
     case "skeleton-pulse":
       return (
         <div className="grid w-36 gap-2">
-          <mw.div className={`${recipe.classes} h-3 rounded-full bg-border`} />
-          <mw.div
-            className={`${recipe.classes} h-3 w-4/5 rounded-full bg-border`}
+          <div className="h-3 rounded-full bg-border" />
+          <div
+            className="h-3 w-4/5 rounded-full bg-border"
           />
-          <mw.div className={`${recipe.classes} h-12 rounded-lg bg-border`} />
+          <div className="h-12 rounded-lg bg-border" />
         </div>
+      );
+    case "card-hover":
+      return (
+        <article className="component-preview-card-hover w-48 rounded-xl border border-border bg-surface-elevated p-4">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-[11px] font-semibold text-fg">
+              Motionwind
+            </span>
+            <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[9px] text-accent">
+              ready
+            </span>
+          </div>
+          <p className="mt-2 text-[10px] leading-relaxed text-fg-muted">
+            Motion that stays out of the way until it matters.
+          </p>
+          <div className="mt-4 flex items-center gap-1.5">
+            <span className="size-1.5 rounded-full bg-accent" />
+            <span className="text-[9px] text-code-muted">hover to explore</span>
+          </div>
+        </article>
       );
     default:
       return (
         <mw.div
-          className={`${recipe.classes} rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-accent-fg`}
+          className="component-preview-card-hover rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-accent-fg"
         >
           Preview
         </mw.div>
@@ -620,11 +532,11 @@ function TabIndicatorPreview({ recipe }: { recipe: MotionwindRecipe }) {
   );
 }
 
-function getRecipeTag(recipe: MotionwindRecipe) {
+function _getRecipeTag(recipe: MotionwindRecipe) {
   return TAG_BY_RECIPE[recipe.id] ?? "div";
 }
 
-function getRecipeText(recipe: MotionwindRecipe) {
+function _getRecipeText(recipe: MotionwindRecipe) {
   if (recipe.id === "button-press") return "Press me";
   if (recipe.id === "magnetic-button") return "Magnetic";
   if (recipe.id === "card-hover") return "Preview card";

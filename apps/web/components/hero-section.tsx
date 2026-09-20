@@ -1,9 +1,16 @@
 "use client";
 
 import { useMemo } from "react";
-import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
+import {
+  LazyMotion,
+  MotionConfig,
+  domAnimation,
+  m,
+  useReducedMotion,
+} from "motion/react";
 import { mw } from "motionwind-react";
 import { generateMotionCode } from "motionwind-react/tooling";
+import { ArrowRightIcon, ArrowUpRightIcon } from "@phosphor-icons/react";
 import { OssProgramBadge } from "@repo/ui/oss-program-badge";
 import { highlightCode } from "../lib/highlight";
 import { MintlifyLogo } from "./mintlify-logo";
@@ -16,7 +23,7 @@ const fadeUp = {
 };
 
 const heroClasses =
-  "animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-420 animate-damping-24 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-accent-fg cursor-pointer";
+  "animate-hover:scale-102 animate-tap:scale-95 animate-spring animate-stiffness-420 animate-damping-24 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-accent-fg cursor-pointer";
 
 export function HeroSection() {
   const reduceMotion = useReducedMotion();
@@ -31,12 +38,20 @@ export function HeroSection() {
 
   return (
     <LazyMotion features={domAnimation}>
+<<<<<<< HEAD
+      <MotionConfig reducedMotion="user">
+        <section className="relative overflow-hidden px-4 sm:px-6">
+          <div className="surface-glow" aria-hidden="true" />
+
+          <div className="relative mx-auto flex min-h-[calc(100dvh-3.5rem)] max-w-[1120px] flex-col items-center justify-center py-20 sm:py-24 lg:py-28">
+            <div className="flex w-full max-w-5xl flex-col items-center text-center">
+=======
       <section className="relative overflow-hidden px-4 sm:px-6">
-        <div className="surface-grid" aria-hidden="true" />
         <div className="surface-glow" aria-hidden="true" />
 
-        <div className="relative mx-auto grid min-h-[calc(88dvh-3.5rem)] max-w-7xl items-center gap-8 py-14 sm:py-16 lg:min-h-[700px] lg:grid-cols-[0.92fr_1.08fr] lg:py-18">
-          <div className="max-w-2xl">
+        <div className="relative mx-auto flex min-h-[calc(100dvh-3.5rem)] max-w-[1120px] flex-col items-center justify-center py-20 sm:py-24 lg:py-28">
+          <div className="flex w-full max-w-5xl flex-col items-center text-center">
+>>>>>>> origin/codex/playground-ui-reliability
             <m.div
               variants={fadeUp}
               initial="hidden"
@@ -45,7 +60,7 @@ export function HeroSection() {
               className="inline-flex"
             >
               <OssProgramBadge
-                brand={<MintlifyLogo className="h-3 w-auto" />}
+                brand={<MintlifyLogo className="h-3.5 w-auto" />}
               />
             </m.div>
 
@@ -54,7 +69,7 @@ export function HeroSection() {
               initial="hidden"
               animate="show"
               transition={{ duration: 0.5, delay: 0.06, ease: easeOutQuint }}
-              className="mt-8 max-w-[11ch] text-balance text-5xl font-semibold tracking-[-0.04em] text-fg sm:text-6xl lg:text-7xl"
+              className="mt-8 max-w-5xl text-balance text-[clamp(3.6rem,7vw,7.5rem)] font-semibold leading-[0.92] tracking-[-0.065em] text-fg"
             >
               Motion as utility classes.
             </m.h1>
@@ -64,7 +79,7 @@ export function HeroSection() {
               initial="hidden"
               animate="show"
               transition={{ duration: 0.5, delay: 0.13, ease: easeOutQuint }}
-              className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg"
+              className="mt-7 max-w-2xl text-pretty text-base leading-relaxed text-fg-muted sm:text-lg"
             >
               Write animation intent in className. Motionwind compiles it into
               Motion props before your app ships.
@@ -75,41 +90,66 @@ export function HeroSection() {
               initial="hidden"
               animate="show"
               transition={{ duration: 0.5, delay: 0.2, ease: easeOutQuint }}
-              className="mt-8 flex flex-wrap gap-3"
+              className="mt-9 flex flex-wrap justify-center gap-3"
             >
               <a
                 href="https://www.motionwind.xyz/docs"
-                className="inline-flex cursor-pointer items-center rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-[var(--color-accent-fg)] transition-colors hover:bg-accent-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-[var(--color-accent-fg)] transition-colors hover:bg-accent-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
                 Read docs
+                <ArrowUpRightIcon size={16} weight="bold" aria-hidden="true" />
               </a>
               <a
                 href="https://play.motionwind.xyz"
-                className="inline-flex cursor-pointer items-center rounded-lg border border-border bg-surface-elevated px-5 py-3 text-sm font-semibold text-fg transition-colors hover:border-accent/30 hover:bg-surface active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-surface-elevated px-5 py-3 text-sm font-semibold text-fg transition-colors hover:border-accent/30 hover:bg-surface active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
                 Open playground
+                <ArrowRightIcon size={16} weight="bold" aria-hidden="true" />
               </a>
             </m.div>
-          </div>
+            </div>
 
+<<<<<<< HEAD
+            <m.div
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              transition={{ duration: 0.6, delay: 0.16, ease: easeOutQuint }}
+              className="relative mt-16 w-full max-w-[1040px] lg:ml-16"
+            >
+            <div className="overflow-hidden rounded-xl border border-border bg-surface">
+              <div className="flex items-center justify-between px-5 py-5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
+=======
           <m.div
             variants={fadeUp}
             initial="hidden"
             animate="show"
             transition={{ duration: 0.6, delay: 0.16, ease: easeOutQuint }}
-            className="relative"
+            className="relative mt-16 w-full max-w-[1040px] lg:ml-16"
           >
-            <div className="overflow-hidden rounded-[1.4rem] border border-border bg-surface-elevated shadow-[0_28px_90px_-56px_var(--color-shadow)]">
-              <div className="grid gap-0 lg:grid-cols-[minmax(0,1.32fr)_minmax(220px,0.68fr)]">
-                <div className="grid min-w-0 gap-3 border-b border-border-subtle bg-surface/70 p-3 lg:border-b-0 lg:border-r">
+            <div className="overflow-hidden rounded-xl border border-border bg-surface">
+              <div className="flex items-center justify-between px-5 py-4 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
+>>>>>>> origin/codex/playground-ui-reliability
+                <span>motionwind / compile</span>
+                <span className="flex items-center gap-2 normal-case tracking-normal text-accent">
+                  <span className="size-1.5 rounded-full bg-accent" />
+                  ready
+                </span>
+              </div>
+              <div className="grid gap-0 lg:grid-cols-[minmax(0,1.36fr)_minmax(260px,0.64fr)]">
+<<<<<<< HEAD
+                <div className="grid min-w-0 gap-5 border-b border-border-subtle bg-surface p-5 lg:border-b-0 lg:border-r">
+=======
+                <div className="grid min-w-0 gap-4 border-b border-border-subtle bg-surface p-4 lg:border-b-0 lg:border-r lg:p-5">
+>>>>>>> origin/codex/playground-ui-reliability
                   <CodePane
                     title="className"
                     code={`<button className="${heroClasses}">\n  Ship interaction\n</button>`}
                     expanded
                   />
-                  <div className="flex items-center justify-between px-1 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
+                  <div className="flex items-center justify-between border-y border-border-subtle px-1 py-2 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
                     <span>compile step</span>
-                    <span>Motion props</span>
+                    <span className="text-fg-muted">Motion props</span>
                   </div>
                   <CodePane
                     title="generated output"
@@ -118,17 +158,16 @@ export function HeroSection() {
                   />
                 </div>
 
-                <div className="studio-checker flex min-h-[220px] flex-col justify-between gap-5 p-5">
-                  <div>
-                    <div className="font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
-                      live preview
-                    </div>
-                    <p className="mt-2 max-w-48 text-sm leading-relaxed text-fg-muted">
-                      The component stays semantic while Motion receives real
-                      hover and tap props.
-                    </p>
+<<<<<<< HEAD
+                <div className="m-5 flex min-h-[300px] flex-col justify-between gap-8 rounded-xl border border-border-subtle bg-surface-elevated p-5">
+=======
+                <div className="m-3 flex min-h-[300px] flex-col justify-between gap-8 rounded-xl border border-border-subtle bg-surface-elevated p-5 lg:p-7">
+>>>>>>> origin/codex/playground-ui-reliability
+                  <div className="flex items-center justify-between font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
+                    <span>live result</span>
+                    <span className="text-fg-muted">react</span>
                   </div>
-                  <div className="flex items-center justify-center py-4">
+                  <div className="flex flex-1 items-center justify-center py-4">
                     <mw.button
                       className={heroClasses}
                       data-demo-ready={!reduceMotion}
@@ -140,7 +179,7 @@ export function HeroSection() {
                     {["hover", "tap", "spring", "build"].map((item) => (
                       <span
                         key={item}
-                        className="rounded-md border border-border bg-surface-elevated px-2.5 py-2 text-center font-[family-name:var(--font-mono)] text-[10px] text-code-muted"
+                        className="rounded-lg border border-border-subtle bg-surface px-2.5 py-2.5 text-center font-[family-name:var(--font-mono)] text-[10px] text-code-muted transition-colors duration-200 hover:border-border hover:text-fg"
                       >
                         {item}
                       </span>
@@ -149,9 +188,10 @@ export function HeroSection() {
                 </div>
               </div>
             </div>
-          </m.div>
-        </div>
-      </section>
+            </m.div>
+          </div>
+        </section>
+      </MotionConfig>
     </LazyMotion>
   );
 }
@@ -166,12 +206,12 @@ function CodePane({
   expanded?: boolean;
 }) {
   return (
-    <div className="min-w-0 rounded-lg border border-border-subtle bg-code-bg">
+    <div className="min-w-0 rounded-lg border border-border-subtle bg-surface-elevated">
       <div className="border-b border-border-subtle px-3 py-2 font-[family-name:var(--font-mono)] text-[10px] text-code-muted">
         {title}
       </div>
       <pre
-        className={`overflow-auto px-3 py-3 font-[family-name:var(--font-mono)] text-[11px] leading-5 ${expanded ? "max-h-56" : "max-h-40"}`}
+        className={`code-scrollbar-hidden overflow-auto px-3 py-4 font-[family-name:var(--font-mono)] text-[11px] leading-5 ${expanded ? "max-h-56" : "max-h-40"}`}
       >
         <code>{highlightCode(code)}</code>
       </pre>

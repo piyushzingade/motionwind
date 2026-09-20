@@ -6,10 +6,14 @@ export function Typewriter({
   text,
   charDelay = 65,
   startDelay = 200,
+  loop = false,
+  loopDelay = 1100,
 }: {
   text: string;
   charDelay?: number;
   startDelay?: number;
+  loop?: boolean;
+  loopDelay?: number;
 }) {
   const [count, setCount] = useState(0);
   const [started, setStarted] = useState(false);
@@ -29,24 +33,31 @@ export function Typewriter({
       return;
     }
 
+    let startTimer: number | undefined;
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) {
           obs.disconnect();
-          setTimeout(() => setStarted(true), startDelay);
+          startTimer = window.setTimeout(() => setStarted(true), startDelay);
         }
       },
       { threshold: 0.5 },
     );
     obs.observe(el);
-    return () => obs.disconnect();
+    return () => {
+      obs.disconnect();
+      if (startTimer !== undefined) window.clearTimeout(startTimer);
+    };
   }, [text.length, startDelay]);
 
   useEffect(() => {
-    if (!started || count >= text.length) return;
-    const t = setTimeout(() => setCount((c) => c + 1), charDelay);
+    if (!started) return;
+    const t = setTimeout(
+      () => setCount((current) => (current >= text.length ? (loop ? 0 : current) : current + 1)),
+      count >= text.length ? loopDelay : charDelay,
+    );
     return () => clearTimeout(t);
-  }, [started, count, text.length, charDelay]);
+  }, [started, count, text.length, charDelay, loop, loopDelay]);
 
   const done = count >= text.length;
 

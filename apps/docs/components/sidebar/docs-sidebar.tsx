@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useEffectEvent, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import { MotionwindHorizontalLogo } from "@repo/ui/motionwind-logo";
 import { usePathname } from "next/navigation";
 import { m, AnimatePresence } from "motion/react";
 import { WEB_SIDEBAR, RN_SIDEBAR, type Platform } from "./sidebar-items";
 import { FeedbackDialog } from "./feedback-dialog";
+import { LegalLinks } from "@repo/ui/legal-links";
 
 const easeOutQuint: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
@@ -101,16 +102,7 @@ export function DocsSidebar({
       {/* Header */}
       <div className="flex h-14 items-center border-b border-dashed border-[var(--color-border)] px-4">
         <Link href="/" className="flex items-center gap-2.5 no-underline">
-          <Image
-            src="/logo.svg"
-            alt="motionwind"
-            width={22}
-            height={22}
-            className="shrink-0"
-          />
-          <span className="font-[family-name:var(--font-display)] text-xl italic tracking-tight text-[var(--color-fg)]">
-            motionwind
-          </span>
+          <MotionwindHorizontalLogo className="h-10 w-44 shrink-0 text-[var(--color-fg)]" />
           <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-fg-muted)]/50 ml-0.5">
             v0.1
           </span>
@@ -185,6 +177,7 @@ export function DocsSidebar({
           open={feedbackOpen}
           onClose={() => setFeedbackOpen(false)}
         />
+        <LegalLinks className="mt-3 justify-center text-[10px] text-[var(--color-fg-muted)]" />
       </div>
     </div>
   );

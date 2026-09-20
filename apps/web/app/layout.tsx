@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Providers } from "./providers";
 import "./globals.css";
-
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  variable: "--font-display",
-  display: "swap",
-});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -63,7 +57,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "https://www.motionwind.xyz/og.png",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Motionwind - Motion animations as Tailwind classes",
@@ -75,7 +69,7 @@ export const metadata: Metadata = {
     title: "Motionwind - Motion animations as Tailwind classes",
     description:
       "Write Motion animations as Tailwind-like utility classes. Zero imports, zero boilerplate, zero runtime overhead.",
-    images: ["https://www.motionwind.xyz/og.png"],
+    images: ["/opengraph-image"],
     creator: "@piyushzingade",
   },
   robots: {
@@ -163,7 +157,7 @@ export default function RootLayout({
         ) : null}
       </head>
       <body
-        className={`${instrumentSerif.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <Providers>
           {children}

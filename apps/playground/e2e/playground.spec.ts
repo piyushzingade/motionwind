@@ -5,6 +5,10 @@ test("recipe selection keeps the workspace and URL in sync", async ({
 }) => {
   await page.goto("/playground");
 
+  await expect(
+    page.getByRole("button", { name: "Dialog entrance" }),
+  ).toBeHidden();
+  await page.getByRole("button", { name: "Toggle recipe sidebar" }).click();
   await page.getByRole("button", { name: "Dialog entrance" }).click();
 
   await expect(page.locator("#studio-classes")).toHaveValue(
@@ -57,6 +61,26 @@ test("timeline and shareable preferences use exact state", async ({ page }) => {
   await page.locator("#delay").fill("400");
   await expect(page.getByTestId("timeline")).toContainText("700ms");
 
+  await page.getByRole("button", { name: "Pause preview" }).click();
+  await expect(
+    page.getByRole("button", { name: "Play preview" }),
+  ).toBeVisible();
+  await page.getByRole("slider", { name: "Timeline scrubber" }).fill("350");
+  await expect(
+    page.getByRole("slider", { name: "Timeline scrubber" }),
+  ).toHaveAttribute("aria-valuetext", "350ms");
+  await page.getByRole("button", { name: "Play preview" }).click();
+  await expect(
+    page.getByRole("button", { name: "Pause preview" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Replay preview" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Replay preview" }).click();
+  await expect(
+    page.getByRole("button", { name: "Pause preview" }),
+  ).toBeVisible();
+
   await page.getByRole("button", { name: /phone preview/ }).click();
   await page.getByRole("button", { name: "Full motion" }).click();
   await expect(page.getByTestId("timeline-playhead")).toHaveAttribute(
@@ -76,6 +100,7 @@ test("recipes render dedicated preview scenes, not a bare button", async ({
   page,
 }) => {
   await page.goto("/playground");
+  await page.getByRole("button", { name: "Toggle recipe sidebar" }).click();
   const viewport = page.getByTestId("preview-viewport");
 
   await page.getByRole("button", { name: "Progress bar" }).click();

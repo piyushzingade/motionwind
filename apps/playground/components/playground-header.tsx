@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import {
-  GithubLogoIcon,
-  SidebarSimpleIcon,
-  StarIcon,
-} from "@phosphor-icons/react";
+import { SidebarSimpleIcon, StarIcon } from "@phosphor-icons/react";
+import { GithubIcon } from "@repo/ui/github-icon";
+<<<<<<< HEAD
+import { ThemeToggle } from "@repo/ui/theme-toggle";
+=======
+>>>>>>> origin/codex/playground-ui-reliability
 import type { MotionwindRecipe } from "motionwind-react";
 import type { StudioState } from "@/lib/types";
-import { ThemeToggle } from "./theme-toggle";
 import { SearchPalette } from "./search-palette";
 
 export function PlaygroundHeader({
@@ -62,9 +62,9 @@ export function PlaygroundHeader({
               ? "Star Motionwind on GitHub"
               : `Star Motionwind on GitHub, ${starCount} stars`
           }
-          className="control-press inline-flex h-8 items-center gap-2 rounded-[10px] border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-3 text-[13px] text-[var(--color-fg-muted)] no-underline transition-[border-color,color] duration-150 hover:border-[var(--color-accent)]/20 hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/45"
+          className="control-press inline-flex h-10 items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-4 text-[13px] text-[var(--color-fg-muted)] no-underline transition-[border-color,color] duration-150 hover:border-[var(--color-accent)]/20 hover:text-[var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/45"
         >
-          <GithubLogoIcon size={13} weight="fill" />
+          <GithubIcon className="size-5 text-[var(--color-fg)]" />
           <StarIcon size={15} weight="fill" className="text-[#ffd700]" />
           <span>Star</span>
           {starCount !== null ? (

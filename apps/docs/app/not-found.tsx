@@ -16,7 +16,7 @@ export default function NotFound() {
       <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--color-fg-muted)] mb-4">
         404
       </span>
-      <h1 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl italic tracking-tight mb-4">
+      <h1 className="font-sans text-4xl md:text-5xl italic tracking-tight mb-4">
         Page not found
       </h1>
       <p className="text-[0.9375rem] text-[var(--color-fg-muted)] mb-8 max-w-md leading-relaxed">
