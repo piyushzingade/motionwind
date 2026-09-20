@@ -3,10 +3,7 @@
 import Link from "next/link";
 import { SidebarSimpleIcon, StarIcon } from "@phosphor-icons/react";
 import { GithubIcon } from "@repo/ui/github-icon";
-<<<<<<< HEAD
 import { ThemeToggle } from "@repo/ui/theme-toggle";
-=======
->>>>>>> origin/codex/playground-ui-reliability
 import type { MotionwindRecipe } from "motionwind-react";
 import type { StudioState } from "@/lib/types";
 import { SearchPalette } from "./search-palette";

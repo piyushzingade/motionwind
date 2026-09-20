@@ -53,7 +53,10 @@ export function Typewriter({
   useEffect(() => {
     if (!started) return;
     const t = setTimeout(
-      () => setCount((current) => (current >= text.length ? (loop ? 0 : current) : current + 1)),
+      () =>
+        setCount((current) =>
+          current >= text.length ? (loop ? 0 : current) : current + 1,
+        ),
       count >= text.length ? loopDelay : charDelay,
     );
     return () => clearTimeout(t);

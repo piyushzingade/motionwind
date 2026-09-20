@@ -3,11 +3,7 @@
 import Link from "next/link";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { GithubIcon } from "@repo/ui/github-icon";
-<<<<<<< HEAD
 import { ThemeToggle } from "@repo/ui/theme-toggle";
-=======
-import { ThemeToggle } from "./theme-toggle";
->>>>>>> origin/codex/playground-ui-reliability
 
 export function DocsHeader({
   onToggleSidebar,

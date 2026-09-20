@@ -881,19 +881,11 @@ figure.shiki pre::-webkit-scrollbar {
 
 /* animate-* classes — accent color both modes */
 .rn-hl-animate {
-<<<<<<< HEAD
   color: #566b2f;
   font-weight: 500;
 }
 .dark .rn-hl-animate {
   color: #c9ff33;
-=======
-  color: #566B2F;
-  font-weight: 500;
-}
-.dark .rn-hl-animate {
-  color: #C9FF33;
->>>>>>> origin/codex/playground-ui-reliability
 }
 
 /* Comments */
