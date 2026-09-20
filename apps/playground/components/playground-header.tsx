@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { SidebarSimpleIcon, StarIcon } from "@phosphor-icons/react";
 import { GithubIcon } from "@repo/ui/github-icon";
+import { ThemeToggle } from "@repo/ui/theme-toggle";
 import type { MotionwindRecipe } from "motionwind-react";
 import type { StudioState } from "@/lib/types";
-import { ThemeToggle } from "./theme-toggle";
 import { SearchPalette } from "./search-palette";
 
 export function PlaygroundHeader({

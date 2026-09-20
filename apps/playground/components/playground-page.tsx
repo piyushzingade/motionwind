@@ -7,6 +7,7 @@ import { useStudioState } from "@/lib/use-studio-state";
 import { PlaygroundSidebar } from "@/components/playground-sidebar";
 import { PlaygroundHeader } from "@/components/playground-header";
 import { PlaygroundStudio } from "@/components/playground/studio";
+import { LegalLinks } from "@repo/ui/legal-links";
 
 export function PlaygroundPage({ starCount }: { starCount: number | null }) {
   const studio = useStudioState();
@@ -72,6 +73,9 @@ export function PlaygroundPage({ starCount }: { starCount: number | null }) {
         />
         <main className="min-h-0 flex-1 overflow-y-auto">
           <PlaygroundStudio studio={studio} />
+          <footer className="border-t border-[var(--color-border)] px-6 py-4 text-xs text-[var(--color-fg-muted)]">
+            <LegalLinks />
+          </footer>
         </main>
       </div>
     </div>

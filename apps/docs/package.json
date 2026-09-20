@@ -24,6 +24,7 @@
     "fumadocs-ui": "^16.6.17",
     "motion": "^12.12.1",
     "motionwind-react": "*",
+    "next-themes": "^0.4.6",
     "next": "^16.2.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

@@ -8,13 +8,16 @@ import {
   TerminalWindowIcon,
 } from "@phosphor-icons/react";
 import { Reveal } from "./reveal";
+import { Typewriter } from "./typewriter";
+
+const installCommand = "bun add motionwind-react";
 
 export function GetStartedSection() {
   const [copied, setCopied] = useState(false);
 
   const copyCommand = async () => {
     try {
-      await navigator.clipboard.writeText("bun add motionwind-react");
+      await navigator.clipboard.writeText(installCommand);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1800);
     } catch {
@@ -25,9 +28,9 @@ export function GetStartedSection() {
   return (
     <section
       id="start"
-      className="section-anchor relative overflow-hidden px-4 py-24 sm:px-6 md:py-32 lg:py-40"
+      className="section-anchor relative overflow-hidden px-4 py-16 sm:px-6 md:py-20 lg:py-24"
     >
-      <div className="mx-auto flex max-w-[1120px] flex-col items-center gap-12">
+      <div className="mx-auto flex max-w-[1120px] flex-col items-center gap-10">
         <Reveal>
           <div className="max-w-3xl text-center">
             <p className="mb-6 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-accent">
@@ -69,9 +72,17 @@ export function GetStartedSection() {
               </span>
             </div>
             <div className="flex items-center justify-between gap-4 border-b border-border-subtle px-5 py-5 sm:px-6">
-              <code className="min-w-0 truncate font-[family-name:var(--font-mono)] text-sm text-fg sm:text-base">
+              <code
+                aria-label={installCommand}
+                className="min-w-0 truncate font-[family-name:var(--font-mono)] text-sm text-fg sm:text-base"
+              >
                 <span className="mr-3 text-accent">$</span>
-                bun add motionwind-react
+                <Typewriter
+                  text={installCommand}
+                  charDelay={48}
+                  startDelay={220}
+                  loop
+                />
               </code>
               <button
                 type="button"

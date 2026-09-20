@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../../../packages/ui/src";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -880,11 +881,11 @@ figure.shiki pre::-webkit-scrollbar {
 
 /* animate-* classes — accent color both modes */
 .rn-hl-animate {
-  color: #566B2F;
+  color: #566b2f;
   font-weight: 500;
 }
 .dark .rn-hl-animate {
-  color: #C9FF33;
+  color: #c9ff33;
 }
 
 /* Comments */

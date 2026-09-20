@@ -7,9 +7,9 @@ import { DownloadCTA } from "./download-cta";
 
 export function Footer() {
   return (
-    <footer className="px-4 pb-8 pt-16 sm:px-6 md:px-8 sm:pb-10 md:pt-20">
-      <div className="mx-auto max-w-[1120px] pt-6">
-        <DownloadCTA className="mx-auto mb-16" />
+    <footer className="px-4 pb-8 pt-10 sm:px-6 md:px-8 sm:pb-10 md:pt-14">
+      <div className="mx-auto max-w-[1120px]">
+        <DownloadCTA className="mx-auto mb-12" />
         <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between md:gap-10">
           <Link
             href="/"

@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { m, AnimatePresence } from "motion/react";
 import { WEB_SIDEBAR, RN_SIDEBAR, type Platform } from "./sidebar-items";
 import { FeedbackDialog } from "./feedback-dialog";
+import { LegalLinks } from "@repo/ui/legal-links";
 
 const easeOutQuint: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
@@ -176,6 +177,7 @@ export function DocsSidebar({
           open={feedbackOpen}
           onClose={() => setFeedbackOpen(false)}
         />
+        <LegalLinks className="mt-3 justify-center text-[10px] text-[var(--color-fg-muted)]" />
       </div>
     </div>
   );

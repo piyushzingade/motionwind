@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { GithubIcon } from "@repo/ui/github-icon";
-import { ThemeToggle } from "./theme-toggle";
+import { ThemeToggle } from "@repo/ui/theme-toggle";
 
 export function DocsHeader({
   onToggleSidebar,

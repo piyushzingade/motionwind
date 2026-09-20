@@ -7,9 +7,13 @@
   "exports": {
     "./oss-program-badge": "./src/oss-program-badge.tsx",
     "./motionwind-logo": "./src/motionwind-logo.tsx",
-    "./github-icon": "./src/github-icon.tsx"
+    "./github-icon": "./src/github-icon.tsx",
+    "./theme-toggle": "./src/theme-toggle.tsx",
+    "./legal-links": "./src/legal-links.tsx",
+    "./legal-page": "./src/legal-page.tsx"
   },
   "peerDependencies": {
+    "next-themes": "^0.4.6",
     "react": "^18.0.0 || ^19.0.0"
   }
 }

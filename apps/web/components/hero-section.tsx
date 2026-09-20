@@ -1,7 +1,13 @@
 "use client";
 
 import { useMemo } from "react";
-import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
+import {
+  LazyMotion,
+  MotionConfig,
+  domAnimation,
+  m,
+  useReducedMotion,
+} from "motion/react";
 import { mw } from "motionwind-react";
 import { generateMotionCode } from "motionwind-react/tooling";
 import { ArrowRightIcon, ArrowUpRightIcon } from "@phosphor-icons/react";
@@ -17,7 +23,7 @@ const fadeUp = {
 };
 
 const heroClasses =
-  "animate-hover:scale-105 animate-tap:scale-95 animate-spring animate-stiffness-420 animate-damping-24 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-accent-fg cursor-pointer";
+  "animate-hover:scale-102 animate-tap:scale-95 animate-spring animate-stiffness-420 animate-damping-24 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-accent-fg cursor-pointer";
 
 export function HeroSection() {
   const reduceMotion = useReducedMotion();
@@ -32,11 +38,12 @@ export function HeroSection() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <section className="relative overflow-hidden px-4 sm:px-6">
-        <div className="surface-glow" aria-hidden="true" />
+      <MotionConfig reducedMotion="user">
+        <section className="relative overflow-hidden px-4 sm:px-6">
+          <div className="surface-glow" aria-hidden="true" />
 
-        <div className="relative mx-auto flex min-h-[calc(100dvh-3.5rem)] max-w-[1120px] flex-col items-center justify-center py-20 sm:py-24 lg:py-28">
-          <div className="flex w-full max-w-5xl flex-col items-center text-center">
+          <div className="relative mx-auto flex min-h-[calc(100dvh-3.5rem)] max-w-[1120px] flex-col items-center justify-center py-20 sm:py-24 lg:py-28">
+            <div className="flex w-full max-w-5xl flex-col items-center text-center">
             <m.div
               variants={fadeUp}
               initial="hidden"
@@ -92,17 +99,17 @@ export function HeroSection() {
                 <ArrowRightIcon size={16} weight="bold" aria-hidden="true" />
               </a>
             </m.div>
-          </div>
+            </div>
 
-          <m.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            transition={{ duration: 0.6, delay: 0.16, ease: easeOutQuint }}
-            className="relative mt-16 w-full max-w-[1040px] lg:ml-16"
-          >
+            <m.div
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              transition={{ duration: 0.6, delay: 0.16, ease: easeOutQuint }}
+              className="relative mt-16 w-full max-w-[1040px] lg:ml-16"
+            >
             <div className="overflow-hidden rounded-xl border border-border bg-surface">
-              <div className="flex items-center justify-between px-5 py-4 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
+              <div className="flex items-center justify-between px-5 py-5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
                 <span>motionwind / compile</span>
                 <span className="flex items-center gap-2 normal-case tracking-normal text-accent">
                   <span className="size-1.5 rounded-full bg-accent" />
@@ -110,7 +117,7 @@ export function HeroSection() {
                 </span>
               </div>
               <div className="grid gap-0 lg:grid-cols-[minmax(0,1.36fr)_minmax(260px,0.64fr)]">
-                <div className="grid min-w-0 gap-4 border-b border-border-subtle bg-surface p-4 lg:border-b-0 lg:border-r lg:p-5">
+                <div className="grid min-w-0 gap-5 border-b border-border-subtle bg-surface p-5 lg:border-b-0 lg:border-r">
                   <CodePane
                     title="className"
                     code={`<button className="${heroClasses}">\n  Ship interaction\n</button>`}
@@ -127,7 +134,7 @@ export function HeroSection() {
                   />
                 </div>
 
-                <div className="m-3 flex min-h-[300px] flex-col justify-between gap-8 rounded-xl border border-border-subtle bg-surface-elevated p-5 lg:p-7">
+                <div className="m-5 flex min-h-[300px] flex-col justify-between gap-8 rounded-xl border border-border-subtle bg-surface-elevated p-5">
                   <div className="flex items-center justify-between font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-code-muted">
                     <span>live result</span>
                     <span className="text-fg-muted">react</span>
@@ -153,9 +160,10 @@ export function HeroSection() {
                 </div>
               </div>
             </div>
-          </m.div>
-        </div>
-      </section>
+            </m.div>
+          </div>
+        </section>
+      </MotionConfig>
     </LazyMotion>
   );
 }
