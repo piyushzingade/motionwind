@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^14.0.0",
-    "motion-v": "^1.7.1",
+    "motion-v": "^2.4.4",
     "motionwind-core": "^2.0.0",
     "motionwind-vue": "^2.0.0",
     "nuxt": "^4.0.0",
