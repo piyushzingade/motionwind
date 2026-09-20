@@ -7,10 +7,14 @@
   "exports": {
     "./oss-program-badge": "./src/oss-program-badge.tsx",
     "./motionwind-logo": "./src/motionwind-logo.tsx",
+<<<<<<< HEAD
     "./github-icon": "./src/github-icon.tsx",
     "./theme-toggle": "./src/theme-toggle.tsx",
     "./legal-links": "./src/legal-links.tsx",
     "./legal-page": "./src/legal-page.tsx"
+=======
+    "./github-icon": "./src/github-icon.tsx"
+>>>>>>> origin/codex/playground-ui-reliability
   },
   "peerDependencies": {
     "next-themes": "^0.4.6",

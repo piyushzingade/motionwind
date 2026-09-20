@@ -45,6 +45,9 @@
   --color-dot-grid: rgba(86, 107, 47, 0.045);
   --color-demo-glow: rgba(86, 107, 47, 0.045);
   --color-demo-grid-line: rgba(86, 107, 47, 0.055);
+  --cta-glow-start: color-mix(in srgb, var(--color-accent) 52%, white);
+  --cta-glow-mid: color-mix(in srgb, var(--color-accent) 38%, white);
+  --cta-glow-soft: color-mix(in srgb, var(--color-accent) 20%, transparent);
   --accent-glow: rgba(86, 107, 47, 0.24);
   --code-bg: #f3f3ec;
   --code-comment: #8f9288;
@@ -63,6 +66,7 @@
 
 /* ── Dark Theme ────────────────────────────────────────────────────── */
 .dark {
+<<<<<<< HEAD
   --color-bg: #0a0a0f;
   --color-fg: #f0f0f0;
   --color-fg-muted: #8a8a9a;
@@ -78,13 +82,39 @@
   --color-code-header: #12121c;
   --color-code-border: rgba(201, 255, 51, 0.06);
   --color-code-muted: #5a5a6a;
+=======
+  --color-bg: #11130f;
+  --color-fg: #f3f5ed;
+  --color-fg-muted: #a3a89a;
+  --color-accent: #c9ff33;
+  --color-accent-hover: #b9ef23;
+  --color-accent-fg: #11130f;
+  --color-border: #30372b;
+  --color-border-subtle: #252b22;
+  --color-surface: #191d16;
+  --color-surface-elevated: #22281d;
+  --color-shadow: rgba(0, 0, 0, 0.56);
+  --color-code-bg: #151912;
+  --color-code-header: #1c2118;
+  --color-code-border: #2a3224;
+  --color-code-muted: #788071;
+>>>>>>> origin/codex/playground-ui-reliability
   --color-selection: rgba(201, 255, 51, 0.18);
   --color-dot-grid: rgba(201, 255, 51, 0.03);
   --color-demo-glow: rgba(201, 255, 51, 0.04);
   --color-demo-grid-line: rgba(201, 255, 51, 0.04);
+<<<<<<< HEAD
   --accent-glow: rgba(201, 255, 51, 0.35);
   --code-bg: #0c0c14;
   --code-comment: #5a5a6a;
+=======
+  --cta-glow-start: rgba(201, 255, 51, 0.42);
+  --cta-glow-mid: rgba(201, 255, 51, 0.24);
+  --cta-glow-soft: rgba(201, 255, 51, 0.08);
+  --accent-glow: rgba(201, 255, 51, 0.35);
+  --code-bg: #151912;
+  --code-comment: #788071;
+>>>>>>> origin/codex/playground-ui-reliability
   --code-tag: #f472b6;
   --code-string: #86efac;
   --code-attr: #c9ff33;
@@ -684,6 +714,7 @@ body {
   }
 }
 
+<<<<<<< HEAD
 @keyframes component-preview-press {
   0%,
   54%,
@@ -695,6 +726,35 @@ body {
   }
   68% {
     transform: translateY(0) scale(1);
+=======
+@keyframes component-preview-loop {
+  0%,
+  100% {
+    opacity: 0.82;
+    transform: translateY(4px) scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1);
+  }
+}
+
+.web-component-loop {
+  animation: component-preview-loop 3.8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .web-component-loop {
+    animation: none;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-glow {
+    animation: none;
+>>>>>>> origin/codex/playground-ui-reliability
   }
 }
 
