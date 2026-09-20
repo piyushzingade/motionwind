@@ -95,8 +95,7 @@
     "babel-loader": "^9.2.1"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.28.5",

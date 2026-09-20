@@ -83,7 +83,6 @@
     "vue": "^3.5.13"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   }
 }

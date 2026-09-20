@@ -85,7 +85,6 @@
     "directory": "packages/motionwind-react-native"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   }
 }
