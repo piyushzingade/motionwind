@@ -292,9 +292,7 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       );
     case "dialog-enter":
       return (
-        <mw.div
-          className="component-preview-dialog w-48 rounded-xl border border-border bg-surface-elevated p-3 shadow-[0_12px_28px_-18px_var(--color-shadow)]"
-        >
+        <mw.div className="component-preview-dialog w-48 rounded-xl border border-border bg-surface-elevated p-3 shadow-[0_12px_28px_-18px_var(--color-shadow)]">
           <div className="flex items-center justify-between gap-2">
             <span className="text-[11px] font-semibold text-fg">
               Quick actions
@@ -342,9 +340,7 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       );
     case "menu-pop":
       return (
-        <mw.div
-          className="component-preview-menu grid w-48 gap-2 rounded-xl border border-border bg-surface-elevated p-3"
-        >
+        <mw.div className="component-preview-menu grid w-48 gap-2 rounded-xl border border-border bg-surface-elevated p-3">
           <span className="component-preview-menu-item flex h-8 items-center rounded-md bg-surface px-3 text-[10px] text-fg-muted">
             Open playground
           </span>
@@ -397,9 +393,7 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       );
     case "toast-enter":
       return (
-        <mw.div
-          className="component-preview-toast w-48 rounded-xl border border-border bg-surface-elevated p-2.5 shadow-[0_12px_28px_-18px_var(--color-shadow)]"
-        >
+        <mw.div className="component-preview-toast w-48 rounded-xl border border-border bg-surface-elevated p-2.5 shadow-[0_12px_28px_-18px_var(--color-shadow)]">
           <div className="flex items-start gap-2.5">
             <CheckCircleIcon
               size={16}
@@ -443,9 +437,7 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       return (
         <div className="w-36">
           <div className="h-2 overflow-hidden rounded-full bg-border-subtle">
-            <mw.div
-              className="h-full origin-left rounded-full bg-accent"
-            />
+            <mw.div className="h-full origin-left rounded-full bg-accent" />
           </div>
           <div className="mt-3 grid gap-1.5">
             <span className="h-2 rounded-full bg-border" />
@@ -457,9 +449,7 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       return (
         <div className="grid w-36 gap-2">
           <div className="h-3 rounded-full bg-border" />
-          <div
-            className="h-3 w-4/5 rounded-full bg-border"
-          />
+          <div className="h-3 w-4/5 rounded-full bg-border" />
           <div className="h-12 rounded-lg bg-border" />
         </div>
       );
@@ -485,9 +475,7 @@ function MiniRecipePreview({ recipe }: { recipe: MotionwindRecipe }) {
       );
     default:
       return (
-        <mw.div
-          className="component-preview-card-hover rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-accent-fg"
-        >
+        <mw.div className="component-preview-card-hover rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-accent-fg">
           Preview
         </mw.div>
       );

@@ -24,8 +24,20 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       type="button"
       onClick={mounted ? () => setTheme(isDark ? "light" : "dark") : undefined}
       className={buttonClassName}
-      aria-label={mounted ? (isDark ? "Switch to light mode" : "Switch to dark mode") : "Toggle theme"}
-      title={mounted ? (isDark ? "Switch to light mode" : "Switch to dark mode") : undefined}
+      aria-label={
+        mounted
+          ? isDark
+            ? "Switch to light mode"
+            : "Switch to dark mode"
+          : "Toggle theme"
+      }
+      title={
+        mounted
+          ? isDark
+            ? "Switch to light mode"
+            : "Switch to dark mode"
+          : undefined
+      }
       disabled={!mounted}
     >
       {mounted && (
