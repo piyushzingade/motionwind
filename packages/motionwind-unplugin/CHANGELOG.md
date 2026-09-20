@@ -1,5 +1,13 @@
 # motionwind-unplugin
 
+## 2.1.0
+
+### Patch Changes
+
+- Updated dependencies [f681137]
+  - motionwind-react@2.1.0
+  - motionwind-core@2.1.0
+
 ## 2.0.0
 
 ### Major Changes
