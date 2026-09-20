@@ -8,6 +8,7 @@ import { MWDiv, MWButton, MWSpan, MWInput } from "@/components/mdx-content";
 import { CopyLlmsButton } from "@/components/copy-llms-button";
 import { FrameworkGrid } from "@/components/framework-grid";
 import { DocsPageHeader } from "@/components/docs-page-header";
+import { DocsPageFooter } from "@/components/docs-page-footer";
 import { TableOfContents } from "@/components/toc";
 import {
   ExpandableCardDemo,
@@ -159,6 +160,7 @@ export default async function Page(props: {
         <div className="docs-prose">
           <MDX components={mdxComponents} />
         </div>
+        <DocsPageFooter currentUrl={page.url} title={page.data.title} />
       </article>
       <aside className="toc-sidebar">
         <TableOfContents items={page.data.toc} />
