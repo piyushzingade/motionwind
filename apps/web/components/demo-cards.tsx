@@ -6,14 +6,11 @@ import {
   mw,
   type MotionwindRecipe,
 } from "motionwind-react";
-<<<<<<< HEAD
 import {
   CaretDownIcon,
   CheckCircleIcon,
   MagnifyingGlassIcon,
 } from "@phosphor-icons/react";
-=======
->>>>>>> origin/codex/playground-ui-reliability
 import { Reveal } from "./reveal";
 import { ComponentPreviewCard } from "./component-preview-card";
 
@@ -69,18 +66,10 @@ export function DemoCards() {
 
         <Reveal y={18}>
           <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-<<<<<<< HEAD
             {recipes.map((recipe) => (
               <ComponentPreviewCard
                 key={recipe.id}
                 title={recipe.name}
-=======
-            {recipes.map((recipe, index) => (
-              <ComponentPreviewCard
-                key={recipe.id}
-                title={recipe.name}
-                animationDelay={(index % 3) * 180}
->>>>>>> origin/codex/playground-ui-reliability
                 preview={<MiniRecipePreview recipe={recipe} />}
               />
             ))}
