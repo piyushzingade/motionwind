@@ -16,7 +16,7 @@
     "@repo/ui": "workspace:*",
     "@radix-ui/react-dialog": "^1.1.23",
     "@vercel/analytics": "^2.0.1",
-    "motion": "^12.12.1",
+    "motion": "^13.4.0",
     "motionwind-react": "*",
     "next": "^16.2.6",
     "next-themes": "^0.4.6",

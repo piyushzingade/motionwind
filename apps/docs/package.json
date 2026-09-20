@@ -22,7 +22,7 @@
     "fumadocs-core": "^16.6.17",
     "fumadocs-mdx": "^14.2.10",
     "fumadocs-ui": "^16.6.17",
-    "motion": "^12.12.1",
+    "motion": "^13.4.0",
     "motionwind-react": "*",
     "next-themes": "^0.4.6",
     "next": "^16.2.6",

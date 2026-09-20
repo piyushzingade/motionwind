@@ -58,7 +58,7 @@
     "check-types": "tsc --noEmit"
   },
   "peerDependencies": {
-    "motion": "^11.0.0 || ^12.0.0"
+    "motion": "^11.0.0 || ^12.0.0 || ^13.0.0"
   },
   "dependencies": {
     "motionwind-core": "^2.0.0"
@@ -67,7 +67,7 @@
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "eslint": "^9.39.1",
-    "motion": "^12.12.1",
+    "motion": "^13.4.0",
     "tsup": "^8.5.0",
     "typescript": "5.9.2",
     "vitest": "^3.2.1"

@@ -5,7 +5,7 @@ import {
   StarIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { MotionStage } from "./motion-stage";
-import { MintlifyLogo } from "./mintlify-logo";
+import { MintlifyLogo } from "@repo/ui/mintlify-badge";
 import { OssProgramBadge } from "@repo/ui/oss-program-badge";
 
 const formatStars = (count: number) =>

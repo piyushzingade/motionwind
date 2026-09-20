@@ -6,12 +6,17 @@ import {
   type InjectionKey,
   type VNode,
 } from "vue";
-import { motion } from "motion-v";
+import * as MotionV from "motion-v";
 import { parseMotionClasses, type MotionwindConfig } from "motionwind-core";
 import { buildMotionProps, stripInteractive } from "./props.js";
 
 // motion-v exposes a component per tag (motion.div, motion.button, …).
-const motionTags = motion as unknown as Record<string, Component>;
+// Motion Vue 2 exposes the tag map at runtime, but its root declaration does
+// not re-export the legacy named type consistently across module resolution
+// modes. Keep the adapter typed against the public module namespace while
+// preserving the runtime `motion.div`/`motion.button` API.
+const motionTags = (MotionV as unknown as { motion: Record<string, Component> })
+  .motion;
 export const motionwindConfigKey: InjectionKey<MotionwindConfig> =
   Symbol("motionwind-config");
 

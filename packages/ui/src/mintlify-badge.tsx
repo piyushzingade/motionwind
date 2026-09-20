@@ -1,7 +1,22 @@
 /**
- * Mintlify wordmark. The letterforms render in `currentColor` so the mark
- * adapts to light/dark surfaces; the green mint-leaf symbol keeps its brand
- * color. Path data from Mintlify's official logo assets.
+ * Mintlify OSS Program badge. Rendered in the same style across web, docs,
+ * and playground heroes so the sponsorship reads identically everywhere.
+ */
+export function MintlifyBadge() {
+  return (
+    <span className="inline-flex w-fit items-center gap-2.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-elevated)]/70 py-1.5 pl-4 pr-5 backdrop-blur-sm">
+      <span className="text-[11px] font-medium tracking-wide text-[var(--color-fg-muted)]">
+        Backed by
+      </span>
+      <MintlifyLogo className="h-3.5 w-auto text-[var(--color-fg)]" />
+    </span>
+  );
+}
+
+/**
+ * Mintlify wordmark. Letterforms render in `currentColor` so the mark adapts
+ * to light/dark surfaces; the green mint-leaf symbol keeps its brand color.
+ * Path data from Mintlify's official logo assets.
  */
 export function MintlifyLogo({ className }: { className?: string }) {
   return (

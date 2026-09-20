@@ -12,8 +12,8 @@ import { mw } from "motionwind-react";
 import { generateMotionCode } from "motionwind-react/tooling";
 import { ArrowRightIcon, ArrowUpRightIcon } from "@phosphor-icons/react";
 import { OssProgramBadge } from "@repo/ui/oss-program-badge";
+import { MintlifyLogo } from "@repo/ui/mintlify-badge";
 import { highlightCode } from "../lib/highlight";
-import { MintlifyLogo } from "./mintlify-logo";
 
 const easeOutQuint: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
