@@ -1381,7 +1381,6 @@ figure.shiki pre::-webkit-scrollbar {
 :where(
     .docs-content-wrapper,
     .docs-prose,
-    .toc-sidebar,
     .landing-preview-wrap,
     [role="dialog"],
     [data-radix-popper-content-wrapper]
@@ -1415,8 +1414,6 @@ figure.shiki pre::-webkit-scrollbar {
   background: none;
 }
 
-.toc-header,
-.toc-link,
 .rn-code-panel,
 .rn-code-panel-header,
 figure.shiki,
@@ -1451,11 +1448,6 @@ a > svg :is(path, line, rect, circle, ellipse, polyline, polygon),
 span > svg :is(path, line, rect, circle, ellipse, polyline, polygon),
 kbd > svg :is(path, line, rect, circle, ellipse, polyline, polygon) {
   stroke-dasharray: 1.5 2.5;
-  stroke-linecap: round;
-}
-
-.toc-svg path {
-  stroke-dasharray: 1 5;
   stroke-linecap: round;
 }
 
