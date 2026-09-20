@@ -18,7 +18,7 @@ export function MintlifyBadge() {
  * to light/dark surfaces; the green mint-leaf symbol keeps its brand color.
  * Path data from Mintlify's official logo assets.
  */
-function MintlifyLogo({ className }: { className?: string }) {
+export function MintlifyLogo({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 1682 368"
