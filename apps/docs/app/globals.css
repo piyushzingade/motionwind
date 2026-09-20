@@ -726,7 +726,7 @@ figure.shiki pre::-webkit-scrollbar {
   gap: 0.5rem;
   min-height: 2.5rem;
   cursor: pointer;
-  border: 1px dotted var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: 0.625rem;
   background: var(--color-surface-elevated);
   padding: 0.5rem 1rem;
@@ -748,7 +748,7 @@ figure.shiki pre::-webkit-scrollbar {
 }
 
 .docs-rating-button:focus-visible {
-  outline: 2px dotted color-mix(in srgb, var(--color-accent), transparent 35%);
+  outline: 2px solid color-mix(in srgb, var(--color-accent), transparent 35%);
   outline-offset: 3px;
 }
 
@@ -780,7 +780,7 @@ figure.shiki pre::-webkit-scrollbar {
   grid-template-columns: 2.75rem minmax(0, 1fr) minmax(0, 1fr) 2.75rem;
   align-items: center;
   gap: 0.625rem;
-  border: 1px dotted var(--color-border-subtle);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 0.875rem;
   background: var(--color-surface);
   padding: 0.375rem 0.625rem;
@@ -827,7 +827,7 @@ figure.shiki pre::-webkit-scrollbar {
 }
 
 .docs-pagination-card:focus-visible {
-  outline: 2px dotted color-mix(in srgb, var(--color-accent), transparent 35%);
+  outline: 2px solid color-mix(in srgb, var(--color-accent), transparent 35%);
   outline-offset: 4px;
 }
 
@@ -1373,135 +1373,6 @@ figure.shiki pre::-webkit-scrollbar {
     padding-inline-start: 10rem;
     padding-inline-end: 4rem;
   }
-}
-
-/* ── Dotted UI system ─────────────────────────────────────────────── */
-/* Unlayered and near the end so it wins over Tailwind/Fumadocs utility
-   output while preserving existing border widths, colors, and radii. */
-:where(
-    .docs-content-wrapper,
-    .docs-prose,
-    .landing-preview-wrap,
-    [role="dialog"],
-    [data-radix-popper-content-wrapper]
-  )
-  :where(
-    [class*="border"],
-    button,
-    a,
-    kbd,
-    input,
-    textarea,
-    select,
-    table,
-    th,
-    td,
-    figure,
-    pre,
-    code,
-    blockquote
-  ) {
-  border-style: dotted !important;
-}
-
-.docs-prose blockquote {
-  border-style: dotted !important;
-}
-
-.docs-prose hr {
-  height: 0;
-  border-top: 1px dotted var(--color-border);
-  background: none;
-}
-
-.rn-code-panel,
-.rn-code-panel-header,
-figure.shiki,
-figure.shiki > div:first-child button,
-.demo-btn,
-.demo-btn-primary,
-[data-stage-card],
-[data-stage-card] > div,
-[data-fd-sidebar],
-[data-active="true"],
-[class*="border"] {
-  border-style: dotted !important;
-}
-
-button:has(> svg),
-a:has(> svg),
-span:has(> svg),
-kbd:has(> svg) {
-  border-style: dotted !important;
-}
-
-button:has(> svg):not([class*="border"]),
-a:has(> svg):not([class*="border"]),
-span:has(> svg):not([class*="border"]),
-kbd:has(> svg):not([class*="border"]) {
-  border: 1px dotted color-mix(in srgb, var(--color-border), transparent 20%);
-  border-radius: 0.5rem;
-}
-
-button > svg :is(path, line, rect, circle, ellipse, polyline, polygon),
-a > svg :is(path, line, rect, circle, ellipse, polyline, polygon),
-span > svg :is(path, line, rect, circle, ellipse, polyline, polygon),
-kbd > svg :is(path, line, rect, circle, ellipse, polyline, polygon) {
-  stroke-dasharray: 1.5 2.5;
-  stroke-linecap: round;
-}
-
-[data-testid="toc-marker"] {
-  box-shadow: 0 0 0 3px var(--color-bg);
-}
-
-/* Keep dotted borders for components, not token-level code text. */
-.docs-prose :where(p, li, td, th) code,
-.docs-prose :where(figure.shiki, figure.shiki pre, figure.shiki code) {
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
-}
-
-.docs-prose :where(p, li) code {
-  background: color-mix(in srgb, var(--color-accent), transparent 94%);
-}
-
-.docs-prose :where(td, th) code {
-  background: transparent !important;
-  padding: 0 !important;
-}
-
-.docs-prose figure.shiki {
-  border: 1px dotted var(--color-border) !important;
-}
-
-/* Filled action buttons should read as solid controls; reserve dotted borders
-   for outline/ghost buttons and surrounding component frames. */
-:where(
-  button,
-  a
-):where(
-  [class*="bg-[var(--color-accent)]"],
-  [class*="bg-fd-primary"],
-  [class*="bg-\\[#c8ff2e\\]"],
-  [class*="bg-\\[#4d7c0f\\]"],
-  .demo-btn-primary
-) {
-  border-style: solid !important;
-}
-
-:where(
-  button,
-  a
-):where(
-  [class*="bg-[var(--color-accent)]"],
-  [class*="bg-fd-primary"],
-  [class*="bg-\\[#c8ff2e\\]"],
-  [class*="bg-\\[#4d7c0f\\]"],
-  .demo-btn-primary
-):not([class*="border"]) {
-  border-color: transparent !important;
 }
 
 /* Search results and compact nav lists should not look like separated cards. */
