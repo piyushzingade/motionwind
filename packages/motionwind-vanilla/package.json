@@ -1,6 +1,6 @@
 {
   "name": "motionwind-vanilla",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "sideEffects": false,
   "description": "Write Motion animations as Tailwind-like classes in plain HTML/JS — scans the DOM and wires animations via the vanilla Motion API.",
@@ -61,7 +61,7 @@
     "motion": "^11.0.0 || ^12.0.0 || ^13.0.0"
   },
   "dependencies": {
-    "motionwind-core": "^2.0.0"
+    "motionwind-core": "^2.1.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",

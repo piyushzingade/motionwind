@@ -1,6 +1,6 @@
 {
   "name": "motionwind-vue",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "sideEffects": false,
   "description": "Write Motion animations as Tailwind-like classes in Vue 3 — powered by Motion for Vue.",
@@ -68,7 +68,7 @@
     "motion-v": "^2.0.0"
   },
   "dependencies": {
-    "motionwind-core": "^2.0.0"
+    "motionwind-core": "^2.1.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
